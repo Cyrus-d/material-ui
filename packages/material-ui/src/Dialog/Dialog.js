@@ -226,6 +226,7 @@ const Dialog = React.forwardRef(function Dialog(props, ref) {
         onExiting={onExiting}
         onExited={onExited}
         role="none presentation"
+		tabIndex={children.props.tabIndex}
         {...TransitionProps}
       >
         {/* roles are applied via cloneElement from TransitionComponent */}
