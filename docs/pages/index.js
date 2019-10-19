@@ -8,6 +8,7 @@ import HomeSteps from 'docs/src/modules/components/HomeSteps';
 import HomeQuickWord from 'docs/src/modules/components/HomeQuickWord';
 import HomeBackers from 'docs/src/modules/components/HomeBackers';
 import HomeUsers from 'docs/src/modules/components/HomeUsers';
+import HomePro from 'docs/src/modules/components/HomePro';
 import HomeFooter from 'docs/src/modules/components/HomeFooter';
 import AppFrame from 'docs/src/modules/components/AppFrame';
 import Link from 'docs/src/modules/components/Link';
@@ -106,9 +107,7 @@ export default function HomePage() {
 
     loadDependencies();
   }, []);
-  const { t } = useSelector(state => ({
-    t: state.options.t,
-  }));
+  const t = useSelector(state => state.options.t);
   const classes = useStyles();
 
   return (
@@ -164,6 +163,7 @@ export default function HomePage() {
               Follow
             </a>
           </div>
+          <HomePro />
           <HomeQuickWord />
           <HomeSteps />
           <HomeBackers />

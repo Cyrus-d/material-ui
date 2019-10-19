@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import clsx from 'clsx';
 import { elementTypeAcceptingRef, refType } from '@material-ui/utils';
-import { useForkRef } from '../utils/reactHelpers';
+import useForkRef from '../utils/useForkRef';
 import useEventCallback from '../utils/useEventCallback';
 import withStyles from '../styles/withStyles';
 import NoSsr from '../NoSsr';
@@ -60,9 +60,9 @@ const ButtonBase = React.forwardRef(function ButtonBase(props, ref) {
     centerRipple = false,
     children,
     classes,
-    className: classNameProp,
+    className,
     component = 'button',
-    disabled,
+    disabled = false,
     disableRipple = false,
     disableTouchRipple = false,
     focusRipple = false,
@@ -234,16 +234,6 @@ const ButtonBase = React.forwardRef(function ButtonBase(props, ref) {
     }
   });
 
-  const className = clsx(
-    classes.root,
-    {
-      [classes.disabled]: disabled,
-      [classes.focusVisible]: focusVisible,
-      [focusVisibleClassName]: focusVisible,
-    },
-    classNameProp,
-  );
-
   let ComponentProp = component;
 
   if (ComponentProp === 'button' && other.href) {
@@ -267,7 +257,15 @@ const ButtonBase = React.forwardRef(function ButtonBase(props, ref) {
 
   return (
     <ComponentProp
-      className={className}
+      className={clsx(
+        classes.root,
+        {
+          [classes.disabled]: disabled,
+          [classes.focusVisible]: focusVisible,
+          [focusVisibleClassName]: focusVisible,
+        },
+        className,
+      )}
       onBlur={handleBlur}
       onClick={onClick}
       onFocus={handleFocus}
@@ -304,7 +302,7 @@ ButtonBase.propTypes = {
   action: refType,
   /**
    * Use that prop to pass a ref to the native button component.
-   * @deprecated Use `ref` instead
+   * @deprecated Use `ref` instead.
    */
   buttonRef: refType,
   /**

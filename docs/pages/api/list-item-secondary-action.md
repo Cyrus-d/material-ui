@@ -16,7 +16,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { ListItemSecondaryAction } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 Must be used as the last child of ListItem to function properly.
 
@@ -38,7 +38,7 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiListItemSecondaryAction-root</span> | Styles applied to the root element.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiListItemSecondaryAction-root</span> | Styles applied to the root element.
 
 You can override the style of the component thanks to one of these customization points:
 

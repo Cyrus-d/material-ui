@@ -7,18 +7,54 @@ components: Icon, SvgIcon
 
 <p class="description">Guidance and suggestions for using icons with Material-UI.</p>
 
-A [system icon](https://material.io/design/iconography/system-icons.html) or UI icon,
-symbolizes a command, file, device, or directory.
-System icons are also used to represent common actions like trash, print, and save,
-and are commonly found in app bars, toolbars, buttons, and lists.
-Google has provided a set of [Material icons](https://material.io/tools/icons/?style=baseline) that follow these guidelines.
+Material-UI provides icons support in three ways:
 
-Material-UI provides two components to render system icons: `SvgIcon` for rendering SVG paths, and `Icon` for rendering font icons.
+1. Standardized [Material Design icons](#material-icons) exported as React components (SVG icons).
+1. With the [SvgIcon](#svgicon) component, a React wrapper for custom SVG icons.
+1. With the [Icon](#icon-font-icons) component, a React wrapper for custom font icons.
 
-## SVG Icons
+## Material Icons
 
-The `SvgIcon` component takes an SVG `path` element as its child and converts it to a React component that displays the path,
-and allows the icon to be styled and respond to mouse events. SVG elements should be scaled for a 24x24px viewport.
+Material Design has standardized over 1,000 official icons, each in five different "themes" (see below). For each SVG icon, we export the respective React component from the `@material-ui/icons` package. You can search the full list of these icons in our [built-in search page](/components/material-icons/).
+
+### Usage
+
+Install `@material-ui/icons`. Import icons using one of these two options:
+
+- Option 1:
+
+  ```jsx
+  import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+  import ThreeDRotation from '@material-ui/icons/ThreeDRotation';
+  ```
+
+- Option 2:
+
+  ```jsx
+  import { AccessAlarm, ThreeDRotation } from '@material-ui/icons';
+  ```
+
+The safest is Option 1 but Option 2 can yield the best developer experience.
+Make sure you follow the [minimizing bundle size guide](/guides/minimizing-bundle-size/#option-2) before using the second approach.
+The configuration of a Babel plugin is encouraged.
+
+Each icon also has a "theme": `Filled` (default), `Outlined`, `Rounded`, `Two tone` and `Sharp`. If you want to import the icon component with a "theme" different than default, append the "theme" name to the icon name. For example `@material-ui/icons/Delete` icon with:
+
+- `Filled` "theme" (default) is exported as `@material-ui/icons/Delete`,
+- `Outlined` "theme" is exported as `@material-ui/icons/DeleteOutlined`,
+- `Rounded` "theme" is exported as `@material-ui/icons/DeleteRounded`,
+- `Two tone` "theme" is exported as `@material-ui/icons/DeleteTwoTone`,
+- `Sharp` "theme" is exported as `@material-ui/icons/DeleteSharp`.
+
+Note: The Material Design specification names the icons using "snake_case" naming (for example `delete_forever`, `add_a_photo`), while `@material-ui/icons` exports the respective icons using "PascalCase" naming (for example `DeleteForever`, `AddAPhoto`). There are three exceptions to this naming rule: `3d_rotation` exported as `ThreeDRotation`, `4k` exported as `FourK`, and `360` exported as `ThreeSixty`.
+
+{{"demo": "pages/components/icons/SvgMaterialIcons.js"}}
+
+## SvgIcon
+
+If you need a custom SVG icon (not available in Material Icons) you should use the `SvgIcon` wrapper.
+The `SvgIcon` component takes the SVG `path` element as its child and converts it to a React component that displays this SVG icon, and allows the icon to be styled and respond to mouse events.
+SVG elements should be scaled for a 24x24px viewport.
 
 The resulting icon can be used as is,
 or included as a child for other Material-UI components that use icons.
@@ -27,66 +63,20 @@ Optionally, you can set the icon color using one of the theme color properties: 
 
 {{"demo": "pages/components/icons/SvgIcons.js"}}
 
-### SVG Material icons
+### Libraries
 
-It's interesting to have the building blocks needed to implement custom icons, but what about presets?
-[@material-ui/icons](https://www.npmjs.com/package/@material-ui/icons) is an npm package that includes the 1,000+ official [Material icons](https://material.io/tools/icons/?style=baseline) converted to `SvgIcon` components.
+#### Material Design (recommended)
 
-<a href="/components/material-icons/">
-  <img src="/static/images/icons/icons.png" alt="Official material icons" style="width: 566px" />
-</a>
+Material Design has standardized over [1,000 official icons](#material-icons).
 
-#### Usage
+#### MDI
 
-You can use our [internal search](/components/material-icons/) or [material.io/tools/icons](https://material.io/tools/icons/?style=baseline) to find a specific icon.
-When importing an icon, keep in mind that the names of the icons are `PascalCase`, for instance:
+[materialdesignicons.com](https://materialdesignicons.com/) provides over 2,000 icons.
+For the wanted icon, copy the SVG `path` they provide, and use it as the child of the `SvgIcon` component.
 
-- [`delete`](https://material.io/tools/icons/?icon=delete&style=baseline) is exposed as `@material-ui/icons/Delete`
-- [`delete forever`](https://material.io/tools/icons/?icon=delete_forever&style=baseline) is exposed as `@material-ui/icons/DeleteForever`
+Note: [mdi-material-ui](https://github.com/TeamWertarbyte/mdi-material-ui) has already wrapped each of these SVG icons with the `SvgIcon` component, so you don't have to do it yourself.
 
-For "themed" icons, append the theme name to the icon name. For instance with the
-
-- The Outlined [`delete`](https://material.io/tools/icons/?icon=delete&style=outline) icon is exposed as `@material-ui/icons/DeleteOutlined`
-- The Rounded [`delete`](https://material.io/tools/icons/?icon=delete&style=rounded) icon is exposed as `@material-ui/icons/DeleteRounded`
-- The Two Tone [`delete`](https://material.io/tools/icons/?icon=delete&style=twotone) icon is exposed as `@material-ui/icons/DeleteTwoTone`
-- The Sharp [`delete`](https://material.io/tools/icons/?icon=delete&style=sharp) icon is exposed as `@material-ui/icons/DeleteSharp`
-
-There are three exceptions to this rule:
-
-- [`3d_rotation`](https://material.io/tools/icons/?icon=3d_rotation&style=baseline) is exposed as `@material-ui/icons/ThreeDRotation`
-- [`4k`](https://material.io/tools/icons/?icon=4k&style=baseline) is exposed as `@material-ui/icons/FourK`
-- [`360`](https://material.io/tools/icons/?icon=360&style=baseline) is exposed as `@material-ui/icons/ThreeSixty`
-
-{{"demo": "pages/components/icons/SvgMaterialIcons.js"}}
-
-#### Imports
-
-You can import the icons with one of these two options:
-
-- Option 1:
-
-  ```jsx
-  import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
-  import ThreeDRotation from '@material-ui/icons/ThreeDRotation';
-  ```
-  
-- Option 2:
-
-  ```jsx
-  import { AccessAlarm, ThreeDRotation } from '@material-ui/icons';
-  ```
-
-The safest is option 1 but option 2 can yield the best experience.
-Make sure you follow our [minimizing bundle size guide](/guides/minimizing-bundle-size/#option-2) before using the second approach.
-We encourage the configuration of a Babel plugin.
-
-### More SVG icons
-
-Looking for even more SVG icons? There are a lot of projects out there,
-but [https://materialdesignicons.com](https://materialdesignicons.com/) provides over 2,000 official and community provided icons.
-[mdi-material-ui](https://github.com/TeamWertarbyte/mdi-material-ui) packages these icons as Material-UI SvgIcons in much the same way as [@material-ui/icons](https://www.npmjs.com/package/@material-ui/icons) does for the official icons.
-
-## Font Icons
+## Icon (Font icons)
 
 The `Icon` component will display an icon from any icon font that supports ligatures.
 As a prerequisite, you must include one, such as the
@@ -140,12 +130,12 @@ This includes icons without text next to them used as interactive controls — b
 ### Decorative SVG Icons
 
 If your icons are purely decorative, you’re already done!
-We add the `aria-hidden=true` attribute so that your icons are properly accessible (invisible).
+The `aria-hidden=true` attribute is added so that your icons are properly accessible (invisible).
 
 ### Semantic SVG Icons
 
 If your icon has semantic meaning, all you need to do is throw in a `titleAccess="meaning"` property.
-We add the `role="img"` attribute and the `<title>` element so that your icons are properly accessible.
+The `role="img"` attribute and the `<title>` element are added so that your icons are properly accessible.
 
 In the case of focusable interactive elements, like when used with an icon button, you can use the `aria-label` property:
 
@@ -165,7 +155,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 ### Decorative Font Icons
 
 If your icons are purely decorative, you’re already done!
-We add the `aria-hidden=true` attribute so that your icons are properly accessible (invisible).
+The `aria-hidden=true` attribute is added so that your icons are properly accessible (invisible).
 
 ### Semantic Font Icons
 

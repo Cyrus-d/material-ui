@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '@material-ui/core/test-utils/describeConformance';
-import { cleanup, createClientRender, fireEvent } from 'test/utils/createClientRender';
+import { createClientRender, fireEvent } from 'test/utils/createClientRender';
 import TreeItem from './TreeItem';
 import TreeView from '../TreeView';
 
@@ -12,10 +12,6 @@ describe('<TreeItem />', () => {
   const render = createClientRender({ strict: false });
   const mount = createMount({ strict: false });
   const classes = getClasses(<TreeItem nodeId="one" label="one" />);
-
-  afterEach(() => {
-    cleanup();
-  });
 
   describeConformance(<TreeItem nodeId="one" label="one" />, () => ({
     classes,
@@ -38,6 +34,52 @@ describe('<TreeItem />', () => {
     fireEvent.click(getByText('test'));
 
     expect(handleClick.callCount).to.equal(1);
+  });
+
+  it('should display the right icons', () => {
+    const defaultEndIcon = <div data-test="defaultEndIcon" />;
+    const defaultExpandIcon = <div data-test="defaultExpandIcon" />;
+    const defaultCollapseIcon = <div data-test="defaultCollapseIcon" />;
+    const defaultParentIcon = <div data-test="defaultParentIcon" />;
+    const icon = <div data-test="icon" />;
+    const endIcon = <div data-test="endIcon" />;
+
+    const { getByTestId } = render(
+      <TreeView
+        defaultEndIcon={defaultEndIcon}
+        defaultExpandIcon={defaultExpandIcon}
+        defaultCollapseIcon={defaultCollapseIcon}
+        defaultParentIcon={defaultParentIcon}
+        defaultExpanded={['1']}
+      >
+        <TreeItem nodeId="1" label="1" data-testid="1">
+          <TreeItem nodeId="2" label="2" data-testid="2" />
+          <TreeItem nodeId="5" label="5" data-testid="5" icon={icon} />
+          <TreeItem nodeId="6" label="6" data-testid="6" endIcon={endIcon} />
+        </TreeItem>
+        <TreeItem nodeId="3" label="3" data-testid="3">
+          <TreeItem nodeId="4" label="4" data-testid="4" />
+        </TreeItem>
+      </TreeView>,
+    );
+
+    const getIcon = testId => getByTestId(testId).querySelector(`.${classes.iconContainer} div`);
+
+    expect(getIcon('1'))
+      .attribute('data-test')
+      .to.equal('defaultCollapseIcon');
+    expect(getIcon('2'))
+      .attribute('data-test')
+      .to.equal('defaultEndIcon');
+    expect(getIcon('3'))
+      .attribute('data-test')
+      .to.equal('defaultExpandIcon');
+    expect(getIcon('5'))
+      .attribute('data-test')
+      .to.equal('icon');
+    expect(getIcon('6'))
+      .attribute('data-test')
+      .to.equal('endIcon');
   });
 
   it('should not call onClick when children are clicked', () => {

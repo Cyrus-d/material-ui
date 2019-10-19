@@ -1,5 +1,5 @@
 ---
-description: Here are the most significant changes in May.
+description: Here are the most significant improvements in May.
 ---
 
 # May 2019 Update
@@ -8,7 +8,7 @@ description: Here are the most significant changes in May.
 
 *June 8, 2019*
 
-Here are the most significant changes in May:
+Here are the most significant improvements in May:
 
 - 🎉 We released Material-UI v4 stable during the React Europe conference.
 You can find the details in our [blog post 📝](https://medium.com/material-ui/material-ui-v4-is-out-4b7587d1e701) and a quick introduction in this [5 minutes talk](https://www.youtube.com/watch?v=m54_CPfbWow).
@@ -39,4 +39,4 @@ You can contact us at advisory@material-ui.com.
 
 <hr />
 
-Material-UI is an MIT-licensed open source project. It’s an independent project with ongoing development made possible thanks to the support of these awesome [backers](/discover-more/backers/). Please join them ✨.
+Material-UI is an MIT-licensed open source project. It’s an independent project with ongoing development helped by the support of these awesome [backers](/discover-more/backers/). Please join them ✨.

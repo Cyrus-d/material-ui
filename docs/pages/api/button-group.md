@@ -16,7 +16,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { ButtonGroup } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -33,7 +33,7 @@ You can learn more about the difference by [reading our guide](/guides/minimizin
 | <span class="prop-name">disableRipple</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the button ripple effect will be disabled. |
 | <span class="prop-name">fullWidth</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the buttons will take up the full width of its container. |
 | <span class="prop-name">size</span> | <span class="prop-type">'small'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'large'</span> | <span class="prop-default">'medium'</span> | The size of the button. `small` is equivalent to the dense button styling. |
-| <span class="prop-name">variant</span> | <span class="prop-type">'outlined'<br>&#124;&nbsp;'contained'</span> | <span class="prop-default">'outlined'</span> | The variant to use. |
+| <span class="prop-name">variant</span> | <span class="prop-type">'text'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'contained'</span> | <span class="prop-default">'outlined'</span> | The variant to use. |
 
 The `ref` is forwarded to the root element.
 
@@ -46,17 +46,20 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiButtonGroup-root</span> | Styles applied to the root element.
-| <span class="prop-name">contained</span> | <span class="prop-name">MuiButtonGroup-contained</span> | Styles applied to the root element if variant="contained".
-| <span class="prop-name">fullWidth</span> | <span class="prop-name">MuiButtonGroup-fullWidth</span> | Styles applied to the root element if fullWidth={true}.
-| <span class="prop-name">grouped</span> | <span class="prop-name">MuiButtonGroup-grouped</span> | Styles applied to the children.
-| <span class="prop-name">groupedOutlined</span> | <span class="prop-name">MuiButtonGroup-groupedOutlined</span> | Styles applied to the children if variant="outlined".
-| <span class="prop-name">groupedOutlinedPrimary</span> | <span class="prop-name">MuiButtonGroup-groupedOutlinedPrimary</span> | Styles applied to the children if variant="outlined" & color="primary".
-| <span class="prop-name">groupedOutlinedSecondary</span> | <span class="prop-name">MuiButtonGroup-groupedOutlinedSecondary</span> | Styles applied to the children if variant="outlined" & color="secondary".
-| <span class="prop-name">groupedContained</span> | <span class="prop-name">MuiButtonGroup-groupedContained</span> | Styles applied to the children if variant="contained".
-| <span class="prop-name">groupedContainedPrimary</span> | <span class="prop-name">MuiButtonGroup-groupedContainedPrimary</span> | Styles applied to the children if variant="contained" & color="primary".
-| <span class="prop-name">groupedContainedSecondary</span> | <span class="prop-name">MuiButtonGroup-groupedContainedSecondary</span> | Styles applied to the children if variant="contained" & color="secondary".
-| <span class="prop-name">disabled</span> | <span class="prop-name">Mui-disabled</span> | Pseudo-class applied to child elements if `disabled={true}`.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiButtonGroup-root</span> | Styles applied to the root element.
+| <span class="prop-name">contained</span> | <span class="prop-name">.MuiButtonGroup-contained</span> | Styles applied to the root element if `variant="contained"`.
+| <span class="prop-name">fullWidth</span> | <span class="prop-name">.MuiButtonGroup-fullWidth</span> | Styles applied to the root element if `fullWidth={true}`.
+| <span class="prop-name">grouped</span> | <span class="prop-name">.MuiButtonGroup-grouped</span> | Styles applied to the children.
+| <span class="prop-name">groupedText</span> | <span class="prop-name">.MuiButtonGroup-groupedText</span> | Styles applied to the children if `variant="text"`.
+| <span class="prop-name">groupedTextPrimary</span> | <span class="prop-name">.MuiButtonGroup-groupedTextPrimary</span> | Styles applied to the children if `variant="text"` and `color="primary"`.
+| <span class="prop-name">groupedTextSecondary</span> | <span class="prop-name">.MuiButtonGroup-groupedTextSecondary</span> | Styles applied to the children if `variant="text"` and `color="secondary"`.
+| <span class="prop-name">groupedOutlined</span> | <span class="prop-name">.MuiButtonGroup-groupedOutlined</span> | Styles applied to the children if `variant="outlined"`.
+| <span class="prop-name">groupedOutlinedPrimary</span> | <span class="prop-name">.MuiButtonGroup-groupedOutlinedPrimary</span> | Styles applied to the children if `variant="outlined"` and `color="primary"`.
+| <span class="prop-name">groupedOutlinedSecondary</span> | <span class="prop-name">.MuiButtonGroup-groupedOutlinedSecondary</span> | Styles applied to the children if `variant="outlined"` and `color="secondary"`.
+| <span class="prop-name">groupedContained</span> | <span class="prop-name">.MuiButtonGroup-groupedContained</span> | Styles applied to the children if `variant="contained"`.
+| <span class="prop-name">groupedContainedPrimary</span> | <span class="prop-name">.MuiButtonGroup-groupedContainedPrimary</span> | Styles applied to the children if `variant="contained"` and `color="primary"`.
+| <span class="prop-name">groupedContainedSecondary</span> | <span class="prop-name">.MuiButtonGroup-groupedContainedSecondary</span> | Styles applied to the children if `variant="contained"` and `color="secondary"`.
+| <span class="prop-name">disabled</span> | <span class="prop-name">.Mui-disabled</span> | Pseudo-class applied to child elements if `disabled={true}`.
 
 You can override the style of the component thanks to one of these customization points:
 

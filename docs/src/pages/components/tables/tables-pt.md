@@ -47,7 +47,7 @@ A tabela recebeu uma largura fixa para demonstrar a rolagem horizontal. Para imp
 
 ## Tabelas Customizadas
 
-Aqui está um exemplo de customização do componente. Você pode aprender mais sobre isso na [página de documentação de sobrescritas](/customization/components/).
+Aqui esta um exemplo de customização do componente. Você pode aprender mais sobre isso na [página de documentação de sobrescritas](/customization/components/).
 
 {{"demo": "pages/components/tables/CustomizedTables.js"}}
 
@@ -57,7 +57,13 @@ A propriedade `Action` do componente `TablePagination` permite a implementação
 
 {{"demo": "pages/components/tables/CustomPaginationActionsTable.js"}}
 
-## Tabela de abrangência
+## Cabeçalho fixo
+
+Um exemplo de uma tabela com linhas roláveis e cabeçalhos de coluna fixos. Ele aproveita do suporte de `stickyHeader` (⚠️ sem suporte ao IE 11).
+
+{{"demo": "pages/components/tables/StickyHeadTable.js"}}
+
+## Abrangendo Tabela
 
 Um exemplo simples com abrangência de linhas & colunas.
 
@@ -65,13 +71,13 @@ Um exemplo simples com abrangência de linhas & colunas.
 
 ## Tabela Virtualizada
 
-No exemplo a seguir, nós demonstramos como usar [react-virtualized](https://github.com/bvaughn/react-virtualized) com o componente `Table`. São renderizadas 200 linhas e pode facilmente lidar com mais. A virtualização ajuda a lidar com problemas de desempenho.
+No exemplo a seguir, nós demonstramos como usar [react-virtualized](https://github.com/bvaughn/react-virtualized) com o componente `Table`. Ela renderiza 200 linhas e pode facilmente lidar com mais. A virtualização ajuda a lidar com problemas de desempenho.
 
 {{"demo": "pages/components/tables/ReactVirtualizedTable.js"}}
 
 ## Projetos Complementares
 
-Para casos de uso mais avançados, você pode tirar proveito de:
+Para caso de usos mais avançados, você é capaz de aproveitar de:
 
 ### material-table
 
@@ -83,5 +89,16 @@ Para casos de uso mais avançados, você pode tirar proveito de:
 
 ### Outros
 
-- [dx-react-grid-material-ui](https://devexpress.github.io/devextreme-reactive/react/grid/) Uma grade de dados para Material-UI com paginação, ordenação, filtragem, agrupamento e funções de edição ([custom license](https://js.devexpress.com/licensing/)).
-- [mui-datatables](https://github.com/gregnb/mui-datatables) Tabelas de dados responsivas para Material-UI com filtro, ordenação, pesquisa e muito mais.
+- [dx-react-grid-material-ui](https://devexpress.github.io/devextreme-reactive/react/grid/) Uma grade de dados para Material-UI com paginação, ordenação, filtragem, agrupamento e funções de edição.([Com licenciamento de uso pago](https://js.devexpress.com/licensing/)).
+- [mui-datatables](https://github.com/gregnb/mui-datatables): Tabelas de dados responsivas para Material-UI com filtro, ordenação, pesquisa e muito mais.
+- [tubular-react](https://github.com/unosquare/tubular-react): Uma tabela de Material-UI com fonte de dados local ou remota. Com filtragem, classificação, pesquisa de texto livre, exportação para CSV localmente e agregações.
+
+## Acessibilidade
+
+(WAI tutorial: https://www.w3.org/WAI/tutorials/tables/)
+
+### Caption
+
+A caption functions like a heading for a table. Most screen readers announce the content of captions. Captions help users to find a table and understand what it’s about and decide if they want to read it.
+
+{{"demo": "pages/components/tables/AcccessibleTable.js"}}

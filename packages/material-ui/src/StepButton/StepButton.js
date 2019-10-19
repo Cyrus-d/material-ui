@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ButtonBase from '../ButtonBase';
 import StepLabel from '../StepLabel';
-import { isMuiElement } from '../utils/reactHelpers';
+import isMuiElement from '../utils/isMuiElement';
 
 export const styles = {
   /* Styles applied to the root element. */
@@ -19,6 +19,8 @@ export const styles = {
   /* Styles applied to the root element if `orientation="vertical"`. */
   vertical: {
     justifyContent: 'flex-start',
+    padding: '8px',
+    margin: '-8px',
   },
   /* Styles applied to the `ButtonBase` touch-ripple. */
   touchRipple: {

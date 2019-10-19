@@ -5,9 +5,9 @@ components: Hidden
 
 # Hidden
 
-<p class="description">Modifique rapidamente e de forma responsiva a visibilidade dos componentes e muito mais com nosso utilitário hidden.</p>
+<p class="description">Modifique rapidamente e de forma responsiva a visibilidade dos componentes e muito mais com o utilitário hidden.</p>
 
-Todos os elementos são visíveis a menos que **estejam explicitamente ocultos**. Para facilitar a integração com [pontos de quebra (breakpoint) responsivos](/customization/breakpoints/) do Material-UI's, este componente pode ser utilizado, ou você pode usa-lo de forma conjunta com um componente [`Grid`](/components/grid/).
+Todos os elementos são visíveis a menos que **estejam explicitamente ocultos**. Para facilitar a integração com [pontos de quebra responsivos](/customization/breakpoints/) do Material-UI's, este componente pode ser utilizado para ocultar qualquer conteúdo, ou você pode usa-lo de forma conjunta com um componente [`Grid`](/components/grid/).
 
 ## Como funciona
 

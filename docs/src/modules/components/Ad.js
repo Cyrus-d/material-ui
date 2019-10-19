@@ -10,7 +10,7 @@ import AdCarbon from 'docs/src/modules/components/AdCarbon';
 const styles = theme => ({
   root: {
     position: 'relative',
-    minHeight: 116,
+    minHeight: 124,
     maxWidth: 345,
     display: 'block',
     marginTop: theme.spacing(4),
@@ -46,15 +46,13 @@ function getAdblock(classes, t) {
   );
 }
 
-const disable = process.env.NODE_ENV !== 'production';
+const disable = process.env.NODE_ENV !== 'production' && process.env.ENABLE_AD !== 'true';
 
 function Ad(props) {
   const { classes } = props;
   const { current: random } = React.useRef(Math.random());
   const timerAdblock = React.useRef();
-  const { t } = useSelector(state => ({
-    t: state.options.t,
-  }));
+  const t = useSelector(state => state.options.t);
   const [adblock, setAdblock] = React.useState(null);
 
   const checkAdblock = React.useCallback((attempt = 1) => {
@@ -91,7 +89,7 @@ function Ad(props) {
 
   return (
     <span className={classes.root}>
-      {random >= 0.7 ? <AdCodeFund /> : <AdCarbon />}
+      {random >= 0.6 ? <AdCodeFund /> : <AdCarbon />}
       {adblock === true ? getAdblock(classes, t) : null}
     </span>
   );

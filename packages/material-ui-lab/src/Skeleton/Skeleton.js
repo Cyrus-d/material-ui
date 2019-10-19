@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 export const styles = theme => ({
   /* Styles applied to the root element. */
   root: {
+    display: 'block',
     backgroundColor: theme.palette.action.hover,
     height: '1.2em',
   },
@@ -23,9 +24,9 @@ export const styles = theme => ({
   },
   /* Styles applied to the root element if `disabledAnimate={false}`. */
   animate: {
-    animation: '$mui-skeleton 1.5s ease-in-out infinite',
+    animation: '$animate 1.5s ease-in-out infinite',
   },
-  '@keyframes mui-skeleton': {
+  '@keyframes animate': {
     '0%': {
       opacity: 1,
     },

@@ -16,7 +16,7 @@ import Collapse from '@material-ui/core/Collapse';
 import { Collapse } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 The Collapse transition is used by the
 [Vertical Stepper](/components/steppers/#vertical-stepper) StepContent component.
@@ -44,11 +44,11 @@ Any other props supplied will be provided to the root element ([Transition](http
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">container</span> | <span class="prop-name">MuiCollapse-container</span> | Styles applied to the container element.
-| <span class="prop-name">entered</span> | <span class="prop-name">MuiCollapse-entered</span> | Styles applied to the container element when the transition has entered.
-| <span class="prop-name">hidden</span> | <span class="prop-name">MuiCollapse-hidden</span> | Styles applied to the container element when the transition has exited and `collapsedHeight` != 0px.
-| <span class="prop-name">wrapper</span> | <span class="prop-name">MuiCollapse-wrapper</span> | Styles applied to the outer wrapper element.
-| <span class="prop-name">wrapperInner</span> | <span class="prop-name">MuiCollapse-wrapperInner</span> | Styles applied to the inner wrapper element.
+| <span class="prop-name">container</span> | <span class="prop-name">.MuiCollapse-container</span> | Styles applied to the container element.
+| <span class="prop-name">entered</span> | <span class="prop-name">.MuiCollapse-entered</span> | Styles applied to the container element when the transition has entered.
+| <span class="prop-name">hidden</span> | <span class="prop-name">.MuiCollapse-hidden</span> | Styles applied to the container element when the transition has exited and `collapsedHeight` != 0px.
+| <span class="prop-name">wrapper</span> | <span class="prop-name">.MuiCollapse-wrapper</span> | Styles applied to the outer wrapper element.
+| <span class="prop-name">wrapperInner</span> | <span class="prop-name">.MuiCollapse-wrapperInner</span> | Styles applied to the inner wrapper element.
 
 You can override the style of the component thanks to one of these customization points:
 

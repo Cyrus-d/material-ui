@@ -16,7 +16,7 @@ import TextField from '@material-ui/core/TextField';
 import { TextField } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 The `TextField` is a convenience wrapper for the most common cases (80%).
 It cannot be all things to all people, otherwise the API would grow out of control.
@@ -66,7 +66,7 @@ For advanced cases, please look at the source of TextField by clicking on the
 | <span class="prop-name">InputLabelProps</span> | <span class="prop-type">object</span> |  | Props applied to the [`InputLabel`](/api/input-label/) element. |
 | <span class="prop-name">InputProps</span> | <span class="prop-type">object</span> |  | Props applied to the Input element. It will be a [`FilledInput`](/api/filled-input/), [`OutlinedInput`](/api/outlined-input/) or [`Input`](/api/input/) component depending on the `variant` prop value. |
 | <span class="prop-name">inputProps</span> | <span class="prop-type">object</span> |  | [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element. |
-| <span class="prop-name">inputRef</span> | <span class="prop-type">ref</span> |  | This prop can be used to pass a ref to the `input` element. |
+| <span class="prop-name">inputRef</span> | <span class="prop-type">ref</span> |  | Pass a ref to the `input` element. |
 | <span class="prop-name">label</span> | <span class="prop-type">node</span> |  | The label content. |
 | <span class="prop-name">margin</span> | <span class="prop-type">'none'<br>&#124;&nbsp;'dense'<br>&#124;&nbsp;'normal'</span> |  | If `dense` or `normal`, will adjust vertical spacing of this and contained components. |
 | <span class="prop-name">multiline</span> | <span class="prop-type">bool</span> |  | If `true`, a textarea element will be rendered instead of an input. |
@@ -93,7 +93,7 @@ Any other props supplied will be provided to the root element ([FormControl](/ap
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiTextField-root</span> | Styles applied to the root element.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiTextField-root</span> | Styles applied to the root element.
 
 You can override the style of the component thanks to one of these customization points:
 

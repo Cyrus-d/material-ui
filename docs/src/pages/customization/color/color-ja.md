@@ -49,7 +49,7 @@ const color = HUE[SHADE];
 
 {{"demo": "pages/customization/color/ColorTool.js", "hideHeader": true}}
 
-カラーサンプルに示されている出力は、[`createMuiTheme()`](/customization/theming/#createmuitheme-options-theme)関数([`MuiThemeProvider`](/customization/theming/#theme-provider)で使用される) に直接貼り付けることができます。
+The output shown in the color sample can be pasted directly into a [`createMuiTheme()`](/customization/theming/#createmuitheme-options-theme) function (to be used with [`ThemeProvider`](/customization/theming/#theme-provider)):
 
 ```jsx
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -73,7 +73,7 @@ const theme = createMuiTheme({
 
 Material Designチームは素晴らしいパレット設定ツール、[materialio/tools/color](https://material.io/tools/color/)も開発しました。 これにより、UIのカラーパレットを作成したり、任意のカラー組み合わせのアクセシビリティレベルを測定したりできます。
 
-<a href="https://material.io/tools/color/#!/?view.left=0&view.right=0&primary.color=3F51B5&secondary.color=F44336">
+<a href="https://material.io/tools/color/#!/?view.left=0&view.right=0&primary.color=3F51B5&secondary.color=F44336" target="_blank" rel="noopener nofollow">
   <img src="/static/images/color/colorTool.png" alt="公式カラーツール" style="width: 574px" />
 </a>
 
@@ -102,6 +102,6 @@ const theme = createMuiTheme({
 
 ### コミュニティによるツール
 
-- [create-mui-theme](https://react-theming.github.io/create-mui-theme/)はMaterial Design Color Toolを使用してMaterial-UIテーマを作成するためのオンラインツールです。
-- [material-ui-theme-editor](https://in-your-saas.github.io/material-ui-theme-editor/)は、カラーを選択してライブプレビューを表示するだけで、Material-UIアプリケーションのテーマを生成するツールです。
+- [create-mui-theme](https://react-theming.github.io/create-mui-theme/): Is an online tool for creating Material-UI themes via Material Design Color Tool.
+- [material-ui-theme-editor](https://in-your-saas.github.io/material-ui-theme-editor/): A tool to generate themes for your Material-UI applications by just selecting the colors and having a live preview.
 - [マテリアルパレットジェネレータ](https://material.io/inline-tools/color/)　: マテリアルパレットジェネレータを使用して、入力した任意のカラーのパレットを生成できます。

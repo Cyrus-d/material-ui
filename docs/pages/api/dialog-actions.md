@@ -16,7 +16,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import { DialogActions } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -39,8 +39,8 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiDialogActions-root</span> | Styles applied to the root element.
-| <span class="prop-name">spacing</span> | <span class="prop-name">MuiDialogActions-spacing</span> | Styles applied to the root element if `disableSpacing={false}`.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiDialogActions-root</span> | Styles applied to the root element.
+| <span class="prop-name">spacing</span> | <span class="prop-name">.MuiDialogActions-spacing</span> | Styles applied to the root element if `disableSpacing={false}`.
 
 You can override the style of the component thanks to one of these customization points:
 

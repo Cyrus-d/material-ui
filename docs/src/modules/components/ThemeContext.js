@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ThemeProvider as MuiThemeProvider } from '@material-ui/styles';
-import { createMuiTheme, darken } from '@material-ui/core/styles';
+import {
+  ThemeProvider as MuiThemeProvider,
+  createMuiTheme,
+  darken,
+} from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { blue, pink } from '@material-ui/core/colors';
 import { getCookie } from 'docs/src/modules/utils/helpers';
@@ -140,7 +143,7 @@ export function ThemeProvider(props) {
     }
   }, themeInitialOptions);
 
-  const prefersDarkMode = useMediaQuery('@media (prefers-color-scheme: dark)');
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const preferredType = prefersDarkMode ? 'dark' : 'light';
   const { dense, direction, paletteColors, paletteType = preferredType, spacing } = themeOptions;
 

@@ -5,7 +5,7 @@ import { refType } from '@material-ui/utils';
 import { useFormControl } from '../FormControl';
 import withStyles from '../styles/withStyles';
 import Typography from '../Typography';
-import { capitalize } from '../utils/helpers';
+import capitalize from '../utils/capitalize';
 
 export const styles = theme => ({
   /* Styles applied to the root element. */
@@ -134,7 +134,7 @@ FormControlLabel.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * This prop can be used to pass a ref to the `input` element.
+   * Pass a ref to the `input` element.
    */
   inputRef: refType,
   /**

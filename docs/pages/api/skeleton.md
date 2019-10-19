@@ -16,7 +16,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { Skeleton } from '@material-ui/lab';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -42,11 +42,11 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiSkeleton-root</span> | Styles applied to the root element.
-| <span class="prop-name">text</span> | <span class="prop-name">MuiSkeleton-text</span> | Styles applied to the root element if `variant="text"`.
-| <span class="prop-name">rect</span> | <span class="prop-name">MuiSkeleton-rect</span> | Styles applied to the root element if `variant="rect"`.
-| <span class="prop-name">circle</span> | <span class="prop-name">MuiSkeleton-circle</span> | Styles applied to the root element if `variant="circle"`.
-| <span class="prop-name">animate</span> | <span class="prop-name">MuiSkeleton-animate</span> | Styles applied to the root element if `disabledAnimate={false}`.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiSkeleton-root</span> | Styles applied to the root element.
+| <span class="prop-name">text</span> | <span class="prop-name">.MuiSkeleton-text</span> | Styles applied to the root element if `variant="text"`.
+| <span class="prop-name">rect</span> | <span class="prop-name">.MuiSkeleton-rect</span> | Styles applied to the root element if `variant="rect"`.
+| <span class="prop-name">circle</span> | <span class="prop-name">.MuiSkeleton-circle</span> | Styles applied to the root element if `variant="circle"`.
+| <span class="prop-name">animate</span> | <span class="prop-name">.MuiSkeleton-animate</span> | Styles applied to the root element if `disabledAnimate={false}`.
 
 You can override the style of the component thanks to one of these customization points:
 

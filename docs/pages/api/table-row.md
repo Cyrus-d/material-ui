@@ -16,7 +16,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { TableRow } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 Will automatically set dynamic row height
 based on the material table element parent (head, body, etc).
@@ -42,11 +42,11 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiTableRow-root</span> | Styles applied to the root element.
-| <span class="prop-name">selected</span> | <span class="prop-name">Mui-selected</span> | Pseudo-class applied to the root element if `selected={true}`.
-| <span class="prop-name">hover</span> | <span class="prop-name">MuiTableRow-hover</span> | Pseudo-class applied to the root element if `hover={true}`.
-| <span class="prop-name">head</span> | <span class="prop-name">MuiTableRow-head</span> | Styles applied to the root element if table variant="head".
-| <span class="prop-name">footer</span> | <span class="prop-name">MuiTableRow-footer</span> | Styles applied to the root element if table variant="footer".
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiTableRow-root</span> | Styles applied to the root element.
+| <span class="prop-name">selected</span> | <span class="prop-name">.Mui-selected</span> | Pseudo-class applied to the root element if `selected={true}`.
+| <span class="prop-name">hover</span> | <span class="prop-name">.MuiTableRow-hover</span> | Pseudo-class applied to the root element if `hover={true}`.
+| <span class="prop-name">head</span> | <span class="prop-name">.MuiTableRow-head</span> | Styles applied to the root element if table variant="head".
+| <span class="prop-name">footer</span> | <span class="prop-name">.MuiTableRow-footer</span> | Styles applied to the root element if table variant="footer".
 
 You can override the style of the component thanks to one of these customization points:
 

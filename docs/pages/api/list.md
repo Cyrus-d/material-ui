@@ -16,7 +16,7 @@ import List from '@material-ui/core/List';
 import { List } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -42,10 +42,10 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiList-root</span> | Styles applied to the root element.
-| <span class="prop-name">padding</span> | <span class="prop-name">MuiList-padding</span> | Styles applied to the root element if `disablePadding={false}`.
-| <span class="prop-name">dense</span> | <span class="prop-name">MuiList-dense</span> | Styles applied to the root element if dense.
-| <span class="prop-name">subheader</span> | <span class="prop-name">MuiList-subheader</span> | Styles applied to the root element if a `subheader` is provided.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiList-root</span> | Styles applied to the root element.
+| <span class="prop-name">padding</span> | <span class="prop-name">.MuiList-padding</span> | Styles applied to the root element if `disablePadding={false}`.
+| <span class="prop-name">dense</span> | <span class="prop-name">.MuiList-dense</span> | Styles applied to the root element if dense.
+| <span class="prop-name">subheader</span> | <span class="prop-name">.MuiList-subheader</span> | Styles applied to the root element if a `subheader` is provided.
 
 You can override the style of the component thanks to one of these customization points:
 

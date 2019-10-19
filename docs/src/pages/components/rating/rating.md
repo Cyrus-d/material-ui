@@ -7,8 +7,6 @@ components: Rating
 
 <p class="description">Ratings provide insight regarding others’ opinions and experiences with a product. Users can also rate products they’ve purchased.</p>
 
-- 📦 [20 kB gzipped](/size-snapshot) (but only 6 kB without @material-ui/styles).
-
 ## Simple ratings
 
 {{"demo": "pages/components/rating/SimpleRating.js"}}
@@ -42,8 +40,11 @@ Fancy larger or smaller ratings? Use the `size` prop.
 
 ## Accessibility
 
+(WAI tutorial: https://www.w3.org/WAI/tutorials/forms/custom-controls/#a-star-rating)
+
 The accessibility of this component relies on:
 
 - A radio group is used with its fields visually hidden.
 It contains six radio buttons, one for each star and another for 0 stars, which is checked by default. Make sure you are providing a `name` prop that is unique to the parent form.
 - The labels for the radio buttons contain actual text (“1 Star”, “2 Stars”, …), make sure you provide a `getLabelText` prop when the page language is not English.
+

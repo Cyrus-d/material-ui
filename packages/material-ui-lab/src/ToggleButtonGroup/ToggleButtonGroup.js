@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import warning from 'warning';
 import clsx from 'clsx';
 import isValueSelected from './isValueSelected';
 import { withStyles } from '@material-ui/core/styles';
@@ -76,19 +75,22 @@ const ToggleButtonGroup = React.forwardRef(function ToggleButton(props, ref) {
   };
 
   return (
-    <div className={clsx(classes.root, className)} ref={ref} {...other}>
+    <div className={clsx(classes.root, className)} ref={ref} role="group" {...other}>
       {React.Children.map(children, child => {
         if (!React.isValidElement(child)) {
           return null;
         }
 
-        warning(
-          child.type !== React.Fragment,
-          [
-            "Material-UI: the ToggleButtonGroup component doesn't accept a Fragment as a child.",
-            'Consider providing an array instead.',
-          ].join('\n'),
-        );
+        if (process.env.NODE_ENV !== 'production') {
+          if (child.type === React.Fragment) {
+            console.error(
+              [
+                "Material-UI: the ToggleButtonGroup component doesn't accept a Fragment as a child.",
+                'Consider providing an array instead.',
+              ].join('\n'),
+            );
+          }
+        }
 
         const { selected: buttonSelected, value: buttonValue } = child.props;
         const selected =
@@ -112,15 +114,19 @@ const ToggleButtonGroup = React.forwardRef(function ToggleButton(props, ref) {
 });
 
 ToggleButtonGroup.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The content of the button.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -133,7 +139,7 @@ ToggleButtonGroup.propTypes = {
    * Callback fired when the value changes.
    *
    * @param {object} event The event source of the callback.
-   * @param {object} value of the selected buttons. When `exclusive` is true
+   * @param {any} value of the selected buttons. When `exclusive` is true
    * this is a single value; when false an array of selected values. If no value
    * is selected and `exclusive` is true the value is null; when false an empty array.
    */
@@ -141,7 +147,7 @@ ToggleButtonGroup.propTypes = {
   /**
    * The size of the buttons.
    */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   /**
    * The currently selected value within the group or an array of selected
    * values when `exclusive` is false.

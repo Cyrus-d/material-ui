@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { exactProp } from '@material-ui/utils';
-import { setRef, useForkRef } from '../utils/reactHelpers';
+import setRef from '../utils/setRef';
+import useForkRef from '../utils/useForkRef';
 
 function getContainer(container) {
   container = typeof container === 'function' ? container() : container;
@@ -55,6 +56,10 @@ const Portal = React.forwardRef(function Portal(props, ref) {
 });
 
 Portal.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The children to render into the `container`.
    */

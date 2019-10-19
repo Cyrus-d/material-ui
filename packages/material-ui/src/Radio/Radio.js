@@ -5,7 +5,8 @@ import { refType } from '@material-ui/utils';
 import SwitchBase from '../internal/SwitchBase';
 import RadioButtonIcon from './RadioButtonIcon';
 import { fade } from '../styles/colorManipulator';
-import { capitalize, createChainedFunction } from '../utils/helpers';
+import capitalize from '../utils/capitalize';
+import createChainedFunction from '../utils/createChainedFunction';
 import withStyles from '../styles/withStyles';
 import RadioGroupContext from '../RadioGroup/RadioGroupContext';
 
@@ -138,7 +139,7 @@ Radio.propTypes = {
    */
   inputProps: PropTypes.object,
   /**
-   * This prop can be used to pass a ref to the `input` element.
+   * Pass a ref to the `input` element.
    */
   inputRef: refType,
   /**

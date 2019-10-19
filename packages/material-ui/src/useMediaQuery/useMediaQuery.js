@@ -1,5 +1,4 @@
 import React from 'react';
-import warning from 'warning';
 import { getThemeProps, useTheme } from '@material-ui/styles';
 
 // This variable will be true once the server-side hydration is completed.
@@ -13,14 +12,17 @@ function useMediaQuery(queryInput, options = {}) {
     props: {},
   });
 
-  warning(
-    typeof queryInput !== 'function' || theme !== null,
-    [
-      'Material-UI: the `query` argument provided is invalid.',
-      'You are providing a function without a theme in the context.',
-      'One of the parent elements needs to use a ThemeProvider.',
-    ].join('\n'),
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    if (typeof queryInput === 'function' && theme === null) {
+      console.error(
+        [
+          'Material-UI: the `query` argument provided is invalid.',
+          'You are providing a function without a theme in the context.',
+          'One of the parent elements needs to use a ThemeProvider.',
+        ].join('\n'),
+      );
+    }
+  }
 
   let query = typeof queryInput === 'function' ? queryInput(theme) : queryInput;
   query = query.replace(/^@media( ?)/m, '');
@@ -51,6 +53,7 @@ function useMediaQuery(queryInput, options = {}) {
   });
 
   React.useEffect(() => {
+    let active = true;
     hydrationCompleted = true;
 
     if (!supportMatchMedia) {
@@ -59,11 +62,17 @@ function useMediaQuery(queryInput, options = {}) {
 
     const queryList = window.matchMedia(query);
     const updateMatch = () => {
-      setMatch(queryList.matches);
+      // Workaround Safari wrong implementation of matchMedia
+      // TODO can we remove it?
+      // https://github.com/mui-org/material-ui/pull/17315#issuecomment-528286677
+      if (active) {
+        setMatch(queryList.matches);
+      }
     };
     updateMatch();
     queryList.addListener(updateMatch);
     return () => {
+      active = false;
       queryList.removeListener(updateMatch);
     };
   }, [query, supportMatchMedia]);

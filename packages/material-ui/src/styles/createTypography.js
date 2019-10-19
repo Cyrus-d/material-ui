@@ -1,5 +1,4 @@
 import deepmerge from 'deepmerge'; // < 1kb payload overhead when lodash/merge is > 3kb.
-import warning from 'warning';
 
 function round(value) {
   return Math.round(value * 1e5) / 1e5;
@@ -28,17 +27,22 @@ export default function createTypography(palette, typography) {
     htmlFontSize = 16,
     // Apply the CSS properties to all the variants.
     allVariants,
+    pxToRem: pxToRem2,
     ...other
   } = typeof typography === 'function' ? typography(palette) : typography;
 
-  warning(typeof fontSize === 'number', `Material-UI: 'fontSize' is required to be a number.`);
-  warning(
-    typeof htmlFontSize === 'number',
-    `Material-UI: 'htmlFontSize' is required to be a number.`,
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    if (typeof fontSize !== 'number') {
+      console.error(`Material-UI: 'fontSize' is required to be a number.`);
+    }
+
+    if (typeof htmlFontSize !== 'number') {
+      console.error(`Material-UI: 'htmlFontSize' is required to be a number.`);
+    }
+  }
 
   const coef = fontSize / 14;
-  const pxToRem = size => `${(size / htmlFontSize) * coef}rem`;
+  const pxToRem = pxToRem2 || (size => `${(size / htmlFontSize) * coef}rem`);
   const buildVariant = (fontWeight, size, lineHeight, letterSpacing, casing) => ({
     fontFamily,
     fontWeight,
@@ -74,7 +78,7 @@ export default function createTypography(palette, typography) {
     {
       htmlFontSize,
       pxToRem,
-      round,
+      round, // TODO To remove in v5?
       fontFamily,
       fontSize,
       fontWeightLight,

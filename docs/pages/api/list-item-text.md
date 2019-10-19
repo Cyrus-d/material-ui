@@ -16,7 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { ListItemText } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -44,12 +44,12 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiListItemText-root</span> | Styles applied to the root element.
-| <span class="prop-name">multiline</span> | <span class="prop-name">MuiListItemText-multiline</span> | Styles applied to the `Typography` components if primary and secondary are set.
-| <span class="prop-name">dense</span> | <span class="prop-name">MuiListItemText-dense</span> | Styles applied to the `Typography` components if dense.
-| <span class="prop-name">inset</span> | <span class="prop-name">MuiListItemText-inset</span> | Styles applied to the root element if `inset={true}`.
-| <span class="prop-name">primary</span> | <span class="prop-name">MuiListItemText-primary</span> | Styles applied to the primary `Typography` component.
-| <span class="prop-name">secondary</span> | <span class="prop-name">MuiListItemText-secondary</span> | Styles applied to the secondary `Typography` component.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiListItemText-root</span> | Styles applied to the root element.
+| <span class="prop-name">multiline</span> | <span class="prop-name">.MuiListItemText-multiline</span> | Styles applied to the `Typography` components if primary and secondary are set.
+| <span class="prop-name">dense</span> | <span class="prop-name">.MuiListItemText-dense</span> | Styles applied to the `Typography` components if dense.
+| <span class="prop-name">inset</span> | <span class="prop-name">.MuiListItemText-inset</span> | Styles applied to the root element if `inset={true}`.
+| <span class="prop-name">primary</span> | <span class="prop-name">.MuiListItemText-primary</span> | Styles applied to the primary `Typography` component.
+| <span class="prop-name">secondary</span> | <span class="prop-name">.MuiListItemText-secondary</span> | Styles applied to the secondary `Typography` component.
 
 You can override the style of the component thanks to one of these customization points:
 

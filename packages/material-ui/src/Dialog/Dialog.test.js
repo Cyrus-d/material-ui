@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
 import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
-import { cleanup, createClientRender, fireEvent } from 'test/utils/createClientRender';
+import { createClientRender, fireEvent } from 'test/utils/createClientRender';
 import Modal from '../Modal';
 import Dialog from './Dialog';
 
@@ -48,7 +48,6 @@ describe('<Dialog />', () => {
 
   afterEach(() => {
     clock.restore();
-    cleanup();
   });
 
   describeConformance(<Dialog open>foo</Dialog>, () => ({
@@ -80,10 +79,10 @@ describe('<Dialog />', () => {
     const onClose = spy();
     function TestCase() {
       const [open, close] = React.useReducer(() => false, true);
-      function handleClose(...args) {
+      const handleClose = (...args) => {
         close();
         onClose(...args);
-      }
+      };
 
       return (
         <Dialog
@@ -142,11 +141,10 @@ describe('<Dialog />', () => {
   });
 
   describe('backdrop', () => {
-    it('has the document role', () => {
-      // FixMe: should have none. Revisit in React Flare
+    it('does have `role` `none presentation`', () => {
       render(<Dialog open>foo</Dialog>);
 
-      expect(findBackdrop(document.body)).to.have.attribute('role', 'document');
+      expect(findBackdrop(document.body)).to.have.attribute('role', 'none presentation');
     });
 
     it('calls onBackdropClick and onClose when clicked', () => {

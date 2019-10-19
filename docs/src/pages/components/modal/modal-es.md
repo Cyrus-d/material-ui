@@ -16,7 +16,7 @@ The component renders its `children` node in front of a backdrop component. The 
 - ♿️ Adds the appropriate ARIA roles automatically.
 - 📦 [5 kB gzipped](/size-snapshot).
 
-> **Terminology note**. The term "modal" is sometimes used to mean "dialog", but this is a misnomer. A Modal window describes parts of a UI. An element is considered modal if [it blocks interaction with the rest of the application](https://en.wikipedia.org/wiki/Modal_window).
+> **Terminology note**. The term "modal" is sometimes used to mean "dialog", but this is a misnomer. A modal window describes parts of a UI. An element is considered modal if [it blocks interaction with the rest of the application](https://en.wikipedia.org/wiki/Modal_window).
 
 If you are creating a modal dialog, you probably want to use the [Dialog](/components/dialogs/) component rather than directly using Modal. Modal is a lower-level construct that is leveraged by the following components:
 
@@ -48,48 +48,15 @@ Alternatively, you can use [react-spring](https://github.com/react-spring/react-
 
 {{"demo": "pages/components/modal/SpringModal.js"}}
 
-## Rendimiento
+## Server-side modal
 
-The content of the modal is **lazily mounted** into the DOM. It ensures that having many closed modals in your React tree won't slow down your page.
+React [doesn't support](https://github.com/facebook/react/issues/13097) the [`createPortal()`](https://reactjs.org/docs/portals.html) API on the server. In order to display the modal, you need to disable the portal feature with the `disablePortal` prop:
 
-However, creating React elements has a cost too. Consider the following case:
-
-```jsx
-<Modal open={false}>
-  <table>
-    <thead>
-      <tr>
-        <td>Dessert (100g serving)</td>
-        <td>Calories</td>
-        <td>Fat (g)</td>
-      </tr>
-    </thead>
-    <tbody>
-      {rows.map(row => (
-        <tr key={row.id}>
-          <th scope="row">
-            {row.name}
-          </th>
-          <td>{row.calories}</td>
-          <td>{row.fat}</TableCell>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</Modal>
-```
-
-We create a lot of React elements that will never be mounted. It's wasteful 🐢. You can **speed up** the rendering by moving the modal body into its own component.
-
-```jsx
-<Modal open={false}>
-  <TableComponent />
-</Modal>
-```
-
-This way, you take advantage of [React render laziness evaluation](https://overreacted.io/react-as-a-ui-runtime/#lazy-evaluation). The `TableComponent` render method will only be evaluated when opening the modal.
+{{"demo": "pages/components/modal/ServerModal.js"}}
 
 ## Accesibilidad
+
+(WAI-ARIA: https://www.w3.org/TR/wai-aria-practices/#dialog_modal)
 
 - Be sure to add `aria-labelledby="id..."`, referencing the modal title, to the `Modal`. Additionally, you may give a description of your modal with the `aria-describedby="id..."` prop on the `Modal`.
 
@@ -107,10 +74,5 @@ This way, you take advantage of [React render laziness evaluation](https://overr
 </Modal>
 ```
 
-- The [WAI-ARIA Authoring Practices 1.1](https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/dialog.html) can help you set the initial focus on the most relevant element, based on your modal content.
-
-## Server-side modal
-
-React [doesn't support](https://github.com/facebook/react/issues/13097) the [`createPortal()`](https://reactjs.org/docs/portals.html) API on the server. In order to see the modal, you need to disable the portal feature with the `disablePortal` prop:
-
-{{"demo": "pages/components/modal/ServerModal.js"}}
+- The [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/dialog.html) can help you set the initial focus on the most relevant element, based on your modal content.
+- A modal window overlys on either the primary window or another modal window. Windows under a modal are **inert**. That is, users cannot interact with content outside an active modal window.

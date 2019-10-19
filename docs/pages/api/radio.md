@@ -16,7 +16,7 @@ import Radio from '@material-ui/core/Radio';
 import { Radio } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -33,7 +33,7 @@ You can learn more about the difference by [reading our guide](/guides/minimizin
 | <span class="prop-name">icon</span> | <span class="prop-type">node</span> |  | The icon to display when the component is unchecked. |
 | <span class="prop-name">id</span> | <span class="prop-type">string</span> |  | The id of the `input` element. |
 | <span class="prop-name">inputProps</span> | <span class="prop-type">object</span> |  | [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element. |
-| <span class="prop-name">inputRef</span> | <span class="prop-type">ref</span> |  | This prop can be used to pass a ref to the `input` element. |
+| <span class="prop-name">inputRef</span> | <span class="prop-type">ref</span> |  | Pass a ref to the `input` element. |
 | <span class="prop-name">name</span> | <span class="prop-type">string</span> |  | Name attribute of the `input` element. |
 | <span class="prop-name">onChange</span> | <span class="prop-type">func</span> |  | Callback fired when the state is changed.<br><br>**Signature:**<br>`function(event: object) => void`<br>*event:* The event source of the callback. You can pull out the new value by accessing `event.target.value` (string). You can pull out the new checked state by accessing `event.target.checked` (boolean). |
 | <span class="prop-name">required</span> | <span class="prop-type">bool</span> |  | If `true`, the `input` element will be required. |
@@ -51,11 +51,11 @@ Any other props supplied will be provided to the root element ([IconButton](/api
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiRadio-root</span> | Styles applied to the root element.
-| <span class="prop-name">checked</span> | <span class="prop-name">Mui-checked</span> | Pseudo-class applied to the root element if `checked={true}`.
-| <span class="prop-name">disabled</span> | <span class="prop-name">Mui-disabled</span> | Pseudo-class applied to the root element if `disabled={true}`.
-| <span class="prop-name">colorPrimary</span> | <span class="prop-name">MuiRadio-colorPrimary</span> | Styles applied to the root element if `color="primary"`.
-| <span class="prop-name">colorSecondary</span> | <span class="prop-name">MuiRadio-colorSecondary</span> | Styles applied to the root element if `color="secondary"`.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiRadio-root</span> | Styles applied to the root element.
+| <span class="prop-name">checked</span> | <span class="prop-name">.Mui-checked</span> | Pseudo-class applied to the root element if `checked={true}`.
+| <span class="prop-name">disabled</span> | <span class="prop-name">.Mui-disabled</span> | Pseudo-class applied to the root element if `disabled={true}`.
+| <span class="prop-name">colorPrimary</span> | <span class="prop-name">.MuiRadio-colorPrimary</span> | Styles applied to the root element if `color="primary"`.
+| <span class="prop-name">colorSecondary</span> | <span class="prop-name">.MuiRadio-colorSecondary</span> | Styles applied to the root element if `color="secondary"`.
 
 You can override the style of the component thanks to one of these customization points:
 

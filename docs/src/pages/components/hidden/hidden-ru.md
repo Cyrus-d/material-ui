@@ -5,9 +5,9 @@ components: Hidden
 
 # Hidden
 
-<p class="description">Быстро и оперативно переключайте значения видимости компонентов и многое другое с помощью наших утилит для скрытия.</p>
+<p class="description">Быстро и адаптивно изменяйте видимость компонент и многое другое с помощью наших утилит управления видимостью.</p>
 
-Все элементы видны, если **они явно не скрыты**. To ease integration with Material-UI's [responsive breakpoints](/customization/breakpoints/), this component can be used to hide any content, or you can use it in conjunction with our [`Grid`](/components/grid/) component.
+Все элементы видны, если **они явно не скрыты**. Чтобы упростить интеграцию с [ точками остановки](/customization/breakpoints/) Material-UI, этот компонент можно использовать для скрытия любого контента, или использовать его в сочетании с нашим компонентом [`Grid`](/components/grid/).
 
 ## Как это работает
 

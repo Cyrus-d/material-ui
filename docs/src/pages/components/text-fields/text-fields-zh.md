@@ -43,7 +43,7 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 
 ## 自定义输入
 
-Here are some examples of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+以下是自定义组件的一些例子。 您可以在[重写文档页](/customization/components/)中了解有关此内容的更多信息。
 
 {{"demo": "pages/components/text-fields/CustomizedInputs.js"}}
 
@@ -170,6 +170,6 @@ In order for the text field to be accessible, **the input should be linked to th
 
 对于更高级的用例，您可以使用这些：
 
-- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui)：一组用于更加方便地与 Redux Form 配搭来使用 Material UI 的封装组件。
-- [formik-material-ui](https://github.com/stackworx/formik-material-ui)：用 formil 来绑定 Material-UI。
+- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Bindings for using Material-UI with formik.
+- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) A set of wrapper components to facilitate using Material UI with Redux Form.
 - [final-form-material-ui](https://github.com/Deadly0/final-form-material-ui)：一组配合 Final Form 和 Material UI 的封装组件。

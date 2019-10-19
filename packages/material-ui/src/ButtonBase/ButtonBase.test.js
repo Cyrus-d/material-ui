@@ -2,13 +2,12 @@
 import React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import rerender from 'test/utils/rerender';
 import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
 import TouchRipple from './TouchRipple';
 import ButtonBase from './ButtonBase';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
-import { act, cleanup, createClientRender, fireEvent } from 'test/utils/createClientRender';
+import { act, createClientRender, fireEvent } from 'test/utils/createClientRender';
 import * as PropTypes from 'prop-types';
 
 /**
@@ -52,10 +51,6 @@ describe('<ButtonBase />', () => {
     } catch (err) {
       canFireDragEvents = false;
     }
-  });
-
-  after(() => {
-    cleanup();
   });
 
   describeConformance(<ButtonBase />, () => ({
@@ -192,46 +187,38 @@ describe('<ButtonBase />', () => {
 
   describe('ripple', () => {
     describe('interactions', () => {
-      /**
-       * @type {HTMLElement}
-       */
-      let button;
-
-      /**
-       * Each test in here relies on the previous one. Each one has a single
-       * act and a single assertion. The state of the Ripple is tracked by the number of ripples
-       * that are active i.e. not leaving and the number of ripples that are inactive (child-leaving)
-       */
-
-      before(() => {
-        const { getByText } = render(
+      it('should not have a focus ripple by default', () => {
+        const { getByRole } = render(
           <ButtonBase
             TouchRippleProps={{
               classes: {
-                root: 'touch-ripple',
-                ripple: 'ripple',
                 ripplePulsate: 'ripple-pulsate',
-                rippleVisible: 'ripple-visible',
-                child: 'child',
-                childLeaving: 'child-leaving',
               },
             }}
-          >
-            Hello
-          </ButtonBase>,
+          />,
         );
-        button = getByText('Hello');
-
+        const button = getByRole('button');
         simulatePointerDevice();
-      });
 
-      it('should not have a focus ripple by default', () => {
         focusVisible(button);
 
         expect(button.querySelectorAll('.ripple-pulsate')).to.have.lengthOf(0);
       });
 
-      it('should start the ripple when the mouse is pressed 1', () => {
+      it('should start the ripple when the mouse is pressed', () => {
+        const { getByRole } = render(
+          <ButtonBase
+            TouchRippleProps={{
+              classes: {
+                rippleVisible: 'ripple-visible',
+                child: 'child',
+                childLeaving: 'child-leaving',
+              },
+            }}
+          />,
+        );
+        const button = getByRole('button');
+
         fireEvent.mouseDown(button);
 
         expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(0);
@@ -241,6 +228,20 @@ describe('<ButtonBase />', () => {
       });
 
       it('should stop the ripple when the mouse is released', () => {
+        const { getByRole } = render(
+          <ButtonBase
+            TouchRippleProps={{
+              classes: {
+                rippleVisible: 'ripple-visible',
+                child: 'child',
+                childLeaving: 'child-leaving',
+              },
+            }}
+          />,
+        );
+        const button = getByRole('button');
+        fireEvent.mouseDown(button);
+
         fireEvent.mouseUp(button);
 
         expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(1);
@@ -250,6 +251,21 @@ describe('<ButtonBase />', () => {
       });
 
       it('should start the ripple when the mouse is pressed 2', () => {
+        const { getByRole } = render(
+          <ButtonBase
+            TouchRippleProps={{
+              classes: {
+                rippleVisible: 'ripple-visible',
+                child: 'child',
+                childLeaving: 'child-leaving',
+              },
+            }}
+          />,
+        );
+        const button = getByRole('button');
+        fireEvent.mouseDown(button);
+        fireEvent.mouseUp(button);
+
         fireEvent.mouseDown(button);
 
         expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(1);
@@ -259,48 +275,102 @@ describe('<ButtonBase />', () => {
       });
 
       it('should stop the ripple when the button blurs', () => {
-        button.blur();
-
-        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(2);
-        expect(
-          button.querySelectorAll('.ripple-visible .child:not(.child-leaving)'),
-        ).to.have.lengthOf(0);
-      });
-
-      it('should start the ripple when the mouse is pressed 3', () => {
+        const { getByRole } = render(
+          <ButtonBase
+            TouchRippleProps={{
+              classes: {
+                rippleVisible: 'ripple-visible',
+                child: 'child',
+                childLeaving: 'child-leaving',
+              },
+            }}
+          />,
+        );
+        const button = getByRole('button');
         fireEvent.mouseDown(button);
 
-        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(2);
+        button.blur();
+
+        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(0);
+        expect(
+          button.querySelectorAll('.ripple-visible .child:not(.child-leaving)'),
+        ).to.have.lengthOf(1);
+      });
+
+      it('should restart the ripple when the mouse is pressed again', () => {
+        const { getByRole } = render(
+          <ButtonBase
+            TouchRippleProps={{
+              classes: {
+                rippleVisible: 'ripple-visible',
+                child: 'child',
+                childLeaving: 'child-leaving',
+              },
+            }}
+          />,
+        );
+        const button = getByRole('button');
+
+        fireEvent.mouseDown(button);
+
+        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(0);
+        expect(
+          button.querySelectorAll('.ripple-visible .child:not(.child-leaving)'),
+        ).to.have.lengthOf(1);
+
+        fireEvent.mouseUp(button);
+        fireEvent.mouseDown(button);
+
+        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(1);
         expect(
           button.querySelectorAll('.ripple-visible .child:not(.child-leaving)'),
         ).to.have.lengthOf(1);
       });
 
       it('should stop the ripple when the mouse leaves', () => {
+        const { getByRole } = render(
+          <ButtonBase
+            TouchRippleProps={{
+              classes: {
+                rippleVisible: 'ripple-visible',
+                child: 'child',
+                childLeaving: 'child-leaving',
+              },
+            }}
+          />,
+        );
+        const button = getByRole('button');
+        fireEvent.mouseDown(button);
+
         fireEvent.mouseLeave(button);
 
-        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(3);
+        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(1);
         expect(
           button.querySelectorAll('.ripple-visible .child:not(.child-leaving)'),
         ).to.have.lengthOf(0);
-      });
-
-      it('should start the ripple when the mouse is pressed 4', () => {
-        fireEvent.mouseDown(button);
-
-        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(3);
-        expect(
-          button.querySelectorAll('.ripple-visible .child:not(.child-leaving)'),
-        ).to.have.lengthOf(1);
       });
 
       it('should stop the ripple when dragging has finished', function test() {
         if (!canFireDragEvents) {
           this.skip();
         }
+        const { getByRole } = render(
+          <ButtonBase
+            TouchRippleProps={{
+              classes: {
+                rippleVisible: 'ripple-visible',
+                child: 'child',
+                childLeaving: 'child-leaving',
+              },
+            }}
+          />,
+        );
+        const button = getByRole('button');
+        fireEvent.mouseDown(button);
+
         fireEvent.dragLeave(button);
 
-        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(4);
+        expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(1);
         expect(
           button.querySelectorAll('.ripple-visible .child:not(.child-leaving)'),
         ).to.have.lengthOf(0);
@@ -321,55 +391,93 @@ describe('<ButtonBase />', () => {
   });
 
   describe('focusRipple', () => {
-    /**
-     * @type {HTMLElement}
-     */
-    let button;
-
-    before(() => {
-      const { getByText } = render(
-        <ButtonBase
-          focusRipple
-          focusVisibleClassName="focus-visible"
-          TouchRippleProps={{
-            classes: {
-              root: 'touch-ripple',
-              ripple: 'ripple',
-              ripplePulsate: 'ripple-pulsate',
-              rippleVisible: 'ripple-visible',
-              childLeaving: 'child-leaving',
-            },
-          }}
-        >
-          Hello
-        </ButtonBase>,
-      );
-
-      button = getByText('Hello');
-
-      simulatePointerDevice();
+    before(function beforeHook() {
+      if (/Version\/10\.\d+\.\d+ Safari/.test(window.navigator.userAgent)) {
+        // browserstack quirk
+        this.skip();
+      }
     });
 
     it('should pulsate the ripple when focusVisible', () => {
+      const { getByRole } = render(
+        <ButtonBase
+          focusRipple
+          TouchRippleProps={{
+            classes: {
+              ripplePulsate: 'ripple-pulsate',
+            },
+          }}
+        />,
+      );
+      const button = getByRole('button');
+
+      simulatePointerDevice();
       focusVisible(button);
 
       expect(button.querySelectorAll('.ripple-pulsate')).to.have.lengthOf(1);
     });
 
     it('should not stop the ripple when the mouse leaves', () => {
+      const { getByRole } = render(
+        <ButtonBase
+          focusRipple
+          TouchRippleProps={{
+            classes: {
+              ripplePulsate: 'ripple-pulsate',
+            },
+          }}
+        />,
+      );
+      const button = getByRole('button');
+
+      simulatePointerDevice();
+      focusVisible(button);
       fireEvent.mouseLeave(button);
 
       expect(button.querySelectorAll('.ripple-pulsate')).to.have.lengthOf(1);
     });
 
     it('should stop pulsate and start a ripple when the space button is pressed', () => {
+      const { getByRole } = render(
+        <ButtonBase
+          focusRipple
+          TouchRippleProps={{
+            classes: {
+              childLeaving: 'child-leaving',
+              ripplePulsate: 'ripple-pulsate',
+              rippleVisible: 'rippled-visible',
+            },
+          }}
+        />,
+      );
+      const button = getByRole('button');
+
+      simulatePointerDevice();
+      focusVisible(button);
       fireEvent.keyDown(button, { key: ' ' });
 
       expect(button.querySelectorAll('.ripple-pulsate .child-leaving')).to.have.lengthOf(1);
-      expect(button.querySelectorAll('.ripple-visible')).to.have.lengthOf(2);
+      expect(button.querySelectorAll('.ripple-visible')).to.have.lengthOf(0);
     });
 
     it('should stop and re-pulsate when space bar is released', () => {
+      const { getByRole } = render(
+        <ButtonBase
+          focusRipple
+          TouchRippleProps={{
+            classes: {
+              childLeaving: 'child-leaving',
+              ripplePulsate: 'ripple-pulsate',
+              rippleVisible: 'ripple-visible',
+            },
+          }}
+        />,
+      );
+      const button = getByRole('button');
+
+      simulatePointerDevice();
+      focusVisible(button);
+      fireEvent.keyDown(button, { key: ' ' });
       fireEvent.keyUp(button, { key: ' ' });
 
       expect(button.querySelectorAll('.ripple-pulsate .child-leaving')).to.have.lengthOf(1);
@@ -378,12 +486,26 @@ describe('<ButtonBase />', () => {
     });
 
     it('should stop on blur and set focusVisible to false', () => {
-      expect(button).to.match('.focus-visible');
+      const { getByRole } = render(
+        <ButtonBase
+          focusRipple
+          TouchRippleProps={{
+            classes: {
+              childLeaving: 'child-leaving',
+              rippleVisible: 'ripple-visible',
+            },
+          }}
+        />,
+      );
+      const button = getByRole('button');
+      simulatePointerDevice();
+      focusVisible(button);
+
       act(() => {
         button.blur();
       });
 
-      expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(3);
+      expect(button.querySelectorAll('.ripple-visible .child-leaving')).to.have.lengthOf(1);
     });
   });
 
@@ -631,25 +753,6 @@ describe('<ButtonBase />', () => {
       buttonActionsRef.current.focusVisible();
       expect(getByText('Hello')).to.be.focused;
       expect(getByText('Hello')).to.match('.focusVisible');
-    });
-  });
-
-  describe('rerender', () => {
-    beforeEach(() => {
-      rerender.spy();
-    });
-
-    afterEach(() => {
-      rerender.reset();
-    });
-
-    it('should not rerender the TouchRipple', () => {
-      const wrapper = render(<ButtonBase>foo</ButtonBase>);
-      wrapper.setProps({
-        children: 'bar',
-      });
-
-      expect(rerender.updates.filter(update => update.displayName !== 'NoSsr')).to.have.lengthOf(1);
     });
   });
 

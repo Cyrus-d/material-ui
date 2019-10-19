@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import debounce from '../utils/debounce';
-import { useForkRef } from '../utils/reactHelpers';
+import useForkRef from '../utils/useForkRef';
 
 function getStyleValue(computedStyle, property) {
   return parseInt(computedStyle[property], 10) || 0;
@@ -21,6 +21,8 @@ const styles = {
     height: 0,
     top: 0,
     left: 0,
+    // Create a new layer, increase the isolation of the computed values
+    transform: 'translateZ(0)',
   },
 };
 
@@ -68,24 +70,25 @@ const TextareaAutosize = React.forwardRef(function TextareaAutosize(props, ref) 
 
     // Take the box sizing into account for applying this value as a style.
     const outerHeightStyle = outerHeight + (boxSizing === 'border-box' ? padding + border : 0);
+    const overflow = Math.abs(outerHeight - innerHeight) <= 1;
 
     setState(prevState => {
       // Need a large enough different to update the height.
       // This prevents infinite rendering loop.
       if (
-        outerHeightStyle > 0 &&
-        Math.abs((prevState.outerHeightStyle || 0) - outerHeightStyle) > 1
+        (outerHeightStyle > 0 &&
+          Math.abs((prevState.outerHeightStyle || 0) - outerHeightStyle) > 1) ||
+        prevState.overflow !== overflow
       ) {
         return {
-          innerHeight,
-          outerHeight,
+          overflow,
           outerHeightStyle,
         };
       }
 
       return prevState;
     });
-  }, [setState, rows, rowsMax, props.placeholder]);
+  }, [rows, rowsMax, props.placeholder]);
 
   React.useEffect(() => {
     const handleResize = debounce(() => {
@@ -125,7 +128,7 @@ const TextareaAutosize = React.forwardRef(function TextareaAutosize(props, ref) 
           height: state.outerHeightStyle,
           // Need a large enough different to allow scrolling.
           // This prevents infinite rendering loop.
-          overflow: Math.abs(state.outerHeight - state.innerHeight) <= 1 ? 'hidden' : null,
+          overflow: state.overflow ? 'hidden' : null,
           ...style,
         }}
         {...other}

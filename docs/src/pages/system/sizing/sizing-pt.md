@@ -1,6 +1,6 @@
 # Dimensionando
 
-<p class="description">Facilmente faça um elemento tão largo ou tão alto (relativo a seu pai) com nossos utilitários de largura e altura.</p>
+<p class="description">Facilmente faça um elemento tão largo ou tão alto (relativo a seu pai) com os utilitários de largura e altura.</p>
 
 ## Valores suportados
 

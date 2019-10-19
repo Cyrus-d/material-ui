@@ -9,12 +9,12 @@ components: MobileStepper, Step, StepButton, StepConnector, StepContent, StepIco
 
 [Assistentes](https://material.io/archive/guidelines/components/steppers.html) exibem o progresso através de uma sequência de etapas lógicas e numeradas. Elas também podem ser usadas para navegação. Assistentes podem exibir uma mensagem de feedback transiente depois que uma etapa é salva.
 
-- **Types of Steps**: Editable, Non-editable, Mobile, Optional
-- **Types of Steppers**: Horizontal, Vertical, Linear, Non-linear
+- **Tipos de etapas**: Editável, Somente leitura, Mobile, Opcional
+- **Tipos de assistentes**: Horizontal, Vertical, Linear, Não linear
 
 > **Nota:** Os assistentes não estão mais documentados nas [diretrizes do Material Design](https://material.io/), mas o Material-UI continuará a suportá-los.
 
-## Horizontal Stepper
+## Assistente horizontal
 
 ### Linear
 
@@ -24,15 +24,15 @@ Este exemplo também mostra o uso de uma etapa opcional, colocando a propriedade
 
 {{"demo": "pages/components/steppers/HorizontalLinearStepper.js"}}
 
-### Linear - Alternative Label
+### Linear - Rótulo Alternativo
 
-Labels can be placed below the step icon by setting the `alternativeLabel` prop on the `Stepper` component.
+Os rótulos podem ser colocados abaixo do ícone da etapa, definindo a propriedade `alternativeLabel` no componente `Stepper`.
 
 {{"demo": "pages/components/steppers/HorizontalLinearAlternativeLabelStepper.js"}}
 
 ### Assistente customizado
 
-Aqui está um exemplo de customização do componente. Você pode aprender mais sobre isso na [página de documentação de sobrescritas](/customization/components/).
+Aqui esta um exemplo de customização do componente. Você pode aprender mais sobre isso na [página de documentação de sobrescritas](/customization/components/).
 
 {{"demo": "pages/components/steppers/CustomizedSteppers.js"}}
 
@@ -42,17 +42,17 @@ Os assistentes não lineares permitem que os usuários insiram um fluxo de vári
 
 Este exemplo é semelhante ao não linear, porém as etapas não são mais automaticamente definidas `disabled={true}` com base na propriedade `activeStep`.
 
-Nós usamos um `StepButton` aqui para demonstrar rótulos de etapa clicáveis, bem como definindo o flag `completed`, porque etapas podem ser acessadas de forma não-linear, e pode até implementar sua própria lógica para determinar quando todas as etapas forem concluídas (ou mesmo se elas precisam ser completadas).
+O uso do `StepButton` aqui, demonstra rótulos de etapas clicáveis, além de definir a propriedade sinalizadora `completed`. No entanto, como as etapas podem ser acessadas de maneira não linear, cabe a sua própria implementação determinar quando todas as etapas são concluídas (ou mesmo se precisam ser concluídas).
 
 {{"demo": "pages/components/steppers/HorizontalNonLinearStepper.js"}}
 
-### Non Linear - Alternative Label
+### Não Linear - Rótulo Alternativo
 
-Labels can be placed below the step icon by setting the `alternativeLabel` prop on the `Stepper` component.
+Os rótulos podem ser colocados abaixo do ícone da etapa, definindo a propriedade `alternativeLabel` no componente `Stepper`.
 
 {{"demo": "pages/components/steppers/HorizontalNonLinearAlternativeLabelStepper.js"}}
 
-### Non Linear - Error Step
+### Não Linear - Etapa de Erro
 
 {{"demo": "pages/components/steppers/HorizontalNonLinearStepperWithError.js"}}
 
@@ -64,19 +64,19 @@ Labels can be placed below the step icon by setting the `alternativeLabel` prop 
 
 Este componente implementa um assistente compacto adequado para um dispositivo mobile. Veja [mobile steps](https://material.io/archive/guidelines/components/steppers.html#steppers-types-of-steps) para essa inspiração.
 
-### Text
+### Texto
 
 Este é essencialmente um botão de voltar/próximo posicionado corretamente. Você deve implementar a descrição textual por conta própria, no entanto, um exemplo é fornecido abaixo para referência.
 
 {{"demo": "pages/components/steppers/TextMobileStepper.js"}}
 
-### Text with Carousel effect
+### Texto com efeito carrossel
 
 Esta demonstração é muito similiar a anterior, a diferença é o uso de [react-swipeable-views](https://github.com/oliviertassinari/react-swipeable-views) para fazer a transição de etapas.
 
 {{"demo": "pages/components/steppers/SwipeableTextMobileStepper.js"}}
 
-### Dots
+### Pontos
 
 Use pontos quando o número de etapas não for grande.
 

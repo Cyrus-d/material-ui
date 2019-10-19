@@ -16,7 +16,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { Toolbar } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -41,10 +41,10 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiToolbar-root</span> | Styles applied to the root element.
-| <span class="prop-name">gutters</span> | <span class="prop-name">MuiToolbar-gutters</span> | Styles applied to the root element if `disableGutters={false}`.
-| <span class="prop-name">regular</span> | <span class="prop-name">MuiToolbar-regular</span> | Styles applied to the root element if `variant="regular"`.
-| <span class="prop-name">dense</span> | <span class="prop-name">MuiToolbar-dense</span> | Styles applied to the root element if `variant="dense"`.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiToolbar-root</span> | Styles applied to the root element.
+| <span class="prop-name">gutters</span> | <span class="prop-name">.MuiToolbar-gutters</span> | Styles applied to the root element if `disableGutters={false}`.
+| <span class="prop-name">regular</span> | <span class="prop-name">.MuiToolbar-regular</span> | Styles applied to the root element if `variant="regular"`.
+| <span class="prop-name">dense</span> | <span class="prop-name">.MuiToolbar-dense</span> | Styles applied to the root element if `variant="dense"`.
 
 You can override the style of the component thanks to one of these customization points:
 

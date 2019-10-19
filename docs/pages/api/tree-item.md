@@ -16,7 +16,7 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import { TreeItem } from '@material-ui/lab';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -45,12 +45,12 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiTreeItem-root</span> | Styles applied to the root element.
-| <span class="prop-name">expanded</span> | <span class="prop-name">Mui-expanded</span> | Pseudo-class applied to the root element when expanded.
-| <span class="prop-name">group</span> | <span class="prop-name">MuiTreeItem-group</span> | Styles applied to the `role="group"` element.
-| <span class="prop-name">content</span> | <span class="prop-name">MuiTreeItem-content</span> | Styles applied to the tree node content.
-| <span class="prop-name">iconContainer</span> | <span class="prop-name">MuiTreeItem-iconContainer</span> | Styles applied to the tree node icon and collapse/expand icon.
-| <span class="prop-name">label</span> | <span class="prop-name">MuiTreeItem-label</span> | Styles applied to the label element.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiTreeItem-root</span> | Styles applied to the root element.
+| <span class="prop-name">expanded</span> | <span class="prop-name">.Mui-expanded</span> | Pseudo-class applied to the root element when expanded.
+| <span class="prop-name">group</span> | <span class="prop-name">.MuiTreeItem-group</span> | Styles applied to the `role="group"` element.
+| <span class="prop-name">content</span> | <span class="prop-name">.MuiTreeItem-content</span> | Styles applied to the tree node content.
+| <span class="prop-name">iconContainer</span> | <span class="prop-name">.MuiTreeItem-iconContainer</span> | Styles applied to the tree node icon and collapse/expand icon.
+| <span class="prop-name">label</span> | <span class="prop-name">.MuiTreeItem-label</span> | Styles applied to the label element.
 
 You can override the style of the component thanks to one of these customization points:
 

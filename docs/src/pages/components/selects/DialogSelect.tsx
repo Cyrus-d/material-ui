@@ -34,16 +34,16 @@ export default function DialogSelect() {
   const handleChange = (name: keyof typeof state) => (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
-    setState({ ...state, [name]: Number(event.target.value) });
+    setState({ ...state, [name]: Number(event.target.value) || '' });
   };
 
-  function handleClickOpen() {
+  const handleClickOpen = () => {
     setState({ ...state, open: true });
-  }
+  };
 
-  function handleClose() {
+  const handleClose = () => {
     setState({ ...state, open: false });
-  }
+  };
 
   return (
     <div>

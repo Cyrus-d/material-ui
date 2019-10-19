@@ -1,27 +1,27 @@
 # API
 
-<p class="description">The API reference of the @material-ui/styles package.</p>
+<p class="description">The API reference of @material-ui/core/styles.</p>
 
 ## `createGenerateClassName([options]) => class name generator`
 
-A function which returns [a class name generator function](https://cssinjs.org/jss-api/#generate-your-class-names).
+[クラス名ジェネレーター関数を返す関数](https://cssinjs.org/jss-api/#generate-your-class-names) 。
 
 #### 引数
 
 1. `オプション` (*オプジェクト* [任意]): 
-  - `options.disableGlobal` (*ブール値* [任意]): デフォルト値 `false`. Disable the generation of deterministic class names.
-  - `options.productionPrefix` (*String* [optional]): Defaults to `'jss'`. The string used to prefix the class names in production.
-  - `options.seed` (*String* [optional]): Defaults to `''`. The string used to uniquely identify the generator. It can be used to avoid class name collisions when using multiple generators in the same document.
+  - `options.disableGlobal` (*Boolean* [optional]): Defaults `false`. 確定的なクラス名の生成を無効にします。
+  - `options.productionPrefix` (*String* [optional]): Defaults to `'jss'`. プロダクションでクラス名のプレフィックスに使用される文字列。
+  - `options.seed` (*String* [optional]): Defaults to `''`. ジェネレータを一意に識別するために使用される文字列。 同じドキュメントで複数のジェネレーターを使用する場合、クラス名の衝突を避けるために使用できます。
 
 #### 戻り値
 
-`class name generator`: The generator should be provided to JSS.
+`class name generator` ：ジェネレーターをJSSに提供する必要があります。
 
 #### 例
 
 ```jsx
 import React from 'react';
-import { StylesProvider, createGenerateClassName } from '@material-ui/styles';
+import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles';
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'c',
@@ -49,7 +49,7 @@ This function doesn't really "do anything" at runtime, it's just the identity fu
 #### 例
 
 ```jsx
-import { makeStyles, createStyles } from '@material-ui/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -86,7 +86,7 @@ Link a style sheet with a function component using the **hook** pattern.
 
 ```jsx
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   root: {
@@ -103,11 +103,11 @@ export default function MyComponent(props) {
 
 ## `ServerStyleSheets`
 
-This is a class helper to handle server-side rendering. [You can follow our guide for a practical approach](/guides/server-rendering/).
+This is a class helper to handle server-side rendering. [You can follow this guide for a practical approach](/guides/server-rendering/).
 
 ```jsx
 import ReactDOMServer from 'react-dom/server';
-import { ServerStyleSheets } from '@material-ui/styles';
+import { ServerStyleSheets } from '@material-ui/core/styles';
 
 const sheets = new ServerStyleSheets();
 const html = ReactDOMServer.renderToString(sheets.collect(<App />));
@@ -140,7 +140,8 @@ The method returns the collected styles.
 
 ⚠️ You must call `.collect()` before using this method.
 
-### `sheets.getStyleElement() => CSS React element`
+### `
+sheets.getStyleElement() => CSS React element`
 
 The method is an alternative to `.toString()` when you are rendering the whole page with React.
 
@@ -163,13 +164,13 @@ Link a style sheet with a function component using the **styled components** pat
 
 #### 戻り値
 
-`Component`: The new component created.
+`Component` ：作成された新しいコンポーネント。
 
 #### 例
 
 ```jsx
 import React from 'react';
-import { styled } from '@material-ui/styles';
+import { styled } from '@material-ui/core/styles';
 
 const MyComponent = styled('div')({
   backgroundColor: 'red',
@@ -225,7 +226,7 @@ It should preferably be used at **the root of your component tree**.
   
   <pre><code class="jsx">import React from 'react';
 import ReactDOM from 'react-dom';
-import { StylesProvider } from '@material-ui/styles';
+import { StylesProvider } from '@material-ui/core/styles';
 
 function App() {
   return (
@@ -310,7 +311,7 @@ ReactDOM.render(&lt;App /&gt;, document.querySelector('#app'));
   
   <pre><code class="jsx">import React from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 const theme = {};
 
@@ -336,7 +337,7 @@ ReactDOM.render(&lt;App /&gt;, document.querySelector('#app'));
   </h4>
   
   <p>
-    <code>theme</code>: The theme object previously injected in the context.
+    <code>theme</code>：以前にコンテキストに挿入されたテーマオブジェクト。
   </p>
   
   <h4>
@@ -344,7 +345,7 @@ ReactDOM.render(&lt;App /&gt;, document.querySelector('#app'));
   </h4>
   
   <pre><code class="jsx">import React from 'react';
-import { useTheme } from '@material-ui/styles';
+import { useTheme } from '@material-ui/core/styles';
 
 export default function MyComponent() {
   const theme = useTheme();
@@ -423,7 +424,7 @@ export default function MyComponent() {
   </h4>
   
   <pre><code class="jsx">import React from 'react';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
   root: {
@@ -439,11 +440,11 @@ export default withStyles(styles)(MyComponent);
 </code></pre>
   
   <p>
-    Also, you can use as <a href="https://babeljs.io/docs/en/babel-plugin-proposal-decorators">decorators</a> like so:
+    また、<a href="https://babeljs.io/docs/en/babel-plugin-proposal-decorators">デコレータ</a>などとしてしても使用できます。
   </p>
   
   <pre><code class="jsx">import React from 'react';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
   root: {
@@ -475,7 +476,7 @@ export default MyComponent
   
   <ol start="1" spaces="0" level="0">
     <li level="0">
-      <code>Component</code>: The component that will be wrapped.
+      <code>Component</code>:：ラップされるコンポーネント。
     </li>
   </ol>
   
@@ -484,7 +485,7 @@ export default MyComponent
   </h4>
   
   <p>
-    <code>Component</code>: The new component created. Does forward refs to the inner component.
+    <code>Component</code> ：作成された新しいコンポーネント。 内部コンポーネントへの参照を転送します。
   </p>
   
   <h4>
@@ -492,7 +493,7 @@ export default MyComponent
   </h4>
   
   <pre><code class="jsx">import React from 'react';
-import { withTheme } from '@material-ui/styles';
+import { withTheme } from '@material-ui/core/styles';
 
 function MyComponent(props) {
   return &lt;div&gt;{props.theme.direction}&lt;/div&gt;;

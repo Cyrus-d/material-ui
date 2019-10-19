@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import warning from 'warning';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { refType } from '@material-ui/utils';
@@ -102,10 +101,13 @@ const TextField = React.forwardRef(function TextField(props, ref) {
     }
   }, [variant, required, label]);
 
-  warning(
-    !select || Boolean(children),
-    'Material-UI: `children` must be passed when using the `TextField` component with `select`.',
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    if (select && !children) {
+      console.error(
+        'Material-UI: `children` must be passed when using the `TextField` component with `select`.',
+      );
+    }
+  }
 
   const InputMore = {};
 
@@ -249,7 +251,7 @@ TextField.propTypes = {
    */
   inputProps: PropTypes.object,
   /**
-   * This prop can be used to pass a ref to the `input` element.
+   * Pass a ref to the `input` element.
    */
   inputRef: refType,
   /**

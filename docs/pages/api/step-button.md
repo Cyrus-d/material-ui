@@ -16,7 +16,7 @@ import StepButton from '@material-ui/core/StepButton';
 import { StepButton } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -40,10 +40,10 @@ Any other props supplied will be provided to the root element ([ButtonBase](/api
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiStepButton-root</span> | Styles applied to the root element.
-| <span class="prop-name">horizontal</span> | <span class="prop-name">MuiStepButton-horizontal</span> | Styles applied to the root element if `orientation="horizontal"`.
-| <span class="prop-name">vertical</span> | <span class="prop-name">MuiStepButton-vertical</span> | Styles applied to the root element if `orientation="vertical"`.
-| <span class="prop-name">touchRipple</span> | <span class="prop-name">MuiStepButton-touchRipple</span> | Styles applied to the `ButtonBase` touch-ripple.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiStepButton-root</span> | Styles applied to the root element.
+| <span class="prop-name">horizontal</span> | <span class="prop-name">.MuiStepButton-horizontal</span> | Styles applied to the root element if `orientation="horizontal"`.
+| <span class="prop-name">vertical</span> | <span class="prop-name">.MuiStepButton-vertical</span> | Styles applied to the root element if `orientation="vertical"`.
+| <span class="prop-name">touchRipple</span> | <span class="prop-name">.MuiStepButton-touchRipple</span> | Styles applied to the `ButtonBase` touch-ripple.
 
 You can override the style of the component thanks to one of these customization points:
 

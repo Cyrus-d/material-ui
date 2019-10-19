@@ -11,53 +11,53 @@ components: AppBar, Toolbar, Menu
 
 状況に応じて変化するアクションバーや、ナビゲーションバーとして使用することができます。
 
-## Simple App Bar
+## シンプルなアプリバー
 
 {{"demo": "pages/components/app-bar/ButtonAppBar.js"}}
 
-## App Bar with a primary search field
+## 基本的な検索フィールド付きApp Bar
 
-A primary searchbar.
+基本的な検索バー
 
 {{"demo": "pages/components/app-bar/PrimarySearchAppBar.js"}}
 
-## App Bar with menu
+## メニュー付き App Bar
 
 {{"demo": "pages/components/app-bar/MenuAppBar.js"}}
 
-## App Bar with search field
+## 検索フィールド付きApp Bar
 
-A side searchbar.
+サイド検索バー
 
 {{"demo": "pages/components/app-bar/SearchAppBar.js"}}
 
-## Dense (desktop only)
+## Dense App Bar (デスクトップのみ)
 
 {{"demo": "pages/components/app-bar/DenseAppBar.js"}}
 
-## Bottom App Bar
+## 下部アプリバー
 
 {{"demo": "pages/components/app-bar/BottomAppBar.js", "iframe": true, "maxWidth": 500}}
 
-## Scrolling
+## スクロール
 
-You can use the `useScrollTrigger()` hook to respond to user scroll actions.
+`useScrollTrigger()` hookを使用して、ユーザーのスクロールアクションに 対応できます。
 
 ### App Barを隠す
 
-The app bar hides on scroll down to leave more space for reading.
+アプリバーは下にスクロールすると非表示になり、読み込めるスペースが増えます。
 
 {{"demo": "pages/components/app-bar/HideAppBar.js", "iframe": true, "maxWidth": 500}}
 
 ### App Barを固定する
 
-The app bar elevates on scroll to communicate that the user is not at the top of the page.
+アプリバーはスクロール時に上昇し、ユーザーがページの上部にいないことを伝えます。
 
 {{"demo": "pages/components/app-bar/ElevateAppBar.js", "iframe": true, "maxWidth": 500}}
 
-### Back to top
+### トップへ戻る
 
-A floating action buttons appears on scroll to make it easy to get back to the top of the page.
+スクロール時にフローティングアクションボタンが表示され、ページの上部に簡単に戻ることができます。
 
 {{"demo": "pages/components/app-bar/BackToTop.js", "iframe": true, "maxWidth": 500}}
 
@@ -73,7 +73,7 @@ A floating action buttons appears on scroll to make it easy to get back to the t
 
 #### 戻り値
 
-`trigger`: Does the scroll position match the criteria?
+` trigger `：スクロール位置が基準に合っているのか
 
 #### 例
 

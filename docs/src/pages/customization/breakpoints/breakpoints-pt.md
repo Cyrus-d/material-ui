@@ -27,7 +27,7 @@ Os pontos de quebra são usados internamente em vários componentes para torná-
 
 ## Consultas de Mídia CSS
 
-Consultas de mídia CSS é a abordagem idiomática para tornar sua interface de usuário responsiva. Nós fornecemos quatro ajudantes de estilos para fazer isso:
+Consultas de mídia CSS são a abordagem idiomática para tornar sua interface de usuário responsiva. O tema fornece quatro estilos auxiliares para fazer isso:
 
 - [theme.breakpoints.up(key)](#theme-breakpoints-up-key-media-query)
 - [theme.breakpoints.down(key)](#theme-breakpoints-down-key-media-query)
@@ -239,3 +239,7 @@ function MyComponent(props) {
 
 export default withWidth()(MyComponent);
 ```
+
+## Valores padrão
+
+Você pode explorar os valores padrão dos pontos de quebra usando [o explorador de tema](/customization/default-theme/?expend-path=$.breakpoints) ou abrindo o console das ferramentas de desenvolvimento nesta página (`window.theme.breakpoints`).

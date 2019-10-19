@@ -16,7 +16,7 @@ import Divider from '@material-ui/core/Divider';
 import { Divider } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -42,12 +42,12 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiDivider-root</span> | Styles applied to the root element.
-| <span class="prop-name">absolute</span> | <span class="prop-name">MuiDivider-absolute</span> | Styles applied to the root element if `absolute={true}`.
-| <span class="prop-name">inset</span> | <span class="prop-name">MuiDivider-inset</span> | Styles applied to the root element if `variant="inset"`.
-| <span class="prop-name">light</span> | <span class="prop-name">MuiDivider-light</span> | Styles applied to the root element if `light={true}`.
-| <span class="prop-name">middle</span> | <span class="prop-name">MuiDivider-middle</span> | Styles applied to the root element if `variant="middle"`.
-| <span class="prop-name">vertical</span> | <span class="prop-name">MuiDivider-vertical</span> | Styles applied to the root element if `orientation="vertical"`.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiDivider-root</span> | Styles applied to the root element.
+| <span class="prop-name">absolute</span> | <span class="prop-name">.MuiDivider-absolute</span> | Styles applied to the root element if `absolute={true}`.
+| <span class="prop-name">inset</span> | <span class="prop-name">.MuiDivider-inset</span> | Styles applied to the root element if `variant="inset"`.
+| <span class="prop-name">light</span> | <span class="prop-name">.MuiDivider-light</span> | Styles applied to the root element if `light={true}`.
+| <span class="prop-name">middle</span> | <span class="prop-name">.MuiDivider-middle</span> | Styles applied to the root element if `variant="middle"`.
+| <span class="prop-name">vertical</span> | <span class="prop-name">.MuiDivider-vertical</span> | Styles applied to the root element if `orientation="vertical"`.
 
 You can override the style of the component thanks to one of these customization points:
 

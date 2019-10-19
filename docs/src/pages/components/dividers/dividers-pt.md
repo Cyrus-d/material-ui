@@ -17,7 +17,7 @@ O divisor renderiza como um `<hr>` por padrão. Você pode salvar a renderizaç�
 
 ## Especificação HTML5
 
-Precisamos garantir que o `Divider` seja renderizado como `li` para corresponder à especificação HTML5. Os exemplos abaixo mostram duas maneiras de conseguir isso.
+Em uma lista, você deve garantir que o `Divisor` seja renderizado como um elemento `<li>` para corresponder à especificação HTML5. Os exemplos abaixo mostram duas maneiras de conseguir isso.
 
 ## Divisores de inserção
 

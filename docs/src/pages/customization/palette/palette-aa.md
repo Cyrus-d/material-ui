@@ -47,12 +47,11 @@ crwdns93622:0[300]crwdnd93622:0[500]crwdnd93622:0[700]crwdnd93622:0[500]crwdnd93
 crwdns93624:0crwdne93624:0
 
 ```js
-crwdns93626:0{ createMuiTheme }crwdne93626:0
-crwdns93628:0crwdne93628:0
-crwdns93630:0crwdne93630:0
-    crwdns93632:0crwdne93632:0
-    crwdns93634:0crwdne93634:0
-    crwdns93636:0crwdne93636:0
+crwdns101184:0{ createMuiTheme }crwdne101184:0
+crwdns101186:0crwdne101186:0
+    crwdns101188:0crwdne101188:0
+    crwdns101190:0crwdne101190:0
+    crwdns101192:0crwdne101192:0
 ```
 
 **crwdns93638:0crwdne93638:0**
@@ -99,3 +98,19 @@ crwdns93684:0{
 ```
 
 crwdns93686:0crwdne93686:0
+
+### crwdns103414:0crwdne103414:0
+
+crwdns103416:0crwdne103416:0 crwdns103418:0crwdne103418:0 crwdns103420:0crwdne103420:0
+
+crwdns103422:0crwdne103422:0
+
+crwdns103424:0crwdne103424:0
+
+```jsx
+crwdns103426:0{ ThemeProvider }crwdne103426:0 crwdns103428:0[prefersDarkMode]crwdnd103428:0{theme}crwdne103428:0
+```
+
+## crwdns100956:0crwdne100956:0
+
+crwdns103430:0crwdne103430:0

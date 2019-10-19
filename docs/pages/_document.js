@@ -1,10 +1,8 @@
-/* eslint-disable no-underscore-dangle */
-
 import React from 'react';
 import { ServerStyleSheets } from '@material-ui/styles';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { Router as Router2 } from 'next/router';
-import { LANGUAGES_LABEL } from 'docs/src/modules/constants';
+import { LANGUAGES_SSR } from 'docs/src/modules/constants';
 import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import { themeColor } from 'docs/src/modules/components/ThemeContext';
 
@@ -30,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const GOOGLE_ID = process.env.NODE_ENV === 'production' ? 'UA-106598593-2' : 'UA-106598593-3';
 
-class MyDocument extends Document {
+export default class MyDocument extends Document {
   render() {
     const { canonical, userLanguage } = this.props;
 
@@ -64,7 +62,7 @@ class MyDocument extends Document {
             href={`https://material-ui.com${Router2._rewriteUrlForNextExport(canonical)}`}
             hrefLang="x-default"
           />
-          {LANGUAGES_LABEL.map(({ code: userLanguage2 }) => (
+          {LANGUAGES_SSR.map(userLanguage2 => (
             <link
               key={userLanguage2}
               rel="alternate"
@@ -85,21 +83,6 @@ class MyDocument extends Document {
           <style id="app-search" />
           <style id="prismjs" />
           <style id="insertion-point-jss" />
-          {userLanguage === 'aa' ? (
-            <React.Fragment>
-              <meta name="robots" content="noindex,nofollow" />
-              <script
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{
-                  __html: `
-              var _jipt = [];
-              _jipt.push(['project', 'material-ui-docs']);
-              `,
-                }}
-              />
-              <script type="text/javascript" src="//cdn.crowdin.com/jipt/jipt.js" />
-            </React.Fragment>
-          ) : null}
         </Head>
         <body>
           <Main />
@@ -169,5 +152,3 @@ MyDocument.getInitialProps = async ctx => {
     ),
   };
 };
-
-export default MyDocument;

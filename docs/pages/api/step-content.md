@@ -16,7 +16,7 @@ import StepContent from '@material-ui/core/StepContent';
 import { StepContent } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -41,9 +41,9 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiStepContent-root</span> | Styles applied to the root element.
-| <span class="prop-name">last</span> | <span class="prop-name">MuiStepContent-last</span> | Styles applied to the root element if `last={true}` (controlled by `Step`).
-| <span class="prop-name">transition</span> | <span class="prop-name">MuiStepContent-transition</span> | Styles applied to the Transition component.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiStepContent-root</span> | Styles applied to the root element.
+| <span class="prop-name">last</span> | <span class="prop-name">.MuiStepContent-last</span> | Styles applied to the root element if `last={true}` (controlled by `Step`).
+| <span class="prop-name">transition</span> | <span class="prop-name">.MuiStepContent-transition</span> | Styles applied to the Transition component.
 
 You can override the style of the component thanks to one of these customization points:
 

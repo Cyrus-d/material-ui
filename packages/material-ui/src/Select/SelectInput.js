@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import warning from 'warning';
+import capitalize from '../utils/capitalize';
 import { refType } from '@material-ui/utils';
 import Menu from '../Menu/Menu';
 import { isFilled } from '../InputBase/utils';
-import { useForkRef } from '../utils/reactHelpers';
+import useForkRef from '../utils/useForkRef';
 
 function areEqualValues(a, b) {
   if (typeof b === 'object' && b !== null) {
@@ -47,65 +47,57 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
     required,
     SelectDisplayProps,
     tabIndex: tabIndexProp,
-    type = 'hidden',
+    // catching `type` from Input which makes no sense for SelectInput
+    type,
     value,
-    variant,
+    variant = 'standard',
     ...other
   } = props;
 
   const inputRef = React.useRef(null);
-  const displayRef = React.useRef(null);
-  const ignoreNextBlur = React.useRef(false);
+  const [displayNode, setDisplayNode] = React.useState(null);
   const { current: isOpenControlled } = React.useRef(openProp != null);
   const [menuMinWidthState, setMenuMinWidthState] = React.useState();
   const [openState, setOpenState] = React.useState(false);
-  const [, forceUpdate] = React.useState(0);
   const handleRef = useForkRef(ref, inputRefProp);
 
   React.useImperativeHandle(
     handleRef,
     () => ({
       focus: () => {
-        displayRef.current.focus();
+        displayNode.focus();
       },
       node: inputRef.current,
       value,
     }),
-    [value],
+    [displayNode, value],
   );
 
   React.useEffect(() => {
-    if (isOpenControlled && openProp) {
-      // Focus the display node so the focus is restored on this element once
-      // the menu is closed.
-      displayRef.current.focus();
-      // Rerender with the resolve `displayRef` reference.
-      forceUpdate(n => !n);
+    if (autoFocus && displayNode) {
+      displayNode.focus();
     }
-
-    if (autoFocus) {
-      displayRef.current.focus();
-    }
-  }, [autoFocus, isOpenControlled, openProp]);
+  }, [autoFocus, displayNode]);
 
   const update = (open, event) => {
     if (open) {
       if (onOpen) {
         onOpen(event);
       }
-    } else if (onClose) {
-      onClose(event);
+    } else {
+      displayNode.focus();
+      if (onClose) {
+        onClose(event);
+      }
     }
 
     if (!isOpenControlled) {
-      setMenuMinWidthState(autoWidth ? null : displayRef.current.clientWidth);
+      setMenuMinWidthState(autoWidth ? null : displayNode.clientWidth);
       setOpenState(open);
     }
   };
 
   const handleClick = event => {
-    // Opening the menu is going to blur the. It will be focused back when closed.
-    ignoreNextBlur.current = true;
     update(true, event);
   };
 
@@ -139,21 +131,6 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
     }
   };
 
-  const handleBlur = event => {
-    if (ignoreNextBlur.current === true) {
-      // The parent components are relying on the bubbling of the event.
-      event.stopPropagation();
-      ignoreNextBlur.current = false;
-      return;
-    }
-
-    if (onBlur) {
-      event.persist();
-      event.target = { value, name };
-      onBlur(event);
-    }
-  };
-
   const handleKeyDown = event => {
     if (!readOnly) {
       const validKeys = [
@@ -167,14 +144,21 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
 
       if (validKeys.indexOf(event.key) !== -1) {
         event.preventDefault();
-        // Opening the menu is going to blur the. It will be focused back when closed.
-        ignoreNextBlur.current = true;
         update(true, event);
       }
     }
   };
 
-  const open = isOpenControlled && displayRef.current ? openProp : openState;
+  const open = displayNode !== null && (isOpenControlled ? openProp : openState);
+
+  const handleBlur = event => {
+    // if open event.stopImmediatePropagation
+    if (!open && onBlur) {
+      event.persist();
+      event.target = { value, name };
+      onBlur(event);
+    }
+  };
 
   delete other['aria-invalid'];
 
@@ -182,6 +166,7 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
   let displaySingle;
   const displayMultiple = [];
   let computeDisplay = false;
+  let foundMatch = false;
 
   // No need to display any value if the field is empty.
   if (isFilled(props) || displayEmpty) {
@@ -197,13 +182,16 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
       return null;
     }
 
-    warning(
-      child.type !== React.Fragment,
-      [
-        "Material-UI: the Select component doesn't accept a Fragment as a child.",
-        'Consider providing an array instead.',
-      ].join('\n'),
-    );
+    if (process.env.NODE_ENV !== 'production') {
+      if (child.type === React.Fragment) {
+        console.error(
+          [
+            "Material-UI: the Select component doesn't accept a Fragment as a child.",
+            'Consider providing an array instead.',
+          ].join('\n'),
+        );
+      }
+    }
 
     let selected;
 
@@ -226,6 +214,10 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
       }
     }
 
+    if (selected) {
+      foundMatch = true;
+    }
+
     return React.cloneElement(child, {
       'aria-selected': selected ? 'true' : undefined,
       onClick: handleItemClick(child),
@@ -236,6 +228,24 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
     });
   });
 
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+      if (!foundMatch && !multiple && value !== '') {
+        const values = React.Children.toArray(children).map(child => child.props.value);
+        console.warn(
+          [
+            `Material-UI: you have provided an out-of-range value \`${value}\` for the select ${
+              name ? `(name="${name}") ` : ''
+            }component.`,
+            "Consider providing a value that matches one of the available options or ''.",
+            `The available values are ${values.join(', ') || '""'}.`,
+          ].join('\n'),
+        );
+      }
+    }, [foundMatch, children, multiple, name, value]);
+  }
+
   if (computeDisplay) {
     display = multiple ? displayMultiple.join(', ') : displaySingle;
   }
@@ -243,8 +253,8 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
   // Avoid performing a layout computation in the render method.
   let menuMinWidth = menuMinWidthState;
 
-  if (!autoWidth && isOpenControlled && displayRef.current) {
-    menuMinWidth = displayRef.current.clientWidth;
+  if (!autoWidth && isOpenControlled && displayNode) {
+    menuMinWidth = displayNode.clientWidth;
   }
 
   let tabIndex;
@@ -261,14 +271,13 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
           classes.root, // TODO v5: merge root and select
           classes.select,
           classes.selectMenu,
+          classes[variant],
           {
             [classes.disabled]: disabled,
-            [classes.filled]: variant === 'filled',
-            [classes.outlined]: variant === 'outlined',
           },
           className,
         )}
-        ref={displayRef}
+        ref={setDisplayNode}
         data-mui-test="SelectDisplay"
         tabIndex={tabIndex}
         role="button"
@@ -276,8 +285,8 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
         aria-haspopup="listbox"
         aria-owns={open ? `menu-${name || ''}` : undefined}
         onKeyDown={handleKeyDown}
-        onBlur={handleBlur}
         onClick={disabled || readOnly ? null : handleClick}
+        onBlur={handleBlur}
         onFocus={onFocus}
         // The id can help with end-to-end testing automation.
         id={name ? `select-${name}` : undefined}
@@ -295,14 +304,14 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
         value={Array.isArray(value) ? value.join(',') : value}
         name={name}
         ref={inputRef}
-        type={type}
+        type="hidden"
         autoFocus={autoFocus}
         {...other}
       />
-      <IconComponent className={classes.icon} />
+      <IconComponent className={clsx(classes.icon, classes[`icon${capitalize(variant)}`])} />
       <Menu
         id={`menu-${name || ''}`}
-        anchorEl={displayRef.current}
+        anchorEl={displayNode}
         open={open}
         onClose={handleClose}
         {...MenuProps}
@@ -360,9 +369,10 @@ SelectInput.propTypes = {
   /**
    * The icon that displays the arrow.
    */
-  IconComponent: PropTypes.elementType,
+  IconComponent: PropTypes.elementType.isRequired,
   /**
-   * Use that prop to pass a ref to the native select element.
+   * Imperative handle implementing `{ value: T, node: HTMLElement, focus(): void }`
+   * Equivalent to `ref`
    */
   inputRef: refType,
   /**
@@ -437,7 +447,7 @@ SelectInput.propTypes = {
   /**
    * @ignore
    */
-  type: PropTypes.string,
+  type: PropTypes.any,
   /**
    * The input value.
    */

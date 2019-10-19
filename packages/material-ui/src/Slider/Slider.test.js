@@ -4,8 +4,8 @@ import { spy, stub } from 'sinon';
 import { expect } from 'chai';
 import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '@material-ui/core/test-utils/describeConformance';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { cleanup, createClientRender, fireEvent } from 'test/utils/createClientRender';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { createClientRender, fireEvent } from 'test/utils/createClientRender';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
 import Slider from './Slider';
 
@@ -34,10 +34,6 @@ describe('<Slider />', () => {
   before(() => {
     classes = getClasses(<Slider value={0} />);
     mount = createMount({ strict: true });
-  });
-
-  after(() => {
-    cleanup();
   });
 
   describeConformance(<Slider value={0} />, () => ({
@@ -120,9 +116,12 @@ describe('<Slider />', () => {
 
       fireEvent.touchStart(
         container.firstChild,
-        createTouches([{ identifier: 1, pageX: 0, pageY: 20 }]),
+        createTouches([{ identifier: 1, clientX: 0, clientY: 20 }]),
       );
-      fireEvent.touchMove(document.body, createTouches([{ identifier: 1, pageX: 0, pageY: 22 }]));
+      fireEvent.touchMove(
+        document.body,
+        createTouches([{ identifier: 1, clientX: 0, clientY: 22 }]),
+      );
 
       expect(handleChange.callCount).to.equal(2);
       expect(handleChange.args[0][1]).to.equal(80);
@@ -194,11 +193,17 @@ describe('<Slider />', () => {
 
       fireEvent.touchStart(
         container.firstChild,
-        createTouches([{ identifier: 1, pageX: 21, pageY: 0 }]),
+        createTouches([{ identifier: 1, clientX: 21, clientY: 0 }]),
       );
 
-      fireEvent.touchMove(document.body, createTouches([{ identifier: 1, pageX: 22, pageY: 0 }]));
-      fireEvent.touchMove(document.body, createTouches([{ identifier: 1, pageX: 22, pageY: 0 }]));
+      fireEvent.touchMove(
+        document.body,
+        createTouches([{ identifier: 1, clientX: 22, clientY: 0 }]),
+      );
+      fireEvent.touchMove(
+        document.body,
+        createTouches([{ identifier: 1, clientX: 22, clientY: 0 }]),
+      );
 
       expect(handleChange.callCount).to.equal(3);
       expect(handleChange.args[0][1]).to.deep.equal([21, 30]);
@@ -226,7 +231,7 @@ describe('<Slider />', () => {
 
       fireEvent.touchStart(
         container.firstChild,
-        createTouches([{ identifier: 1, pageX: 21, pageY: 0 }]),
+        createTouches([{ identifier: 1, clientX: 21, clientY: 0 }]),
       );
       expect(thumb).to.have.attribute('aria-valuenow', '20');
 
@@ -248,6 +253,18 @@ describe('<Slider />', () => {
       const { container, getByRole } = render(<Slider disabled value={0} />);
       expect(container.firstChild).to.have.class(classes.disabled);
       expect(getByRole('slider')).to.not.have.attribute('tabIndex');
+    });
+  });
+
+  describe('prop: track', () => {
+    it('should render the track classes for false', () => {
+      const { container } = render(<Slider track={false} value={50} />);
+      expect(container.firstChild).to.have.class(classes.trackFalse);
+    });
+
+    it('should render the track classes for inverted', () => {
+      const { container } = render(<Slider track="inverted" value={50} />);
+      expect(container.firstChild).to.have.class(classes.trackInverted);
     });
   });
 
@@ -414,13 +431,13 @@ describe('<Slider />', () => {
   it('should handle RTL', () => {
     const handleChange = spy();
     const { container, getByRole } = render(
-      <MuiThemeProvider
+      <ThemeProvider
         theme={createMuiTheme({
           direction: 'rtl',
         })}
       >
         <Slider value={30} onChange={handleChange} />
-      </MuiThemeProvider>,
+      </ThemeProvider>,
     );
     const thumb = getByRole('slider');
     expect(thumb.style.right).to.equal('30%');
@@ -434,10 +451,10 @@ describe('<Slider />', () => {
 
     fireEvent.touchStart(
       container.firstChild,
-      createTouches([{ identifier: 1, pageX: 20, pageY: 0 }]),
+      createTouches([{ identifier: 1, clientX: 20, clientY: 0 }]),
     );
 
-    fireEvent.touchMove(document.body, createTouches([{ identifier: 1, pageX: 22, pageY: 0 }]));
+    fireEvent.touchMove(document.body, createTouches([{ identifier: 1, clientX: 22, clientY: 0 }]));
 
     expect(handleChange.callCount).to.equal(2);
     expect(handleChange.args[0][1]).to.equal(80);
@@ -454,11 +471,54 @@ describe('<Slider />', () => {
       PropTypes.resetWarningCache();
     });
 
-    it('should warn if aria-valuetext is a string', () => {
+    it('should warn if aria-valuetext is provided', () => {
       render(<Slider value={[20, 50]} aria-valuetext="hot" />);
       expect(consoleErrorMock.args()[0][0]).to.include(
         'you need to use the `getAriaValueText` prop instead of',
       );
     });
+
+    it('should warn if aria-label is provided', () => {
+      render(<Slider value={[20, 50]} aria-label="hot" />);
+      expect(consoleErrorMock.args()[0][0]).to.include(
+        'you need to use the `getAriaLabel` prop instead of',
+      );
+    });
+
+    it('should warn when switching from controlled to uncontrolled', () => {
+      const { setProps } = render(<Slider value={[20, 50]} />);
+
+      setProps({ value: undefined });
+      expect(consoleErrorMock.args()[0][0]).to.include(
+        'A component is changing a controlled Slider to be uncontrolled.',
+      );
+    });
+
+    it('should warn when switching between uncontrolled to controlled', () => {
+      const { setProps } = render(<Slider />);
+
+      setProps({ value: [20, 50] });
+      expect(consoleErrorMock.args()[0][0]).to.include(
+        'A component is changing an uncontrolled Slider to be controlled.',
+      );
+    });
+  });
+
+  it('should support getAriaValueText', () => {
+    const getAriaValueText = value => `${value}°C`;
+    const { getAllByRole } = render(
+      <Slider value={[20, 50]} getAriaValueText={getAriaValueText} />,
+    );
+
+    expect(getAllByRole('slider')[0]).to.have.attribute('aria-valuetext', '20°C');
+    expect(getAllByRole('slider')[1]).to.have.attribute('aria-valuetext', '50°C');
+  });
+
+  it('should support getAriaLabel', () => {
+    const getAriaLabel = index => `Label ${index}`;
+    const { getAllByRole } = render(<Slider value={[20, 50]} getAriaLabel={getAriaLabel} />);
+
+    expect(getAllByRole('slider')[0]).to.have.attribute('aria-label', 'Label 0');
+    expect(getAllByRole('slider')[1]).to.have.attribute('aria-label', 'Label 1');
   });
 });

@@ -6,10 +6,7 @@ Material-UI aims to provide a strong foundation for building dynamic UIs. For th
 
 ## Why use Material-UI's styling solution?
 
-In previous versions, Material-UI has used LESS, then a custom inline-style solution to write the component styles, but these approaches have proven to be limited. We have [adopted a *CSS-in-JS* solution](https://github.com/oliviertassinari/a-journey-toward-better-style). It **unlocks many great features** (theme nesting, dynamic styles, self-support, etc.). We think that this is the future:
-
-- [A Unified Styling Language](https://medium.com/seek-blog/a-unified-styling-language-d0c208de2660)
-- [Convert SCSS (Sass) to CSS-in-JS](https://egghead.io/courses/convert-scss-sass-to-css-in-js)
+In previous versions, Material-UI has used LESS, then a custom inline-style solution to write the component styles, but these approaches have proven to be limited. [A *CSS-in-JS* solution](https://github.com/oliviertassinari/a-journey-toward-better-style) overcomes many of those limitations, and **unlocks many great features** (theme nesting, dynamic styles, self-support, etc.).
 
 Material-UI's styling solution is inspired by many other styling libraries such as [styled-components](https://www.styled-components.com/) and [emotion](https://emotion.sh/).
 
@@ -33,13 +30,13 @@ yarn add @material-ui/styles
 
 ## Getting started
 
-We provide 3 different APIs to generate and apply styles, however they all share the same underlying logic.
+There are 3 possible APIs you can use to generate and apply styles, however they all share the same underlying logic.
 
 ### Hook API
 
 ```jsx
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
@@ -68,7 +65,7 @@ Note: this only applies to the calling syntax – style definitions still use a 
 
 ```jsx
 import React from 'react';
-import { styled } from '@material-ui/styles';
+import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 const MyButton = styled(Button)({
@@ -93,7 +90,7 @@ export default function StyledComponents() {
 ```jsx
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 const styles = {
@@ -183,7 +180,7 @@ This button component has a color property that changes its color:
 
 {{"demo": "pages/styles/basics/AdaptingHOC.js"}}
 
-## Stress test
+### Stress test
 
 In the following stress test, you can update the *theme color* and the *background-color property* live:
 
@@ -197,3 +194,21 @@ const useStyles = makeStyles(theme => ({
 ```
 
 {{"demo": "pages/styles/basics/StressTest.js"}}
+
+## @material-ui/core/styles vs @material-ui/styles
+
+Material-UI's styles are powered by the [@material-ui/styles](https://www.npmjs.com/package/@material-ui/styles) package, (built with JSS). This solution is [isolated](https://bundlephobia.com/result?p=@material-ui/styles). It doesn't have a default theme, and can be used to style React applications that are not using Material-UI components.
+
+To reduce the number of packages to install when using Material-UI, and to simplify the imports, `@material-ui/styles` modules are re-exported from `@material-ui/core/styles`.
+
+To remove the need to systematically supply a theme, the default Material-UI theme is applied to the re-exported `makeStyles`, `styled`, `withTheme`, `useTheme`, and `withStyles` modules.
+
+For instance:
+
+```js
+// Re-export with a default theme
+import { makeStyles } from '@material-ui/core/styles';
+
+// Original module with no default theme
+import { makeStyles } from '@material-ui/styles';
+```

@@ -1,13 +1,11 @@
 ---
 title: Rating React component
-components: Rating
+components: レート
 ---
 
-# レート
+# レート （Rating）
 
 <p class="description">評価は、他の人の意見や製品に関する経験に関する洞察を提供します。 ユーザーは購入した製品を評価することもできます。</p>
-
-- 📦 [20 kB gzipped](/size-snapshot) (but only 6 kB without @material-ui/styles).
 
 ## 簡単な評価
 
@@ -39,7 +37,9 @@ components: Rating
 
 ## アクセシビリティ
 
+(WAI tutorial: https://www.w3.org/WAI/tutorials/forms/custom-controls/#a-star-rating)
+
 このコンポーネントのアクセシビリティは、
 
 - ラジオグループは、フィールドを視覚的に非表示にして使用されます。 これには6つのラジオボタンがあり、それぞれが星1つ、星が0つ星です。デフォルトではオンになっています。 親フォームに固有の `name` プロパティを指定していることを確認します。
-- ラジオボタンのラベルには実際のテキスト（ "1 Star"、 "2 Stars"、 …）が含まれています。ページの言語が英語でない場合は、必ず `getLabelText` propを指定してください。
+- ラジオボタンのラベルには実際のテキスト（ "1 Star"、 "2 Stars"、…）が含まれています。ページの言語が英語でない場合は、必ず `getLabelText` propを指定してください。

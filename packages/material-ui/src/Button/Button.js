@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import { fade } from '../styles/colorManipulator';
 import ButtonBase from '../ButtonBase';
-import { capitalize } from '../utils/helpers';
+import capitalize from '../utils/capitalize';
 
 export const styles = theme => ({
   /* Styles applied to the root element. */
@@ -68,7 +68,7 @@ export const styles = theme => ({
   },
   /* Styles applied to the root element if `variant="outlined"`. */
   outlined: {
-    padding: '5px 16px',
+    padding: '5px 15px',
     border: `1px solid ${
       theme.palette.type === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)'
     }`,
@@ -110,6 +110,18 @@ export const styles = theme => ({
     color: theme.palette.getContrastText(theme.palette.grey[300]),
     backgroundColor: theme.palette.grey[300],
     boxShadow: theme.shadows[2],
+    '&:hover': {
+      backgroundColor: theme.palette.grey.A100,
+      boxShadow: theme.shadows[4],
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        boxShadow: theme.shadows[2],
+        backgroundColor: theme.palette.grey[300],
+      },
+      '&$disabled': {
+        backgroundColor: theme.palette.action.disabledBackground,
+      },
+    },
     '&$focusVisible': {
       boxShadow: theme.shadows[6],
     },
@@ -120,16 +132,6 @@ export const styles = theme => ({
       color: theme.palette.action.disabled,
       boxShadow: theme.shadows[0],
       backgroundColor: theme.palette.action.disabledBackground,
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.grey.A100,
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {
-        backgroundColor: theme.palette.grey[300],
-      },
-      '&$disabled': {
-        backgroundColor: theme.palette.action.disabledBackground,
-      },
     },
   },
   /* Styles applied to the root element if `variant="contained"` and `color="primary"`. */
@@ -165,19 +167,73 @@ export const styles = theme => ({
     color: 'inherit',
     borderColor: 'currentColor',
   },
-  /* Styles applied to the root element if `size="small"`. */
-  sizeSmall: {
-    padding: '4px 8px',
+  /* Styles applied to the root element if `size="small"` and `variant="text"`. */
+  textSizeSmall: {
+    padding: '4px 5px',
     fontSize: theme.typography.pxToRem(13),
   },
-  /* Styles applied to the root element if `size="large"`. */
-  sizeLarge: {
-    padding: '8px 24px',
+  /* Styles applied to the root element if `size="large"` and `variant="text"`. */
+  textSizeLarge: {
+    padding: '8px 11px',
     fontSize: theme.typography.pxToRem(15),
   },
+  /* Styles applied to the root element if `size="small"` and `variant="outlined"`. */
+  outlinedSizeSmall: {
+    padding: '3px 9px',
+    fontSize: theme.typography.pxToRem(13),
+  },
+  /* Styles applied to the root element if `size="large"` and `variant="outlined"`. */
+  outlinedSizeLarge: {
+    padding: '7px 21px',
+    fontSize: theme.typography.pxToRem(15),
+  },
+  /* Styles applied to the root element if `size="small"` and `variant="contained"`. */
+  containedSizeSmall: {
+    padding: '4px 10px',
+    fontSize: theme.typography.pxToRem(13),
+  },
+  /* Styles applied to the root element if `size="large"` and `variant="contained"`. */
+  containedSizeLarge: {
+    padding: '8px 22px',
+    fontSize: theme.typography.pxToRem(15),
+  },
+  /* Styles applied to the root element if `size="small"`. */
+  sizeSmall: {},
+  /* Styles applied to the root element if `size="large"`. */
+  sizeLarge: {},
   /* Styles applied to the root element if `fullWidth={true}`. */
   fullWidth: {
     width: '100%',
+  },
+  /* Styles applied to the startIcon element if supplied. */
+  startIcon: {
+    display: 'inherit',
+    marginRight: 8,
+    marginLeft: -4,
+  },
+  /* Styles applied to the endIcon element if supplied. */
+  endIcon: {
+    display: 'inherit',
+    marginRight: -4,
+    marginLeft: 8,
+  },
+  /* Styles applied to the icon element if supplied and `size="small"`. */
+  iconSizeSmall: {
+    '& > *:first-child': {
+      fontSize: 18,
+    },
+  },
+  /* Styles applied to the icon element if supplied and `size="medium"`. */
+  iconSizeMedium: {
+    '& > *:first-child': {
+      fontSize: 20,
+    },
+  },
+  /* Styles applied to the icon element if supplied and `size="large"`. */
+  iconSizeLarge: {
+    '& > *:first-child': {
+      fontSize: 22,
+    },
   },
 });
 
@@ -185,47 +241,47 @@ const Button = React.forwardRef(function Button(props, ref) {
   const {
     children,
     classes,
-    className: classNameProp,
+    className,
     color = 'default',
     component = 'button',
     disabled = false,
     disableFocusRipple = false,
+    endIcon: endIconProp,
     focusVisibleClassName,
     fullWidth = false,
     size = 'medium',
+    startIcon: startIconProp,
     type = 'button',
     variant = 'text',
     ...other
   } = props;
 
-  const text = variant === 'text';
-  const outlined = variant === 'outlined';
-  const contained = variant === 'contained';
-  const primary = color === 'primary';
-  const secondary = color === 'secondary';
-  const className = clsx(
-    classes.root,
-    {
-      [classes.text]: text,
-      [classes.textPrimary]: text && primary,
-      [classes.textSecondary]: text && secondary,
-      [classes.outlined]: outlined,
-      [classes.outlinedPrimary]: outlined && primary,
-      [classes.outlinedSecondary]: outlined && secondary,
-      [classes.contained]: contained,
-      [classes.containedPrimary]: contained && primary,
-      [classes.containedSecondary]: contained && secondary,
-      [classes[`size${capitalize(size)}`]]: size !== 'medium',
-      [classes.disabled]: disabled,
-      [classes.fullWidth]: fullWidth,
-      [classes.colorInherit]: color === 'inherit',
-    },
-    classNameProp,
+  const startIcon = startIconProp && (
+    <span className={clsx(classes.startIcon, classes[`iconSize${capitalize(size)}`])}>
+      {startIconProp}
+    </span>
+  );
+  const endIcon = endIconProp && (
+    <span className={clsx(classes.endIcon, classes[`iconSize${capitalize(size)}`])}>
+      {endIconProp}
+    </span>
   );
 
   return (
     <ButtonBase
-      className={className}
+      className={clsx(
+        classes.root,
+        classes[variant],
+        {
+          [classes[`${variant}${capitalize(color)}`]]: color !== 'default' && color !== 'inherit',
+          [classes[`${variant}Size${capitalize(size)}`]]: size !== 'medium',
+          [classes[`size${capitalize(size)}`]]: size !== 'medium',
+          [classes.disabled]: disabled,
+          [classes.fullWidth]: fullWidth,
+          [classes.colorInherit]: color === 'inherit',
+        },
+        className,
+      )}
       component={component}
       disabled={disabled}
       focusRipple={!disableFocusRipple}
@@ -234,7 +290,11 @@ const Button = React.forwardRef(function Button(props, ref) {
       type={type}
       {...other}
     >
-      <span className={classes.label}>{children}</span>
+      <span className={classes.label}>
+        {startIcon}
+        {children}
+        {endIcon}
+      </span>
     </ButtonBase>
   );
 });
@@ -279,6 +339,10 @@ Button.propTypes = {
    */
   disableRipple: PropTypes.bool,
   /**
+   * Element placed after the children.
+   */
+  endIcon: PropTypes.node,
+  /**
    * @ignore
    */
   focusVisibleClassName: PropTypes.string,
@@ -296,6 +360,10 @@ Button.propTypes = {
    * `small` is equivalent to the dense button styling.
    */
   size: PropTypes.oneOf(['small', 'medium', 'large']),
+  /**
+   * Element placed before the children.
+   */
+  startIcon: PropTypes.node,
   /**
    * @ignore
    */

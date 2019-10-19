@@ -1,6 +1,6 @@
 # Exibição
 
-<p class="description">Rapidamente e responsivamente alterne o valor de exibição de componentes e muito mais com nossos utilitários de exibição. Inclui suporte para alguns dos valores mais comuns, bem como alguns extras para controlar a exibição durante a impressão.</p>
+<p class="description">Troque rapidamente, de forma responsiva, a propriedade 'display' dos seus componentes e faça muito mais com as ferramentas de exibição. Inclui suporte para alguns dos valores mais comuns, bem como alguns extras para controlar a exibição durante a impressão.</p>
 
 ## Exemplos
 

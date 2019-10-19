@@ -14,15 +14,12 @@ function Copyright() {
         Your Website
       </MuiLink>{' '}
       {new Date().getFullYear()}
-      {'. Built with '}
-      <MuiLink color="inherit" href="https://material-ui.com/">
-        Material-UI.
-      </MuiLink>
+      {'.'}
     </Typography>
   );
 }
 
-export default function App() {
+export default function About() {
   return (
     <Container maxWidth="sm">
       <Box my={4}>

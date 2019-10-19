@@ -4,7 +4,7 @@
 
 ## Paketgröße zählt
 
-Die Paketgröße von Material-UI wird sehr ernst genommen. We take size snapshots on every commit for every package and critical parts of those packages ([view the latest snapshot](/size-snapshot)). Wir können, kombiniert mit [dangerJS](https://danger.systems/js/), [detaillierte Änderungen der Bündelgröße](https://github.com/mui-org/material-ui/pull/14638#issuecomment-466658459) bei jedem Pull Request prüfen.
+Die Paketgröße von Material-UI wird sehr ernst genommen. Size snapshots are taken on every commit for every package and critical parts of those packages ([view the latest snapshot](/size-snapshot)). Wir können, kombiniert mit [dangerJS](https://danger.systems/js/), [detaillierte Änderungen der Bündelgröße](https://github.com/mui-org/material-ui/pull/14638#issuecomment-466658459) bei jedem Pull Request prüfen.
 
 ## Wie kann ich die Paketgröße reduzieren?
 
@@ -20,13 +20,7 @@ If this is an issue for you, you have various options:
 
 ### Option 1
 
-Sie können Pfadimporte verwenden, um zu vermeiden, dass nicht verwendete Module abgerufen werden. Zum Beispiel anstelle von:
-
-```js
-import { Button, TextField } from '@material-ui/core';
-```
-
-verwende:
+Sie können Pfadimporte verwenden, um zu vermeiden, dass nicht verwendete Module abgerufen werden. For instance, use:
 
 ```js
 // 🚀 Fast
@@ -34,7 +28,13 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 ```
 
-This is the option we document in **all** the demos because it requires no configuration. We encourage it for library authors extending our components. Head to [Option 2](#option-2) for the approach that yields the best DX and UX.
+instead of top level imports (without a Babel plugin):
+
+```js
+import { Button, TextField } from '@material-ui/core';
+```
+
+This is the option we document in all the demos, since it requires no configuration. It is encouraged for library authors extending the components. Head to [Option 2](#option-2) for the approach that yields the best DX and UX.
 
 Beim direkten Importieren auf diese Weise werden die Exporte in [`@material-ui/core/index.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/index.js) nicht verwendet. Diese Datei kann trotzdem als praktische Referenz für die öffentlichen Module dienen.
 
@@ -58,11 +58,21 @@ import TabIndicator from '@material-ui/core/Tabs/TabIndicator';
 
 ### Option 2
 
-This option provides the best DX and UX. However, you need to apply the following steps correctly.
+This option provides the best User Experience and Developer Experience:
+
+- UX: The Babel plugin enables top level tree-shaking even if your bundler doesn't support it.
+- DX: The Babel plugin makes startup time in dev mode as fast as Option 1.
+- DX: This syntax reduces the duplication of code, requiring only a single import for multiple modules. Overall, the code is easier to read, and you are less likely to make a mistake when importing a new module.
+
+```js
+import { Button, TextField } from '@material-ui/core';
+```
+
+However, you need to apply the two following steps correctly.
 
 #### 1. Configure Babel
 
-Wählen Sie eines der folgenden Plugins:
+Pick one of the following plugins:
 
 - [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) with the following configuration:
     
@@ -125,7 +135,7 @@ Wählen Sie eines der folgenden Plugins:
   module.exports = {plugins};
   ```
 
-If you are using Create React App, you will need to use a couple of projects that let you use `.babelrc` configuration, without ejecting. 
+If you are using Create React App, you will need to use a couple of projects that let you use `.babelrc` configuration, without ejecting.
 
   `yarn add -D react-app-rewired customize-cra`
 
@@ -137,7 +147,7 @@ If you are using Create React App, you will need to use a couple of projects tha
 
   module.exports = override(
     useBabelRc()
-  );  
+  );
   ```
 
   If you wish, `babel-plugin-import` can be configured through `config-overrides.js` instead of `.babelrc` by using this [configuration](https://github.com/arackaf/customize-cra/blob/master/api.md#fixbabelimportslibraryname-options).
@@ -172,7 +182,7 @@ If you are using Create React App, you will need to use a couple of projects tha
     
     #### 2. Convert all your imports
     
-    Finally, you can convert your exisiting codebase to this option with our [top-level-imports](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-codemod/README.md#top-level-imports) codemod.
+    Finally, you can convert your exisiting codebase to this option with this [top-level-imports](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-codemod/README.md#top-level-imports) codemod.
     It will perform the following diffs:
     
     ```diff
@@ -183,8 +193,8 @@ If you are using Create React App, you will need to use a couple of projects tha
 
 ## ECMAScript
 
-Das auf npm veröffentlichte Paket ist mit [Babel](https://github.com/babel/babel) **transpiliert**, um die [ unterstützten Plattformen](/getting-started/supported-platforms/) zu berücksichtigen.
+The package published on npm is **transpiled**, with [Babel](https://github.com/babel/babel), to take into account the [supported platforms](/getting-started/supported-platforms/).
 
-Wir veröffentlichen auch eine zweite Version der Komponenten. Sie finden diese Version unter den [`/es` Ordner](https://unpkg.com/@material-ui/core/es/). Die gesamte nicht offizielle Syntax wird auf den [ECMA-262 Standard](https://www.ecma-international.org/publications/standards/Ecma-262.htm) transpiliert, nichts mehr. Dies kann verwendet werden, um separate Bundles für verschiedene Browser zu erstellen. Ältere Browser erfordern mehr transpilierte JavaScript-Funktionen. Dies erhöht die Größe des Packets. Für die Laufzeitfunktionen von ES2015 sind keine polyfills enthalten. IE11 + und Evergreen-Browser unterstützen alle erforderlichen Funktionen. Wenn Sie Unterstützung für andere Browser benötigen, sollten Sie [`@babel/polyfill`](https://www.npmjs.com/package/@babel/polyfill) in Betracht ziehen.
+A second version of the components is also published, which you can find under the [`/es` folder](https://unpkg.com/@material-ui/core/es/). All the non-official syntax is transpiled to the [ECMA-262 standard](https://www.ecma-international.org/publications/standards/Ecma-262.htm), nothing more. This can be used to make separate bundles targeting different browsers. Older browsers will require more JavaScript features to be transpiled, which increases the size of the bundle. No polyfills are included for ES2015 runtime features. IE11+ and evergreen browsers support all the necessary features. If you need support for other browsers, consider using [`@babel/polyfill`](https://www.npmjs.com/package/@babel/polyfill).
 
-⚠️ Um die Duplizierung von Code in Benutzerpaketen zu minimieren, raten wir **dringend davon ab** den `/es` Ordner zu benutzten.
+⚠️ In order to minimize duplication of code in users' bundles, library authors are **strongly discouraged** from using the `/es` folder.

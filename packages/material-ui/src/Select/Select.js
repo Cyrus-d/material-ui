@@ -9,10 +9,10 @@ import ArrowDropDownIcon from '../internal/svg-icons/ArrowDropDown';
 import Input from '../Input';
 import { styles as nativeSelectStyles } from '../NativeSelect/NativeSelect';
 import NativeSelectInput from '../NativeSelect/NativeSelectInput';
+import FilledInput from '../FilledInput';
+import OutlinedInput from '../OutlinedInput';
 
 export const styles = nativeSelectStyles;
-
-const defaultInput = <Input />;
 
 const Select = React.forwardRef(function Select(props, ref) {
   const {
@@ -21,7 +21,7 @@ const Select = React.forwardRef(function Select(props, ref) {
     classes,
     displayEmpty = false,
     IconComponent = ArrowDropDownIcon,
-    input = defaultInput,
+    input,
     inputProps,
     MenuProps,
     multiple = false,
@@ -31,7 +31,8 @@ const Select = React.forwardRef(function Select(props, ref) {
     open,
     renderValue,
     SelectDisplayProps,
-    variant,
+    variant: variantProps = 'standard',
+    labelWidth = 0,
     ...other
   } = props;
 
@@ -44,7 +45,17 @@ const Select = React.forwardRef(function Select(props, ref) {
     states: ['variant'],
   });
 
-  return React.cloneElement(input, {
+  const variant = fcs.variant || variantProps;
+
+  const InputComponent =
+    input ||
+    {
+      standard: <Input />,
+      outlined: <OutlinedInput labelWidth={labelWidth} />,
+      filled: <FilledInput />,
+    }[variant];
+
+  return React.cloneElement(InputComponent, {
     // Most of the logic is implemented in `SelectInput`.
     // The `Select` component is a simple API wrapper to expose something better to play with.
     inputComponent,
@@ -52,7 +63,7 @@ const Select = React.forwardRef(function Select(props, ref) {
     inputProps: {
       children,
       IconComponent,
-      variant: fcs.variant,
+      variant,
       type: undefined, // We render a select. We can ignore the type provided by the `Input`.
       multiple,
       ...(native
@@ -121,6 +132,11 @@ Select.propTypes = {
    */
   inputProps: PropTypes.object,
   /**
+   * The label width to be used on OutlinedInput.
+   * This prop is required when the `variant` prop is `outlined`.
+   */
+  labelWidth: PropTypes.number,
+  /**
    * Props applied to the [`Menu`](/api/menu/) element.
    */
   MenuProps: PropTypes.object,
@@ -172,8 +188,12 @@ Select.propTypes = {
    */
   SelectDisplayProps: PropTypes.object,
   /**
-   * The input value.
+   * The input value. Providing an empty string will select no options.
    * This prop is required when the `native` prop is `false` (default).
+   * Set to an empty string `''` if you don't want any of the available options to be selected.
+   *
+   * If the value is an object it must have reference equality with the option in order to be selected.
+   * If the value is not an object, the string representation must match with the string representation of the option in order to be selected.
    */
   value: PropTypes.any,
   /**

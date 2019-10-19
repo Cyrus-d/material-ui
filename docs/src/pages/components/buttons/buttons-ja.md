@@ -96,7 +96,7 @@ FABを使用するのは、それが画面の主なアクションを提示す�
 
 ## カスタムButton
 
-コンポーネントのカスタマイズの例を次に示します。 詳細については、 [overrides documentation page](/customization/components/)を参照してください。
+コンポーネントのカスタマイズの例を次に示します。 詳細については、 [オーバーライドのドキュメントページ](/customization/components/)を参照してください。
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js"}}
 
@@ -110,10 +110,38 @@ FABを使用するのは、それが画面の主なアクションを提示す�
 
 ## サードパーティ製ルーティングライブラリ
 
-一般的な使用例の1つは、ボタンを使用して新しいページへのナビゲーションを開始することです。 `ButtonBase` コンポーネントは、このユースケースを処理するためのプロパティを提供します 。 108/5000 ただし、特定のフォーカスについては` ButtonBase `には提供されているDOMノードが必要です。 これは、refをコンポーネントに添付し、 コンポーネントがこのrefを基になるDOMノードに転送することを期待することによって実現されます。 私たちのインタラクティブなコンポーネントの多くが` ButtonBase `に依存していることを考えると、あなたはどこでもそれを利用することができるはずです。
+一般的な使用例の1つは、ボタンを使用して新しいページへのナビゲーションを開始することです。 `ButtonBase` コンポーネントは、このユースケースを処理するためのプロパティを提供します 。 108/5000 ただし、特定のフォーカスについては` ButtonBase `には提供されているDOMノードが必要です。 これは、refをコンポーネントに添付し、 コンポーネントがこのrefを基になるDOMノードに転送することを期待することによって実現されます。 Given that many of the interactive components rely on `ButtonBase`, you should be able to take advantage of it everywhere.
 
-次に、react-routerとの統合例を示します。
+こちらは [react-routerとの統合例](/guides/composition/#button).
 
-{{"demo": "pages/components/buttons/ButtonRouter.js", "defaultCodeOpen": true}}
+## 制限事項
 
-*注意：ボタンコンポーネントの作成は、予期しないアンマウントを防ぐために必要です。 詳細については、<a href=「/guides/composition/#component-property」>コンポーネント・プロパティー・ガイド</a>を参照してください。*
+### Cursor not-allowed
+
+The ButtonBase component sets `pointer-events: none;` on disabled buttons. which prevents the appearance of a disabled cursor.
+
+If you wish to use `not-allowed`, you have two options:
+
+1. **CSS only**. You can remove the pointer events style on the disabled state of the `<button>` element:
+
+```css
+.MuiButtonBase-root:disabled {
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+```
+
+However:
+
+- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements)
+- The cursor won't change if you render something other than a button element, for instance, a link `<a>` element.
+
+2. **DOM change**. You can wrap the button:
+
+```jsx
+<span style={{ cursor: "not-allowed" }}>
+  <Button component={Link} disabled>disabled</Button>
+</span>
+```
+
+This has the advantage of supporting any element, for instance, a link `<a>` element.

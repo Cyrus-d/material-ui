@@ -4,11 +4,11 @@ import clsx from 'clsx';
 import { chainPropTypes } from '@material-ui/utils';
 import withStyles from '../styles/withStyles';
 import useTheme from '../styles/useTheme';
-import { fade, lighten } from '../styles/colorManipulator';
+import { fade, lighten, darken } from '../styles/colorManipulator';
 import { useIsFocusVisible } from '../utils/focusVisible';
-import ownerWindow from '../utils/ownerWindow';
 import useEventCallback from '../utils/useEventCallback';
-import { useForkRef } from '../utils/reactHelpers';
+import useForkRef from '../utils/useForkRef';
+import capitalize from '../utils/capitalize';
 import ValueLabel from './ValueLabel';
 
 function asc(a, b) {
@@ -47,8 +47,8 @@ function trackFinger(event, touchId) {
       const touch = event.changedTouches[i];
       if (touch.identifier === touchId.current) {
         return {
-          x: touch.pageX,
-          y: touch.pageY,
+          x: touch.clientX,
+          y: touch.clientY,
         };
       }
     }
@@ -57,8 +57,8 @@ function trackFinger(event, touchId) {
   }
 
   return {
-    x: event.pageX,
-    y: event.pageY,
+    x: event.clientX,
+    y: event.clientY,
   };
 }
 
@@ -154,6 +154,14 @@ export const styles = theme => ({
       padding: '0 11px',
     },
   },
+  /* Styles applied to the root element if `color="primary"`. */
+  colorPrimary: {
+    // TODO v5, move the style here
+  },
+  /* Styles applied to the root element if `color="secondary"`. */
+  colorSecondary: {
+    color: theme.palette.secondary.main,
+  },
   /* Styles applied to the root element if `marks` is provided with at least one label. */
   marked: {
     marginBottom: 20,
@@ -189,6 +197,25 @@ export const styles = theme => ({
     backgroundColor: 'currentColor',
     '$vertical &': {
       width: 2,
+    },
+  },
+  /* Styles applied to the track element if `track={false}`. */
+  trackFalse: {
+    '& $track': {
+      display: 'none',
+    },
+  },
+  /* Styles applied to the track element if `track="inverted"`. */
+  trackInverted: {
+    '& $track': {
+      backgroundColor:
+        // Same logic as the LinearProgress track color
+        theme.palette.type === 'light'
+          ? lighten(theme.palette.primary.main, 0.62)
+          : darken(theme.palette.primary.main, 0.5),
+    },
+    '& $rail': {
+      opacity: 1,
     },
   },
   /* Styles applied to the thumb element. */
@@ -236,6 +263,19 @@ export const styles = theme => ({
       marginBottom: -4,
     },
   },
+  /* Styles applied to the thumb element if `color="primary"`. */
+  thumbColorPrimary: {
+    // TODO v5, move the style here
+  },
+  /* Styles applied to the thumb element if `color="secondary"`. */
+  thumbColorSecondary: {
+    '&$focusVisible,&:hover': {
+      boxShadow: `0px 0px 0px 8px ${fade(theme.palette.secondary.main, 0.16)}`,
+    },
+    '&$active': {
+      boxShadow: `0px 0px 0px 14px ${fade(theme.palette.secondary.main, 0.16)}`,
+    },
+  },
   /* Pseudo-class applied to the thumb element if it's active. */
   active: {},
   /* Pseudo-class applied to the thumb element if keyboard focused. */
@@ -252,7 +292,8 @@ export const styles = theme => ({
   },
   /* Styles applied to the mark element if active (depending on the value). */
   markActive: {
-    backgroundColor: lighten(theme.palette.primary.main, 0.76),
+    backgroundColor: theme.palette.background.paper,
+    opacity: 0.8,
   },
   /* Styles applied to the mark label element. */
   markLabel: {
@@ -281,9 +322,11 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     'aria-valuetext': ariaValuetext,
     classes,
     className,
+    color = 'primary',
     component: Component = 'span',
     defaultValue,
     disabled = false,
+    getAriaLabel,
     getAriaValueText,
     marks: marksProp = defaultMarks,
     max = 100,
@@ -295,6 +338,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     orientation = 'horizontal',
     step = 1,
     ThumbComponent = 'span',
+    track = 'normal',
     value: valueProp,
     ValueLabelComponent = ValueLabel,
     valueLabelDisplay = 'off',
@@ -446,9 +490,9 @@ const Slider = React.forwardRef(function Slider(props, ref) {
       let percent;
 
       if (axis.indexOf('vertical') === 0) {
-        percent = (bottom + ownerWindow(slider).pageYOffset - finger.y) / height;
+        percent = (bottom - finger.y) / height;
       } else {
-        percent = (finger.x - left - ownerWindow(slider).pageXOffset) / width;
+        percent = (finger.x - left) / width;
       }
 
       if (axis.indexOf('-reverse') !== -1) {
@@ -544,11 +588,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
   const handleMouseEnter = useEventCallback(event => {
     // If the slider was being interacted with but the mouse went off the window
     // and then re-entered while unclicked then end the interaction.
-    //
-    // In Firefox, the event can be triggered when a new DOM node is inserted and hovered.
-    // We need to make sure that the relatedTarget (The EventTarget the pointing device exited from)
-    // is not null (it should be the html element)
-    if (event.buttons === 0 && event.relatedTarget !== null) {
+    if (event.buttons === 0) {
       handleTouchEnd(event);
     }
   });
@@ -594,6 +634,25 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     };
   }, [disabled, handleMouseEnter, handleTouchEnd, handleTouchMove, handleTouchStart]);
 
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+      if (isControlled !== (valueProp != null)) {
+        console.error(
+          [
+            `Material-UI: A component is changing ${
+              isControlled ? 'a ' : 'an un'
+            }controlled Slider to be ${isControlled ? 'un' : ''}controlled.`,
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            'Decide between using a controlled or uncontrolled Slider ' +
+              'element for the lifetime of the component.',
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        );
+      }
+    }, [valueProp, isControlled]);
+  }
+
   const handleMouseDown = useEventCallback(event => {
     if (onMouseDown) {
       onMouseDown(event);
@@ -632,10 +691,13 @@ const Slider = React.forwardRef(function Slider(props, ref) {
       ref={handleRef}
       className={clsx(
         classes.root,
+        classes[`color${capitalize(color)}`],
         {
           [classes.disabled]: disabled,
           [classes.marked]: marks.length > 0 && marks.some(mark => mark.label),
           [classes.vertical]: orientation === 'vertical',
+          [classes.trackInverted]: track === 'inverted',
+          [classes.trackFalse]: track === false,
         },
         className,
       )}
@@ -648,9 +710,17 @@ const Slider = React.forwardRef(function Slider(props, ref) {
       {marks.map(mark => {
         const percent = valueToPercent(mark.value, min, max);
         const style = axisProps[axis].offset(percent);
-        const markActive = range
-          ? mark.value >= values[0] && mark.value <= values[values.length - 1]
-          : mark.value <= values[0];
+
+        let markActive;
+        if (track === false) {
+          markActive = values.indexOf(mark.value) !== -1;
+        } else {
+          const isMarkActive = range
+            ? mark.value >= values[0] && mark.value <= values[values.length - 1]
+            : mark.value <= values[0];
+          markActive =
+            (isMarkActive && track === 'normal') || (!isMarkActive && track === 'inverted');
+        }
 
         return (
           <React.Fragment key={mark.value}>
@@ -688,7 +758,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
             disabled={disabled}
           >
             <ThumbComponent
-              className={clsx(classes.thumb, {
+              className={clsx(classes.thumb, classes[`thumbColor${capitalize(color)}`], {
                 [classes.active]: active === index,
                 [classes.focusVisible]: focusVisible === index,
               })}
@@ -696,7 +766,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
               role="slider"
               style={style}
               data-index={index}
-              aria-label={ariaLabel}
+              aria-label={getAriaLabel ? getAriaLabel(index) : ariaLabel}
               aria-labelledby={ariaLabelledby}
               aria-orientation={orientation}
               aria-valuemax={max}
@@ -720,7 +790,17 @@ Slider.propTypes = {
   /**
    * The label of the slider.
    */
-  'aria-label': PropTypes.string,
+  'aria-label': chainPropTypes(PropTypes.string, props => {
+    const range = Array.isArray(props.value || props.defaultValue);
+
+    if (range && props['aria-label'] != null) {
+      return new Error(
+        'Material-UI: you need to use the `getAriaLabel` prop instead of `aria-label` when using a range slider.',
+      );
+    }
+
+    return null;
+  }),
   /**
    * The id of the element containing a label for the slider.
    */
@@ -731,9 +811,9 @@ Slider.propTypes = {
   'aria-valuetext': chainPropTypes(PropTypes.string, props => {
     const range = Array.isArray(props.value || props.defaultValue);
 
-    if (range && props['aria-valuetext']) {
+    if (range && props['aria-valuetext'] != null) {
       return new Error(
-        'Material-UI: you need to use the `getAriaValueText` prop instead of `aria-valuetext` when using a range input.',
+        'Material-UI: you need to use the `getAriaValueText` prop instead of `aria-valuetext` when using a range slider.',
       );
     }
 
@@ -749,6 +829,10 @@ Slider.propTypes = {
    */
   className: PropTypes.string,
   /**
+   * The color of the component. It supports those theme colors that make sense for this component.
+   */
+  color: PropTypes.oneOf(['primary', 'secondary']),
+  /**
    * The component used for the root node.
    * Either a string to use a DOM element or a component.
    */
@@ -762,10 +846,18 @@ Slider.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * Accepts a function which returns a string value that provides a user-friendly name for the thumb labels of the slider.
+   *
+   * @param {number} index The thumb label's index to format.
+   * @returns {string}
+   */
+  getAriaLabel: PropTypes.func,
+  /**
    * Accepts a function which returns a string value that provides a user-friendly name for the current value of the slider.
    *
    * @param {number} value The thumb label's value to format.
    * @param {number} index The thumb label's index to format.
+   * @returns {string}
    */
   getAriaValueText: PropTypes.func,
   /**
@@ -819,6 +911,14 @@ Slider.propTypes = {
    * The component used to display the value label.
    */
   ThumbComponent: PropTypes.elementType,
+  /**
+   * The track presentation:
+   *
+   * - `normal` the track will render a bar representing the slider value.
+   * - `inverted` the track will render a bar representing the remaining slider value.
+   * - `false` the track will render without a bar.
+   */
+  track: PropTypes.oneOf(['normal', false, 'inverted']),
   /**
    * The value of the slider.
    * For ranged sliders, provide an array with two values.

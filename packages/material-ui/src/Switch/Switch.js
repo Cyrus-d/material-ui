@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { refType } from '@material-ui/utils';
 import withStyles from '../styles/withStyles';
 import { fade } from '../styles/colorManipulator';
-import { capitalize } from '../utils/helpers';
+import capitalize from '../utils/capitalize';
 import SwitchBase from '../internal/SwitchBase';
 
 export const styles = theme => ({
@@ -233,7 +233,7 @@ Switch.propTypes = {
    */
   inputProps: PropTypes.object,
   /**
-   * This prop can be used to pass a ref to the `input` element.
+   * Pass a ref to the `input` element.
    */
   inputRef: refType,
   /**

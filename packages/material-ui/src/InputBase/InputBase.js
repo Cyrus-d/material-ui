@@ -2,13 +2,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import warning from 'warning';
 import clsx from 'clsx';
 import { refType } from '@material-ui/utils';
 import formControlState from '../FormControl/formControlState';
 import FormControlContext, { useFormControl } from '../FormControl/FormControlContext';
 import withStyles from '../styles/withStyles';
-import { useForkRef } from '../utils/reactHelpers';
+import useForkRef from '../utils/useForkRef';
 import TextareaAutosize from '../TextareaAutosize';
 import { isFilled } from './utils';
 
@@ -87,6 +86,7 @@ export const styles = theme => {
       // Make the flex item shrink with Firefox
       minWidth: 0,
       width: '100%', // Fix IE 11 width issue
+      animationName: '$auto-fill-cancel',
       '&::-webkit-input-placeholder': placeholder,
       '&::-moz-placeholder': placeholder, // Firefox 19+
       '&:-ms-input-placeholder': placeholder, // IE 11
@@ -116,6 +116,16 @@ export const styles = theme => {
       '&$disabled': {
         opacity: 1, // Reset iOS opacity
       },
+      '&:-webkit-autofill': {
+        animationDuration: '5000s',
+        animationName: '$auto-fill',
+      },
+    },
+    '@keyframes auto-fill': {
+      from: {},
+    },
+    '@keyframes auto-fill-cancel': {
+      from: {},
     },
     /* Styles applied to the `input` element if `margin="dense"`. */
     inputMarginDense: {
@@ -194,14 +204,17 @@ const InputBase = React.forwardRef(function InputBase(props, ref) {
 
   const inputRef = React.useRef();
   const handleInputRefWarning = React.useCallback(instance => {
-    warning(
-      !instance || instance instanceof HTMLInputElement || instance.focus,
-      [
-        'Material-UI: you have provided a `inputComponent` to the input component',
-        'that does not correctly handle the `inputRef` prop.',
-        'Make sure the `inputRef` prop is called with a HTMLInputElement.',
-      ].join('\n'),
-    );
+    if (process.env.NODE_ENV !== 'production') {
+      if (instance && !(instance instanceof HTMLInputElement) && !instance.focus) {
+        console.error(
+          [
+            'Material-UI: you have provided a `inputComponent` to the input component',
+            'that does not correctly handle the `inputRef` prop.',
+            'Make sure the `inputRef` prop is called with a HTMLInputElement.',
+          ].join('\n'),
+        );
+      }
+    }
   }, []);
   const handleInputPropsRefProp = useForkRef(inputPropsProp.ref, handleInputRefWarning);
   const handleInputRefProp = useForkRef(inputRefProp, handleInputPropsRefProp);
@@ -239,17 +252,20 @@ const InputBase = React.forwardRef(function InputBase(props, ref) {
     }
   }, [muiFormControl, disabled, focused, onBlur]);
 
+  const onFilled = muiFormControl && muiFormControl.onFilled;
+  const onEmpty = muiFormControl && muiFormControl.onEmpty;
+
   const checkDirty = React.useCallback(
     obj => {
       if (isFilled(obj)) {
-        if (muiFormControl && muiFormControl.onFilled) {
-          muiFormControl.onFilled();
+        if (onFilled) {
+          onFilled();
         }
-      } else if (muiFormControl && muiFormControl.onEmpty) {
-        muiFormControl.onEmpty();
+      } else if (onEmpty) {
+        onEmpty();
       }
     },
-    [muiFormControl],
+    [onFilled, onEmpty],
   );
 
   useEnhancedEffect(() => {
@@ -311,6 +327,12 @@ const InputBase = React.forwardRef(function InputBase(props, ref) {
     }
   };
 
+  // Check the input state on mount, in case it was filled by the user
+  // or auto filled by the browser before the hydration (for SSR).
+  React.useEffect(() => {
+    checkDirty(inputRef.current);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleClick = event => {
     if (inputRef.current && event.currentTarget === event.target) {
       inputRef.current.focus();
@@ -353,6 +375,13 @@ const InputBase = React.forwardRef(function InputBase(props, ref) {
       ...inputProps,
     };
   }
+
+  const handleAutoFill = event => {
+    // Provide a fake value as Chrome might not let you access it for security reasons.
+    checkDirty(
+      event.animationName.indexOf('auto-fill-cancel') !== -1 ? inputRef.current : { value: 'x' },
+    );
+  };
 
   return (
     <div
@@ -399,6 +428,7 @@ const InputBase = React.forwardRef(function InputBase(props, ref) {
           defaultValue={defaultValue}
           disabled={fcs.disabled}
           id={id}
+          onAnimationStart={handleAutoFill}
           name={name}
           onBlur={handleBlur}
           onChange={handleChange}
@@ -483,7 +513,7 @@ InputBase.propTypes = {
    */
   inputProps: PropTypes.object,
   /**
-   * This prop can be used to pass a ref to the `input` element.
+   * Pass a ref to the `input` element.
    */
   inputRef: refType,
   /**

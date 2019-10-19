@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { useTheme } from '@material-ui/styles';
+import { getThemeProps, useTheme } from '@material-ui/styles';
 import { elementAcceptingRef } from '@material-ui/utils';
 import ownerDocument from '../utils/ownerDocument';
 import Portal from '../Portal';
-import { createChainedFunction } from '../utils/helpers';
-import { useForkRef } from '../utils/reactHelpers';
+import createChainedFunction from '../utils/createChainedFunction';
+import useForkRef from '../utils/useForkRef';
 import useEventCallback from '../utils/useEventCallback';
 import zIndex from '../styles/zIndex';
 import ModalManager, { ariaHidden } from './ModalManager';
@@ -55,7 +55,9 @@ export const styles = theme => ({
  *
  * This component shares many concepts with [react-overlays](https://react-bootstrap.github.io/react-overlays/#modals).
  */
-const Modal = React.forwardRef(function Modal(props, ref) {
+const Modal = React.forwardRef(function Modal(inProps, ref) {
+  const theme = useTheme();
+  const props = getThemeProps({ name: 'MuiModal', props: { ...inProps }, theme });
   const {
     BackdropComponent = SimpleBackdrop,
     BackdropProps,
@@ -80,7 +82,6 @@ const Modal = React.forwardRef(function Modal(props, ref) {
     ...other
   } = props;
 
-  const theme = useTheme();
   const [exited, setExited] = React.useState(true);
   const modal = React.useRef({});
   const mountNodeRef = React.useRef(null);
@@ -206,10 +207,6 @@ const Modal = React.forwardRef(function Modal(props, ref) {
 
   const inlineStyle = styles(theme || { zIndex });
   const childProps = {};
-  // FixMe: Always apply document role. Revisit once React Flare is released
-  if (children.role === undefined) {
-    childProps.role = children.role || 'document';
-  }
   if (children.tabIndex === undefined) {
     childProps.tabIndex = children.tabIndex || '-1';
   }

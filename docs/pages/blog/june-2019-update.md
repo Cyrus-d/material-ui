@@ -1,5 +1,5 @@
 ---
-description: Here are the most significant changes in June.
+description: Here are the most significant improvements in June.
 ---
 
 # June 2019 Update
@@ -8,7 +8,7 @@ description: Here are the most significant changes in June.
 
 *July 8, 2019*
 
-Here are the most significant changes in June:
+Here are the most significant improvements in June:
 
 - 💄 We have introduced a new [ButtonGroup](/components/buttons/#grouped-buttons) component.
   ![ButtonGroup](/static/blog/june-2019-update/button-group.png)
@@ -35,4 +35,4 @@ But this summary is just scratching the surface. We have accepted 198 commits fr
 
 <hr />
 
-Material-UI is an MIT-licensed open source project. It’s an independent project with ongoing development made possible thanks to the support of these awesome [backers](/discover-more/backers/). Please join them ✨.
+Material-UI is an MIT-licensed open source project. It’s an independent project with ongoing development helped by the support of these awesome [backers](/discover-more/backers/). Please join them ✨.

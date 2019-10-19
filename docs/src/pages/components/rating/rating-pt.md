@@ -7,8 +7,6 @@ components: Rating
 
 <p class="description">As avaliações fornecem informações sobre opiniões e experiências de outros usuários com um produto. Os usuários também podem avaliar os produtos que compraram.</p>
 
-- 📦 [20 kB gzipped](/size-snapshot) (mas apenas 6 kB sem @material-ui/styles).
-
 ## Avaliações simples
 
 {{"demo": "pages/components/rating/SimpleRating.js"}}
@@ -39,7 +37,9 @@ Gosta de avaliações maiores ou menores? Use a propriedade `size`.
 
 ## Acessibilidade
 
+(WAI tutorial: https://www.w3.org/WAI/tutorials/forms/custom-controls/#a-star-rating)
+
 A acessibilidade neste componente conta com:
 
-- Um grupo de botões de opção é usado com seus campos visualmente ocultos. Ele contém seis botões de opção, um para cada estrela e outro para 0 estrelas, que é marcado por padrão. Certifique-se de que você está fornecendo uma propriedade `name`, que é exclusivo para o formulário principal.
+- Um grupo de botões é usado com seus campos visualmente ocultos. Ele contém seis botões de opção, um para cada estrela e outro para 0 estrelas, que é marcado por padrão. Certifique-se de que você está fornecendo uma propriedade `name`, que é exclusivo para o formulário principal.
 - Os rótulos dos botões de opção contêm o texto atualmente como ("1 Star", "2 Star", …). Certifique-se de fornecer uma propriedade `getLabelText` quando o idioma da página não for o inglês.

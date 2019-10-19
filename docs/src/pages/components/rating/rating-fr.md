@@ -7,8 +7,6 @@ components: Rating
 
 <p class="description">Ratings provide insight regarding others’ opinions and experiences with a product. Users can also rate products they’ve purchased.</p>
 
-- 📦 [20 kB gzipped](/size-snapshot) (but only 6 kB without @material-ui/styles).
-
 ## Simple ratings
 
 {{"demo": "pages/components/rating/SimpleRating.js"}}
@@ -38,6 +36,8 @@ Fancy larger or smaller ratings? Use the `size` prop.
 {{"demo": "pages/components/rating/RatingSize.js"}}
 
 ## Accessibilité
+
+(WAI tutorial: https://www.w3.org/WAI/tutorials/forms/custom-controls/#a-star-rating)
 
 L'accessibilité de ce composant repose sur les points suivants :
 

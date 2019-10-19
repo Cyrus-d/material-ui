@@ -16,7 +16,7 @@ import RootRef from '@material-ui/core/RootRef';
 import { RootRef } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 ⚠️⚠️⚠️
 If you want the DOM element of a Material-UI component check out
@@ -54,7 +54,7 @@ function MyComponent() {
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | <span class="prop-name required">children&nbsp;*</span> | <span class="prop-type">element</span> |  | The wrapped element. |
-| <span class="prop-name required">rootRef&nbsp;*</span> | <span class="prop-type">func<br>&#124;&nbsp;object</span> |  | Provide a way to access the DOM node of the wrapped element. You can provide a callback ref or a `React.createRef()` ref. |
+| <span class="prop-name required">rootRef&nbsp;*</span> | <span class="prop-type">refType.isRequired</span> |  | A ref that points to the first DOM node of the wrapped element. |
 
 The component cannot hold a ref.
 

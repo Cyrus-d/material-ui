@@ -26,12 +26,12 @@ components: Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 
 警告框是一种紧急中断的行为，用以将某一情况通知用户，并需要确认。
 
-大多数警报不需要标题。 They summarize a decision in a sentence or two by either:
+大多数警报不需要标题。 他们通过以下两种方式总结了一两句话的决定：
 
 - 问一个问题（例如："是否删除此对话？”）
 - 发表一个和动作按钮相关的声明
 
-Use title bar alerts only for high-risk situations, such as the potential loss of connectivity. Users should be able to understand the choices based on the title and button text alone.
+仅在高风险情况下使用标题栏警报，例如可能丢失连接。 用户应该能够仅根据标题和按钮文本来理解选择。
 
 如果需要加上标题请:
 
@@ -54,7 +54,7 @@ Use title bar alerts only for high-risk situations, such as the potential loss o
 
 ## 自定义对话框
 
-Here is an example of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+以下是自定义组件的一个示例。 您可以在[重写文档页](/customization/components/)中了解有关此内容的更多信息。
 
 该对话框加上了一个关闭按钮来辅助可用性。
 
@@ -95,27 +95,23 @@ function MyComponent() {
 
 {{"demo": "pages/components/dialogs/ConfirmationDialog.js"}}
 
-## 可及性
+## Draggable dialog
 
-参考[模态框可及性的部分](/components/modal/#accessibility)。
+You can create a draggable dialog by using [react-draggable](https://github.com/mzabriskie/react-draggable). To do so, you can pass the the imported `Draggable` component as the `PaperComponent` of the `Dialog` component. This will make the entire dialog draggable.
+
+{{"demo": "pages/components/dialogs/DraggableDialog.js"}}
 
 ## 长内容滚动
 
-由于用户设备的不同或视图的大小，对话框会变得很长，此时对话框是可以滚动的。
+When dialogs become too long for the user’s viewport or device, they scroll.
 
 - `scroll=paper` 可以使对话框的内容在 paper 元素中滚动。
 - `scroll=body` 可以使对话框的内容在 body 元素内滚动。
 
-请尝试下面的例子来加深理解：
+Try the demo below to see what we mean:
 
 {{"demo": "pages/components/dialogs/ScrollDialog.js"}}
 
-## 可拖动的对话框
+## 可访问性
 
-您可以使用 [react-draggable](https://github.com/mzabriskie/react-draggable) 创建可拖动的对话框。 为此，您可以将导入的 `Draggable` 组件作为 `Dialog` 组件的 `PaperComponent` 传递。 这将使整个对话框变成可拖动的。
-
-{{"demo": "pages/components/dialogs/DraggableDialog.js"}}
-
-## 性能
-
-参考[模态性能部分](/components/modal/#performance)。
+Follow the [Modal accessibility section](/components/modal/#accessibility).

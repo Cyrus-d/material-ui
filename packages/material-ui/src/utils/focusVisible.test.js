@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createMount } from '@material-ui/core/test-utils';
 import { teardown, useIsFocusVisible } from './focusVisible';
-import { useForkRef } from './reactHelpers';
+import useForkRef from './useForkRef';
 
 function dispatchFocusVisible(element) {
   element.ownerDocument.dispatchEvent(new window.Event('keydown'));
@@ -23,18 +23,18 @@ const SimpleButton = React.forwardRef(function SimpleButton(props, ref) {
 
   const [focusVisible, setFocusVisible] = React.useState(false);
 
-  function handleBlur() {
+  const handleBlur = () => {
     if (focusVisible) {
       setFocusVisible(false);
       onBlurVisible();
     }
-  }
+  };
 
-  function handleFocus(event) {
+  const handleFocus = event => {
     if (isFocusVisible(event)) {
       setFocusVisible(true);
     }
-  }
+  };
 
   return (
     <button

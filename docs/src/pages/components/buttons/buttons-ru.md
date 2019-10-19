@@ -7,7 +7,7 @@ components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
 
 <p class="description">Кнопки позволяют пользователям выполнять действия и делать выбор одним нажатием.</p>
 
-[Buttons](https://material.io/design/components/buttons.html) communicate actions that users can take. They are typically placed throughout your UI, in places like:
+[Кнопки](https://material.io/design/components/buttons.html) обозначают действия, которые могут выполнять пользователи. Они используются в таких местах пользовательского интерфейса, как:
 
 - Диалоги
 - Всплывающие окно
@@ -44,15 +44,15 @@ components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
 
 {{"demo": "pages/components/buttons/OutlinedButtons.js"}}
 
-## Grouped Buttons
+## Сгруппированные кнопки
 
-The ButtonGroup component can be used to group outlined (the default) or contained buttons.
+Компонент ButtonGroup можно использовать для группировки контурных (по умолчанию) или блочных кнопок.
 
 {{"demo": "pages/components/buttons/GroupedButtons.js"}}
 
 ## Split Button
 
-ButtonGroup can also be used to create a split button. The dropdown can change the button action (as in this example), or be use to immediately trigger a related action.
+ButtonGroup can also be used to create a split button. The dropdown can change the button action (as in this example), or be used to immediately trigger a related action.
 
 {{"demo": "pages/components/buttons/SplitButton.js"}}
 
@@ -96,7 +96,7 @@ Fancy larger or smaller buttons? Use the `size` property.
 
 ## Настраиваемые кнопки
 
-Here are some examples of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+Ниже находятся примеры кастомизации компонента. You can learn more about this in the [overrides documentation page](/customization/components/).
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js"}}
 
@@ -110,10 +110,38 @@ Here are some examples of customizing the component. You can learn more about th
 
 ## Сторонняя библиотека маршрутизации
 
-Одним из распространенных вариантов использования кнопки является переход на новую страницу. `ButtonBase` компонент предоставляет свойство для обработки этого варианта использования: `component`. However for certain focus polyfills `ButtonBase` requires the DOM node of the provided component. This is achieved by attaching a ref to the component and expecting that the component forwards this ref to the underlying DOM node. Given that a lot of our interactive components rely on `ButtonBase`, you should be able to take advantage of it everywhere.
+One common use case is to use the button to trigger navigation to a new page. `ButtonBase` компонент предоставляет свойство для обработки этого варианта использования: `component`. However for certain focus polyfills `ButtonBase` requires the DOM node of the provided component. This is achieved by attaching a ref to the component and expecting that the component forwards this ref to the underlying DOM node. Given that many of the interactive components rely on `ButtonBase`, you should be able to take advantage of it everywhere.
 
-Here is an integration example with react-router:
+Here is an [integration example with react-router](/guides/composition/#button).
 
-{{"demo": "pages/components/buttons/ButtonRouter.js", "defaultCodeOpen": true}}
+## Ограничения
 
-*Note: Creating the Button components is necessary to prevent unexpected unmounting. You can read more about it in our [component property guide](/guides/composition/#component-property).*
+### Cursor not-allowed
+
+The ButtonBase component sets `pointer-events: none;` on disabled buttons. which prevents the appearance of a disabled cursor.
+
+If you wish to use `not-allowed`, you have two options:
+
+1. **CSS only**. You can remove the pointer events style on the disabled state of the `<button>` element:
+
+```css
+.MuiButtonBase-root:disabled {
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+```
+
+However:
+
+- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements)
+- The cursor won't change if you render something other than a button element, for instance, a link `<a>` element.
+
+2. **DOM change**. You can wrap the button:
+
+```jsx
+<span style={{ cursor: "not-allowed" }}>
+  <Button component={Link} disabled>disabled</Button>
+</span>
+```
+
+This has the advantage of supporting any element, for instance, a link `<a>` element.

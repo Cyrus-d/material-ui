@@ -16,7 +16,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { Avatar } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 
 
@@ -44,9 +44,9 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiAvatar-root</span> | Styles applied to the root element.
-| <span class="prop-name">colorDefault</span> | <span class="prop-name">MuiAvatar-colorDefault</span> | Styles applied to the root element if there are children and not `src` or `srcSet`.
-| <span class="prop-name">img</span> | <span class="prop-name">MuiAvatar-img</span> | Styles applied to the img element if either `src` or `srcSet` is defined.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiAvatar-root</span> | Styles applied to the root element.
+| <span class="prop-name">colorDefault</span> | <span class="prop-name">.MuiAvatar-colorDefault</span> | Styles applied to the root element if there are children and not `src` or `srcSet`.
+| <span class="prop-name">img</span> | <span class="prop-name">.MuiAvatar-img</span> | Styles applied to the img element if either `src` or `srcSet` is defined.
 
 You can override the style of the component thanks to one of these customization points:
 

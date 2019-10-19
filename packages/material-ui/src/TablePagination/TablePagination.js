@@ -14,8 +14,8 @@ import TablePaginationActions from './TablePaginationActions';
 export const styles = theme => ({
   /* Styles applied to the root element. */
   root: {
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.pxToRem(12),
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.pxToRem(14),
     // Increase the specificity to override TableCell.
     '&:last-child': {
       padding: 0,
@@ -23,8 +23,7 @@ export const styles = theme => ({
   },
   /* Styles applied to the Toolbar component. */
   toolbar: {
-    height: 56,
-    minHeight: 56,
+    minHeight: 52,
     paddingRight: 2,
   },
   /* Styles applied to the spacer element. */
@@ -67,7 +66,8 @@ export const styles = theme => ({
   },
 });
 
-const defaultLabelDisplayedRows = ({ from, to, count }) => `${from}-${to} of ${count}`;
+const defaultLabelDisplayedRows = ({ from, to, count }) =>
+  `${from}-${to === -1 ? count : to} of ${count}`;
 const defaultRowsPerPageOptions = [10, 25, 50, 100];
 
 /**
@@ -78,6 +78,7 @@ const TablePagination = React.forwardRef(function TablePagination(props, ref) {
     ActionsComponent = TablePaginationActions,
     backIconButtonProps,
     classes,
+    className,
     colSpan: colSpanProp,
     component: Component = TableCell,
     count,
@@ -102,11 +103,11 @@ const TablePagination = React.forwardRef(function TablePagination(props, ref) {
   const MenuItemComponent = SelectProps.native ? 'option' : MenuItem;
 
   return (
-    <Component className={classes.root} colSpan={colSpan} ref={ref} {...other}>
+    <Component className={clsx(classes.root, className)} colSpan={colSpan} ref={ref} {...other}>
       <Toolbar className={classes.toolbar}>
         <div className={classes.spacer} />
         {rowsPerPageOptions.length > 1 && (
-          <Typography color="inherit" variant="caption" className={classes.caption}>
+          <Typography color="inherit" variant="body2" className={classes.caption}>
             {labelRowsPerPage}
           </Typography>
         )}
@@ -125,14 +126,14 @@ const TablePagination = React.forwardRef(function TablePagination(props, ref) {
               <MenuItemComponent
                 className={classes.menuItem}
                 key={rowsPerPageOption}
-                value={rowsPerPageOption}
+                value={rowsPerPageOption.value ? rowsPerPageOption.value : rowsPerPageOption}
               >
-                {rowsPerPageOption}
+                {rowsPerPageOption.label ? rowsPerPageOption.label : rowsPerPageOption}
               </MenuItemComponent>
             ))}
           </Select>
         )}
-        <Typography color="inherit" variant="caption" className={classes.caption}>
+        <Typography color="inherit" variant="body2" className={classes.caption}>
           {labelDisplayedRows({
             from: count === 0 ? 0 : page * rowsPerPage + 1,
             to: Math.min(count, (page + 1) * rowsPerPage),
@@ -169,6 +170,10 @@ TablePagination.propTypes = {
    * See [CSS API](#css) below for more details.
    */
   classes: PropTypes.object.isRequired,
+  /**
+   * @ignore
+   */
+  className: PropTypes.string,
   /**
    * @ignore
    */

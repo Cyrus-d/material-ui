@@ -16,7 +16,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { FormControl } from '@material-ui/core';
 ```
 
-You can learn more about the difference by [reading our guide](/guides/minimizing-bundle-size/).
+You can learn more about the difference by [reading this guide](/guides/minimizing-bundle-size/).
 
 Provides context such as filled/focused/error/required for form inputs.
 Relying on the context provides high flexibility and ensures that the state always stays
@@ -66,10 +66,10 @@ Any other props supplied will be provided to the root element (native element).
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">MuiFormControl-root</span> | Styles applied to the root element.
-| <span class="prop-name">marginNormal</span> | <span class="prop-name">MuiFormControl-marginNormal</span> | Styles applied to the root element if `margin="normal"`.
-| <span class="prop-name">marginDense</span> | <span class="prop-name">MuiFormControl-marginDense</span> | Styles applied to the root element if `margin="dense"`.
-| <span class="prop-name">fullWidth</span> | <span class="prop-name">MuiFormControl-fullWidth</span> | Styles applied to the root element if `fullWidth={true}`.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiFormControl-root</span> | Styles applied to the root element.
+| <span class="prop-name">marginNormal</span> | <span class="prop-name">.MuiFormControl-marginNormal</span> | Styles applied to the root element if `margin="normal"`.
+| <span class="prop-name">marginDense</span> | <span class="prop-name">.MuiFormControl-marginDense</span> | Styles applied to the root element if `margin="dense"`.
+| <span class="prop-name">fullWidth</span> | <span class="prop-name">.MuiFormControl-fullWidth</span> | Styles applied to the root element if `fullWidth={true}`.
 
 You can override the style of the component thanks to one of these customization points:
 

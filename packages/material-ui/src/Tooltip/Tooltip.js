@@ -1,26 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import warning from 'warning';
 import clsx from 'clsx';
 import { elementAcceptingRef } from '@material-ui/utils';
 import { fade } from '../styles/colorManipulator';
 import withStyles from '../styles/withStyles';
-import { capitalize } from '../utils/helpers';
+import capitalize from '../utils/capitalize';
 import Grow from '../Grow';
 import Popper from '../Popper';
-import { useForkRef } from '../utils/reactHelpers';
+import useForkRef from '../utils/useForkRef';
+import setRef from '../utils/setRef';
 import { useIsFocusVisible } from '../utils/focusVisible';
 import useTheme from '../styles/useTheme';
+
+function round(value) {
+  return Math.round(value * 1e5) / 1e5;
+}
 
 export const styles = theme => ({
   /* Styles applied to the Popper component. */
   popper: {
     zIndex: theme.zIndex.tooltip,
     pointerEvents: 'none',
-    position: 'absolute',
-    top: 0,
-    left: 0,
     flip: false, // disable jss-rtl plugin
   },
   /* Styles applied to the Popper component if `interactive={true}`. */
@@ -35,7 +36,7 @@ export const styles = theme => ({
     fontFamily: theme.typography.fontFamily,
     padding: '4px 8px',
     fontSize: theme.typography.pxToRem(10),
-    lineHeight: `${theme.typography.round(14 / 10)}em`,
+    lineHeight: `${round(14 / 10)}em`,
     maxWidth: 300,
     wordWrap: 'break-word',
     fontWeight: theme.typography.fontWeightMedium,
@@ -44,7 +45,7 @@ export const styles = theme => ({
   touch: {
     padding: '8px 16px',
     fontSize: theme.typography.pxToRem(14),
-    lineHeight: `${theme.typography.round(16 / 14)}em`,
+    lineHeight: `${round(16 / 14)}em`,
     fontWeight: theme.typography.fontWeightRegular,
   },
   /* Styles applied to the tooltip (label wrapper) element if `placement` contains "left". */
@@ -81,7 +82,7 @@ export const styles = theme => ({
   },
 });
 
-function Tooltip(props) {
+const Tooltip = React.forwardRef(function Tooltip(props, ref) {
   const {
     children,
     classes,
@@ -117,24 +118,28 @@ function Tooltip(props) {
   const leaveTimer = React.useRef();
   const touchTimer = React.useRef();
 
-  React.useEffect(() => {
-    warning(
-      !(
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+      if (
         childNode &&
         childNode.disabled &&
         !isControlled &&
         title !== '' &&
         childNode.tagName.toLowerCase() === 'button'
-      ),
-      [
-        'Material-UI: you are providing a disabled `button` child to the Tooltip component.',
-        'A disabled element does not fire events.',
-        "Tooltip needs to listen to the child element's events to display the title.",
-        '',
-        'Place a `div` container on top of the element.',
-      ].join('\n'),
-    );
-  }, [isControlled, title, childNode]);
+      ) {
+        console.error(
+          [
+            'Material-UI: you are providing a disabled `button` child to the Tooltip component.',
+            'A disabled element does not fire events.',
+            "Tooltip needs to listen to the child element's events to display the title.",
+            '',
+            'Add a simple wrapper element, such as a `span`.',
+          ].join('\n'),
+        );
+      }
+    }, [isControlled, title, childNode]);
+  }
 
   React.useEffect(() => {
     // Fallback to this default id when possible.
@@ -158,6 +163,25 @@ function Tooltip(props) {
       clearTimeout(touchTimer.current);
     };
   }, []);
+
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+      if (isControlled !== (openProp != null)) {
+        console.error(
+          [
+            `Material-UI: A component is changing ${
+              isControlled ? 'a ' : 'an un'
+            }controlled Tooltip to be ${isControlled ? 'un' : ''}controlled.`,
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            'Decide between using a controlled or uncontrolled Tooltip ' +
+              'element for the lifetime of the component.',
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        );
+      }
+    }, [openProp, isControlled]);
+  }
 
   const handleOpen = event => {
     // The mouseover event will trigger for every nested element in the tooltip.
@@ -204,12 +228,12 @@ function Tooltip(props) {
 
   const { isFocusVisible, onBlurVisible, ref: focusVisibleRef } = useIsFocusVisible();
   const [childIsFocusVisible, setChildIsFocusVisible] = React.useState(false);
-  function handleBlur() {
+  const handleBlur = () => {
     if (childIsFocusVisible) {
       setChildIsFocusVisible(false);
       onBlurVisible();
     }
-  }
+  };
 
   const handleFocus = event => {
     // Workaround for https://github.com/facebook/react/issues/7769
@@ -297,13 +321,15 @@ function Tooltip(props) {
     }, leaveTouchDelay);
   };
 
+  const handleUseRef = useForkRef(setChildNode, ref);
+  const handleFocusRef = useForkRef(focusVisibleRef, handleUseRef);
   // can be removed once we drop support for non ref forwarding class components
-  const handleOwnRef = useForkRef(
-    React.useCallback(instance => {
+  const handleOwnRef = React.useCallback(
+    instance => {
       // #StrictMode ready
-      setChildNode(ReactDOM.findDOMNode(instance));
-    }, []),
-    focusVisibleRef,
+      setRef(handleFocusRef, ReactDOM.findDOMNode(instance));
+    },
+    [handleFocusRef],
   );
   const handleRef = useForkRef(children.ref, handleOwnRef);
 
@@ -352,13 +378,16 @@ function Tooltip(props) {
       }
     : {};
 
-  warning(
-    !children.props.title,
-    [
-      'Material-UI: you have provided a `title` prop to the child of <Tooltip />.',
-      `Remove this title prop \`${children.props.title}\` or the Tooltip component.`,
-    ].join('\n'),
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    if (children.props.title) {
+      console.error(
+        [
+          'Material-UI: you have provided a `title` prop to the child of <Tooltip />.',
+          `Remove this title prop \`${children.props.title}\` or the Tooltip component.`,
+        ].join('\n'),
+      );
+    }
+  }
 
   return (
     <React.Fragment>
@@ -397,7 +426,7 @@ function Tooltip(props) {
       </Popper>
     </React.Fragment>
   );
-}
+});
 
 Tooltip.propTypes = {
   /**
@@ -451,13 +480,13 @@ Tooltip.propTypes = {
    */
   leaveTouchDelay: PropTypes.number,
   /**
-   * Callback fired when the tooltip requests to be closed.
+   * Callback fired when the component requests to be closed.
    *
    * @param {object} event The event source of the callback.
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired when the tooltip requests to be open.
+   * Callback fired when the component requests to be open.
    *
    * @param {object} event The event source of the callback.
    */
