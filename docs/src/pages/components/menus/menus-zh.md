@@ -31,7 +31,7 @@ A [Menu](https://material.io/design/components/menus.html) displays a list of ch
 
 `MenuList`组件的主要任务是处理焦点。
 
-{{"demo": "pages/components/menus/MenuListComposition.js"}}
+{{"demo": "pages/components/menus/MenuListComposition.js", "bg": true}}
 
 ## 自定义菜单
 
@@ -51,7 +51,7 @@ The `MenuItem` is a wrapper around `ListItem` with some additional styles. You c
 
 有 [一个 flexbox 的 错误](https://bugs.chromium.org/p/chromium/issues/detail?id=327437)，使 `text-overflow: ellipsis` 在 Flexbox 布局中不工作。 您可以使用 `Typography` 组件和 `noWrap` 来解决此问题：
 
-{{"demo": "pages/components/menus/TypographyMenu.js"}}
+{{"demo": "pages/components/menus/TypographyMenu.js", "bg": true}}
 
 ## 更改过渡动画
 
@@ -59,12 +59,18 @@ The `MenuItem` is a wrapper around `ListItem` with some additional styles. You c
 
 {{"demo": "pages/components/menus/FadeMenu.js"}}
 
+## 快捷菜单
+
+这是快捷菜单的示例。 （右键单击以打开。）
+
+{{"demo": "pages/components/menus/ContextMenu.js"}}
+
 ## 补充项目
 
 对于更高级的用例，您可以利用：
 
 ### PopupState helper
 
-这里有一个第三方包 [`material-ui-popup-state`](https://github.com/jcoreio/material-ui-popup-state) 在大部分情况下，它都能帮你处理好菜单状态
+There is a 3rd party package [`material-ui-popup-state`](https://github.com/jcoreio/material-ui-popup-state) that takes care of menu state for you in most cases.
 
 {{"demo": "pages/components/menus/MenuPopupState.js"}}

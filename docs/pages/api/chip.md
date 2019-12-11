@@ -27,9 +27,9 @@ Chips represent complex entities in small blocks, such as a contact.
 | <span class="prop-name">avatar</span> | <span class="prop-type">element</span> |  | Avatar element. |
 | <span class="prop-name">children</span> | <span class="prop-type">unsupportedProp</span> |  | This prop isn't supported. Use the `component` prop if you need to change the children structure. |
 | <span class="prop-name">classes</span> | <span class="prop-type">object</span> |  | Override or extend the styles applied to the component. See [CSS API](#css) below for more details. |
-| <span class="prop-name">clickable</span> | <span class="prop-type">bool</span> |  | If true, the chip will appear clickable, and will raise when pressed, even if the onClick prop is not defined. If false, the chip will not be clickable, even if onClick prop is defined. This can be used, for example, along with the component prop to indicate an anchor Chip is clickable. |
+| <span class="prop-name">clickable</span> | <span class="prop-type">bool</span> |  | If `true`, the chip will appear clickable, and will raise when pressed, even if the onClick prop is not defined. If false, the chip will not be clickable, even if onClick prop is defined. This can be used, for example, along with the component prop to indicate an anchor Chip is clickable. |
 | <span class="prop-name">color</span> | <span class="prop-type">'default'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'</span> | <span class="prop-default">'default'</span> | The color of the component. It supports those theme colors that make sense for this component. |
-| <span class="prop-name">component</span> | <span class="prop-type">elementType</span> | <span class="prop-default">'div'</span> | The component used for the root node. Either a string to use a DOM element or a component. |
+| <span class="prop-name">component</span> | <span class="prop-type">elementType</span> |  | The component used for the root node. Either a string to use a DOM element or a component. |
 | <span class="prop-name">deleteIcon</span> | <span class="prop-type">element</span> |  | Override the default delete icon element. Shown only if `onDelete` is set. |
 | <span class="prop-name">disabled</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the chip should be displayed in a disabled state. |
 | <span class="prop-name">icon</span> | <span class="prop-type">element</span> |  | Icon element. |
@@ -64,7 +64,7 @@ Any other props supplied will be provided to the root element (native element).
 | <span class="prop-name">outlinedPrimary</span> | <span class="prop-name">.MuiChip-outlinedPrimary</span> | Styles applied to the root element if `variant="outlined"` and `color="primary"`.
 | <span class="prop-name">outlinedSecondary</span> | <span class="prop-name">.MuiChip-outlinedSecondary</span> | Styles applied to the root element if `variant="outlined"` and `color="secondary"`.
 | <span class="prop-name">avatar</span> | <span class="prop-name">.MuiChip-avatar</span> | Styles applied to the `avatar` element.
-| <span class="prop-name">avatarSmall</span> | <span class="prop-name">.MuiChip-avatarSmall</span> | 
+| <span class="prop-name">avatarSmall</span> | <span class="prop-name">.MuiChip-avatarSmall</span> | Styles applied to the `avatar` element if `size="small"`.
 | <span class="prop-name">avatarColorPrimary</span> | <span class="prop-name">.MuiChip-avatarColorPrimary</span> | Styles applied to the `avatar` element if `color="primary"`.
 | <span class="prop-name">avatarColorSecondary</span> | <span class="prop-name">.MuiChip-avatarColorSecondary</span> | Styles applied to the `avatar` element if `color="secondary"`.
 | <span class="prop-name">icon</span> | <span class="prop-name">.MuiChip-icon</span> | Styles applied to the `icon` element.

@@ -439,14 +439,15 @@ describe('<InputBase />', () => {
         </FormControl>,
       );
       expect(getByTestId('label')).to.have.text('filled: false');
+      const textbox = getByRole('textbox');
 
-      fireEvent.change(getByRole('textbox'), { target: { value: 'material' } });
+      fireEvent.change(textbox, { target: { value: 'material' } });
       expect(getByTestId('label')).to.have.text('filled: true');
 
-      fireEvent.change(getByRole('textbox'), { target: { value: '0' } });
+      fireEvent.change(textbox, { target: { value: '0' } });
       expect(getByTestId('label')).to.have.text('filled: true');
 
-      fireEvent.change(getByRole('textbox'), { target: { value: '' } });
+      fireEvent.change(textbox, { target: { value: '' } });
       expect(getByTestId('label')).to.have.text('filled: false');
     });
 
@@ -498,7 +499,7 @@ describe('<InputBase />', () => {
 
         expect(consoleErrorMock.callCount()).to.eq(1);
         expect(consoleErrorMock.args()[0][0]).to.include(
-          'Material-UI: there are multiple InputBase components inside a FromControl.',
+          'Material-UI: there are multiple InputBase components inside a FormControl.',
         );
       });
 
@@ -554,6 +555,43 @@ describe('<InputBase />', () => {
       const inputRef = React.createRef();
       const { container } = render(<InputBase inputProps={{ ref: inputRef }} />);
       expect(inputRef.current).to.equal(container.querySelector('input'));
+    });
+  });
+
+  describe('prop: inputComponent with prop: inputProps', () => {
+    it('should call onChange inputProp callback with all params sent from custom inputComponent', () => {
+      const INPUT_VALUE = 'material';
+      const OUTPUT_VALUE = 'test';
+
+      function MyInputBase(props) {
+        const { inputRef, onChange, ...other } = props;
+
+        const handleChange = e => {
+          onChange(e.target.value, OUTPUT_VALUE);
+        };
+
+        return <input ref={inputRef} onChange={handleChange} {...other} />;
+      }
+
+      MyInputBase.propTypes = {
+        inputRef: PropTypes.func.isRequired,
+        onChange: PropTypes.func.isRequired,
+      };
+
+      let outputArguments;
+      function parentHandleChange(...args) {
+        outputArguments = args;
+      }
+
+      const { getByRole } = render(
+        <InputBase inputComponent={MyInputBase} inputProps={{ onChange: parentHandleChange }} />,
+      );
+      const textbox = getByRole('textbox');
+      fireEvent.change(textbox, { target: { value: INPUT_VALUE } });
+
+      expect(outputArguments.length).to.equal(2);
+      expect(outputArguments[0]).to.equal(INPUT_VALUE);
+      expect(outputArguments[1]).to.equal(OUTPUT_VALUE);
     });
   });
 

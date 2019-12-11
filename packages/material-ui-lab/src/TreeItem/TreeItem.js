@@ -81,7 +81,8 @@ const TreeItem = React.forwardRef(function TreeItem(props, ref) {
     focusPreviousNode,
     handleFirstChars,
     handleLeftArrow,
-    handleNodeMap,
+    addNodeToNodeMap,
+    removeNodeFromNodeMap,
     icons: contextIcons,
     isExpanded,
     isFocused,
@@ -96,7 +97,7 @@ const TreeItem = React.forwardRef(function TreeItem(props, ref) {
 
   let icon = iconProp;
 
-  const expandable = Boolean(children);
+  const expandable = Boolean(Array.isArray(children) ? children.length : children);
   const expanded = isExpanded ? isExpanded(nodeId) : false;
   const focused = isFocused ? isFocused(nodeId) : false;
   const tabable = isTabable ? isTabable(nodeId) : false;
@@ -124,7 +125,7 @@ const TreeItem = React.forwardRef(function TreeItem(props, ref) {
     }
 
     if (expandable) {
-      toggle(nodeId);
+      toggle(event, nodeId);
     }
 
     if (onClick) {
@@ -132,19 +133,22 @@ const TreeItem = React.forwardRef(function TreeItem(props, ref) {
     }
   };
 
+  const printableCharacter = (event, key) => {
+    if (key === '*') {
+      expandAllSiblings(event, nodeId);
+      return true;
+    }
+
+    if (isPrintableCharacter(key)) {
+      setFocusByFirstCharacter(nodeId, key);
+      return true;
+    }
+    return false;
+  };
+
   const handleKeyDown = event => {
     let flag = false;
     const key = event.key;
-
-    const printableCharacter = () => {
-      if (key === '*') {
-        expandAllSiblings(nodeId);
-        flag = true;
-      } else if (isPrintableCharacter(key)) {
-        setFocusByFirstCharacter(nodeId, key);
-        flag = true;
-      }
-    };
 
     if (event.altKey || event.ctrlKey || event.metaKey) {
       return;
@@ -153,14 +157,14 @@ const TreeItem = React.forwardRef(function TreeItem(props, ref) {
       if (key === ' ' || key === 'Enter') {
         event.stopPropagation();
       } else if (isPrintableCharacter(key)) {
-        printableCharacter();
+        flag = printableCharacter(event, key);
       }
     } else {
       switch (key) {
         case 'Enter':
         case ' ':
           if (nodeRef.current === event.currentTarget && expandable) {
-            toggle();
+            toggle(event);
             flag = true;
           }
           event.stopPropagation();
@@ -178,7 +182,7 @@ const TreeItem = React.forwardRef(function TreeItem(props, ref) {
             if (expanded) {
               focusNextNode(nodeId);
             } else {
-              toggle();
+              toggle(event);
             }
           }
           flag = true;
@@ -196,7 +200,7 @@ const TreeItem = React.forwardRef(function TreeItem(props, ref) {
           break;
         default:
           if (isPrintableCharacter(key)) {
-            printableCharacter();
+            flag = printableCharacter(event, key);
           }
       }
     }
@@ -222,11 +226,20 @@ const TreeItem = React.forwardRef(function TreeItem(props, ref) {
   };
 
   React.useEffect(() => {
-    const childIds = React.Children.map(children, child => child.props.nodeId);
-    if (handleNodeMap) {
-      handleNodeMap(nodeId, childIds);
+    const childIds = React.Children.map(children, child => child.props.nodeId) || [];
+    if (addNodeToNodeMap) {
+      addNodeToNodeMap(nodeId, childIds);
     }
-  }, [children, nodeId, handleNodeMap]);
+  }, [children, nodeId, addNodeToNodeMap]);
+
+  React.useEffect(() => {
+    if (removeNodeFromNodeMap) {
+      return () => {
+        removeNodeFromNodeMap(nodeId);
+      };
+    }
+    return undefined;
+  }, [nodeId, removeNodeFromNodeMap]);
 
   React.useEffect(() => {
     if (handleFirstChars && label) {

@@ -33,7 +33,6 @@ const pages = [
         pathname: '/components',
         subheader: '/components/inputs',
         children: [
-          { pathname: '/components/autocomplete' },
           { pathname: '/components/buttons' },
           { pathname: '/components/checkboxes' },
           { pathname: '/components/pickers', title: 'Date / Time' },
@@ -114,6 +113,7 @@ const pages = [
         subheader: '/components/lab',
         children: [
           { pathname: '/components/about-the-lab' },
+          { pathname: '/components/autocomplete' },
           { pathname: '/components/rating' },
           { pathname: '/components/skeleton' },
           { pathname: '/components/speed-dial' },
@@ -153,9 +153,9 @@ const pages = [
     children: [
       {
         pathname: '/customization',
-        subheader: '/customization/theming',
+        subheader: '/customization/theme',
         children: [
-          { pathname: '/customization/theming', title: 'Overview' },
+          { pathname: '/customization/theming' },
           { pathname: '/customization/palette' },
           { pathname: '/customization/typography' },
           { pathname: '/customization/spacing' },
@@ -183,6 +183,7 @@ const pages = [
       { pathname: '/guides/migration-v3', title: 'Migration From v3' },
       { pathname: '/guides/migration-v0x', title: 'Migration From v0.x' },
       { pathname: '/guides/testing' },
+      { pathname: '/guides/localization' },
       { pathname: '/guides/right-to-left', title: 'Right-to-left' },
       { pathname: '/guides/flow' },
     ],
@@ -213,6 +214,7 @@ const pages = [
   {
     pathname: '/blog',
     children: [
+      { pathname: '/blog/october-2019-update' },
       { pathname: '/blog/september-2019-update' },
       { pathname: '/blog/august-2019-update' },
       { pathname: '/blog/july-2019-update' },

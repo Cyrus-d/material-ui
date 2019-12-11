@@ -15,7 +15,7 @@ The `ToggleButtonGroup` will control the selected state of its child buttons whe
 
 ## Tamaños
 
-Fancy larger or smaller buttons? Use the `size` property.
+Botones más grandes o más pequeños? Usa la propiedad `size`.
 
 {{"demo": "pages/components/toggle-button/ToggleButtonSizes.js"}}
 
@@ -27,7 +27,7 @@ Fancy larger or smaller buttons? Use the `size` property.
 
 Here is an example of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
 
-{{"demo": "pages/components/toggle-button/CustomizedDividers.js"}}
+{{"demo": "pages/components/toggle-button/CustomizedDividers.js", "bg": true}}
 
 ## Accesibilidad
 

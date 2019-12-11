@@ -4,6 +4,7 @@ import { spy } from 'sinon';
 import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
 import { createClientRender, fireEvent } from 'test/utils/createClientRender';
+import ExpansionPanel from '../ExpansionPanel';
 import ExpansionPanelSummary from './ExpansionPanelSummary';
 import ButtonBase from '../ButtonBase';
 
@@ -13,6 +14,7 @@ describe('<ExpansionPanelSummary />', () => {
   const render = createClientRender({ strict: true });
 
   before(() => {
+    // requires mocking the TransitionComponent of `ExpansionPanel`
     mount = createMount({ strict: true });
     classes = getClasses(<ExpansionPanelSummary />);
   });
@@ -33,30 +35,34 @@ describe('<ExpansionPanelSummary />', () => {
   });
 
   it('when disabled should have disabled class', () => {
-    const { getByRole } = render(<ExpansionPanelSummary disabled />);
+    const { getByRole } = render(
+      <ExpansionPanel disabled TransitionComponent={({ children }) => children}>
+        <ExpansionPanelSummary />
+      </ExpansionPanel>,
+    );
 
     expect(getByRole('button')).to.have.class(classes.disabled);
   });
 
-  it('when expanded adds the expanded class to any button regardless of a11y', () => {
-    const { getAllByRole } = render(<ExpansionPanelSummary expanded expandIcon="expand" />);
+  it('when expanded adds the expanded class to the button and expandIcon', () => {
+    const { container, getByRole } = render(
+      <ExpansionPanel expanded TransitionComponent={({ children }) => children}>
+        <ExpansionPanelSummary expandIcon="expand" />
+      </ExpansionPanel>,
+    );
 
-    const buttons = getAllByRole('button', { hidden: true });
-    expect(buttons).to.have.length(2);
-    expect(buttons[0]).to.have.class(classes.expanded);
-    expect(buttons[0]).to.have.attribute('aria-expanded', 'true');
-    expect(buttons[0]).not.to.be.inaccessible;
-    expect(buttons[1]).to.have.class(classes.expanded);
-    expect(buttons[1]).to.be.inaccessible;
+    const button = getByRole('button');
+    expect(button).to.have.class(classes.expanded);
+    expect(button).to.have.attribute('aria-expanded', 'true');
+    expect(container.querySelector(`.${classes.expandIcon}`)).to.have.class(classes.expanded);
   });
 
-  it('should render with the expand icon and have the expandIcon class', () => {
-    const { getAllByRole } = render(<ExpansionPanelSummary expandIcon={<div>Icon</div>} />);
+  it('should render with an inaccessible expand icon and have the expandIcon class', () => {
+    const { container } = render(<ExpansionPanelSummary expandIcon={<div>Icon</div>} />);
 
-    const expandButton = getAllByRole('button', { hidden: true })[1];
-    expect(expandButton).to.have.class(classes.expandIcon);
-    expect(expandButton).to.have.text('Icon');
-    expect(expandButton).to.be.inaccessible;
+    const expandIcon = container.querySelector(`.${classes.expandIcon}`);
+    expect(expandIcon).to.have.text('Icon');
+    expect(expandIcon).to.be.inaccessible;
   });
 
   it('focusing adds the `focused` class if focused visible', () => {
@@ -66,24 +72,26 @@ describe('<ExpansionPanelSummary />', () => {
     // with :focus
     const { getByRole } = render(<ExpansionPanelSummary />);
     fireEvent.mouseDown(document.body); // pointer device
+    const button = getByRole('button');
 
     fireEvent.keyDown(document.activeElement, { key: 'Tab' }); // not actually focusing (yet)
-    getByRole('button').focus();
+    button.focus();
 
-    expect(getByRole('button')).to.be.focused;
-    expect(getByRole('button')).to.have.class(classes.focused);
+    expect(button).to.have.focus;
+    expect(button).to.have.class(classes.focused);
   });
 
   it('blur should unset focused state', () => {
     const { getByRole } = render(<ExpansionPanelSummary />);
     fireEvent.mouseDown(document.body); // pointer device
     fireEvent.keyDown(document.activeElement, { key: 'Tab' }); // not actually focusing (yet)
-    getByRole('button').focus();
+    const button = getByRole('button');
+    button.focus();
 
-    getByRole('button').blur();
+    button.blur();
 
-    expect(getByRole('button')).not.to.be.focused;
-    expect(getByRole('button')).not.to.have.class(classes.focused);
+    expect(button).not.to.have.focus;
+    expect(button).not.to.have.class(classes.focused);
   });
 
   it('should fire onClick callbacks', () => {
@@ -95,9 +103,13 @@ describe('<ExpansionPanelSummary />', () => {
     expect(handleClick.callCount).to.equal(1);
   });
 
-  it('calls onChange when clicking', () => {
+  it('fires onChange of the ExpansionPanel if clicked', () => {
     const handleChange = spy();
-    const { getByRole } = render(<ExpansionPanelSummary onChange={handleChange} />);
+    const { getByRole } = render(
+      <ExpansionPanel onChange={handleChange} TransitionComponent={({ children }) => children}>
+        <ExpansionPanelSummary />
+      </ExpansionPanel>,
+    );
 
     getByRole('button').click();
 

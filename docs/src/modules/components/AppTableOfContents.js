@@ -1,14 +1,15 @@
 /* eslint-disable react/no-danger */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import marked from 'marked';
 import throttle from 'lodash/throttle';
 import clsx from 'clsx';
+import Box from '@material-ui/core/Box';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import textToHash from 'docs/src/modules/utils/textToHash';
+import DiamondSponsors from 'docs/src/modules/components/DiamondSponsors';
 import Link from 'docs/src/modules/components/Link';
 
 const useStyles = makeStyles(theme => ({
@@ -197,7 +198,19 @@ export default function AppTableOfContents(props) {
   // Corresponds to 10 frames at 60 Hz
   useThrottledOnScroll(itemsServer.length > 0 ? findActiveIndex : null, 166);
 
-  const handleClick = hash => () => {
+  const handleClick = hash => event => {
+    // Ignore click for new tab/new window behavior
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 || // ignore everything but left-click
+      event.metaKey ||
+      event.ctrlKey ||
+      event.altKey ||
+      event.shiftKey
+    ) {
+      return;
+    }
+
     // Used to disable findActiveIndex if the page scrolls due to a click
     clickedRef.current = true;
     unsetClickedRef.current = setTimeout(() => {
@@ -256,6 +269,9 @@ export default function AppTableOfContents(props) {
           </Typography>
         </React.Fragment>
       ) : null}
+      <Box mt={3} mb={2} mx={1.5}>
+        <DiamondSponsors />
+      </Box>
     </nav>
   );
 }

@@ -49,8 +49,8 @@ Head to [Option 2](#option-2) for the approach that yields the best DX and UX.
 
 While importing directly in this manner doesn't use the exports in [`@material-ui/core/index.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/index.js), this file can serve as a handy reference as to which modules are public.
 
-Be aware that we only support first and second level imports. Anything below is considered
-private and can cause module duplication in your bundle.
+Be aware that we only support first and second level imports.
+Anything deeper is considered private and can cause issues, such as module duplication in your bundle.
 
 ```js
 // ✅ OK
@@ -175,26 +175,27 @@ If you are using Create React App, you will need to use a couple of projects tha
 
   Note: You may run into errors like these:
 
-  ```
-    Module not found: Can't resolve '@material-ui/core/makeStyles' in '/your/project'
-    Module not found: Can't resolve '@material-ui/core/createStyles' in '/your/project'
-  ```
+  > Module not found: Can't resolve '@material-ui/core/makeStyles' in '/your/project'
 
   This is because `@material-ui/styles` is re-exported through `core`, but the full import is not allowed.
 
   You have an import like this in your code:
 
-  `import {makeStyles, createStyles} from '@material-ui/core';`
+  ```js
+  import { makeStyles, createStyles } from '@material-ui/core';
+  ```
 
   The fix is simple, define the import separately:
 
-  `import {makeStyles, createStyles} from '@material-ui/core/styles';`
+  ```js
+  import { makeStyles, createStyles } from '@material-ui/core/styles';
+  ```
 
   Enjoy significantly faster start times.
 
 #### 2. Convert all your imports
 
-Finally, you can convert your exisiting codebase to this option with this [top-level-imports](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-codemod/README.md#top-level-imports) codemod.
+Finally, you can convert your existing codebase to this option with this [top-level-imports](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-codemod/README.md#top-level-imports) codemod.
 It will perform the following diffs:
 
 ```diff

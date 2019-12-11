@@ -49,8 +49,18 @@ describe('<Modal />', () => {
   );
 
   describe('props', () => {
+    let container;
+
+    before(() => {
+      container = document.createElement('div');
+      document.body.appendChild(container);
+    });
+
+    after(() => {
+      document.body.removeChild(container);
+    });
+
     it('should consume theme default props', () => {
-      const container = document.createElement('div');
       const theme = createMuiTheme({ props: { MuiModal: { container } } });
       mount(
         <ThemeProvider theme={theme}>
@@ -577,15 +587,17 @@ describe('<Modal />', () => {
         };
 
         const { getByRole, setProps } = render(<WithRemovableElement />);
-        expect(getByRole('dialog')).to.be.focused;
+        const dialog = getByRole('dialog');
+        const toggleButton = getByRole('button');
+        expect(dialog).to.have.focus;
 
-        getByRole('button').focus();
-        expect(getByRole('button')).to.be.focused;
+        toggleButton.focus();
+        expect(toggleButton).to.have.focus;
 
         setProps({ hideButton: true });
-        expect(getByRole('dialog')).to.not.be.focused;
+        expect(dialog).not.to.have.focus;
         clock.tick(500); // wait for the interval check to kick in.
-        expect(getByRole('dialog')).to.be.focused;
+        expect(dialog).to.have.focus;
       });
     });
   });

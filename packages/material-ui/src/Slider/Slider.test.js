@@ -165,8 +165,7 @@ describe('<Slider />', () => {
   describe('range', () => {
     it('should support keyboard', () => {
       const { getAllByRole } = render(<Slider defaultValue={[20, 30]} />);
-      const thumb1 = getAllByRole('slider')[0];
-      const thumb2 = getAllByRole('slider')[1];
+      const [thumb1, thumb2] = getAllByRole('slider');
 
       thumb1.focus();
       fireEvent.keyDown(document.activeElement, {
@@ -307,22 +306,37 @@ describe('<Slider />', () => {
       key: 'ArrowRight',
     };
 
+    it('should use min as the step origin', () => {
+      const { getByRole } = render(<Slider defaultValue={150} step={100} max={750} min={150} />);
+      const thumb = getByRole('slider');
+      thumb.focus();
+
+      fireEvent.keyDown(document.activeElement, moveRightEvent);
+      expect(thumb).to.have.attribute('aria-valuenow', '250');
+
+      fireEvent.keyDown(document.activeElement, moveLeftEvent);
+      expect(thumb).to.have.attribute('aria-valuenow', '150');
+    });
+
     it('should reach right edge value', () => {
       const { getByRole } = render(<Slider defaultValue={90} min={6} max={108} step={10} />);
       const thumb = getByRole('slider');
       thumb.focus();
 
       fireEvent.keyDown(document.activeElement, moveRightEvent);
-      expect(thumb).to.have.attribute('aria-valuenow', '100');
+      expect(thumb).to.have.attribute('aria-valuenow', '96');
+
+      fireEvent.keyDown(document.activeElement, moveRightEvent);
+      expect(thumb).to.have.attribute('aria-valuenow', '106');
 
       fireEvent.keyDown(document.activeElement, moveRightEvent);
       expect(thumb).to.have.attribute('aria-valuenow', '108');
 
       fireEvent.keyDown(document.activeElement, moveLeftEvent);
-      expect(thumb).to.have.attribute('aria-valuenow', '100');
+      expect(thumb).to.have.attribute('aria-valuenow', '96');
 
       fireEvent.keyDown(document.activeElement, moveLeftEvent);
-      expect(thumb).to.have.attribute('aria-valuenow', '90');
+      expect(thumb).to.have.attribute('aria-valuenow', '86');
     });
 
     it('should reach left edge value', () => {
@@ -331,16 +345,13 @@ describe('<Slider />', () => {
       thumb.focus();
 
       fireEvent.keyDown(document.activeElement, moveLeftEvent);
-      expect(thumb).to.have.attribute('aria-valuenow', '10');
-
-      fireEvent.keyDown(document.activeElement, moveLeftEvent);
       expect(thumb).to.have.attribute('aria-valuenow', '6');
 
       fireEvent.keyDown(document.activeElement, moveRightEvent);
-      expect(thumb).to.have.attribute('aria-valuenow', '20');
+      expect(thumb).to.have.attribute('aria-valuenow', '16');
 
       fireEvent.keyDown(document.activeElement, moveRightEvent);
-      expect(thumb).to.have.attribute('aria-valuenow', '30');
+      expect(thumb).to.have.attribute('aria-valuenow', '26');
     });
 
     it('should round value to step precision', () => {
@@ -509,16 +520,39 @@ describe('<Slider />', () => {
     const { getAllByRole } = render(
       <Slider value={[20, 50]} getAriaValueText={getAriaValueText} />,
     );
+    const sliders = getAllByRole('slider');
 
-    expect(getAllByRole('slider')[0]).to.have.attribute('aria-valuetext', '20°C');
-    expect(getAllByRole('slider')[1]).to.have.attribute('aria-valuetext', '50°C');
+    expect(sliders[0]).to.have.attribute('aria-valuetext', '20°C');
+    expect(sliders[1]).to.have.attribute('aria-valuetext', '50°C');
   });
 
   it('should support getAriaLabel', () => {
     const getAriaLabel = index => `Label ${index}`;
     const { getAllByRole } = render(<Slider value={[20, 50]} getAriaLabel={getAriaLabel} />);
+    const sliders = getAllByRole('slider');
 
-    expect(getAllByRole('slider')[0]).to.have.attribute('aria-label', 'Label 0');
-    expect(getAllByRole('slider')[1]).to.have.attribute('aria-label', 'Label 1');
+    expect(sliders[0]).to.have.attribute('aria-label', 'Label 0');
+    expect(sliders[1]).to.have.attribute('aria-label', 'Label 1');
+  });
+
+  describe('prop: ValueLabelComponent', () => {
+    it('receives the formatted value', () => {
+      function ValueLabelComponent(props) {
+        const { value } = props;
+        return <span data-testid="value-label">{value}</span>;
+      }
+      ValueLabelComponent.propTypes = { value: PropTypes.string };
+
+      const { getByTestId } = render(
+        <Slider
+          value={10}
+          ValueLabelComponent={ValueLabelComponent}
+          valueLabelDisplay="on"
+          valueLabelFormat={n => n.toString(2)}
+        />,
+      );
+
+      expect(getByTestId('value-label')).to.have.text('1010');
+    });
   });
 });

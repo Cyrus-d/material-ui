@@ -17,7 +17,6 @@ export const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    // Remove grey highlight
     WebkitTapHighlightColor: 'transparent',
     backgroundColor: 'transparent', // Reset default value
     // We disable the focus ring for mouse, touch and keyboard users.
@@ -123,7 +122,7 @@ const ButtonBase = React.forwardRef(function ButtonBase(props, ref) {
         eventCallback(event);
       }
 
-      const ignore = event.defaultPrevented || skipRippleAction;
+      const ignore = skipRippleAction;
       if (!ignore && rippleRef.current) {
         rippleRef.current[rippleAction](event);
       }
@@ -182,6 +181,11 @@ const ButtonBase = React.forwardRef(function ButtonBase(props, ref) {
     }
   });
 
+  const isNonNativeButton = () => {
+    const button = getButtonNode();
+    return component && component !== 'button' && !(button.tagName === 'A' && button.href);
+  };
+
   /**
    * IE 11 shim for https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/repeat
    */
@@ -206,15 +210,8 @@ const ButtonBase = React.forwardRef(function ButtonBase(props, ref) {
       onKeyDown(event);
     }
 
-    const button = getButtonNode();
     // Keyboard accessibility for non interactive elements
-    if (
-      event.target === event.currentTarget &&
-      component &&
-      component !== 'button' &&
-      (event.key === ' ' || event.key === 'Enter') &&
-      !(button.tagName === 'A' && button.href)
-    ) {
+    if (event.target === event.currentTarget && isNonNativeButton() && event.key === 'Enter') {
       event.preventDefault();
       if (onClick) {
         onClick(event);
@@ -222,7 +219,15 @@ const ButtonBase = React.forwardRef(function ButtonBase(props, ref) {
     }
   });
   const handleKeyUp = useEventCallback(event => {
-    if (focusRipple && event.key === ' ' && rippleRef.current && focusVisible) {
+    // calling preventDefault in keyUp on a <button> will not dispatch a click event if Space is pressed
+    // https://codesandbox.io/s/button-keyup-preventdefault-dn7f0
+    if (
+      focusRipple &&
+      event.key === ' ' &&
+      rippleRef.current &&
+      focusVisible &&
+      !event.defaultPrevented
+    ) {
       keydownRef.current = false;
       event.persist();
       rippleRef.current.stop(event, () => {
@@ -231,6 +236,19 @@ const ButtonBase = React.forwardRef(function ButtonBase(props, ref) {
     }
     if (onKeyUp) {
       onKeyUp(event);
+    }
+
+    // Keyboard accessibility for non interactive elements
+    if (
+      event.target === event.currentTarget &&
+      isNonNativeButton() &&
+      event.key === ' ' &&
+      !event.defaultPrevented
+    ) {
+      event.preventDefault();
+      if (onClick) {
+        onClick(event);
+      }
     }
   });
 
@@ -301,6 +319,8 @@ ButtonBase.propTypes = {
    */
   action: refType,
   /**
+   * @ignore
+   *
    * Use that prop to pass a ref to the native button component.
    * @deprecated Use `ref` instead.
    */

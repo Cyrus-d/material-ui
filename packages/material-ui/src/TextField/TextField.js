@@ -58,14 +58,16 @@ export const styles = {
 const TextField = React.forwardRef(function TextField(props, ref) {
   const {
     autoComplete,
-    autoFocus,
+    autoFocus = false,
     children,
     classes,
-    className: classNameProp,
+    className,
+    color = 'primary',
     defaultValue,
-    error,
+    disabled = false,
+    error = false,
     FormHelperTextProps,
-    fullWidth,
+    fullWidth = false,
     helperText,
     hiddenLabel,
     id,
@@ -74,7 +76,7 @@ const TextField = React.forwardRef(function TextField(props, ref) {
     InputProps,
     inputRef,
     label,
-    multiline,
+    multiline = false,
     name,
     onBlur,
     onChange,
@@ -118,8 +120,16 @@ const TextField = React.forwardRef(function TextField(props, ref) {
 
     InputMore.labelWidth = labelWidth;
   }
+  if (select) {
+    // unset defaults from textbox inputs
+    if (!SelectProps || !SelectProps.native) {
+      InputMore.id = undefined;
+    }
+    InputMore['aria-describedby'] = undefined;
+  }
 
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
+  const inputLabelId = label && id ? `${id}-label` : undefined;
   const InputComponent = variantComponent[variant];
   const InputElement = (
     <InputComponent
@@ -148,22 +158,31 @@ const TextField = React.forwardRef(function TextField(props, ref) {
 
   return (
     <FormControl
-      className={clsx(classes.root, classNameProp)}
+      className={clsx(classes.root, className)}
+      disabled={disabled}
       error={error}
       fullWidth={fullWidth}
       hiddenLabel={hiddenLabel}
       ref={ref}
       required={required}
+      color={color}
       variant={variant}
       {...other}
     >
       {label && (
-        <InputLabel htmlFor={id} ref={labelRef} {...InputLabelProps}>
+        <InputLabel htmlFor={id} ref={labelRef} id={inputLabelId} {...InputLabelProps}>
           {label}
         </InputLabel>
       )}
       {select ? (
-        <Select aria-describedby={helperTextId} value={value} input={InputElement} {...SelectProps}>
+        <Select
+          aria-describedby={helperTextId}
+          id={id}
+          labelId={inputLabelId}
+          value={value}
+          input={InputElement}
+          {...SelectProps}
+        >
           {children}
         </Select>
       ) : (
@@ -202,6 +221,10 @@ TextField.propTypes = {
    * @ignore
    */
   className: PropTypes.string,
+  /**
+   * The color of the component. It supports those theme colors that make sense for this component.
+   */
+  color: PropTypes.oneOf(['primary', 'secondary']),
   /**
    * The default value of the `input` element.
    */
@@ -310,6 +333,10 @@ TextField.propTypes = {
    * Props applied to the [`Select`](/api/select/) element.
    */
   SelectProps: PropTypes.object,
+  /**
+   * The size of the text field.
+   */
+  size: PropTypes.oneOf(['small', 'medium']),
   /**
    * Type of the `input` element. It should be [a valid HTML5 input type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types).
    */

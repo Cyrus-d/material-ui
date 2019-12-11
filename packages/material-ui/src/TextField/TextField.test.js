@@ -7,6 +7,7 @@ import FormControl from '../FormControl';
 import Input from '../Input';
 import OutlinedInput from '../OutlinedInput';
 import TextField from './TextField';
+import MenuItem from '../MenuItem';
 
 describe('<TextField />', () => {
   let classes;
@@ -116,10 +117,10 @@ describe('<TextField />', () => {
   });
 
   describe('prop: select', () => {
-    it('should be able to render a select as expected', () => {
+    it('can render a <select /> when `native`', () => {
       const currencies = [{ value: 'USD', label: '$' }, { value: 'BTC', label: '฿' }];
 
-      const { getByRole } = render(
+      const { container } = render(
         <TextField select SelectProps={{ native: true }}>
           {currencies.map(option => (
             <option key={option.value} value={option.value}>
@@ -129,10 +130,49 @@ describe('<TextField />', () => {
         </TextField>,
       );
 
-      const select = getByRole('listbox');
-
+      const select = container.querySelector('select');
       expect(select).to.be.ok;
-      expect(select.querySelectorAll('option')).to.have.lengthOf(2);
+      expect(select.options).to.have.lengthOf(2);
+    });
+
+    it('associates the label with the <select /> when `native={true}` and `id`', () => {
+      const { getByLabelText } = render(
+        <TextField
+          label="Currency:"
+          id="labelled-select"
+          select
+          SelectProps={{ native: true }}
+          value="$"
+        >
+          <option value="dollar">$</option>
+        </TextField>,
+      );
+
+      expect(getByLabelText('Currency:')).to.have.property('value', 'dollar');
+    });
+
+    it('renders a combobox with the appropriate accessible name', () => {
+      const { getByRole } = render(
+        <TextField select id="my-select" label="Release: " value="stable">
+          <MenuItem value="alpha">Alpha</MenuItem>
+          <MenuItem value="beta">Beta</MenuItem>
+          <MenuItem value="stable">Stable</MenuItem>
+        </TextField>,
+      );
+
+      expect(getByRole('button')).to.have.accessibleName('Release: Stable');
+    });
+
+    it('creates an input[hidden] that has no accessible properties', () => {
+      const { container } = render(
+        <TextField select id="my-select" label="Release: " value="stable">
+          <MenuItem value="stable">Stable</MenuItem>
+        </TextField>,
+      );
+
+      const input = container.querySelector('input[type="hidden"]');
+      expect(input).not.to.have.attribute('id');
+      expect(input).not.to.have.attribute('aria-describedby');
     });
   });
 });

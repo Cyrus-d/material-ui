@@ -19,10 +19,16 @@ components: Skeleton
 )}
 ```
 
-## YouTube 示例
+## 变种(Variants)
 
-{{"demo": "pages/components/skeleton/YouTube.js"}}
+The component supports 3 variants.
 
-## Facebook 示例
+{{"demo": "pages/components/skeleton/Variants.js"}}
 
-{{"demo": "pages/components/skeleton/Facebook.js"}}
+## YouTube example
+
+{{"demo": "pages/components/skeleton/YouTube.js", "defaultCodeOpen": false}}
+
+## Facebook example
+
+{{"demo": "pages/components/skeleton/Facebook.js", "defaultCodeOpen": false, "bg": true}}

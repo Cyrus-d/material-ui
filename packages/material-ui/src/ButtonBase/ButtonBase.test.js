@@ -136,13 +136,12 @@ describe('<ButtonBase />', () => {
       ];
 
       /**
-       * @type {Record<string, ReturnType<typeof spy>>}
+       * @type {Record<string, import('sinon').SinonSpy>}
        */
-      const handlers = eventHandlerNames.reduce((result, n) => {
-        // @ts-ignore
-        result[n] = spy();
-        return result;
-      }, {});
+      const handlers = {};
+      eventHandlerNames.forEach(handlerName => {
+        handlers[handlerName] = spy();
+      });
       const onDragEnd = spy();
       const onTouchStart = spy();
       const onTouchEnd = spy();
@@ -544,8 +543,10 @@ describe('<ButtonBase />', () => {
           Hello
         </ButtonBase>,
       );
-      expect(getByRole('button')).not.to.have.attribute('disabled');
-      expect(getByRole('button')).to.have.attribute('aria-disabled', 'true');
+      const button = getByRole('button');
+
+      expect(button).not.to.have.attribute('disabled');
+      expect(button).to.have.attribute('aria-disabled', 'true');
     });
   });
 
@@ -606,7 +607,7 @@ describe('<ButtonBase />', () => {
       // so we need to check if we're resilient against it
       const { getByText } = render(<ButtonBase autoFocus>Hello</ButtonBase>);
 
-      expect(getByText('Hello')).to.be.focused;
+      expect(getByText('Hello')).to.have.focus;
     });
   });
 
@@ -678,23 +679,119 @@ describe('<ButtonBase />', () => {
     });
 
     describe('keyboard accessibility for non interactive elements', () => {
-      it('calls onClick when a spacebar is pressed on the element', () => {
+      it('does not call onClick when a spacebar is pressed on the element', () => {
         const onClickSpy = spy(event => event.defaultPrevented);
         const { getByRole } = render(
           <ButtonBase onClick={onClickSpy} component="div">
             Hello
           </ButtonBase>,
         );
-
         const button = getByRole('button');
         button.focus();
+
         fireEvent.keyDown(document.activeElement || document.body, {
           key: ' ',
+        });
+
+        expect(onClickSpy.callCount).to.equal(0);
+      });
+
+      it('does call onClick when a spacebar is released on the element', () => {
+        const onClickSpy = spy(event => event.defaultPrevented);
+        const { getByRole } = render(
+          <ButtonBase onClick={onClickSpy} component="div">
+            Hello
+          </ButtonBase>,
+        );
+        const button = getByRole('button');
+        button.focus();
+
+        fireEvent.keyUp(document.activeElement || document.body, {
+          key: ' ',
+        });
+
+        expect(onClickSpy.callCount).to.equal(1);
+        // defaultPrevented?
+        expect(onClickSpy.returnValues[0]).to.equal(true);
+      });
+
+      it('does not call onClick when a spacebar is released and the default is prevented', () => {
+        const onClickSpy = spy(event => event.defaultPrevented);
+        const { getByRole } = render(
+          <ButtonBase
+            onClick={onClickSpy}
+            onKeyUp={
+              /**
+               * @param {React.SyntheticEvent} event
+               */
+              event => event.preventDefault()
+            }
+            component="div"
+          >
+            Hello
+          </ButtonBase>,
+        );
+        const button = getByRole('button');
+        button.focus();
+
+        fireEvent.keyUp(document.activeElement || document.body, {
+          key: ' ',
+        });
+
+        expect(onClickSpy.callCount).to.equal(0);
+      });
+
+      it('calls onClick when Enter is pressed on the element', () => {
+        const onClickSpy = spy(event => event.defaultPrevented);
+        const { getByRole } = render(
+          <ButtonBase onClick={onClickSpy} component="div">
+            Hello
+          </ButtonBase>,
+        );
+        const button = getByRole('button');
+        button.focus();
+
+        fireEvent.keyDown(document.activeElement || document.body, {
+          key: 'Enter',
         });
 
         expect(onClickSpy.calledOnce).to.equal(true);
         // defaultPrevented?
         expect(onClickSpy.returnValues[0]).to.equal(true);
+      });
+
+      it('does not call onClick if Enter was pressed on a child', () => {
+        const onClickSpy = spy(event => event.defaultPrevented);
+        const onKeyDownSpy = spy();
+        render(
+          <ButtonBase onClick={onClickSpy} onKeyDown={onKeyDownSpy} component="div">
+            <input autoFocus type="text" />
+          </ButtonBase>,
+        );
+
+        fireEvent.keyDown(document.activeElement, {
+          key: 'Enter',
+        });
+
+        expect(onKeyDownSpy.callCount).to.equal(1);
+        expect(onClickSpy.callCount).to.equal(0);
+      });
+
+      it('does not call onClick if Space was released on a child', () => {
+        const onClickSpy = spy(event => event.defaultPrevented);
+        const onKeyUpSpy = spy();
+        render(
+          <ButtonBase onClick={onClickSpy} onKeyUp={onKeyUpSpy} component="div">
+            <input autoFocus type="text" />
+          </ButtonBase>,
+        );
+
+        fireEvent.keyUp(document.activeElement, {
+          key: ' ',
+        });
+
+        expect(onKeyUpSpy.callCount).to.equal(1);
+        expect(onClickSpy.callCount).to.equal(0);
       });
 
       it('prevents default with an anchor and empty href', () => {
@@ -751,7 +848,7 @@ describe('<ButtonBase />', () => {
       expect(typeof buttonActionsRef.current.focusVisible).to.equal('function');
       // @ts-ignore
       buttonActionsRef.current.focusVisible();
-      expect(getByText('Hello')).to.be.focused;
+      expect(getByText('Hello')).to.have.focus;
       expect(getByText('Hello')).to.match('.focusVisible');
     });
   });

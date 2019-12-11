@@ -7,7 +7,7 @@ import { emphasize, fade } from '../styles/colorManipulator';
 import useForkRef from '../utils/useForkRef';
 import unsupportedProp from '../utils/unsupportedProp';
 import capitalize from '../utils/capitalize';
-import '../Avatar'; // So we don't have any override priority issue.
+import ButtonBase from '../ButtonBase';
 
 export const styles = theme => {
   const backgroundColor =
@@ -41,6 +41,29 @@ export const styles = theme => {
         opacity: 0.5,
         pointerEvents: 'none',
       },
+      '& $avatar': {
+        marginLeft: 5,
+        marginRight: -6,
+        width: 24,
+        height: 24,
+        color: theme.palette.type === 'light' ? theme.palette.grey[700] : theme.palette.grey[300],
+        fontSize: theme.typography.pxToRem(12),
+      },
+      '& $avatarColorPrimary': {
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary.dark,
+      },
+      '& $avatarColorSecondary': {
+        color: theme.palette.secondary.contrastText,
+        backgroundColor: theme.palette.secondary.dark,
+      },
+      '& $avatarSmall': {
+        marginLeft: 4,
+        marginRight: -4,
+        width: 18,
+        height: 18,
+        fontSize: theme.typography.pxToRem(10),
+      },
     },
     /* Styles applied to the root element if `size="small"`. */
     sizeSmall: {
@@ -60,14 +83,14 @@ export const styles = theme => {
     disabled: {},
     /* Styles applied to the root element if `onClick` is defined or `clickable={true}`. */
     clickable: {
-      WebkitTapHighlightColor: 'transparent', // Remove grey highlight
+      userSelect: 'none',
+      WebkitTapHighlightColor: 'transparent',
       cursor: 'pointer',
       '&:hover, &:focus': {
         backgroundColor: emphasize(backgroundColor, 0.08),
       },
       '&:active': {
         boxShadow: theme.shadows[1],
-        backgroundColor: emphasize(backgroundColor, 0.12),
       },
     },
     /* Styles applied to the root element if `onClick` and `color="primary"` is defined or `clickable={true}`. */
@@ -75,17 +98,11 @@ export const styles = theme => {
       '&:hover, &:focus': {
         backgroundColor: emphasize(theme.palette.primary.main, 0.08),
       },
-      '&:active': {
-        backgroundColor: emphasize(theme.palette.primary.main, 0.12),
-      },
     },
     /* Styles applied to the root element if `onClick` and `color="secondary"` is defined or `clickable={true}`. */
     clickableColorSecondary: {
       '&:hover, &:focus': {
         backgroundColor: emphasize(theme.palette.secondary.main, 0.08),
-      },
-      '&:active': {
-        backgroundColor: emphasize(theme.palette.secondary.main, 0.12),
       },
     },
     /* Styles applied to the root element if `onDelete` is defined. */
@@ -150,32 +167,15 @@ export const styles = theme => {
         backgroundColor: fade(theme.palette.secondary.main, theme.palette.action.hoverOpacity),
       },
     },
+    // TODO remove in V5
     /* Styles applied to the `avatar` element. */
-    avatar: {
-      marginLeft: 5,
-      marginRight: -6,
-      width: 24,
-      height: 24,
-      color: theme.palette.type === 'light' ? theme.palette.grey[700] : theme.palette.grey[300],
-      fontSize: theme.typography.pxToRem(12),
-    },
-    avatarSmall: {
-      marginLeft: 4,
-      marginRight: -4,
-      width: 18,
-      height: 18,
-      fontSize: theme.typography.pxToRem(10),
-    },
+    avatar: {},
+    /* Styles applied to the `avatar` element if `size="small"`. */
+    avatarSmall: {},
     /* Styles applied to the `avatar` element if `color="primary"`. */
-    avatarColorPrimary: {
-      color: theme.palette.primary.contrastText,
-      backgroundColor: theme.palette.primary.dark,
-    },
+    avatarColorPrimary: {},
     /* Styles applied to the `avatar` element if `color="secondary"`. */
-    avatarColorSecondary: {
-      color: theme.palette.secondary.contrastText,
-      backgroundColor: theme.palette.secondary.dark,
-    },
+    avatarColorSecondary: {},
     /* Styles applied to the `icon` element. */
     icon: {
       color: theme.palette.type === 'light' ? theme.palette.grey[700] : theme.palette.grey[300],
@@ -199,13 +199,11 @@ export const styles = theme => {
     },
     /* Styles applied to the label `span` element`. */
     label: {
-      display: 'flex',
-      alignItems: 'center',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
       paddingLeft: 12,
       paddingRight: 12,
-      userSelect: 'none',
       whiteSpace: 'nowrap',
-      cursor: 'inherit',
     },
     labelSmall: {
       paddingLeft: 8,
@@ -213,7 +211,6 @@ export const styles = theme => {
     },
     /* Styles applied to the `deleteIcon` element. */
     deleteIcon: {
-      // Remove grey highlight
       WebkitTapHighlightColor: 'transparent',
       color: deleteIconColor,
       height: 22,
@@ -272,14 +269,13 @@ const Chip = React.forwardRef(function Chip(props, ref) {
     className,
     clickable: clickableProp,
     color = 'default',
-    component: Component = 'div',
+    component: ComponentProp,
     deleteIcon: deleteIconProp,
     disabled = false,
     icon: iconProp,
     label,
     onClick,
     onDelete,
-    onKeyDown,
     onKeyUp,
     size = 'medium',
     variant = 'default',
@@ -297,21 +293,6 @@ const Chip = React.forwardRef(function Chip(props, ref) {
     }
   };
 
-  const handleKeyDown = event => {
-    if (onKeyDown) {
-      onKeyDown(event);
-    }
-
-    // Ignore events from children of `Chip`.
-    if (event.currentTarget !== event.target) {
-      return;
-    }
-
-    if ([' ', 'Enter', 'Backspace', 'Delete', 'Escape'].indexOf(event.key) !== -1) {
-      event.preventDefault();
-    }
-  };
-
   const handleKeyUp = event => {
     if (onKeyUp) {
       onKeyUp(event);
@@ -323,9 +304,7 @@ const Chip = React.forwardRef(function Chip(props, ref) {
     }
 
     const key = event.key;
-    if (onClick && (key === ' ' || key === 'Enter')) {
-      onClick(event);
-    } else if (onDelete && (key === 'Backspace' || key === 'Delete')) {
+    if (onDelete && (key === 'Backspace' || key === 'Delete')) {
       onDelete(event);
     } else if (key === 'Escape' && chipRef.current) {
       chipRef.current.blur();
@@ -334,6 +313,9 @@ const Chip = React.forwardRef(function Chip(props, ref) {
 
   const clickable = clickableProp !== false && onClick ? true : clickableProp;
   const small = size === 'small';
+
+  const Component = ComponentProp || (clickable ? ButtonBase : 'div');
+  const moreProps = Component === ButtonBase ? { component: 'div' } : {};
 
   let deleteIcon = null;
   if (onDelete) {
@@ -407,11 +389,12 @@ const Chip = React.forwardRef(function Chip(props, ref) {
         },
         className,
       )}
+      aria-disabled={disabled ? true : undefined}
       tabIndex={clickable || onDelete ? 0 : undefined}
       onClick={onClick}
-      onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       ref={handleRef}
+      {...moreProps}
       {...other}
     >
       {avatar || icon}
@@ -447,7 +430,7 @@ Chip.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If true, the chip will appear clickable, and will raise when pressed,
+   * If `true`, the chip will appear clickable, and will raise when pressed,
    * even if the onClick prop is not defined.
    * If false, the chip will not be clickable, even if onClick prop is defined.
    * This can be used, for example,

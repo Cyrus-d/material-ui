@@ -35,7 +35,7 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
     checked: checkedProp,
     checkedIcon,
     classes,
-    className: classNameProp,
+    className,
     defaultChecked,
     disabled: disabledProp,
     icon,
@@ -55,6 +55,7 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
   } = props;
   const { current: isControlled } = React.useRef(checkedProp != null);
   const [checkedState, setCheckedState] = React.useState(Boolean(defaultChecked));
+  const checked = isControlled ? checkedProp : checkedState;
 
   const muiFormControl = useFormControl();
 
@@ -79,14 +80,14 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
   };
 
   const handleInputChange = event => {
-    const checked = event.target.checked;
+    const newChecked = event.target.checked;
 
     if (!isControlled) {
-      setCheckedState(checked);
+      setCheckedState(newChecked);
     }
 
     if (onChange) {
-      onChange(event, checked);
+      onChange(event, newChecked);
     }
   };
 
@@ -98,7 +99,6 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
     }
   }
 
-  const checked = isControlled ? checkedProp : checkedState;
   const hasLabelFor = type === 'checkbox' || type === 'radio';
 
   return (
@@ -110,7 +110,7 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
           [classes.checked]: checked,
           [classes.disabled]: disabled,
         },
-        classNameProp,
+        className,
       )}
       disabled={disabled}
       tabIndex={null}

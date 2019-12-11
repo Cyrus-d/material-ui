@@ -34,8 +34,9 @@ export const styles = theme => ({
     fontSize: theme.typography.pxToRem(24),
     color: '#ffb400',
     cursor: 'pointer',
+    WebkitTapHighlightColor: 'transparent',
     '&$disabled': {
-      opacity: 0.4,
+      opacity: 0.5,
       pointerEvents: 'none',
     },
     '&$focusVisible $iconActive': {
@@ -64,6 +65,7 @@ export const styles = theme => ({
     clip: 'rect(0 0 0 0)',
     height: 1,
     margin: -1,
+    color: '#000',
     overflow: 'hidden',
     padding: 0,
     position: 'absolute',
@@ -136,7 +138,7 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     icon = defaultIcon,
     IconContainerComponent = IconContainer,
     max = 5,
-    name,
+    name: nameProp,
     onChange,
     onChangeActive,
     onMouseLeave,
@@ -147,6 +149,15 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     value: valueProp2 = null,
     ...other
   } = props;
+
+  const [defaultName, setDefaultName] = React.useState();
+  const name = nameProp || defaultName;
+  React.useEffect(() => {
+    // Fallback to this default id when possible.
+    // Use the random value for client-side rendering only.
+    // We can't use it server-side.
+    setDefaultName(`mui-rating-${Math.round(Math.random() * 1e5)}`);
+  }, []);
 
   const valueProp = roundValueToPrecision(valueProp2, precision);
   const theme = useTheme();
@@ -354,20 +365,20 @@ const Rating = React.forwardRef(function Rating(props, ref) {
               })}
             >
               {items.map(($, indexDecimal) => {
-                const itemDeciamlValue = roundValueToPrecision(
+                const itemDecimalValue = roundValueToPrecision(
                   itemValue - 1 + (indexDecimal + 1) * precision,
                   precision,
                 );
 
                 return item(
                   {
-                    value: itemDeciamlValue,
+                    value: itemDecimalValue,
                     style:
                       items.length - 1 === indexDecimal
                         ? {}
                         : {
                             width:
-                              itemDeciamlValue === value
+                              itemDecimalValue === value
                                 ? `${(indexDecimal + 1) * precision * 100}%`
                                 : '0%',
                             overflow: 'hidden',
@@ -376,10 +387,10 @@ const Rating = React.forwardRef(function Rating(props, ref) {
                           },
                   },
                   {
-                    filled: itemDeciamlValue <= value,
-                    hover: itemDeciamlValue <= hover,
-                    focus: itemDeciamlValue <= focus,
-                    checked: itemDeciamlValue === valueProp,
+                    filled: itemDecimalValue <= value,
+                    hover: itemDecimalValue <= hover,
+                    focus: itemDecimalValue <= focus,
+                    checked: itemDecimalValue === valueProp,
                   },
                 );
               })}
@@ -424,6 +435,8 @@ Rating.propTypes = {
   emptyIcon: PropTypes.node,
   /**
    * Accepts a function which returns a string value that provides a user-friendly name for the current value of the rating.
+   *
+   * For localization purposes, you can use the provided [translations](/guides/localization/).
    *
    * @param {number} value The rating label's value to format.
    * @returns {string}

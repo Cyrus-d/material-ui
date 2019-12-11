@@ -1,4 +1,5 @@
 import React from 'react';
+import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -20,7 +21,7 @@ const GridList = React.forwardRef(function GridList(props, ref) {
     cellHeight = 180,
     children,
     classes,
-    className: classNameProp,
+    className,
     cols = 2,
     component: Component = 'ul',
     spacing = 4,
@@ -30,7 +31,7 @@ const GridList = React.forwardRef(function GridList(props, ref) {
 
   return (
     <Component
-      className={clsx(classes.root, classNameProp)}
+      className={clsx(classes.root, className)}
       ref={ref}
       style={{ margin: -spacing / 2, ...style }}
       {...other}
@@ -41,7 +42,7 @@ const GridList = React.forwardRef(function GridList(props, ref) {
         }
 
         if (process.env.NODE_ENV !== 'production') {
-          if (child.type === React.Fragment) {
+          if (isFragment(child)) {
             console.error(
               [
                 "Material-UI: the GridList component doesn't accept a Fragment as a child.",

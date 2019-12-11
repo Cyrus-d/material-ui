@@ -1,10 +1,15 @@
 import React from 'react';
+import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import capitalize from '../utils/capitalize';
 import { fade } from '../styles/colorManipulator';
 import withStyles from '../styles/withStyles';
-import '../Button'; // So we don't have any override priority issue.
+import Button from '../Button';
+
+// Force a side effect so we don't have any override priority issue.
+// eslint-disable-next-line no-unused-expressions
+Button.styles;
 
 export const styles = theme => ({
   /* Styles applied to the root element. */
@@ -103,7 +108,7 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
   const {
     children,
     classes,
-    className: classNameProp,
+    className,
     color = 'default',
     component: Component = 'div',
     disabled = false,
@@ -133,7 +138,7 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
           [classes.contained]: variant === 'contained',
           [classes.fullWidth]: fullWidth,
         },
-        classNameProp,
+        className,
       )}
       ref={ref}
       {...other}
@@ -144,7 +149,7 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
         }
 
         if (process.env.NODE_ENV !== 'production') {
-          if (child.type === React.Fragment) {
+          if (isFragment(child)) {
             console.error(
               [
                 "Material-UI: the ButtonGroup component doesn't accept a Fragment as a child.",

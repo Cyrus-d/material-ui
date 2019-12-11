@@ -96,11 +96,15 @@ export const styles = theme => ({
     position: 'sticky',
     top: 0,
     left: 0,
-    zIndex: 1,
+    zIndex: 2,
     backgroundColor: theme.palette.background.default,
   },
 });
 
+/**
+ * The component renders a `<th>` element when the parent context is a header
+ * or otherwise a `<td>` element.
+ */
 const TableCell = React.forwardRef(function TableCell(props, ref) {
   const {
     align = 'inherit',
@@ -143,11 +147,9 @@ const TableCell = React.forwardRef(function TableCell(props, ref) {
       ref={ref}
       className={clsx(
         classes.root,
+        classes[variant],
         {
-          [classes.head]: variant === 'head',
           [classes.stickyHeader]: variant === 'head' && table && table.stickyHeader,
-          [classes.body]: variant === 'body',
-          [classes.footer]: variant === 'footer',
           [classes[`align${capitalize(align)}`]]: align !== 'inherit',
           [classes[`padding${capitalize(padding)}`]]: padding !== 'default',
           [classes[`size${capitalize(size)}`]]: size !== 'medium',

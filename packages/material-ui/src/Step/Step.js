@@ -1,4 +1,5 @@
 import React from 'react';
+import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -28,7 +29,7 @@ const Step = React.forwardRef(function Step(props, ref) {
     alternativeLabel,
     children,
     classes,
-    className: classNameProp,
+    className,
     completed = false,
     connector,
     disabled = false,
@@ -38,18 +39,20 @@ const Step = React.forwardRef(function Step(props, ref) {
     ...other
   } = props;
 
-  const className = clsx(
-    classes.root,
-    classes[orientation],
-    {
-      [classes.alternativeLabel]: alternativeLabel,
-      [classes.completed]: completed,
-    },
-    classNameProp,
-  );
-
   return (
-    <div className={className} ref={ref} {...other}>
+    <div
+      className={clsx(
+        classes.root,
+        classes[orientation],
+        {
+          [classes.alternativeLabel]: alternativeLabel,
+          [classes.completed]: completed,
+        },
+        className,
+      )}
+      ref={ref}
+      {...other}
+    >
       {connector &&
         alternativeLabel &&
         index !== 0 &&
@@ -67,7 +70,7 @@ const Step = React.forwardRef(function Step(props, ref) {
         }
 
         if (process.env.NODE_ENV !== 'production') {
-          if (child.type === React.Fragment) {
+          if (isFragment(child)) {
             console.error(
               [
                 "Material-UI: the Step component doesn't accept a Fragment as a child.",

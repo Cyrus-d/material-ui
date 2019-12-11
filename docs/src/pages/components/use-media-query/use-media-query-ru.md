@@ -15,7 +15,7 @@ Some of the key features:
 
 ## Простой медиа-запрос
 
-Вы должны предоставить медиа-запросу первый аргумент хука. The media query string can by any valid CSS media query, e.g. [`'(prefers-color-scheme: dark)'`](/customization/palette/#user-preference).
+Вы должны предоставить медиа-запросу первый аргумент хука. The media query string can be any valid CSS media query, e.g. [`'(prefers-color-scheme: dark)'`](/customization/palette/#user-preference).
 
 {{"demo": "pages/components/use-media-query/SimpleMediaQuery.js", "defaultCodeOpen": true}}
 
@@ -37,7 +37,7 @@ function MyComponent() {
 }
 ```
 
-{{"demo": "pages/components/use-media-query/ThemeHelper.js"}}
+{{"demo": "pages/components/use-media-query/ThemeHelper.js", "defaultCodeOpen": false}}
 
 Alternatively, you can use a callback function, accepting the theme as a first argument:
 
@@ -115,7 +115,7 @@ function handleRender(req, res) {
   const ssrMatchMedia = query => ({
     matches: mediaQuery.match(query, {
       // The estimated CSS width of the browser.
-      width: deviceType === 'mobile' ? 0 : 1024,
+      width: deviceType === 'mobile' ? '0px' : '1024px',
     }),
   });
 

@@ -28,7 +28,7 @@ ReactDOM.render(<App />, document.querySelector('#app'));
 
 Así es! Esto es todo lo que necesitas para empezar, como podrás comprobar con la siguiente demostración interactiva en vivo:
 
-{{"demo": "pages/getting-started/usage/Usage.js", "hideHeader": true}}
+{{"demo": "pages/getting-started/usage/Usage.js", "hideHeader": true, "bg": true}}
 
 ## Globales
 
@@ -36,7 +36,7 @@ La experiencia de uso de Material-UI puede mejorar con algunas globales importan
 
 ### Meta tag responsivo
 
-Material-UI es desarrollado primero móvil: una estrategia mediante la cual primero escribimos código para dispositivos móviles y luego ampliamos los componentes proporcionalmente, a medida que sea necesario, utilizando los media queries de CSS. Para asegurar un renderizado adecuado y zoom táctil en todos los dispositivos, añade la meta-etiqueta para vista responsiva en el elemento `<head>`.
+Material-UI is developed mobile-first, a strategy in which we first write code for mobile devices, and then scale up components as necessary using CSS media queries. Para asegurar un renderizado adecuado y zoom táctil en todos los dispositivos, añade la meta-etiqueta para vista responsiva en el elemento `<head>`.
 
 ```html
 <meta
@@ -51,7 +51,7 @@ Material-UI proporciona un componente opcional llamado [CssBaseline](/components
 
 ## Documentación versionada
 
-Ésta documentación siempre refleja la última versión estable de Material-UI. Podrás encontrar versiones antiguas en una [página apartada](/versions/).
+Ésta documentación siempre refleja la última versión estable de Material-UI. You can find older versions of the documentation on a [separate page](https://material-ui.com/versions/).
 
 ## Siguientes pasos
 
