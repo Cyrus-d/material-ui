@@ -67,7 +67,7 @@ const theme = createMuiTheme({
 });
 ```
 
-## 字体大小 
+## 字体大小
 
 Material-UI uses `rem` units for the font size. The browser `<html>` element default font size is `16px`, but browsers have an option to change this value, so `rem` units allow us to accommodate the user's settings, resulting in a better accessibility support. Users change font size settings for all kinds of reasons, from poor eyesight to choosing optimum settings for devices that can be vastly different in size and viewing distance.
 
@@ -87,7 +87,7 @@ The computed font size by the browser follows this mathematical equation:
 
 ![font-size](/static/images/font-size.gif) <!-- https://latex.codecogs.com/gif.latex?computed&space;=&space;specification&space;\frac{typography.fontSize}{14}&space;\frac{html&space;font&space;size}{typography.htmlFontSize} -->
 
-### HTML font size
+### HTML字体大小
 
 You might want to change the `<html>` element default font size. For instance, when using the [10px simplification](https://www.sitepoint.com/understanding-and-using-rem-units-in-css/). An `htmlFontSize` theme property is provided for this use case, which tells Material-UI what the font-size on the `<html>` element is. This is used to adjust the `rem` value so the calculated font-size always match the specification.
 
@@ -110,7 +110,7 @@ html {
 
 {{"demo": "pages/customization/typography/FontSizeTheme.js"}}
 
-### Responsive font sizes
+### 响应的字体大小
 
 The typography variants properties map directly to the generated CSS. You can use [media queries](/customization/breakpoints/#api) inside them:
 
@@ -187,4 +187,4 @@ const theme = createMuiTheme({
 
 ## 默认值
 
-You can explore the default values of the typography using [the theme explorer](/customization/default-theme/?expend-path=$.typography) or by opening the dev tools console on this page (`window.theme.typography`).
+You can explore the default values of the typography using [the theme explorer](/customization/default-theme/?expand-path=$.typography) or by opening the dev tools console on this page (`window.theme.typography`).

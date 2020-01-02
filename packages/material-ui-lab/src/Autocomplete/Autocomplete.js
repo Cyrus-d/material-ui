@@ -58,7 +58,7 @@ export const styles = theme => ({
       },
     },
     '&[class*="MuiOutlinedInput-root"]': {
-      padding: 8,
+      padding: 9,
       paddingRight: 62,
       '& $input': {
         padding: '9.5px 4px',
@@ -141,6 +141,7 @@ export const styles = theme => ({
   /* Styles applied to the `Paper` component. */
   paper: {
     ...theme.typography.body1,
+    overflow: 'hidden',
     margin: '4px 0',
     '& > ul': {
       maxHeight: '40vh',
@@ -172,6 +173,7 @@ export const styles = theme => ({
     alignItems: 'center',
     cursor: 'pointer',
     paddingTop: 6,
+    boxSizing: 'border-box',
     outline: '0',
     WebkitTapHighlightColor: 'transparent',
     paddingBottom: 6,
@@ -207,7 +209,7 @@ export const styles = theme => ({
 
 function DisablePortal(props) {
   // eslint-disable-next-line react/prop-types
-  const { popperRef, anchorEl, open, ...other } = props;
+  const { anchorEl, open, ...other } = props;
   return <div {...other} />;
 }
 
@@ -217,6 +219,8 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
     autoComplete = false,
     autoHighlight = false,
     autoSelect = false,
+    blurOnSelect = false,
+    ChipProps,
     classes,
     className,
     clearOnEscape = false,
@@ -233,6 +237,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
     disablePortal = false,
     filterOptions,
     filterSelectedOptions = false,
+    forcePopupIcon = 'auto',
     freeSolo = false,
     getOptionDisabled,
     getOptionLabel = x => x,
@@ -242,6 +247,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
     includeInputInList = false,
     inputValue: inputValueProp,
     ListboxComponent = 'ul',
+    ListboxProps,
     loading = false,
     loadingText = 'Loading…',
     multiple = false,
@@ -266,12 +272,6 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
   } = props;
   /* eslint-enable no-unused-vars */
 
-  const popperRef = React.useRef(null);
-  React.useEffect(() => {
-    if (popperRef.current) {
-      popperRef.current.update();
-    }
-  });
   const PopperComponent = disablePortal ? DisablePortal : PopperComponentProp;
 
   const {
@@ -302,6 +302,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
       className: clsx(classes.tag, {
         [classes.tagSizeSmall]: size === 'small',
       }),
+      disabled,
       ...getTagProps(params),
     });
 
@@ -309,7 +310,12 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
       startAdornment = renderTags(value, getCustomizedTagProps);
     } else {
       startAdornment = value.map((option, index) => (
-        <Chip label={getOptionLabel(option)} size={size} {...getCustomizedTagProps({ index })} />
+        <Chip
+          label={getOptionLabel(option)}
+          size={size}
+          {...getCustomizedTagProps({ index })}
+          {...ChipProps}
+        />
       ));
     }
   }
@@ -377,7 +383,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
                   </IconButton>
                 )}
 
-                {freeSolo ? null : (
+                {(!freeSolo || forcePopupIcon === true) && forcePopupIcon !== false ? (
                   <IconButton
                     {...getPopupIndicatorProps()}
                     disabled={disabled}
@@ -389,7 +395,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
                   >
                     {popupIcon}
                   </IconButton>
-                )}
+                ) : null}
               </div>
             ),
           },
@@ -411,7 +417,6 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
             width: anchorEl ? anchorEl.clientWidth : null,
           }}
           role="presentation"
-          popperRef={popperRef}
           anchorEl={anchorEl}
           open
         >
@@ -423,7 +428,11 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
               <div className={classes.noOptions}>{noOptionsText}</div>
             ) : null}
             {groupedOptions.length > 0 ? (
-              <ListboxComponent className={classes.listbox} {...getListboxProps()}>
+              <ListboxComponent
+                className={classes.listbox}
+                {...getListboxProps()}
+                {...ListboxProps}
+              >
                 {groupedOptions.map((option, index) => {
                   if (groupBy) {
                     return renderGroup({
@@ -465,6 +474,19 @@ Autocomplete.propTypes = {
    * a different option or changes the character string in the input.
    */
   autoSelect: PropTypes.bool,
+  /**
+   * Control if the input should be blurred when an option is selected:
+   *
+   * - `false` the input is not blurred.
+   * - `true` the input is always blurred.
+   * - `touch` the input is blurred after a touch event.
+   * - `mouse` the input is blurred after a mouse event.
+   */
+  blurOnSelect: PropTypes.oneOfType([PropTypes.oneOf(['mouse', 'touch']), PropTypes.bool]),
+  /**
+   * Props applied to the [`Chip`](/api/chip/) element.
+   */
+  ChipProps: PropTypes.object,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
@@ -542,6 +564,10 @@ Autocomplete.propTypes = {
    */
   filterSelectedOptions: PropTypes.bool,
   /**
+   * Force the visibility display of the popup icon.
+   */
+  forcePopupIcon: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.bool]),
+  /**
    * If `true`, the Autocomplete is free solo, meaning that the user input is not bound to provided options.
    */
   freeSolo: PropTypes.bool,
@@ -585,6 +611,10 @@ Autocomplete.propTypes = {
    */
   ListboxComponent: PropTypes.elementType,
   /**
+   * Props applied to the Listbox element.
+   */
+  ListboxProps: PropTypes.object,
+  /**
    * If `true`, the component is in a loading state.
    */
   loading: PropTypes.bool,
@@ -607,7 +637,7 @@ Autocomplete.propTypes = {
   /**
    * Callback fired when the value changes.
    *
-   * @param {object} event The event source of the callback
+   * @param {object} event The event source of the callback.
    * @param {any} value
    */
   onChange: PropTypes.func,
@@ -622,7 +652,8 @@ Autocomplete.propTypes = {
    * Callback fired when the input value changes.
    *
    * @param {object} event The event source of the callback.
-   * @param {string} value
+   * @param {string} value The new value of the text input.
+   * @param {string} reason Can be: "input" (user input), "reset" (programmatic change), `"clear"`.
    */
   onInputChange: PropTypes.func,
   /**

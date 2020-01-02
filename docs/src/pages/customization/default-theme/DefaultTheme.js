@@ -221,18 +221,22 @@ function DefaultTheme(props) {
 
   React.useEffect(() => {
     const URL = url.parse(document.location.href, true);
-    const expandPath = URL.query['expend-path'];
+    // 'expend-path' is for backwards compatibility of any external links with a prior typo.
+    const expandPath = URL.query['expand-path'] || URL.query['expend-path'];
 
     if (!expandPath) {
       return;
     }
 
     setExpandPaths(
-      expandPath.split('.').reduce((acc, path) => {
-        const last = acc.length > 0 ? `${acc[acc.length - 1]}.` : '';
-        acc.push(last + path);
-        return acc;
-      }, []),
+      expandPath
+        .replace('$.', '')
+        .split('.')
+        .reduce((acc, path) => {
+          const last = acc.length > 0 ? `${acc[acc.length - 1]}.` : '';
+          acc.push(last + path);
+          return acc;
+        }, []),
     );
   }, []);
 
@@ -256,11 +260,7 @@ function DefaultTheme(props) {
             checked={checked}
             onChange={(event, newChecked) => {
               setChecked(newChecked);
-              if (newChecked) {
-                setExpandPaths(allNodeIds);
-              } else {
-                setExpandPaths([]);
-              }
+              setExpandPaths(newChecked ? allNodeIds : []);
             }}
           />
         }

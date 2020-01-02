@@ -1,4 +1,4 @@
-# Borders
+# Bordes
 
 <p class="description">Use border utilities to quickly style the border and border-radius of an element. Great for images, buttons, or any other element.</p>
 
@@ -65,5 +65,5 @@ import { borders } from '@material-ui/system';
 | `borderLeft`      | `borderLeft`   | `border-left`   | `borders`                                                        |
 | `borderRight`     | `borderRight`  | `border-right`  | `borders`                                                        |
 | `borderBottom`    | `borderBottom` | `border-bottom` | `borders`                                                        |
-| `borderColor`     | `borderColor`  | `border-color`  | [`palette`](/customization/default-theme/?expend-path=$.palette) |
-| `borderRadius`    | `borderRadius` | `border-radius` | [`shape`](/customization/default-theme/?expend-path=$.shape)     |
+| `borderColor`     | `borderColor`  | `border-color`  | [`palette`](/customization/default-theme/?expand-path=$.palette) |
+| `borderRadius`    | `borderRadius` | `border-radius` | [`shape`](/customization/default-theme/?expand-path=$.shape)     |

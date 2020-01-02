@@ -61,6 +61,17 @@ export function createFilterOptions(config = {}) {
   };
 }
 
+// To replace with .findIndex() once we stop IE 11 support.
+function findIndex(array, comp) {
+  for (let i = 0; i < array.length; i += 1) {
+    if (comp(array[i])) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
 const defaultFilterOptions = createFilterOptions();
 
 // Number of options to jump in list box when pageup and pagedown keys are used.
@@ -71,6 +82,7 @@ export default function useAutocomplete(props) {
     autoComplete = false,
     autoHighlight = false,
     autoSelect = false,
+    blurOnSelect = false,
     clearOnEscape = false,
     debug = false,
     defaultValue,
@@ -107,6 +119,7 @@ export default function useAutocomplete(props) {
     setDefaultId(`mui-autocomplete-${Math.round(Math.random() * 1e5)}`);
   }, []);
 
+  const ignoreFocus = React.useRef(false);
   const firstFocus = React.useRef(true);
   const inputRef = React.useRef(null);
   const listboxRef = React.useRef(null);
@@ -218,7 +231,7 @@ export default function useAutocomplete(props) {
     setInputValue(newInputValue);
 
     if (onInputChange) {
-      onInputChange(event, newInputValue);
+      onInputChange(event, newInputValue, 'reset');
     }
   });
 
@@ -230,8 +243,8 @@ export default function useAutocomplete(props) {
   const [openState, setOpenState] = React.useState(false);
   const open = isOpenControlled ? openProp : openState;
 
-  const inputValueFilter =
-    !multiple && value && inputValue === getOptionLabel(value) ? '' : inputValue;
+  const inputValueIsSelectedValue =
+    !multiple && value != null && inputValue === getOptionLabel(value);
 
   let popupOpen = open;
 
@@ -248,7 +261,9 @@ export default function useAutocomplete(props) {
           }
           return true;
         }),
-        { inputValue: inputValueFilter },
+        // we use the empty string to manipulate `filterOptions` to not filter any options
+        // i.e. the filter predicate always returns true
+        { inputValue: inputValueIsSelectedValue ? '' : inputValue },
       )
     : [];
 
@@ -420,13 +435,7 @@ export default function useAutocomplete(props) {
       const item = newValue;
       newValue = Array.isArray(value) ? [...value] : [];
 
-      let itemIndex = -1;
-      // To replace with .findIndex() once we stop IE 11 support.
-      for (let i = 0; i < newValue.length; i += 1) {
-        if (getOptionSelected(item, newValue[i])) {
-          itemIndex = i;
-        }
-      }
+      const itemIndex = findIndex(newValue, valueItem => getOptionSelected(item, valueItem));
 
       if (itemIndex === -1) {
         newValue.push(item);
@@ -434,12 +443,13 @@ export default function useAutocomplete(props) {
         newValue.splice(itemIndex, 1);
       }
     }
+
+    resetInputValue(event, newValue);
+
     handleValue(event, newValue);
     if (!disableCloseOnSelect) {
       handleClose(event);
     }
-
-    resetInputValue(event, newValue);
 
     selectedIndexRef.current = -1;
   };
@@ -508,11 +518,14 @@ export default function useAutocomplete(props) {
   };
 
   const handleClear = event => {
-    handleValue(event, multiple ? [] : null);
-    if (disableOpenOnFocus) {
-      handleClose();
-    }
+    ignoreFocus.current = true;
     setInputValue('');
+
+    if (onInputChange) {
+      onInputChange(event, '', 'clear');
+    }
+
+    handleValue(event, multiple ? [] : null);
   };
 
   const handleKeyDown = event => {
@@ -579,7 +592,7 @@ export default function useAutocomplete(props) {
               inputRef.current.value.length,
             );
           }
-        } else if (freeSolo && inputValueFilter !== '') {
+        } else if (freeSolo && inputValue !== '' && inputValueIsSelectedValue === false) {
           selectNewValue(event, inputValue);
         }
         break;
@@ -613,7 +626,7 @@ export default function useAutocomplete(props) {
   const handleFocus = event => {
     setFocused(true);
 
-    if (!disableOpenOnFocus) {
+    if (!disableOpenOnFocus && !ignoreFocus.current) {
       handleOpen(event);
     }
   };
@@ -621,6 +634,7 @@ export default function useAutocomplete(props) {
   const handleBlur = event => {
     setFocused(false);
     firstFocus.current = true;
+    ignoreFocus.current = false;
 
     if (debug && inputValue !== '') {
       return;
@@ -638,6 +652,14 @@ export default function useAutocomplete(props) {
   const handleInputChange = event => {
     const newValue = event.target.value;
 
+    if (inputValue !== newValue) {
+      setInputValue(newValue);
+
+      if (onInputChange) {
+        onInputChange(event, newValue, 'input');
+      }
+    }
+
     if (newValue === '') {
       if (disableOpenOnFocus) {
         handleClose(event);
@@ -649,16 +671,6 @@ export default function useAutocomplete(props) {
     } else {
       handleOpen(event);
     }
-
-    if (inputValue === newValue) {
-      return;
-    }
-
-    setInputValue(newValue);
-
-    if (onInputChange) {
-      onInputChange(event, newValue);
-    }
   };
 
   const handleOptionMouseOver = event => {
@@ -666,9 +678,25 @@ export default function useAutocomplete(props) {
     setHighlightedIndex(index, 'mouse');
   };
 
+  const isTouch = React.useRef(false);
+
+  const handleOptionTouchStart = () => {
+    isTouch.current = true;
+  };
+
   const handleOptionClick = event => {
     const index = Number(event.currentTarget.getAttribute('data-option-index'));
     selectNewValue(event, filteredOptions[index]);
+
+    if (
+      blurOnSelect === true ||
+      (blurOnSelect === 'touch' && isTouch.current) ||
+      (blurOnSelect === 'mouse' && !isTouch.current)
+    ) {
+      inputRef.current.blur();
+    }
+
+    isTouch.current = false;
   };
 
   const handleTagDelete = index => event => {
@@ -689,8 +717,6 @@ export default function useAutocomplete(props) {
   });
 
   const handlePopupIndicator = event => {
-    inputRef.current.focus();
-
     if (open) {
       handleClose(event);
     } else {
@@ -698,13 +724,14 @@ export default function useAutocomplete(props) {
     }
   };
 
+  // Prevent input blur when interacting with the combobox
   const handleMouseDown = event => {
     if (event.target.nodeName !== 'INPUT') {
-      // Prevent blur
       event.preventDefault();
     }
   };
 
+  // Focus the input when first interacting with the combobox
   const handleClick = () => {
     if (
       firstFocus.current &&
@@ -814,6 +841,7 @@ export default function useAutocomplete(props) {
         id: `${id}-option-${index}`,
         onMouseOver: handleOptionMouseOver,
         onClick: handleOptionClick,
+        onTouchStart: handleOptionTouchStart,
         'data-option-index': index,
         'aria-disabled': disabled,
         'aria-selected': selected,
@@ -948,6 +976,14 @@ useAutocomplete.propTypes = {
    * @param {object} event The event source of the callback.
    */
   onClose: PropTypes.func,
+  /**
+   * Callback fired when the text input value changes.
+   *
+   * @param {object} event The event source of the callback
+   * @param {string} value The new value of the text input
+   * @param {string} reason One of "input" (user input) or "reset" (programmatic change)
+   */
+  onInputChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be opened.
    * Use in controlled mode (see open).

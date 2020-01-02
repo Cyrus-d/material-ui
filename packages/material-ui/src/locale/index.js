@@ -1,3 +1,64 @@
+export const azAZ = {
+  props: {
+    MuiTablePagination: {
+      backIconButtonText: 'Əvvəlki səhifə',
+      labelRowsPerPage: 'Səhifəyə düşən sətrlər:',
+      labelDisplayedRows: ({ from, to, count }) => `${from}-${to === -1 ? count : to} dən ${count}`,
+      nextIconButtonText: 'Növbəti səhifə',
+    },
+    MuiRating: {
+      getLabelText: value => {
+        let pluralForm = 'Ulduz';
+        const lastDigit = value % 10;
+
+        if (lastDigit > 1 && lastDigit < 5) {
+          pluralForm = 'Ulduzlar';
+        }
+
+        return `${value} ${pluralForm}`;
+      },
+      emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: 'Silmək',
+      closeText: 'Bağlamaq',
+      loadingText: 'Yüklənir…',
+      noOptionsText: 'Seçimlər mövcud deyil',
+      openText: 'Открыть',
+    },
+  },
+};
+
+export const csCZ = {
+  props: {
+    MuiTablePagination: {
+      backIconButtonText: 'Předchozí stránka',
+      labelRowsPerPage: 'Řádků na stránce:',
+      labelDisplayedRows: ({ from, to, count }) => `${from}-${to === -1 ? count : to} z ${count}`,
+      nextIconButtonText: 'Další stránka',
+    },
+    MuiRating: {
+      getLabelText: value => {
+        if (value === 1) {
+          return `${value} hvězdička`;
+        }
+        if (value >= 2 && value <= 4) {
+          return `${value} hvězdičky`;
+        }
+        return `${value} hvězdiček`;
+      },
+      emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: 'Vymazat',
+      closeText: 'Zavřít',
+      loadingText: 'Načítání…',
+      noOptionsText: 'Žádné možnosti',
+      openText: 'Otevřít',
+    },
+  },
+};
+
 export const deDE = {
   props: {
     MuiTablePagination: {
@@ -8,6 +69,7 @@ export const deDE = {
     },
     MuiRating: {
       getLabelText: value => `${value} ${value !== 1 ? 'Sterne' : 'Stern'}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Leeren',
@@ -32,6 +94,7 @@ export const enUS = {};
     },
     MuiRating: {
       getLabelText: value => `${value} Star${value !== 1 ? 's' : ''}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Clear',
@@ -53,6 +116,7 @@ export const esES = {
     },
     MuiRating: {
       getLabelText: value => `${value} Estrella${value !== 1 ? 's' : ''}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Limpiar',
@@ -74,6 +138,7 @@ export const faIR = {
     },
     MuiRating: {
       getLabelText: value => `${value} ستاره`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'پاک‌کردن',
@@ -95,6 +160,7 @@ export const frFR = {
     },
     MuiRating: {
       getLabelText: value => `${value} Etoile${value !== 1 ? 's' : ''}`,
+      emptyLabelText: 'Vide',
     },
     MuiAutocomplete: {
       clearText: 'Vider',
@@ -102,6 +168,29 @@ export const frFR = {
       loadingText: 'Chargement…',
       noOptionsText: 'Pas de résultats',
       openText: 'Ouvrir',
+    },
+  },
+};
+
+export const idID = {
+  props: {
+    MuiTablePagination: {
+      backIconButtonText: 'Halaman sebelumnya',
+      labelRowsPerPage: 'Baris per halaman:',
+      labelDisplayedRows: ({ from, to, count }) =>
+        `${from}-${to === -1 ? count : to} dari ${count}`,
+      nextIconButtonText: 'Halaman selanjutnya',
+    },
+    MuiRating: {
+      getLabelText: value => `${value} Bintang`,
+      emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: 'Hapus',
+      closeText: 'Tutup',
+      loadingText: 'Memuat…',
+      noOptionsText: 'Tidak ada opsi',
+      openText: 'Buka',
     },
   },
 };
@@ -116,6 +205,7 @@ export const itIT = {
     },
     MuiRating: {
       getLabelText: value => `${value} Stell${value !== 1 ? 'a' : 'e'}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Svuota',
@@ -137,6 +227,7 @@ export const jaJP = {
     },
     MuiRating: {
       getLabelText: value => `${value} ${value !== 1 ? '出演者' : '星'}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'クリア',
@@ -144,6 +235,28 @@ export const jaJP = {
       loadingText: '積み込み…',
       noOptionsText: '結果がありません',
       openText: '開いた',
+    },
+  },
+};
+
+export const koKR = {
+  props: {
+    MuiTablePagination: {
+      backIconButtonText: '이전 페이지',
+      labelRowsPerPage: '페이지 당 행:',
+      labelDisplayedRows: ({ from, to, count }) => `${from}-${to === -1 ? count : to} / ${count}`,
+      nextIconButtonText: '다음 페이지',
+    },
+    MuiRating: {
+      getLabelText: value => `${value} 점`,
+      emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: '지우기',
+      closeText: '닫기',
+      loadingText: '불러오는 중…',
+      noOptionsText: '옵션 없음',
+      openText: '열기',
     },
   },
 };
@@ -158,6 +271,7 @@ export const nlNL = {
     },
     MuiRating: {
       getLabelText: value => `${value} Ster${value !== 1 ? 'ren' : ''}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Wissen',
@@ -190,6 +304,7 @@ export const plPL = {
 
         return `${value} ${pluralForm}`;
       },
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Wyczyść',
@@ -211,6 +326,7 @@ export const ptBR = {
     },
     MuiRating: {
       getLabelText: value => `${value} Estrela${value !== 1 ? 's' : ''}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Limpar',
@@ -218,6 +334,50 @@ export const ptBR = {
       loadingText: 'Carregando…',
       noOptionsText: 'Sem opções',
       openText: 'Abrir',
+    },
+  },
+};
+
+export const ptPT = {
+  props: {
+    MuiTablePagination: {
+      backIconButtonText: 'Página anterior',
+      labelRowsPerPage: 'Linhas por página:',
+      labelDisplayedRows: ({ from, to, count }) => `${from}-${to === -1 ? count : to} de ${count}`,
+      nextIconButtonText: 'Próxima página',
+    },
+    MuiRating: {
+      getLabelText: value => `${value} Estrela${value !== 1 ? 's' : ''}`,
+      emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: 'Limpar',
+      closeText: 'Fechar',
+      loadingText: 'A carregar…',
+      noOptionsText: 'Sem opções',
+      openText: 'Abrir',
+    },
+  },
+};
+
+export const roRO = {
+  props: {
+    MuiTablePagination: {
+      backIconButtonText: 'Pagina precedentă',
+      labelRowsPerPage: 'Rânduri pe pagină:',
+      labelDisplayedRows: ({ from, to, count }) => `${from}-${to === -1 ? count : to} din ${count}`,
+      nextIconButtonText: 'Pagina următoare',
+    },
+    MuiRating: {
+      getLabelText: value => `${value} St${value !== 1 ? 'ele' : 'ea'}`,
+      emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: 'Șterge',
+      closeText: 'Închide',
+      loadingText: 'Se încarcă…',
+      noOptionsText: 'Nicio opțiune',
+      openText: 'Deschide',
     },
   },
 };
@@ -243,6 +403,7 @@ export const ruRU = {
 
         return `${value} ${pluralForm}`;
       },
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Очистить',
@@ -250,6 +411,36 @@ export const ruRU = {
       loadingText: 'Загрузка…',
       noOptionsText: 'Нет доступных вариантов',
       openText: 'Открыть',
+    },
+  },
+};
+
+export const skSK = {
+  props: {
+    MuiTablePagination: {
+      backIconButtonText: 'Predchádzajúca stránka',
+      labelRowsPerPage: 'Riadkov na stránke:',
+      labelDisplayedRows: ({ from, to, count }) => `${from}-${to === -1 ? count : to} z ${count}`,
+      nextIconButtonText: 'Ďalšia stránka',
+    },
+    MuiRating: {
+      getLabelText: value => {
+        if (value === 1) {
+          return `${value} hviezdička`;
+        }
+        if (value >= 2 && value <= 4) {
+          return `${value} hviezdičky`;
+        }
+        return `${value} hviezdičiek`;
+      },
+      emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: 'Vymazať',
+      closeText: 'Zavrieť',
+      loadingText: 'Načítanie…',
+      noOptionsText: 'Žiadne možnosti',
+      openText: 'Otvoriť',
     },
   },
 };
@@ -264,6 +455,7 @@ export const svSE = {
     },
     MuiRating: {
       getLabelText: value => `${value} ${value !== 1 ? 'Stjärnor' : 'Stjärna'}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Rensa',
@@ -286,6 +478,7 @@ export const trTR = {
     },
     MuiRating: {
       getLabelText: value => `${value} Yıldız`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: 'Temizle',
@@ -293,6 +486,39 @@ export const trTR = {
       loadingText: 'Yükleniyor…',
       noOptionsText: 'Seçenek yok',
       openText: 'Aç',
+    },
+  },
+};
+
+export const ukUA = {
+  props: {
+    MuiTablePagination: {
+      backIconButtonText: 'Попередня сторінка',
+      labelRowsPerPage: 'Рядків на сторінці:',
+      labelDisplayedRows: ({ from, to, count }) => `${from}-${to === -1 ? count : to} з ${count}`,
+      nextIconButtonText: 'Наступна сторінка',
+    },
+    MuiRating: {
+      getLabelText: value => {
+        let pluralForm = 'Зірок';
+        const lastDigit = value % 10;
+
+        if (lastDigit > 1 && lastDigit < 5) {
+          pluralForm = 'Зірки';
+        } else if (lastDigit === 1) {
+          pluralForm = 'Зірка';
+        }
+
+        return `${value} ${pluralForm}`;
+      },
+      emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: 'Очистити',
+      closeText: 'Згорнути',
+      loadingText: 'Завантаження…',
+      noOptionsText: 'Немає варіантів',
+      openText: 'Розгорнути',
     },
   },
 };
@@ -307,6 +533,7 @@ export const zhCN = {
     },
     MuiRating: {
       getLabelText: value => `${value} 星${value !== 1 ? '星' : ''}`,
+      emptyLabelText: 'Empty',
     },
     MuiAutocomplete: {
       clearText: '明确',

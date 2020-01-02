@@ -25,9 +25,11 @@ const styles = theme => ({
   },
 });
 
-function getAdblock(classes, t) {
+function Adblock(props) {
+  const t = useSelector(state => state.options.t);
+
   return (
-    <Paper component="span" elevation={0} className={classes.paper}>
+    <Paper component="span" elevation={0} {...props}>
       <Typography variant="body2" display="block" component="span" gutterBottom>
         {t('likeMui')}
       </Typography>
@@ -75,14 +77,20 @@ const inHouseAds = [
     img: '/static/in-house/monday.jpg',
     description: 'Why use multiple tools to manage your projects? Meet monday.com',
   },
+  {
+    name: 'bonsaiilabs',
+    link: 'https://bonsaiilabs.com/courseDetail/material-ui-with-react',
+    img: '/static/in-house/bonsaiilabs.png',
+    description:
+      'A course to learn Material‑UI while developing a mobile flight search and booking app.',
+  },
 ];
 
 function Ad(props) {
   const { classes } = props;
-  const { current: random } = React.useRef(Math.random());
-  const t = useSelector(state => state.options.t);
 
   const timerAdblock = React.useRef();
+  const { current: randomSplit } = React.useRef(Math.random());
   const [adblock, setAdblock] = React.useState(null);
   const [carbonOut, setCarbonOut] = React.useState(null);
   const [codeFundOut, setCodeFundOut] = React.useState(null);
@@ -151,26 +159,75 @@ function Ad(props) {
     children = <span />;
   }
 
-  if (adblock) {
+  if (!children && adblock) {
     minHeight = 'auto';
 
-    if (Math.random() >= 0.8) {
-      children = getAdblock(classes, t);
+    if (Math.random() < 0.2) {
+      children = <Adblock className={classes.paper} />;
     } else {
-      children = <AdInHouse ad={inHouseAds[Math.floor(inHouseAds.length * random)]} />;
+      children = <AdInHouse ad={inHouseAds[Math.floor(inHouseAds.length * Math.random())]} />;
     }
   }
 
   if (!children) {
     if (carbonOut || codeFundOut) {
-      children = <AdInHouse ad={inHouseAds[Math.floor(inHouseAds.length * random)]} />;
+      children = <AdInHouse ad={inHouseAds[Math.floor(inHouseAds.length * Math.random())]} />;
       minHeight = 'auto';
-    } else if (random >= 0.55) {
+    } else if (randomSplit < 0.35) {
       children = <AdCodeFund />;
     } else {
       children = <AdCarbon />;
     }
   }
+
+  React.useEffect(() => {
+    // Avoid a flood of events.
+    if (Math.random() < 0.9) {
+      return undefined;
+    }
+
+    const delay = setTimeout(() => {
+      let type;
+
+      if (children.type === AdCodeFund) {
+        type = 'codefund';
+      } else if (children.type === AdCarbon) {
+        type = 'carbon';
+      } else if (children.type === AdInHouse) {
+        if (!adblock && codeFundOut) {
+          type = 'in-house-codefund';
+        } else if (!adblock && carbonOut) {
+          type = 'in-house-carbon';
+        } else {
+          type = 'in-house';
+        }
+      } else if (children.type === Adblock) {
+        type = 'in-house-adblock';
+      } else {
+        return;
+      }
+
+      window.ga('send', {
+        hitType: 'event',
+        eventCategory: 'ad',
+        eventAction: 'display',
+        eventLabel: type,
+      });
+
+      if (type === 'in-house') {
+        window.ga('send', {
+          hitType: 'event',
+          eventCategory: 'in-house-ad',
+          eventAction: 'display',
+          eventLabel: children.props.ad.name,
+        });
+      }
+    }, 2500);
+
+    return () => {
+      clearTimeout(delay);
+    };
+  }, [children.type, children.props.ad, codeFundOut, carbonOut, adblock]);
 
   return (
     <span className={classes.root} style={{ minHeight }}>
@@ -183,4 +240,4 @@ Ad.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Ad);
+export default React.memo(withStyles(styles)(Ad));

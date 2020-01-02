@@ -36,6 +36,15 @@ export interface UseAutocompleteProps {
    */
   autoSelect?: boolean;
   /**
+   * Control if the input should be blurred when an option is selected:
+   *
+   * - `false` the input is not blurred.
+   * - `true` the input is always blurred.
+   * - `touch` the input is blurred after a touch event.
+   * - `mouse` the input is blurred after a mouse event.
+   */
+  blurOnSelect?: 'touch' | 'mouse' | true | false;
+  /**
    * If `true`, clear all values when the user presses escape and the popup is closed.
    */
   clearOnEscape?: boolean;
@@ -123,7 +132,7 @@ export interface UseAutocompleteProps {
   /**
    * Callback fired when the value changes.
    *
-   * @param {object} event The event source of the callback
+   * @param {object} event The event source of the callback.
    * @param {any} value
    */
   onChange?: (event: React.ChangeEvent<{}>, value: any) => void;
@@ -138,9 +147,10 @@ export interface UseAutocompleteProps {
    * Callback fired when the input value changes.
    *
    * @param {object} event The event source of the callback.
-   * @param {string} value
+   * @param {string} value The new value of the text input.
+   * @param {string} reason Can be: "input" (user input), "reset" (programmatic change), `"clear"`.
    */
-  onInputChange?: (event: React.ChangeEvent<{}>, value: any) => void;
+  onInputChange?: (event: React.ChangeEvent<{}>, value: any, reason: 'input' | 'reset') => void;
   /**
    * Callback fired when the popup requests to be opened.
    * Use in controlled mode (see open).
