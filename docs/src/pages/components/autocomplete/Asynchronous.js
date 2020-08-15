@@ -1,12 +1,10 @@
-// *https://www.registers.service.gov.uk/registers/country/use-the-api*
-import 'isomorphic-fetch';
-import React from 'react';
+import * as React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 function sleep(delay = 0) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, delay);
   });
 }
@@ -24,12 +22,16 @@ export default function Asynchronous() {
     }
 
     (async () => {
-      const response = await fetch('https://country.register.gov.uk/records.json?page-size=5000');
+      // https://www.registers.service.gov.uk/registers/country/use-the-api
+      const response = await fetch(
+        'https://country.register.gov.uk/records.json?page-size=5000',
+      );
+
       await sleep(1e3); // For demo purposes.
       const countries = await response.json();
 
       if (active) {
-        setOptions(Object.keys(countries).map(key => countries[key].item[0]));
+        setOptions(Object.keys(countries).map((key) => countries[key].item[0]));
       }
     })();
 
@@ -56,20 +58,21 @@ export default function Asynchronous() {
         setOpen(false);
       }}
       getOptionSelected={(option, value) => option.name === value.name}
-      getOptionLabel={option => option.name}
+      getOptionLabel={(option) => option.name}
       options={options}
       loading={loading}
-      renderInput={params => (
+      renderInput={(params) => (
         <TextField
           {...params}
           label="Asynchronous"
-          fullWidth
           variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
               <React.Fragment>
-                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
                 {params.InputProps.endAdornment}
               </React.Fragment>
             ),

@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from '@material-ui/icons/Done';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -31,7 +31,11 @@ export default function Chips() {
     <div className={classes.root}>
       <Chip label="Basic" />
       <Chip label="Disabled" disabled />
-      <Chip avatar={<Avatar>M</Avatar>} label="Clickable" onClick={handleClick} />
+      <Chip
+        avatar={<Avatar>M</Avatar>}
+        label="Clickable"
+        onClick={handleClick}
+      />
       <Chip
         avatar={<Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />}
         label="Deletable"

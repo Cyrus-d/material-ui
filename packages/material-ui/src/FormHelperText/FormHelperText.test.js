@@ -1,18 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, createClientRender, describeConformance } from 'test/utils';
 import FormHelperText from './FormHelperText';
 import FormControl from '../FormControl';
 
 describe('<FormHelperText />', () => {
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<FormHelperText />);
   });
 
@@ -22,7 +19,6 @@ describe('<FormHelperText />', () => {
     mount,
     refInstanceof: window.HTMLParagraphElement,
     testComponentPropWith: 'div',
-    after: () => mount.cleanUp(),
   }));
 
   describe('prop: error', () => {
@@ -33,7 +29,7 @@ describe('<FormHelperText />', () => {
   });
 
   describe('with FormControl', () => {
-    ['error', 'disabled'].forEach(visualState => {
+    ['error', 'disabled'].forEach((visualState) => {
       describe(visualState, () => {
         function FormHelperTextInFormControl(props) {
           return (

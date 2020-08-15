@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { exactProp } from '@material-ui/utils';
-import createGenerateClassName from '../createGenerateClassName';
 import { create } from 'jss';
+import createGenerateClassName from '../createGenerateClassName';
 import jssPreset from '../jssPreset';
 
 // Default JSS instance.
@@ -34,7 +34,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 let injectFirstNode;
 
-function StylesProvider(props) {
+export default function StylesProvider(props) {
   const { children, injectFirst = false, disableGeneration = false, ...localOptions } = props;
 
   const outerOptions = React.useContext(StylesContext);
@@ -43,7 +43,7 @@ function StylesProvider(props) {
   if (process.env.NODE_ENV !== 'production') {
     if (typeof window === 'undefined' && !context.sheetsManager) {
       console.error(
-        'Material-UI: you need to use the ServerStyleSheets API when rendering on the server.',
+        'Material-UI: You need to use the ServerStyleSheets API when rendering on the server.',
       );
     }
   }
@@ -51,14 +51,14 @@ function StylesProvider(props) {
   if (process.env.NODE_ENV !== 'production') {
     if (context.jss.options.insertionPoint && injectFirst) {
       console.error(
-        'Material-UI: you cannot use a custom insertionPoint and <StylesContext injectFirst> at the same time.',
+        'Material-UI: You cannot use a custom insertionPoint and <StylesContext injectFirst> at the same time.',
       );
     }
   }
 
   if (process.env.NODE_ENV !== 'production') {
     if (injectFirst && localOptions.jss) {
-      console.error('Material-UI: you cannot use the jss and injectFirst props at the same time.');
+      console.error('Material-UI: You cannot use the jss and injectFirst props at the same time.');
     }
   }
 
@@ -133,5 +133,3 @@ StylesProvider.propTypes = {
 if (process.env.NODE_ENV !== 'production') {
   StylesProvider.propTypes = exactProp(StylesProvider.propTypes);
 }
-
-export default StylesProvider;

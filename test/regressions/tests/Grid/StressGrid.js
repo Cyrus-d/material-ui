@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     width: 400,
     backgroundColor: theme.palette.secondary.main,
@@ -37,7 +37,7 @@ function StressGrid(props) {
             <Paper className={classes.paper}>last</Paper>
           </Grid>
         </Grid>
-        <Grid container item spacing={1} justify="space-between">
+        <Grid container item spacing={1} justifyContent="space-between">
           <Grid item xs={3}>
             <Paper className={classes.paper}>space</Paper>
           </Grid>

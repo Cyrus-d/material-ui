@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -17,9 +17,14 @@ const useStyles = makeStyles({
 
 export default function InputSlider() {
   const classes = useStyles();
-  const [value, setValue] = React.useState<number | string | Array<number | string>>(30);
+  const [value, setValue] = React.useState<
+    number | string | Array<number | string>
+  >(30);
 
-  const handleSliderChange = (event: any, newValue: number | number[]) => {
+  const handleSliderChange = (
+    event: React.SyntheticEvent,
+    newValue: number | number[],
+  ) => {
     setValue(newValue);
   };
 

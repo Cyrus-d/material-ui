@@ -6,21 +6,21 @@
 
 [クラス名ジェネレーター関数を返す関数](https://cssinjs.org/jss-api/#generate-your-class-names) 。
 
-#### 引数
+### 引数
 
 1. `オプション` (*オプジェクト* [任意]): 
   - `options.disableGlobal` (*Boolean* [optional]): Defaults `false`. 確定的なクラス名の生成を無効にします。
   - `options.productionPrefix` (*String* [optional]): Defaults to `'jss'`. プロダクションでクラス名のプレフィックスに使用される文字列。
   - `options.seed` (*String* [optional]): Defaults to `''`. ジェネレータを一意に識別するために使用される文字列。 同じドキュメントで複数のジェネレーターを使用する場合、クラス名の衝突を避けるために使用できます。
 
-#### 戻り値
+### 戻り値
 
 `class name generator` ：ジェネレーターをJSSに提供する必要があります。
 
-#### 例
+### 例
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles';
 
 const generateClassName = createGenerateClassName({
@@ -38,15 +38,15 @@ export default function App() {
 
 This function doesn't really "do anything" at runtime, it's just the identity function. Its only purpose is to defeat **TypeScript**'s type widening when providing style rules to `makeStyles`/`withStyles` which are a function of the `Theme`.
 
-#### 引数
+### 引数
 
-1. `styles` (*Function | Object*): A function generating the styles or a styles object.
+1. `styles` (*Object*): A styles object.
 
-#### 戻り値
+### 戻り値
 
-`styles`: A function generating the styles or a styles object.
+`styles`: A styles object.
 
-#### 例
+### 例
 
 ```jsx
 import { makeStyles, createStyles } from '@material-ui/core/styles';
@@ -67,23 +67,23 @@ export default function MyComponent {
 
 Link a style sheet with a function component using the **hook** pattern.
 
-#### 引数
+### 引数
 
 1. `styles` (*Function | Object*): A function generating the styles or a styles object. It will be linked to the component. Use the function signature if you need to have access to the theme. It's provided as the first argument.
 2. `オプション` (*オプジェクト* [任意]): 
   - `options.defaultTheme` (*Object* [optional]): The default theme to use if a theme isn't supplied through a Theme Provider.
-  - `options.name` (*String* [optional]): The name of the style sheet. Useful for debugging. If the value isn't provided, it will try to fallback to the name of the component.
+  - `options.name` (*String* [optional]): The name of the style sheet. Useful for debugging.
   - `options.flip` (*Boolean* [optional]): When set to `false`, this sheet will opt-out the `rtl` transformation. When set to `true`, the styles are inversed. When set to `null`, it follows `theme.direction`.
   - The other keys are forwarded to the options argument of [jss.createStyleSheet([styles], [options])](https://cssinjs.org/jss-api/#create-style-sheet).
 
-#### 戻り値
+### 戻り値
 
 `hook`: A hook. This hook can be used in a function component. The documentation often calls this returned hook `useStyles`. It accepts one argument: the properties that will be used for "interpolation" in the style sheet.
 
-#### 例
+### 例
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -149,7 +149,7 @@ The method is an alternative to `.toString()` when you are rendering the whole p
 
 Link a style sheet with a function component using the **styled components** pattern.
 
-#### 引数
+### 引数
 
 1. `Component`:：ラップされるコンポーネント。
 2. `styles` (*Function | Object*): A function generating the styles or a styles object. It will be linked to the component. Use the function signature if you need to have access to the theme. It's provided as property of the first argument.
@@ -160,14 +160,14 @@ Link a style sheet with a function component using the **styled components** pat
   - `options.flip` (*Boolean* [optional]): When set to `false`, this sheet will opt-out the `rtl` transformation. When set to `true`, the styles are inversed. When set to `null`, it follows `theme.direction`.
   - The other keys are forwarded to the options argument of [jss.createStyleSheet([styles], [options])](https://cssinjs.org/jss-api/#create-style-sheet).
 
-#### 戻り値
+### 戻り値
 
 `Component` ：作成された新しいコンポーネント。
 
-#### 例
+### 例
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@material-ui/core/styles';
 
 const MyComponent = styled('div')({
@@ -195,7 +195,7 @@ This component allows you to change the behavior of the styling solution. It mak
 
 It should preferably be used at **the root of your component tree**.
 
-#### Props
+### Props
 
 | Name              | Type   | Default | Description                                                                                                                                                                                                                                                                                                                          |
 |:----------------- |:------ |:------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -206,10 +206,10 @@ It should preferably be used at **the root of your component tree**.
 | jss               | object |         | JSS's instance.                                                                                                                                                                                                                                                                                                                      |
 
 
-#### 例
+### 例
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { StylesProvider } from '@material-ui/core/styles';
 
@@ -226,7 +226,7 @@ ReactDOM.render(<App />, document.querySelector('#app'));
 
 This component takes a `theme` property, and makes it available down the React tree thanks to the context. It should preferably be used at **the root of your component tree**.
 
-#### Props
+### Props
 
 | Name            | Type                                     | Default | Description                                                           |
 |:--------------- |:---------------------------------------- |:------- |:--------------------------------------------------------------------- |
@@ -234,10 +234,10 @@ This component takes a `theme` property, and makes it available down the React t
 | theme&nbsp;*    | union:&nbsp;object&nbsp;&#124;&nbsp;func |         | A theme object. You can provide a function to extend the outer theme. |
 
 
-#### 例
+### 例
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
 
@@ -256,14 +256,14 @@ ReactDOM.render(<App />, document.querySelector('#app'));
 
 This hook returns the `theme` object so it can be used inside a function component.
 
-#### 戻り値
+### 戻り値
 
 `theme`：以前にコンテキストに挿入されたテーマオブジェクト。
 
-#### 例
+### 例
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 
 export default function MyComponent() {
@@ -284,7 +284,7 @@ Link a style sheet with a component using the **higher-order component** pattern
 - The `innerRef` prop is deprecated. Use `ref` instead.
 - It does **not** copy over statics. たとえば、`getInitialProps()`静的メソッド (next.js) を定義するために使用できます。
 
-#### 引数
+### 引数
 
 1. `styles` (*Function | Object*): A function generating the styles or a styles object. It will be linked to the component. Use the function signature if you need to have access to the theme. It's provided as the first argument.
 2. `オプション` (*オプジェクト* [任意]): 
@@ -294,14 +294,14 @@ Link a style sheet with a component using the **higher-order component** pattern
   - `options.flip` (*Boolean* [optional]): When set to `false`, this sheet will opt-out the `rtl` transformation. When set to `true`, the styles are inversed. When set to `null`, it follows `theme.direction`.
   - The other keys are forwarded to the options argument of [jss.createStyleSheet([styles], [options])](https://cssinjs.org/jss-api/#create-style-sheet).
 
-#### 戻り値
+### 戻り値
 
 `higher-order component` ：コンポーネントをラップするために使用する必要があります。
 
-#### 例
+### 例
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
@@ -320,7 +320,7 @@ export default withStyles(styles)(MyComponent);
 また、[デコレータ](https://babeljs.io/docs/en/babel-plugin-proposal-decorators)などとしてしても使用できます。
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
@@ -343,18 +343,18 @@ export default MyComponent
 
 Provide the `theme` object as a property of the input component so it can be used in the render method.
 
-#### 引数
+### 引数
 
 1. `Component`:：ラップされるコンポーネント。
 
-#### 戻り値
+### 戻り値
 
 `Component` ：作成された新しいコンポーネント。 内部コンポーネントへの参照を転送します。
 
-#### 例
+### 例
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { withTheme } from '@material-ui/core/styles';
 
 function MyComponent(props) {

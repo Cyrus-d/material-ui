@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -40,7 +40,7 @@ export default function SpeedDialTooltipOpen() {
   const [hidden, setHidden] = React.useState(false);
 
   const handleVisibility = () => {
-    setHidden(prevHidden => !prevHidden);
+    setHidden((prevHidden) => !prevHidden);
   };
 
   const handleOpen = () => {
@@ -64,7 +64,7 @@ export default function SpeedDialTooltipOpen() {
         onOpen={handleOpen}
         open={open}
       >
-        {actions.map(action => (
+        {actions.map((action) => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}

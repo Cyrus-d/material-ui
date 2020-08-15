@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -27,7 +27,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
   },
@@ -107,7 +107,7 @@ export default function Checkout() {
             Checkout
           </Typography>
           <Stepper activeStep={activeStep} className={classes.stepper}>
-            {steps.map(label => (
+            {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
               </Step>
@@ -120,8 +120,9 @@ export default function Checkout() {
                   Thank you for your order.
                 </Typography>
                 <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order confirmation, and will
-                  send you an update when your order has shipped.
+                  Your order number is #2001539. We have emailed your order
+                  confirmation, and will send you an update when your order has
+                  shipped.
                 </Typography>
               </React.Fragment>
             ) : (
@@ -135,7 +136,6 @@ export default function Checkout() {
                   )}
                   <Button
                     variant="contained"
-                    color="primary"
                     onClick={handleNext}
                     className={classes.button}
                   >

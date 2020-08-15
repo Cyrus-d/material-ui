@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 
@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       height: 300,
       flexGrow: 1,
+      minWidth: 300,
       transform: 'translateZ(0)',
       // The position fixed scoping doesn't work in IE 11.
       // Disable this demo to preserve the others.
@@ -48,7 +49,9 @@ export default function ServerModal() {
       >
         <div className={classes.paper}>
           <h2 id="server-modal-title">Server-side modal</h2>
-          <p id="server-modal-description">If you disable JavaScript, you will still see me.</p>
+          <p id="server-modal-description">
+            If you disable JavaScript, you will still see me.
+          </p>
         </div>
       </Modal>
     </div>

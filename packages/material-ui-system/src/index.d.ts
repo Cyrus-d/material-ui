@@ -1,5 +1,4 @@
-import * as CSS from 'csstype';
-
+import * as React from 'react';
 // disable automatic export
 export {};
 
@@ -35,8 +34,8 @@ type DefaultBreakPoints = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * @returns An enhanced stylefunction that considers breakpoints
  */
 export function breakpoints<Props, Breakpoints extends string = DefaultBreakPoints>(
-  styleFunction: StyleFunction<Props>,
-): StyleFunction<Partial<Record<Breakpoints, Props>>>;
+  styleFunction: StyleFunction<Props>
+): StyleFunction<Partial<Record<Breakpoints, Props>> & Props>;
 
 // compose.js
 /**
@@ -55,7 +54,7 @@ export function compose<T extends Array<StyleFunction<any>>>(...args: T): Compos
 
 // css.js
 export function css<Props>(
-  styleFunction: StyleFunction<Props>,
+  styleFunction: StyleFunction<Props>
 ): StyleFunction<Props & { css: Omit<Props, 'theme'> }>;
 
 export const display: SimpleStyleFunction<
@@ -64,6 +63,7 @@ export const display: SimpleStyleFunction<
 
 export type DisplayProps = PropsFor<typeof display>;
 
+// flexbox.js
 export const flexbox: SimpleStyleFunction<
   | 'flexBasis'
   | 'flexDirection'
@@ -80,6 +80,23 @@ export const flexbox: SimpleStyleFunction<
   | 'justifySelf'
 >;
 export type FlexboxProps = PropsFor<typeof flexbox>;
+
+// grid.js
+export const grid: SimpleStyleFunction<
+  | 'gridGap'
+  | 'gridColumnGap'
+  | 'gridRowGap'
+  | 'gridColumn'
+  | 'gridRow'
+  | 'gridAutoFlow'
+  | 'gridAutoColumns'
+  | 'gridAutoRows'
+  | 'gridTemplateColumns'
+  | 'gridTemplateRows'
+  | 'gridTemplateAreas'
+  | 'gridArea'
+>;
+export type GridProps = PropsFor<typeof grid>;
 
 // palette.js
 export const color: SimpleStyleFunction<'color'>;
@@ -104,6 +121,7 @@ export const maxHeight: SimpleStyleFunction<'maxHeight'>;
 export const minHeight: SimpleStyleFunction<'minHeight'>;
 export const sizeWidth: SimpleStyleFunction<'sizeWidth'>;
 export const sizeHeight: SimpleStyleFunction<'sizeHeight'>;
+export const boxSizing: SimpleStyleFunction<'boxSizing'>;
 export const sizing: SimpleStyleFunction<
   | 'width'
   | 'maxWidth'
@@ -113,6 +131,7 @@ export const sizing: SimpleStyleFunction<
   | 'minHeight'
   | 'sizeWidth'
   | 'sizeHeight'
+  | 'boxSizing'
 >;
 export type SizingProps = PropsFor<typeof sizing>;
 
@@ -151,7 +170,7 @@ export type SpacingProps = PropsFor<typeof spacing>;
 
 // style.js
 export interface StyleOptions<PropKey, Theme extends object> {
-  cssProperty?: PropKey | keyof CSS.Properties | false;
+  cssProperty?: PropKey | keyof React.CSSProperties | false;
   prop: PropKey;
   /**
    * dot access in `Theme`
@@ -160,7 +179,7 @@ export interface StyleOptions<PropKey, Theme extends object> {
   transform?: (cssValue: unknown) => number | string | React.CSSProperties;
 }
 export function style<PropKey extends string, Theme extends object>(
-  options: StyleOptions<PropKey, Theme>,
+  options: StyleOptions<PropKey, Theme>
 ): StyleFunction<{ [K in PropKey]?: unknown } & { theme: Theme }>;
 
 // typography.js
@@ -181,6 +200,8 @@ export const typography: SimpleStyleFunction<
   | 'textAlign'
 >;
 export type TypographyProps = PropsFor<typeof typography>;
+
+export const visuallyHidden: React.CSSProperties;
 
 // utils
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;

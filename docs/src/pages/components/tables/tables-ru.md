@@ -5,11 +5,11 @@ components: Table, TableBody, TableCell, TableContainer, TableFooter, TableHead,
 
 # Table (tаблица)
 
-<p class="description">Tables display sets of data. Они могут быть полностью модифицированы.</p>
+<p class="description">Таблицы отображают наборы данных. Они могут быть полностью модифицированы.</p>
 
 [Tables](https://material.io/design/components/data-tables.html) display information in a way that’s easy to scan, so that users can look for patterns and insights. Они могут быть встроены в основной контент, например в карточки.
 
-Tables can include:
+Таблицы могу включать в себя:
 
 - Соответствующую визуализацию
 - Навигацию
@@ -23,7 +23,7 @@ Tables can include:
 
 Флажки должны сопровождать каждую строку, если пользователю необходимо выбрать или манипулировать данными.
 
-Для доступности(accessibility) первый столбец должен быть элементом `<th>` с атрибутом `scope` со значением `"row"`. Это позволяет программам чтения с экрана идентифицировать значение ячейки по имени строки и столбца.
+For accessibility, the first column is set to be a `<th>` element, with a `scope` of `"col"`. Это позволяет программам чтения с экрана идентифицировать значение ячейки по имени строки и столбца.
 
 ## Простая таблица
 
@@ -41,7 +41,7 @@ Tables can include:
 
 В этом примере демонстрируется использование `чекбокса` и кликабельных строк для выбора данных в настраиваемой `панели инструментов`. Здесь используется компонент `TableSortLabel` чтобы помочь стилизовать заголовки столбцов.
 
-Таблица имеет фиксированную ширину для демонстрации горизонтальной прокрутки. Чтобы предотвратить прокрутку элементов управления нумерацией страниц, компонент TablePagination находится за пределами таблицы. (В [примерe «собственные действия элементов нумерации»](#custom-table-pagination-action) ниже показывается управление нумерацией таблиц с помощью TableFooter.)
+Таблица имеет фиксированную ширину для демонстрации горизонтальной прокрутки. Чтобы предотвратить прокрутку элементов управления нумерацией страниц, компонент TablePagination находится за пределами таблицы. (В [примерe «собственные действия элементов нумерации»](#custom-pagination-actions) ниже показывается управление нумерацией таблиц с помощью TableFooter.)
 
 {{"demo": "pages/components/tables/EnhancedTable.js", "bg": true}}
 
@@ -79,6 +79,12 @@ Tables can include:
 
 {{"demo": "pages/components/tables/StickyHeadTable.js", "bg": true}}
 
+## Collapsible table
+
+An example of a table with expandable rows, revealing more information. It utilizes the [`Collapse`](/api/collapse/) component.
+
+{{"demo": "pages/components/tables/CollapsibleTable.js", "bg": true}}
+
 ## Объединение таблиц
 
 Простой пример с объединением строк и столбцов.
@@ -87,7 +93,7 @@ Tables can include:
 
 ## Виртуализированная таблица
 
-В следующем примере мы демонстрируем, как использовать [react-virtualized](https://github.com/bvaughn/react-virtualized) с компонентом `Table`. Он отображает 200 строк и c легкостью может еще больше. Virtualization helps with performance issues.
+В следующем примере мы покажем, как использовать [react-virtualized](https://github.com/bvaughn/react-virtualized) с компонентом `Table`. Он отображает 200 строк и c легкостью может еще больше. Virtualization helps with performance issues.
 
 {{"demo": "pages/components/tables/ReactVirtualizedTable.js", "bg": true}}
 

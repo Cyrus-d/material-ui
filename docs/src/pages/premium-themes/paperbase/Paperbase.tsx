@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   createMuiTheme,
   createStyles,
@@ -21,8 +21,7 @@ function Copyright() {
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
       </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
+      {new Date().getFullYear()}.
     </Typography>
   );
 }

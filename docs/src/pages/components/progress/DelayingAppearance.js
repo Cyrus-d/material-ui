@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -33,7 +33,7 @@ export default function DelayingAppearance() {
   );
 
   const handleClickLoading = () => {
-    setLoading(prevLoading => !prevLoading);
+    setLoading((prevLoading) => !prevLoading);
   };
 
   const handleClickQuery = () => {

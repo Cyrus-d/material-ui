@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import capitalize from '../utils/capitalize';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     width: '100%',
@@ -13,13 +13,10 @@ export const styles = theme => ({
     marginRight: 'auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    display: 'block', // Fix IE 11 layout when used with main.
     [theme.breakpoints.up('sm')]: {
       paddingLeft: theme.spacing(3),
       paddingRight: theme.spacing(3),
-    },
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing(4),
-      paddingRight: theme.spacing(4),
     },
   },
   /* Styles applied to the root element if `disableGutters={true}`. */
@@ -99,19 +96,26 @@ const Container = React.forwardRef(function Container(props, ref) {
 });
 
 Container.propTypes = {
-  children: PropTypes.node.isRequired,
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
+  /**
+   * @ignore
+   */
+  children: PropTypes /* @typescript-to-proptypes-ignore */.node.isRequired,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -130,7 +134,7 @@ Container.propTypes = {
    * The container width grows with the size of the screen.
    * Set to `false` to disable `maxWidth`.
    */
-  maxWidth: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl', false]),
+  maxWidth: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs', false]),
 };
 
 export default withStyles(styles, { name: 'MuiContainer' })(Container);

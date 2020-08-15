@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-const StyledTableCell = withStyles(theme => ({
+const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
@@ -18,10 +18,14 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles(theme => ({
+const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
     },
   },
 }))(TableRow);
@@ -60,7 +64,7 @@ export default function CustomizedTables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {rows.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">
                 {row.name}

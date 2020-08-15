@@ -4,6 +4,20 @@ import * as colors from './colors';
 export { colors };
 export * from './styles';
 
+export * from './utils';
+
+export { default as Accordion } from './Accordion';
+export * from './Accordion';
+
+export { default as AccordionActions } from './AccordionActions';
+export * from './AccordionActions';
+
+export { default as AccordionDetails } from './AccordionDetails';
+export * from './AccordionDetails';
+
+export { default as AccordionSummary } from './AccordionSummary';
+export * from './AccordionSummary';
+
 export { default as AppBar } from './AppBar';
 export * from './AppBar';
 
@@ -96,18 +110,6 @@ export * from './Divider';
 
 export { default as Drawer } from './Drawer';
 export * from './Drawer';
-
-export { default as ExpansionPanel } from './ExpansionPanel';
-export * from './ExpansionPanel';
-
-export { default as ExpansionPanelActions } from './ExpansionPanelActions';
-export * from './ExpansionPanelActions';
-
-export { default as ExpansionPanelDetails } from './ExpansionPanelDetails';
-export * from './ExpansionPanelDetails';
-
-export { default as ExpansionPanelSummary } from './ExpansionPanelSummary';
-export * from './ExpansionPanelSummary';
 
 export { default as Fab } from './Fab';
 export * from './Fab';
@@ -238,8 +240,8 @@ export * from './Radio';
 export { default as RadioGroup } from './RadioGroup';
 export * from './RadioGroup';
 
-export { default as RootRef } from './RootRef';
-export * from './RootRef';
+export { default as ScopedCssBaseline } from './ScopedCssBaseline';
+export * from './ScopedCssBaseline';
 
 export { default as Select } from './Select';
 export * from './Select';
@@ -319,6 +321,9 @@ export * from './TableSortLabel';
 export { default as Tabs } from './Tabs';
 export * from './Tabs';
 
+export { default as TabScrollButton } from './TabScrollButton';
+export * from './TabScrollButton';
+
 export { default as TextField } from './TextField';
 export * from './TextField';
 
@@ -333,6 +338,9 @@ export * from './Tooltip';
 
 export { default as Typography } from './Typography';
 export * from './Typography';
+
+export { default as Unstable_TrapFocus } from './Unstable_TrapFocus';
+export * from './Unstable_TrapFocus';
 
 export { default as useMediaQuery } from './useMediaQuery';
 export * from './useMediaQuery';

@@ -37,7 +37,7 @@ The `multiline` prop transforms the text field into a [textarea](https://develop
 
 {{"demo": "pages/components/text-fields/MultilineTextFields.js"}}
 
-## Select
+## Liste à choix simple
 
 The `select` prop makes the text field use the [Select](/components/selects/) component internally.
 
@@ -51,7 +51,7 @@ There are multiple ways to display an icon with a text field.
 
 ### Ornements d'input
 
-The main way is with an `InputAdornment`. Ceux-ci peuvent être utilisés pour ajouter un préfixe, un suffixe ou une action à une entrée. Par exemple, vous pouvez utiliser un bouton icône pour masquer ou révéler le mot de passe.
+The main way is with an `InputAdornment`. This can be used to add a prefix, a suffix or an action to an input. Par exemple, vous pouvez utiliser un bouton icône pour masquer ou révéler le mot de passe.
 
 {{"demo": "pages/components/text-fields/InputAdornments.js"}}
 
@@ -63,7 +63,7 @@ Fancy smaller inputs? Use the `size` prop.
 
 ## Disposition
 
-`margin` can be used to alter the vertical spacing of inputs. Using `none` (default) will not apply margins to the `FormControl`, whereas `dense` and `normal` will. `dense` and `normal` alter other styles to meet the specification.
+`margin` prop can be used to alter the vertical spacing of inputs. Using `none` (default) will not apply margins to the `FormControl`, whereas `dense` and `normal` will. `dense` and `normal` alter other styles to meet the specification.
 
 `fullWidth` can be used to make the input take up the full width of its container.
 
@@ -71,7 +71,7 @@ Fancy smaller inputs? Use the `size` prop.
 
 ## Uncontrolled vs Controlled
 
-The component can be controlled or uncontrolled
+The component can be controlled or uncontrolled.
 
 {{"demo": "pages/components/text-fields/StateTextFields.js"}}
 
@@ -102,6 +102,8 @@ Here are some examples of customizing the component. Vous pouvez en savoir plus 
 La personnalisation ne se limite pas aux CSS, vous pouvez utiliser la composition pour créer des composants personnalisés et donner à votre application une sensation unique. Voici un exemple utilisant le composant [`InputBase`](/api/input-base/), inspiré de Google Maps.
 
 {{"demo": "pages/components/text-fields/CustomizedInputBase.js", "bg": true}}
+
+🎨 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/styles/text-field).
 
 ## Limites
 
@@ -171,7 +173,7 @@ function MyInputComponent(props) {
 
 ## Accessibilité
 
-In order for the text field to be accessible, **the input should be linked to the label and the helper text**. The underlying DOM nodes should have this structure.
+In order for the text field to be accessible, **the input should be linked to the label and the helper text**. The underlying DOM nodes should have this structure:
 
 ```jsx
 <div class="form-control">
@@ -196,7 +198,6 @@ In order for the text field to be accessible, **the input should be linked to th
 
 Pour des cas d'utilisation plus avancés, vous pourrez peut-être tirer parti des projects suivants:
 
-- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Bindings for using Material-UI with formik.
-- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) A set of wrapper components to facilitate using Material UI with Redux Form.
-- [final-form-material-ui](https://github.com/Deadly0/final-form-material-ui) A set of wrapper components to facilitate using Material UI with Final Form.
-- [mui-rff](https://github.com/lookfirst/mui-rff) A set of wrapper components to facilitate using Material UI with React Final Form.
+- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Bindings for using Material-UI with [formik](https://jaredpalmer.com/formik).
+- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) Bindings for using Material-UI with [Redux Form](https://redux-form.com/).
+- [mui-rff](https://github.com/lookfirst/mui-rff) Bindings for using Material-UI with [React Final Form](https://final-form.org/react).

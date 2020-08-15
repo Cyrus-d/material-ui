@@ -1,17 +1,14 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, createClientRender, describeConformance } from 'test/utils';
 import Toolbar from './Toolbar';
 
 describe('<Toolbar />', () => {
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<Toolbar>foo</Toolbar>);
   });
 
@@ -20,7 +17,6 @@ describe('<Toolbar />', () => {
     inheritComponent: 'div',
     mount,
     refInstanceof: window.HTMLDivElement,
-    after: () => mount.cleanUp(),
   }));
 
   it('should render with gutters class', () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -6,11 +6,10 @@ import { duration } from '../styles/transitions';
 import ClickAwayListener from '../ClickAwayListener';
 import useEventCallback from '../utils/useEventCallback';
 import capitalize from '../utils/capitalize';
-import createChainedFunction from '../utils/createChainedFunction';
 import Grow from '../Grow';
 import SnackbarContent from '../SnackbarContent';
 
-export const styles = theme => {
+export const styles = (theme) => {
   const top1 = { top: 8 };
   const bottom1 = { bottom: 8 };
   const right = { justifyContent: 'flex-end' };
@@ -98,8 +97,8 @@ export const styles = theme => {
 const Snackbar = React.forwardRef(function Snackbar(props, ref) {
   const {
     action,
-    anchorOrigin: { vertical, horizontal } = { vertical: 'bottom', horizontal: 'center' },
-    autoHideDuration,
+    anchorOrigin: { vertical, horizontal } = { vertical: 'bottom', horizontal: 'left' },
+    autoHideDuration = null,
     children,
     classes,
     className,
@@ -108,12 +107,6 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
     disableWindowBlurListener = false,
     message,
     onClose,
-    onEnter,
-    onEntered,
-    onEntering,
-    onExit,
-    onExited,
-    onExiting,
     onMouseEnter,
     onMouseLeave,
     open,
@@ -123,7 +116,7 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
       enter: duration.enteringScreen,
       exit: duration.leavingScreen,
     },
-    TransitionProps,
+    TransitionProps: { onEnter, onExited, ...TransitionProps } = {},
     ...other
   } = props;
 
@@ -136,7 +129,7 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
     }
   });
 
-  const setAutoHideTimer = useEventCallback(autoHideDurationParam => {
+  const setAutoHideTimer = useEventCallback((autoHideDurationParam) => {
     if (!onClose || autoHideDurationParam == null) {
       return;
     }
@@ -171,35 +164,44 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
     }
   }, [autoHideDuration, resumeHideDuration, setAutoHideTimer]);
 
-  const handleMouseEnter = event => {
+  const handleMouseEnter = (event) => {
     if (onMouseEnter) {
       onMouseEnter(event);
     }
     handlePause();
   };
 
-  const handleMouseLeave = event => {
+  const handleMouseLeave = (event) => {
     if (onMouseLeave) {
       onMouseLeave(event);
     }
     handleResume();
   };
 
-  const handleClickAway = event => {
+  const handleClickAway = (event) => {
     if (onClose) {
       onClose(event, 'clickaway');
     }
   };
 
-  const handleExited = () => {
+  const handleExited = (node) => {
     setExited(true);
+
+    if (onExited) {
+      onExited(node);
+    }
   };
 
-  const handleEnter = () => {
+  const handleEnter = (node, isAppearing) => {
     setExited(false);
+
+    if (onEnter) {
+      onEnter(node, isAppearing);
+    }
   };
 
   React.useEffect(() => {
+    // TODO: window global should be refactored here
     if (!disableWindowBlurListener && open) {
       window.addEventListener('focus', handleResume);
       window.addEventListener('blur', handlePause);
@@ -234,14 +236,10 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
         <TransitionComponent
           appear
           in={open}
-          onEnter={createChainedFunction(handleEnter, onEnter)}
-          onEntered={onEntered}
-          onEntering={onEntering}
-          onExit={onExit}
-          onExited={createChainedFunction(handleExited, onExited)}
-          onExiting={onExiting}
           timeout={transitionDuration}
           direction={vertical === 'top' ? 'down' : 'up'}
+          onEnter={handleEnter}
+          onExited={handleExited}
           {...TransitionProps}
         >
           {children || <SnackbarContent message={message} action={action} {...ContentProps} />}
@@ -252,16 +250,22 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
 });
 
 Snackbar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
-   * The action to display.
+   * The action to display. It renders after the message, at the end of the snackbar.
    */
   action: PropTypes.node,
   /**
    * The anchor of the `Snackbar`.
+   * On smaller screens, the component grows to occupy all the available width,
+   * the horizontal alignment is ignored.
    */
   anchorOrigin: PropTypes.shape({
-    horizontal: PropTypes.oneOf(['left', 'center', 'right']).isRequired,
-    vertical: PropTypes.oneOf(['top', 'bottom']).isRequired,
+    horizontal: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
+    vertical: PropTypes.oneOf(['bottom', 'top']).isRequired,
   }),
   /**
    * The number of milliseconds to wait before automatically calling the
@@ -278,7 +282,7 @@ Snackbar.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -318,30 +322,6 @@ Snackbar.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired before the transition is entering.
-   */
-  onEnter: PropTypes.func,
-  /**
-   * Callback fired when the transition has entered.
-   */
-  onEntered: PropTypes.func,
-  /**
-   * Callback fired when the transition is entering.
-   */
-  onEntering: PropTypes.func,
-  /**
-   * Callback fired before the transition is exiting.
-   */
-  onExit: PropTypes.func,
-  /**
-   * Callback fired when the transition has exited.
-   */
-  onExited: PropTypes.func,
-  /**
-   * Callback fired when the transition is exiting.
-   */
-  onExiting: PropTypes.func,
-  /**
    * @ignore
    */
   onMouseEnter: PropTypes.func,
@@ -362,6 +342,7 @@ Snackbar.propTypes = {
   resumeHideDuration: PropTypes.number,
   /**
    * The component used for the transition.
+   * [Follow this guide](/components/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.
    */
   TransitionComponent: PropTypes.elementType,
   /**
@@ -370,10 +351,15 @@ Snackbar.propTypes = {
    */
   transitionDuration: PropTypes.oneOfType([
     PropTypes.number,
-    PropTypes.shape({ enter: PropTypes.number, exit: PropTypes.number }),
+    PropTypes.shape({
+      appear: PropTypes.number,
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
   ]),
   /**
-   * Props applied to the `Transition` element.
+   * Props applied to the transition element.
+   * By default, the element is based on this [`Transition`](http://reactcommunity.org/react-transition-group/transition) component.
    */
   TransitionProps: PropTypes.object,
 };

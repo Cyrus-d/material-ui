@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,7 +10,10 @@ import Draggable from 'react-draggable';
 
 function PaperComponent(props) {
   return (
-    <Draggable cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
     </Draggable>
   );
@@ -29,8 +32,8 @@ export default function DraggableDialog() {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open form dialog
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Open draggable dialog
       </Button>
       <Dialog
         open={open}
@@ -43,17 +46,15 @@ export default function DraggableDialog() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates
-            occasionally.
+            To subscribe to this website, please enter your email address here.
+            We will send updates occasionally.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
+          <Button autoFocus onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
-            Subscribe
-          </Button>
+          <Button onClick={handleClose}>Subscribe</Button>
         </DialogActions>
       </Dialog>
     </div>

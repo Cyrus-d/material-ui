@@ -1,16 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { elementAcceptingRef } from '@material-ui/utils';
+import { deepmerge, elementAcceptingRef } from '@material-ui/utils';
 import { fade } from '../styles/colorManipulator';
 import withStyles from '../styles/withStyles';
 import capitalize from '../utils/capitalize';
 import Grow from '../Grow';
 import Popper from '../Popper';
 import useForkRef from '../utils/useForkRef';
-import setRef from '../utils/setRef';
-import { useIsFocusVisible } from '../utils/focusVisible';
+import useId from '../utils/unstable_useId';
+import useIsFocusVisible from '../utils/useIsFocusVisible';
+import useControlled from '../utils/useControlled';
 import useTheme from '../styles/useTheme';
 
 function round(value) {
@@ -20,72 +20,55 @@ function round(value) {
 function arrowGenerator() {
   return {
     '&[x-placement*="bottom"] $arrow': {
-      flip: false,
       top: 0,
       left: 0,
-      marginTop: '-0.95em',
+      marginTop: '-0.71em',
       marginLeft: 4,
       marginRight: 4,
-      width: '2em',
-      height: '1em',
       '&::before': {
-        flip: false,
-        borderWidth: '0 1em 1em 1em',
-        borderColor: 'transparent transparent currentcolor transparent',
+        transformOrigin: '0 100%',
       },
     },
     '&[x-placement*="top"] $arrow': {
-      flip: false,
       bottom: 0,
       left: 0,
-      marginBottom: '-0.95em',
+      marginBottom: '-0.71em',
       marginLeft: 4,
       marginRight: 4,
-      width: '2em',
-      height: '1em',
       '&::before': {
-        flip: false,
-        borderWidth: '1em 1em 0 1em',
-        borderColor: 'currentcolor transparent transparent transparent',
+        transformOrigin: '100% 0',
       },
     },
     '&[x-placement*="right"] $arrow': {
-      flip: false,
       left: 0,
-      marginLeft: '-0.95em',
+      marginLeft: '-0.71em',
+      height: '1em',
+      width: '0.71em',
       marginTop: 4,
       marginBottom: 4,
-      height: '2em',
-      width: '1em',
       '&::before': {
-        flip: false,
-        borderWidth: '1em 1em 1em 0',
-        borderColor: 'transparent currentcolor transparent transparent',
+        transformOrigin: '100% 100%',
       },
     },
     '&[x-placement*="left"] $arrow': {
-      flip: false,
       right: 0,
-      marginRight: '-0.95em',
+      marginRight: '-0.71em',
+      height: '1em',
+      width: '0.71em',
       marginTop: 4,
       marginBottom: 4,
-      height: '2em',
-      width: '1em',
       '&::before': {
-        flip: false,
-        borderWidth: '1em 0 1em 1em',
-        borderColor: 'transparent transparent transparent currentcolor',
+        transformOrigin: '0 0',
       },
     },
   };
 }
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the Popper component. */
   popper: {
     zIndex: theme.zIndex.tooltip,
-    pointerEvents: 'none',
-    flip: false, // disable jss-rtl plugin
+    pointerEvents: 'none', // disable jss-rtl plugin
   },
   /* Styles applied to the Popper component if `interactive={true}`. */
   popperInteractive: {
@@ -113,16 +96,20 @@ export const styles = theme => ({
   },
   /* Styles applied to the arrow element. */
   arrow: {
+    overflow: 'hidden',
     position: 'absolute',
-    fontSize: 6,
+    width: '1em',
+    height: '0.71em' /* = width / sqrt(2) = (length of the hypotenuse) */,
+    boxSizing: 'border-box',
     color: fade(theme.palette.grey[700], 0.9),
     '&::before': {
       content: '""',
       margin: 'auto',
       display: 'block',
-      width: 0,
-      height: 0,
-      borderStyle: 'solid',
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'currentColor',
+      transform: 'rotate(45deg)',
     },
   },
   /* Styles applied to the tooltip (label wrapper) element if the tooltip is opened by touch. */
@@ -182,7 +169,8 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
     disableFocusListener = false,
     disableHoverListener = false,
     disableTouchListener = false,
-    enterDelay = 0,
+    enterDelay = 100,
+    enterNextDelay = 0,
     enterTouchDelay = 700,
     id: idProp,
     interactive = false,
@@ -192,6 +180,7 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
     onOpen,
     open: openProp,
     placement = 'bottom',
+    PopperComponent = Popper,
     PopperProps,
     title,
     TransitionComponent = Grow,
@@ -209,30 +198,19 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
   const leaveTimer = React.useRef();
   const touchTimer = React.useRef();
 
-  const { current: isControlled } = React.useRef(openProp != null);
-  const [openState, setOpenState] = React.useState(false);
-  let open = isControlled ? openProp : openState;
+  const [openState, setOpenState] = useControlled({
+    controlled: openProp,
+    default: false,
+    name: 'Tooltip',
+    state: 'open',
+  });
+
+  let open = openState;
 
   if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    React.useEffect(() => {
-      if (isControlled !== (openProp != null)) {
-        console.error(
-          [
-            `Material-UI: A component is changing ${
-              isControlled ? 'a ' : 'an un'
-            }controlled Tooltip to be ${isControlled ? 'un' : ''}controlled.`,
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            'Decide between using a controlled or uncontrolled Tooltip ' +
-              'element for the lifetime of the component.',
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        );
-      }
-    }, [openProp, isControlled]);
-  }
+    const { current: isControlled } = React.useRef(openProp !== undefined);
 
-  if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
       if (
@@ -244,7 +222,7 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
       ) {
         console.error(
           [
-            'Material-UI: you are providing a disabled `button` child to the Tooltip component.',
+            'Material-UI: You are providing a disabled `button` child to the Tooltip component.',
             'A disabled element does not fire events.',
             "Tooltip needs to listen to the child element's events to display the title.",
             '',
@@ -252,21 +230,10 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
           ].join('\n'),
         );
       }
-    }, [isControlled, title, childNode]);
+    }, [title, childNode, isControlled]);
   }
 
-  const [defaultId, setDefaultId] = React.useState();
-  const id = idProp || defaultId;
-  React.useEffect(() => {
-    if (!open || defaultId) {
-      return;
-    }
-
-    // Fallback to this default id when possible.
-    // Use the random value for client-side rendering only.
-    // We can't use it server-side.
-    setDefaultId(`mui-tooltip-${Math.round(Math.random() * 1e5)}`);
-  }, [open, defaultId]);
+  const id = useId(idProp);
 
   React.useEffect(() => {
     return () => {
@@ -277,30 +244,24 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
     };
   }, []);
 
-  const handleOpen = event => {
+  const handleOpen = (event) => {
     clearTimeout(hystersisTimer);
     hystersisOpen = true;
 
     // The mouseover event will trigger for every nested element in the tooltip.
     // We can skip rerendering when the tooltip is already open.
     // We are using the mouseover event instead of the mouseenter event to fix a hide/show issue.
-    if (!isControlled) {
-      setOpenState(true);
-    }
+    setOpenState(true);
 
     if (onOpen) {
       onOpen(event);
     }
   };
 
-  const handleEnter = event => {
+  const handleEnter = (forward = true) => (event) => {
     const childrenProps = children.props;
 
-    if (
-      event.type === 'mouseover' &&
-      childrenProps.onMouseOver &&
-      event.currentTarget === childNode
-    ) {
+    if (event.type === 'mouseover' && childrenProps.onMouseOver && forward) {
       childrenProps.onMouseOver(event);
     }
 
@@ -317,26 +278,36 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
 
     clearTimeout(enterTimer.current);
     clearTimeout(leaveTimer.current);
-    if (enterDelay && !hystersisOpen) {
+    if (enterDelay || (hystersisOpen && enterNextDelay)) {
       event.persist();
-      enterTimer.current = setTimeout(() => {
-        handleOpen(event);
-      }, enterDelay);
+      enterTimer.current = setTimeout(
+        () => {
+          handleOpen(event);
+        },
+        hystersisOpen ? enterNextDelay : enterDelay,
+      );
     } else {
       handleOpen(event);
     }
   };
 
-  const { isFocusVisible, onBlurVisible, ref: focusVisibleRef } = useIsFocusVisible();
-  const [childIsFocusVisible, setChildIsFocusVisible] = React.useState(false);
-  const handleBlur = () => {
-    if (childIsFocusVisible) {
+  const {
+    isFocusVisibleRef,
+    onBlur: handleBlurVisible,
+    onFocus: handleFocusVisible,
+    ref: focusVisibleRef,
+  } = useIsFocusVisible();
+  // We don't necessarily care about the focusVisible state (which is safe to access via ref anyway).
+  // We just need to re-render the Tooltip if the focus-visible state changes.
+  const [, setChildIsFocusVisible] = React.useState(false);
+  const handleBlur = (event) => {
+    handleBlurVisible(event);
+    if (isFocusVisibleRef.current === false) {
       setChildIsFocusVisible(false);
-      onBlurVisible();
     }
   };
 
-  const handleFocus = event => {
+  const handleFocus = (forward = true) => (event) => {
     // Workaround for https://github.com/facebook/react/issues/7769
     // The autoFocus of React might trigger the event before the componentDidMount.
     // We need to account for this eventuality.
@@ -344,27 +315,24 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
       setChildNode(event.currentTarget);
     }
 
-    if (isFocusVisible(event)) {
+    handleFocusVisible(event);
+    if (isFocusVisibleRef.current === true) {
       setChildIsFocusVisible(true);
-      handleEnter(event);
+      handleEnter()(event);
     }
 
     const childrenProps = children.props;
-    if (childrenProps.onFocus && event.currentTarget === childNode) {
+    if (childrenProps.onFocus && forward) {
       childrenProps.onFocus(event);
     }
   };
 
-  const handleClose = event => {
+  const handleClose = (event) => {
     clearTimeout(hystersisTimer);
     hystersisTimer = setTimeout(() => {
       hystersisOpen = false;
-    }, 500);
-    // Use 500 ms per https://github.com/reach/reach-ui/blob/3b5319027d763a3082880be887d7a29aee7d3afc/packages/tooltip/src/index.js#L214
-
-    if (!isControlled) {
-      setOpenState(false);
-    }
+    }, 800 + leaveDelay);
+    setOpenState(false);
 
     if (onClose) {
       onClose(event);
@@ -376,11 +344,11 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
     }, theme.transitions.duration.shortest);
   };
 
-  const handleLeave = event => {
+  const handleLeave = (forward = true) => (event) => {
     const childrenProps = children.props;
 
     if (event.type === 'blur') {
-      if (childrenProps.onBlur && event.currentTarget === childNode) {
+      if (childrenProps.onBlur && forward) {
         childrenProps.onBlur(event);
       }
       handleBlur(event);
@@ -402,24 +370,27 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
     }, leaveDelay);
   };
 
-  const handleTouchStart = event => {
+  const detectTouchStart = (event) => {
     ignoreNonTouchEvents.current = true;
-    const childrenProps = children.props;
 
+    const childrenProps = children.props;
     if (childrenProps.onTouchStart) {
       childrenProps.onTouchStart(event);
     }
+  };
 
+  const handleTouchStart = (event) => {
+    detectTouchStart(event);
     clearTimeout(leaveTimer.current);
     clearTimeout(closeTimer.current);
     clearTimeout(touchTimer.current);
     event.persist();
     touchTimer.current = setTimeout(() => {
-      handleEnter(event);
+      handleEnter()(event);
     }, enterTouchDelay);
   };
 
-  const handleTouchEnd = event => {
+  const handleTouchEnd = (event) => {
     if (children.props.onTouchEnd) {
       children.props.onTouchEnd(event);
     }
@@ -434,15 +405,7 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
 
   const handleUseRef = useForkRef(setChildNode, ref);
   const handleFocusRef = useForkRef(focusVisibleRef, handleUseRef);
-  // can be removed once we drop support for non ref forwarding class components
-  const handleOwnRef = React.useCallback(
-    instance => {
-      // #StrictMode ready
-      setRef(handleFocusRef, ReactDOM.findDOMNode(instance));
-    },
-    [handleFocusRef],
-  );
-  const handleRef = useForkRef(children.ref, handleOwnRef);
+  const handleRef = useForkRef(children.ref, handleFocusRef);
 
   // There is no point in displaying an empty tooltip.
   if (title === '') {
@@ -461,7 +424,11 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
     ...other,
     ...children.props,
     className: clsx(other.className, children.props.className),
+    onTouchStart: detectTouchStart,
+    ref: handleRef,
   };
+
+  const interactiveWrapperListeners = {};
 
   if (!disableTouchListener) {
     childrenProps.onTouchStart = handleTouchStart;
@@ -469,39 +436,56 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
   }
 
   if (!disableHoverListener) {
-    childrenProps.onMouseOver = handleEnter;
-    childrenProps.onMouseLeave = handleLeave;
+    childrenProps.onMouseOver = handleEnter();
+    childrenProps.onMouseLeave = handleLeave();
+
+    if (interactive) {
+      interactiveWrapperListeners.onMouseOver = handleEnter(false);
+      interactiveWrapperListeners.onMouseLeave = handleLeave(false);
+    }
   }
 
   if (!disableFocusListener) {
-    childrenProps.onFocus = handleFocus;
-    childrenProps.onBlur = handleLeave;
-  }
+    childrenProps.onFocus = handleFocus();
+    childrenProps.onBlur = handleLeave();
 
-  const interactiveWrapperListeners = interactive
-    ? {
-        onMouseOver: childrenProps.onMouseOver,
-        onMouseLeave: childrenProps.onMouseLeave,
-        onFocus: childrenProps.onFocus,
-        onBlur: childrenProps.onBlur,
-      }
-    : {};
+    if (interactive) {
+      interactiveWrapperListeners.onFocus = handleFocus(false);
+      interactiveWrapperListeners.onBlur = handleLeave(false);
+    }
+  }
 
   if (process.env.NODE_ENV !== 'production') {
     if (children.props.title) {
       console.error(
         [
-          'Material-UI: you have provided a `title` prop to the child of <Tooltip />.',
+          'Material-UI: You have provided a `title` prop to the child of <Tooltip />.',
           `Remove this title prop \`${children.props.title}\` or the Tooltip component.`,
         ].join('\n'),
       );
     }
   }
 
+  const mergedPopperProps = React.useMemo(() => {
+    return deepmerge(
+      {
+        popperOptions: {
+          modifiers: {
+            arrow: {
+              enabled: Boolean(arrowRef),
+              element: arrowRef,
+            },
+          },
+        },
+      },
+      PopperProps,
+    );
+  }, [arrowRef, PopperProps]);
+
   return (
     <React.Fragment>
-      {React.cloneElement(children, { ref: handleRef, ...childrenProps })}
-      <Popper
+      {React.cloneElement(children, childrenProps)}
+      <PopperComponent
         className={clsx(classes.popper, {
           [classes.popperInteractive]: interactive,
           [classes.popperArrow]: arrow,
@@ -511,16 +495,8 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
         open={childNode ? open : false}
         id={childrenProps['aria-describedby']}
         transition
-        popperOptions={{
-          modifiers: {
-            arrow: {
-              enabled: Boolean(arrowRef),
-              element: arrowRef,
-            },
-          },
-        }}
         {...interactiveWrapperListeners}
-        {...PopperProps}
+        {...mergedPopperProps}
       >
         {({ placement: placementInner, TransitionProps: TransitionPropsInner }) => (
           <TransitionComponent
@@ -543,12 +519,16 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
             </div>
           </TransitionComponent>
         )}
-      </Popper>
+      </PopperComponent>
     </React.Fragment>
   );
 });
 
 Tooltip.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * If `true`, adds an arrow to the tooltip.
    */
@@ -561,7 +541,11 @@ Tooltip.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
+  /**
+   * @ignore
+   */
+  className: PropTypes.string,
   /**
    * Do not respond to focus events.
    */
@@ -579,6 +563,10 @@ Tooltip.propTypes = {
    * This prop won't impact the enter touch delay (`enterTouchDelay`).
    */
   enterDelay: PropTypes.number,
+  /**
+   * The number of milliseconds to wait before showing the tooltip when one was already recently opened.
+   */
+  enterNextDelay: PropTypes.number,
   /**
    * The number of milliseconds a user must touch the element before showing the tooltip.
    */
@@ -636,21 +624,27 @@ Tooltip.propTypes = {
     'top',
   ]),
   /**
+   * The component used for the popper.
+   */
+  PopperComponent: PropTypes.elementType,
+  /**
    * Props applied to the [`Popper`](/api/popper/) element.
    */
   PopperProps: PropTypes.object,
   /**
    * Tooltip title. Zero-length titles string are never displayed.
    */
-  title: PropTypes.node.isRequired,
+  title: PropTypes /* @typescript-to-proptypes-ignore */.node.isRequired,
   /**
    * The component used for the transition.
+   * [Follow this guide](/components/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.
    */
   TransitionComponent: PropTypes.elementType,
   /**
-   * Props applied to the `Transition` element.
+   * Props applied to the transition element.
+   * By default, the element is based on this [`Transition`](http://reactcommunity.org/react-transition-group/transition) component.
    */
   TransitionProps: PropTypes.object,
 };
 
-export default withStyles(styles, { name: 'MuiTooltip' })(Tooltip);
+export default withStyles(styles, { name: 'MuiTooltip', flip: false })(Tooltip);

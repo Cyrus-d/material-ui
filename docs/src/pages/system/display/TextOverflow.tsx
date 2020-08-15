@@ -1,10 +1,16 @@
-import React from 'react';
+import * as React from 'react';
 import Box from '@material-ui/core/Box';
 
 export default function TextOverflow() {
   return (
     <div style={{ width: 200, whiteSpace: 'nowrap' }}>
-      <Box component="div" my={2} textOverflow="clip" overflow="hidden" bgcolor="background.paper">
+      <Box
+        component="div"
+        my={2}
+        textOverflow="clip"
+        overflow="hidden"
+        bgcolor="background.paper"
+      >
         Text Overflow Clip. Text Overflow Clip.
       </Box>
       <Box

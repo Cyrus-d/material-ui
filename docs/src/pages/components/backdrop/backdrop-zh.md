@@ -1,12 +1,12 @@
 ---
-title: Overlay React component
+title: Backdrop React 组件
 components: Backdrop
 ---
 
-# Backdrop
+# Backdrop 背景板
 
-<p class="description">The backdrop component is used to provide emphasis on a particular element or parts of it.</p>
+<p class="description">Backdrop 组件用于提供对特定元素或其部分的强调。</p>
 
-The overlay signals to the user of a state change within the application and can be used for creating loaders, dialogs and more. In its simplest form, the backdrop component will add a dimmed layer over your application.
+Backdrop组件提醒用户应用程序内部状态的变化，也可以用来创建进度条、对话框等等。 在最简单的情况下，backdrop 组件将在您的应用程序上添加一个暗淡的图层。
 
 {{"demo": "pages/components/backdrop/SimpleBackdrop.js"}}

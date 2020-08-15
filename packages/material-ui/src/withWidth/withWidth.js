@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { getDisplayName } from '@material-ui/utils';
 import { getThemeProps } from '@material-ui/styles';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import useTheme from '../styles/useTheme';
-import { keys as breakpointKeys } from '../styles/createBreakpoints';
+import { breakpointKeys } from '../styles/createBreakpoints';
 import useMediaQuery from '../useMediaQuery';
 
 // By default, returns true if screen width is the same or greater than the given breakpoint.
@@ -25,7 +25,7 @@ export const isWidthDown = (breakpoint, width, inclusive = true) => {
 
 const useEnhancedEffect = typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
 
-const withWidth = (options = {}) => Component => {
+const withWidth = (options = {}) => (Component) => {
   const {
     withTheme: withThemeOption = false,
     noSSR = false,
@@ -51,7 +51,7 @@ const withWidth = (options = {}) => Component => {
      *            |-------|-------|-------|-------|------>
      * width      |  xs   |  sm   |  md   |  lg   |  xl
      */
-    const keys = [...theme.breakpoints.keys].reverse();
+    const keys = theme.breakpoints.keys.slice().reverse();
     const widthComputed = keys.reduce((output, key) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const matches = useMediaQuery(theme.breakpoints.up(key));
@@ -85,7 +85,7 @@ const withWidth = (options = {}) => Component => {
     /**
      * As `window.innerWidth` is unavailable on the server,
      * we default to rendering an empty component during the first mount.
-     * You might want to use an heuristic to approximate
+     * You might want to use a heuristic to approximate
      * the screen width of the client browser screen width.
      *
      * For instance, you could be using the user-agent or the client-hints.

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -6,7 +6,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
@@ -42,11 +42,11 @@ export default function HorizontalLinearStepper() {
   const [skipped, setSkipped] = React.useState(new Set());
   const steps = getSteps();
 
-  const isStepOptional = step => {
+  const isStepOptional = (step) => {
     return step === 1;
   };
 
-  const isStepSkipped = step => {
+  const isStepSkipped = (step) => {
     return skipped.has(step);
   };
 
@@ -57,12 +57,12 @@ export default function HorizontalLinearStepper() {
       newSkipped.delete(activeStep);
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleSkip = () => {
@@ -72,8 +72,8 @@ export default function HorizontalLinearStepper() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setSkipped(prevSkipped => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
       const newSkipped = new Set(prevSkipped.values());
       newSkipped.add(activeStep);
       return newSkipped;
@@ -91,7 +91,9 @@ export default function HorizontalLinearStepper() {
           const stepProps = {};
           const labelProps = {};
           if (isStepOptional(index)) {
-            labelProps.optional = <Typography variant="caption">Optional</Typography>;
+            labelProps.optional = (
+              <Typography variant="caption">Optional</Typography>
+            );
           }
           if (isStepSkipped(index)) {
             stepProps.completed = false;
@@ -115,15 +117,20 @@ export default function HorizontalLinearStepper() {
           </div>
         ) : (
           <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <Typography className={classes.instructions}>
+              {getStepContent(activeStep)}
+            </Typography>
             <div>
-              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                className={classes.button}
+              >
                 Back
               </Button>
               {isStepOptional(activeStep) && (
                 <Button
                   variant="contained"
-                  color="primary"
                   onClick={handleSkip}
                   className={classes.button}
                 >
@@ -133,7 +140,6 @@ export default function HorizontalLinearStepper() {
 
               <Button
                 variant="contained"
-                color="primary"
                 onClick={handleNext}
                 className={classes.button}
               >

@@ -4,7 +4,7 @@
 
 Всё же ищете документацию на v3? [Вы можете найти её здесь](https://material-ui.com/versions/).
 
-> Этот документ пока находится в стадии разработки. Вы обновили свой сайт и столкнулись с чем-то, что здесь не рассматривается? [Добавьте ваши изменения на GitHub](https://github.com/mui-org/material-ui/blob/master/docs/src/pages/guides/migration-v3/migration-v3.md).
+> Этот документ пока находится в стадии разработки. Вы обновили свой сайт и столкнулись с чем-то, что здесь не рассматривается? [Добавьте ваши изменения на GitHub](https://github.com/mui-org/material-ui/blob/next/docs/src/pages/guides/migration-v3/migration-v3.md).
 
 ## Вступление
 
@@ -79,6 +79,14 @@ yarn add @material-ui/styles
   -const DeepChild = withTheme()(DeepChildRaw);
   +const DeepChild = withTheme(DeepChildRaw);
   ```
+
+- Rename `convertHexToRGB` to `hexToRgb`.
+
+  ```diff
+  -import { convertHexToRgb } from '@material-ui/core/styles/colorManipulator';
+  +import { hexToRgb } from '@material-ui/core/styles';
+  ```
+
 - Scope the [keyframes API](https://cssinjs.org/jss-syntax/#keyframes-animation). You should apply the following changes in your codebase.
   It helps isolating the animation logic:
 
@@ -238,7 +246,7 @@ This change is explained in more detail in the [TypeScript guide](/guides/typesc
 - [ExpansionPanel] Increase the CSS specificity of the `disabled` and `expanded` style rules.
 - [ExpansionPanel] Rename the `CollapseProps` prop to `TransitionProps`.
 
-### List
+### Список
 
 - [List] Rework the list components to match the specification:
   

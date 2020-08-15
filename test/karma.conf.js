@@ -26,13 +26,7 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: [
-      'karma-mocha',
-      'karma-chrome-launcher',
-      'karma-sourcemap-loader',
-      'karma-webpack',
-      'karma-mocha-reporter',
-    ],
+    plugins: ['karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
     /**
      * possible values:
      * - config.LOG_DISABLE
@@ -54,13 +48,14 @@ module.exports = function setKarmaConfig(config) {
         new webpack.DefinePlugin({
           'process.env': {
             NODE_ENV: JSON.stringify('test'),
+            CI: JSON.stringify(process.env.CI),
           },
         }),
       ],
       module: {
         rules: [
           {
-            test: /\.js$/,
+            test: /\.(js|ts)$/,
             loader: 'babel-loader',
             exclude: /node_modules/,
           },
@@ -72,6 +67,11 @@ module.exports = function setKarmaConfig(config) {
       },
       resolve: {
         alias: {
+          // yarn alias for `pretty-format@3`
+          // @testing-library/dom -> pretty-format@25
+          // which uses Object.entries which isn't implemented in all browsers
+          // we support
+          'pretty-format': require.resolve('pretty-format-v24'),
           // https://github.com/sinonjs/sinon/issues/1951
           // use the cdn main field. Neither module nor main are supported for browserbuilds
           sinon: 'sinon/pkg/sinon.js',
@@ -80,10 +80,12 @@ module.exports = function setKarmaConfig(config) {
           '@testing-library/react/pure':
             '@testing-library/react/dist/@testing-library/react.pure.esm',
         },
+        extensions: ['.js', '.ts'],
       },
     },
-    webpackServer: {
+    webpackMiddleware: {
       noInfo: true,
+      writeToDisk: Boolean(process.env.CI),
     },
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -97,7 +99,8 @@ module.exports = function setKarmaConfig(config) {
   let newConfig = baseConfig;
 
   if (browserStack.accessKey) {
-    newConfig = Object.assign({}, baseConfig, {
+    newConfig = {
+      ...baseConfig,
       browserStack,
       browsers: baseConfig.browsers.concat([
         'BrowserStack_Chrome',
@@ -106,7 +109,8 @@ module.exports = function setKarmaConfig(config) {
         'BrowserStack_Edge',
       ]),
       plugins: baseConfig.plugins.concat(['karma-browserstack-launcher']),
-      customLaunchers: Object.assign({}, baseConfig.customLaunchers, {
+      customLaunchers: {
+        ...baseConfig.customLaunchers,
         BrowserStack_Chrome: {
           base: 'BrowserStack',
           os: 'OS X',
@@ -135,8 +139,8 @@ module.exports = function setKarmaConfig(config) {
           browser: 'Edge',
           browser_version: '14.0',
         },
-      }),
-    });
+      },
+    };
   }
 
   config.set(newConfig);

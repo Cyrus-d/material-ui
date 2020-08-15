@@ -1,13 +1,25 @@
 import * as React from 'react';
-import { StandardProps, PropTypes } from '..';
-import { OverrideProps, OverridableTypeMap, OverridableComponent } from '../OverridableComponent';
-import { ThemeStyle } from '../styles/createTypography';
+import { OverridableStringUnion } from '@material-ui/types';
+import { PropTypes } from '..';
+import { OverrideProps, OverridableComponent } from '../OverridableComponent';
+import { Variant } from '../styles/createTypography';
 
-type Style = ThemeStyle | 'srOnly';
+export interface TypographyPropsVariantOverrides {}
+export type TypographyVariantDefaults = Record<Variant | 'inherit', true>;
 
 export interface TypographyTypeMap<P = {}, D extends React.ElementType = 'span'> {
   props: P & {
+    /**
+     * Set the text-align on the component.
+     */
     align?: PropTypes.Alignment;
+    /**
+     * The content of the component.
+     */
+    children?: React.ReactNode;
+    /**
+     * The color of the component. It supports those theme colors that make sense for this component.
+     */
     color?:
       | 'initial'
       | 'inherit'
@@ -16,17 +28,57 @@ export interface TypographyTypeMap<P = {}, D extends React.ElementType = 'span'>
       | 'textPrimary'
       | 'textSecondary'
       | 'error';
+    /**
+     * Controls the display type
+     */
     display?: 'initial' | 'block' | 'inline';
+    /**
+     * If `true`, the text will have a bottom margin.
+     */
     gutterBottom?: boolean;
+    /**
+     * If `true`, the text will not wrap, but instead will truncate with a text overflow ellipsis.
+     *
+     * Note that text overflow can only happen with block or inline-block level elements
+     * (the element needs to have a width in order to overflow).
+     */
     noWrap?: boolean;
+    /**
+     * If `true`, the text will have a bottom margin.
+     */
     paragraph?: boolean;
-    variant?: Style | 'inherit';
-    variantMapping?: Partial<Record<Style, string>>;
+    /**
+     * Applies the theme typography styles.
+     */
+    variant?: OverridableStringUnion<TypographyVariantDefaults, TypographyPropsVariantOverrides>;
+    /**
+     * The component maps the variant prop to a range of different HTML element types.
+     * For instance, subtitle1 to `<h6>`.
+     * If you wish to change that mapping, you can provide your own.
+     * Alternatively, you can use the `component` prop.
+     */
+    variantMapping?: Partial<
+      Record<
+        OverridableStringUnion<TypographyVariantDefaults, TypographyPropsVariantOverrides>,
+        string
+      >
+    >;
   };
   defaultComponent: D;
   classKey: TypographyClassKey;
 }
 
+/**
+ *
+ * Demos:
+ *
+ * - [Breadcrumbs](https://material-ui.com/components/breadcrumbs/)
+ * - [Typography](https://material-ui.com/components/typography/)
+ *
+ * API:
+ *
+ * - [Typography API](https://material-ui.com/api/typography/)
+ */
 declare const Typography: OverridableComponent<TypographyTypeMap>;
 
 export type TypographyProps<
@@ -49,7 +101,7 @@ export type TypographyClassKey =
   | 'caption'
   | 'button'
   | 'overline'
-  | 'srOnly'
+  | 'inherit'
   | 'alignLeft'
   | 'alignCenter'
   | 'alignRight'
@@ -58,7 +110,9 @@ export type TypographyClassKey =
   | 'gutterBottom'
   | 'paragraph'
   | 'colorInherit'
+  | 'colorPrimary'
   | 'colorSecondary'
+  | 'colorTextPrimary'
   | 'colorTextSecondary'
   | 'colorError'
   | 'displayInline'

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { green, pink } from '@material-ui/core/colors';
 import Avatar from '@material-ui/core/Avatar';
@@ -6,7 +6,7 @@ import FolderIcon from '@material-ui/icons/Folder';
 import PageviewIcon from '@material-ui/icons/Pageview';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     '& > *': {

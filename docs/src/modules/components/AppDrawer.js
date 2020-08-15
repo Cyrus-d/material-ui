@@ -1,16 +1,16 @@
-import React from 'react';
+import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
-import AppDrawerNavItem from 'docs/src/modules/components/AppDrawerNavItem';
+import Box from '@material-ui/core/Box';
 import DiamondSponsors from 'docs/src/modules/components/DiamondSponsors';
+import AppDrawerNavItem from 'docs/src/modules/components/AppDrawerNavItem';
 import Link from 'docs/src/modules/components/Link';
 import { pageToTitleI18n } from 'docs/src/modules/utils/helpers';
 import PageContext from 'docs/src/modules/components/PageContext';
@@ -30,7 +30,7 @@ function PersistScroll(props) {
 
     const activeBox = activeElement.getBoundingClientRect();
 
-    if (savedScrollTop !== null || activeBox.top < savedScrollTop) {
+    if (savedScrollTop === null || activeBox.top - savedScrollTop < 0) {
       // Center the selected item in the list container.
       activeElement.scrollIntoView();
       // Fix a Chrome issue, reset the tabbable ring back to the top of the document.
@@ -51,7 +51,7 @@ PersistScroll.propTypes = {
   children: PropTypes.node,
 };
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     width: 240,
     backgroundColor: theme.palette.background.level1,
@@ -84,7 +84,7 @@ function renderNavItems(options) {
   return (
     <List>
       {pages.reduce(
-        // eslint-disable-next-line no-use-before-define
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         (items, page) => reduceChildRoutes({ items, page, ...params }),
         [],
       )}
@@ -99,7 +99,7 @@ function reduceChildRoutes({ props, activePage, items, page, depth, t }) {
 
   if (page.children && page.children.length > 1) {
     const title = pageToTitleI18n(page, t);
-    const topLevel = activePage.pathname.indexOf(`${page.pathname}/`) === 0;
+    const topLevel = activePage ? activePage.pathname.indexOf(`${page.pathname}/`) === 0 : false;
 
     items.push(
       <AppDrawerNavItem
@@ -140,7 +140,9 @@ const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 function AppDrawer(props) {
   const { classes, className, disablePermanent, mobileOpen, onClose, onOpen } = props;
   const { activePage, pages } = React.useContext(PageContext);
-  const t = useSelector(state => state.options.t);
+  const userLanguage = useSelector((state) => state.options.userLanguage);
+  const languagePrefix = userLanguage === 'en' ? '' : `/${userLanguage}`;
+  const t = useSelector((state) => state.options.t);
 
   const drawer = (
     <PersistScroll>
@@ -153,9 +155,10 @@ function AppDrawer(props) {
             <Link
               color="textSecondary"
               variant="caption"
-              href="https://material-ui.com/versions/"
+              href={`https://material-ui.com${languagePrefix}/versions/`}
               onClick={onClose}
             >
+              {/* eslint-disable-next-line material-ui/no-hardcoded-labels -- version string is untranslatable */}
               {`v${process.env.LIB_VERSION}`}
             </Link>
           ) : null}
@@ -163,7 +166,7 @@ function AppDrawer(props) {
       </div>
       <Divider />
       <Box mx={3} my={2}>
-        <DiamondSponsors />
+        <DiamondSponsors spot="drawer" />
       </Box>
       {renderNavItems({ props, pages, activePage, depth: 0, t })}
     </PersistScroll>

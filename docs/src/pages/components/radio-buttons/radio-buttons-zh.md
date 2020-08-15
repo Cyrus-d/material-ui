@@ -3,7 +3,7 @@ title: React Radio buttons（单选按钮）组件
 components: Radio, RadioGroup, FormControl, FormLabel, FormControlLabel
 ---
 
-# Radio
+# Radio 单选框
 
 <p class="description">用户可以通过单选按钮从一组中选择一个选项。</p>
 
@@ -11,23 +11,33 @@ components: Radio, RadioGroup, FormControl, FormLabel, FormControlLabel
 
 默认情况下，单选按钮应该选择了最常用的选项。
 
+## RadioGroup 单选框组
+
 `RadioGroup`适用于一组` Radio `，它提供相对简单的 API 并且能够使用键盘对该RadioGroup 进行控制。
 
 {{"demo": "pages/components/radio-buttons/RadioButtonsGroup.js"}}
 
-## 独立的单选按钮
+要横向布置按钮，请设置 `row`prop: `<RadioGroup row />`.
 
-`Radio` 也可以单独使用，无需额外包装。
+## Standalone radio buttons 独立的单选框按钮 
+
+`Radio` 也可以单独使用，无需额外的包装。
 
 {{"demo": "pages/components/radio-buttons/RadioButtons.js"}}
 
-## 放置标签
+## 标签放置
 
-你可以更改标签放置的位置:
+你可以用 `FormControlLabel` 组件的 `labelPlacement` 属性来改变标签的位置。
 
-{{"demo": "pages/components/radio-buttons/FormControlLabelPosition.js"}}
+{{"demo": "pages/components/radio-buttons/FormControlLabelPlacement.js"}} 
 
-## Customized radios
+## Show error 显示错误
+
+一般来说，单选按钮应具有一个被默认选中的值。 如果不是这种情况，则在提交表单时如果未选择任何值，则可能会显示错误：
+
+{{"demo": "pages/components/radio-buttons/ErrorRadios.js"}}
+
+## Customized radios 自定义单选框
 
 以下是自定义组件的一个示例。 您可以在[重写文档页](/customization/components/)中了解有关此内容的更多信息。
 
@@ -37,7 +47,7 @@ components: Radio, RadioGroup, FormControl, FormLabel, FormControlLabel
 
 - [复选框 对比 单选按钮](https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/)
 
-## 可访问性
+## 可及性
 
 (WAI-ARIA: https://www.w3.org/TR/wai-aria-practices/#radiobutton)
 

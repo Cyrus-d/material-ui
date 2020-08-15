@@ -1,61 +1,90 @@
-import React from 'react';
-import { assert } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
+import * as React from 'react';
+import { expect } from 'chai';
+import {
+  getClasses,
+  createMount,
+  describeConformance,
+  act,
+  createClientRender,
+  fireEvent,
+} from 'test/utils';
+import { useFakeTimers } from 'sinon';
 import Icon from '@material-ui/core/Icon';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fab from '@material-ui/core/Fab';
 import SpeedDialAction from './SpeedDialAction';
-import describeConformance from '@material-ui/core/test-utils/describeConformance';
 
 describe('<SpeedDialAction />', () => {
-  let mount;
+  let clock;
+  beforeEach(() => {
+    clock = useFakeTimers();
+  });
+
+  afterEach(() => {
+    clock.restore();
+  });
+
+  const mount = createMount({ strict: true });
+  const render = createClientRender();
   let classes;
-  const icon = <Icon>add</Icon>;
-  const defaultProps = {
-    icon,
-    tooltipTitle: 'placeholder',
-  };
+  const fabClasses = getClasses(<Fab>Fab</Fab>);
 
   before(() => {
-    // StrictModeViolation: uses Tooltip
-    mount = createMount({ strict: false });
-    classes = getClasses(<SpeedDialAction {...defaultProps} />);
+    classes = getClasses(<SpeedDialAction icon={<Icon>add</Icon>} tooltipTitle="placeholder" />);
   });
 
-  after(() => {
-    mount.cleanUp();
-  });
-
-  describeConformance(<SpeedDialAction {...defaultProps} />, () => ({
-    classes,
-    inheritComponent: Tooltip,
-    mount,
-    refInstanceof: window.HTMLButtonElement,
-    skip: ['componentProp'],
-  }));
+  describeConformance(
+    <SpeedDialAction icon={<Icon>add</Icon>} tooltipTitle="placeholder" />,
+    () => ({
+      classes,
+      inheritComponent: Tooltip,
+      mount,
+      refInstanceof: window.HTMLButtonElement,
+      skip: ['componentProp'],
+    }),
+  );
 
   it('should be able to change the Tooltip classes', () => {
-    const wrapper = mount(
-      <SpeedDialAction {...defaultProps} TooltipClasses={{ tooltip: 'bar' }} />,
+    const { getByText, container } = render(
+      <SpeedDialAction
+        icon={<Icon>add</Icon>}
+        open
+        tooltipTitle="placeholder"
+        TooltipClasses={{ tooltip: 'bar' }}
+      />,
     );
-    assert.include(wrapper.find(Tooltip).props().classes.tooltip, 'bar');
+
+    fireEvent.mouseOver(container.querySelector('button'));
+    act(() => {
+      clock.tick(100);
+    });
+
+    expect(getByText('placeholder')).to.have.class('bar');
+
+    // TODO: Unclear why not running triggers microtasks but runAll does not trigger microtasks
+    // can be removed once Popper#update is sync
+    clock.runAll();
   });
 
   it('should render a Fab', () => {
-    const wrapper = mount(<SpeedDialAction {...defaultProps} />);
-    assert.strictEqual(wrapper.find(Fab).exists(), true);
+    const { container } = render(
+      <SpeedDialAction icon={<Icon>add</Icon>} tooltipTitle="placeholder" />,
+    );
+    expect(container.querySelector('button')).to.have.class(fabClasses.root);
   });
 
   it('should render the button with the fab class', () => {
-    const wrapper = mount(<SpeedDialAction {...defaultProps} open />);
-    const buttonWrapper = wrapper.find('button');
-    assert.strictEqual(buttonWrapper.hasClass(classes.fab), true);
+    const { container } = render(
+      <SpeedDialAction icon={<Icon>add</Icon>} tooltipTitle="placeholder" open />,
+    );
+    expect(container.querySelector('button')).to.have.class(classes.fab);
   });
 
   it('should render the button with the fab and fabClosed classes', () => {
-    const wrapper = mount(<SpeedDialAction {...defaultProps} />);
-    const buttonWrapper = wrapper.find('button');
-    assert.strictEqual(buttonWrapper.hasClass(classes.fab), true);
-    assert.strictEqual(buttonWrapper.hasClass(classes.fabClosed), true);
+    const { container } = render(
+      <SpeedDialAction icon={<Icon>add</Icon>} tooltipTitle="placeholder" />,
+    );
+    expect(container.querySelector('button')).to.have.class(classes.fab);
+    expect(container.querySelector('button')).to.have.class(classes.fabClosed);
   });
 });

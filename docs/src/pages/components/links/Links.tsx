@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Links() {
   const classes = useStyles();
-  const preventDefault = (event: React.SyntheticEvent) => event.preventDefault();
+  const preventDefault = (event: React.SyntheticEvent) =>
+    event.preventDefault();
 
   return (
     <Typography className={classes.root}>

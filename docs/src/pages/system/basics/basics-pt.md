@@ -12,7 +12,7 @@
 - 🦎 Trabalhe com qualquer objeto de tema.
 - 💅 Trabalhe com as soluções CSS-in-JS mais populares.
 - 📦 Menos que [4 KB gzipped](https://bundlephobia.com/result?p=@material-ui/system).
-- 🚀 [Rápido o suficiente](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-benchmark/README.md#material-uisystem) para não ser um gargalo em tempo de execução.
+- 🚀 [Rápido o suficiente](https://github.com/mui-org/material-ui/blob/next/packages/material-ui-benchmark/README.md#material-uisystem) para não ser um gargalo em tempo de execução.
 
 É importante entender que este pacote expõe funções de estilo puro (sem efeitos colaterais) com esta assinatura: `({ theme, ...style }) => style`, **só isso**.
 
@@ -71,7 +71,7 @@ const theme = {
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      {/* children */}
+      {/* componentes filhos */}
     </ThemeProvider>
   )
 }

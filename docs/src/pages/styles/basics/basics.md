@@ -9,13 +9,13 @@ You can use it, but you don't have to, since Material-UI is also [interoperable 
 ## Why use Material-UI's styling solution?
 
 In previous versions, Material-UI has used LESS, then a custom inline-style solution to write the component styles, but these approaches have proven to be limited.
-[A *CSS-in-JS* solution](https://github.com/oliviertassinari/a-journey-toward-better-style) overcomes many of those limitations,
+[A _CSS-in-JS_ solution](https://github.com/oliviertassinari/a-journey-toward-better-style) overcomes many of those limitations,
 and **unlocks many great features** (theme nesting, dynamic styles, self-support, etc.).
 
 Material-UI's styling solution is inspired by many other styling libraries such as [styled-components](https://www.styled-components.com/) and [emotion](https://emotion.sh/).
 
 - 💅 You can expect [the same advantages](https://www.styled-components.com/docs/basics#motivation) as styled-components.
-- 🚀 It's [blazing fast](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-benchmark/README.md#material-uistyles).
+- 🚀 It's [blazing fast](https://github.com/mui-org/material-ui/blob/next/packages/material-ui-benchmark/README.md#material-uistyles).
 - 🧩 It's extensible via a [plugin](https://github.com/cssinjs/jss/blob/master/docs/plugins.md) API.
 - ⚡️ It uses [JSS](https://github.com/cssinjs/jss) at its core – a [high performance](https://github.com/cssinjs/jss/blob/master/docs/performance.md) JavaScript to CSS compiler which works at runtime and server-side.
 - 📦 Less than [15 KB gzipped](https://bundlephobia.com/result?p=@material-ui/styles); and no bundle size increase if used alongside Material-UI.
@@ -41,7 +41,7 @@ There are 3 possible APIs you can use to generate and apply styles, however they
 ### Hook API
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -71,7 +71,7 @@ Note: this only applies to the calling syntax – style definitions still use a 
 You can also [change this behavior](/styles/advanced/#string-templates), with some limitations.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -95,7 +95,7 @@ export default function StyledComponents() {
 ### Higher-order component API
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -138,9 +138,9 @@ const useStyles = makeStyles({
     '& p': {
       color: 'green',
       '& span': {
-        color: 'blue'
-      }
-    }
+        color: 'blue',
+      },
+    },
   },
 });
 ```
@@ -156,22 +156,25 @@ The function can be provided at the style rule level, or at the CSS property lev
 ```jsx
 const useStyles = makeStyles({
   // style rule
-  foo: props => ({
+  foo: (props) => ({
     backgroundColor: props.backgroundColor,
   }),
   bar: {
     // CSS property
-    color: props => props.color,
+    color: (props) => props.color,
   },
 });
 
 function MyComponent() {
   // Simulated props for the purpose of the example
-  const props = { backgroundColor: 'black', color: 'white' };
+  const props = {
+    backgroundColor: 'black',
+    color: 'white',
+  };
   // Pass the props as the first argument of useStyles()
   const classes = useStyles(props);
 
-  return <div className={`${classes.foo} ${classes.bar}`} />
+  return <div className={`${classes.foo} ${classes.bar}`} />;
 }
 ```
 
@@ -191,11 +194,11 @@ This button component has a color property that changes its color:
 
 ### Stress test
 
-In the following stress test, you can update the *theme color* and the *background-color property* live:
+In the following stress test, you can update the _theme color_ and the _background-color property_ live:
 
 ```js
-const useStyles = makeStyles(theme => ({
-  root: props => ({
+const useStyles = makeStyles((theme) => ({
+  root: (props) => ({
     backgroundColor: props.backgroundColor,
     color: theme.color,
   }),

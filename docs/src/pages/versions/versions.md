@@ -6,18 +6,18 @@
 
 The most recent version is recommended in production.
 
-{{"demo": "pages/versions/StableVersions.js", "hideHeader": true, "bg": "inline"}}
+{{"demo": "pages/versions/StableVersions.js", "hideToolbar": true, "bg": "inline"}}
 
 ## Latest versions
 
 Here you can find the latest unreleased documentation and code.
 You can use it to see what changes are coming and provide better feedback to Material-UI contributors.
 
-{{"demo": "pages/versions/LatestVersions.js", "hideHeader": true, "bg": "inline"}}
+{{"demo": "pages/versions/LatestVersions.js", "hideToolbar": true, "bg": "inline"}}
 
 ## Versioning strategy
 
- Stability ensures that reusable components and libraries, tutorials, tools, and learned practices don't become obsolete unexpectedly. Stability is essential for the ecosystem around Material-UI to thrive.
+Stability ensures that reusable components and libraries, tutorials, tools, and learned practices don't become obsolete unexpectedly. Stability is essential for the ecosystem around Material-UI to thrive.
 
 This document contains the practices that are followed to provide you with a leading-edge UI library, balanced with stability, ensuring that future changes are always introduced in a predictable way.
 
@@ -27,9 +27,9 @@ The version number is incremented based on the level of change included in the r
 
 - **Major releases** contain significant new features, some but minimal developer assistance is expected during the update. When updating to a new major release, you may need to run update scripts, refactor code, run additional tests, and learn new APIs.
 - **Minor releases** contain important new features.
-Minor releases are fully backward-compatible; no developer assistance is expected during update, but you can optionally modify your apps and libraries to begin using new APIs, features, and capabilities that were added in the release.
+  Minor releases are fully backward-compatible; no developer assistance is expected during update, but you can optionally modify your apps and libraries to begin using new APIs, features, and capabilities that were added in the release.
 - **Patch releases** are low risk, contain bug fixes and small new features.
-No developer assistance is expected during update.
+  No developer assistance is expected during update.
 
 ## Release frequency
 
@@ -43,12 +43,12 @@ In general, you can expect the following release cycle:
 
 ## Release schedule
 
-| Date | Version | Status |
-|:-----|:--------|:-------|
-| May 2018 | v1.0.0 | Released |
-| Septembre 2018 | v3.0.0 | Released |
-| May 2019 | v4.0.0 | Released |
-| Q3 2020 | v5.0.0 | ⏳ |
+| Date           | Version | Status   |
+| :------------- | :------ | :------- |
+| May 2018       | v1.0.0  | Released |
+| September 2018 | v3.0.0  | Released |
+| May 2019       | v4.0.0  | Released |
+| Q4 2020        | v5.0.0  | ⏳       |
 
 You can follow the [milestones](https://github.com/mui-org/material-ui/milestones) for a more detailed overview.
 

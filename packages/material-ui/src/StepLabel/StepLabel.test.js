@@ -1,24 +1,23 @@
-import React from 'react';
-import { assert } from 'chai';
-import { createShallow, createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { expect } from 'chai';
+import { getClasses, createClientRender, createMount, describeConformance } from 'test/utils';
 import Typography from '../Typography';
+import Stepper from '../Stepper';
+import Step from '../Step';
 import StepIcon from '../StepIcon';
 import StepLabel from './StepLabel';
 
 describe('<StepLabel />', () => {
-  let shallow;
   let classes;
-  let mount;
+  let iconClasses;
+  let typographyClasses;
+  const mount = createMount({ strict: true });
+  const render = createClientRender();
 
   before(() => {
-    shallow = createShallow({ dive: true });
     classes = getClasses(<StepLabel />);
-    mount = createMount({ strict: true });
-  });
-
-  after(() => {
-    mount.cleanUp();
+    iconClasses = getClasses(<StepIcon />);
+    typographyClasses = getClasses(<Typography />);
   });
 
   describeConformance(<StepLabel />, () => ({
@@ -29,164 +28,167 @@ describe('<StepLabel />', () => {
     skip: ['componentProp'],
   }));
 
-  it('merges styles into the root node', () => {
-    const wrapper = shallow(
-      <StepLabel
-        orientation="horizontal"
-        style={{ paddingRight: 200, color: 'purple', border: '1px solid tomato' }}
-      >
-        My Label
-      </StepLabel>,
-    );
-    const props = wrapper.props();
-    assert.strictEqual(props.style.paddingRight, 200);
-    assert.strictEqual(props.style.color, 'purple');
-    assert.strictEqual(props.style.border, '1px solid tomato');
-  });
-
   describe('label content', () => {
     it('renders the label from children', () => {
-      const wrapper = shallow(<StepLabel>Step One</StepLabel>);
-      assert.strictEqual(wrapper.contains('Step One'), true);
+      const { getByText } = render(<StepLabel>Step One</StepLabel>);
+      getByText('Step One');
     });
 
-    it('renders <StepIcon>', () => {
-      const stepIconProps = { prop1: 'value1', prop2: 'value2' };
-      const wrapper = shallow(
-        <StepLabel icon={1} active completed alternativeLabel StepIconProps={stepIconProps}>
-          Step One
-        </StepLabel>,
+    it('renders <StepIcon> with props passed through StepIconProps', () => {
+      const stepIconProps = { error: true };
+
+      const { container } = render(
+        <Stepper alternativeLabel>
+          <Step active completed>
+            <StepLabel StepIconProps={stepIconProps}>Step One</StepLabel>
+          </Step>
+        </Stepper>,
       );
-      const stepIcon = wrapper.find(StepIcon);
-      assert.strictEqual(stepIcon.length, 1, 'should have an <StepIcon />');
-      const props = stepIcon.props();
-      assert.strictEqual(props.icon, 1, 'should set icon');
-      assert.strictEqual(props.prop1, 'value1', 'should have inherited custom prop1');
-      assert.strictEqual(props.prop2, 'value2', 'should have inherited custom prop2');
+
+      const icon = container.querySelector(`.${iconClasses.root}`);
+      // Should render WarningIcon instead of CheckCircleIcon because of { error: true } props
+      expect(icon).to.have.attribute('data-mui-test').equal('WarningIcon');
     });
   });
 
   describe('prop: StepIconComponent', () => {
     it('should render', () => {
-      const CustomizedIcon = () => <div />;
-      const wrapper = shallow(
-        <StepLabel
-          StepIconComponent={CustomizedIcon}
-          active
-          completed
-          StepIconProps={{ prop1: 'value1', prop2: 'value2' }}
-        >
-          Step One
-        </StepLabel>,
+      const CustomizedIcon = () => <div data-testid="custom-icon" />;
+      const { container, getByTestId } = render(
+        <Step active completed>
+          <StepLabel StepIconComponent={CustomizedIcon}>Step One</StepLabel>
+        </Step>,
       );
-      const stepIcon = wrapper.find(StepIcon);
-      assert.strictEqual(stepIcon.length, 0);
 
-      const customizedIcon = wrapper.find(CustomizedIcon);
-      assert.strictEqual(customizedIcon.length, 1);
-      const props = customizedIcon.props();
-      assert.strictEqual(props.prop1, 'value1');
-      assert.strictEqual(props.prop2, 'value2');
-      assert.strictEqual(props.completed, true);
-      assert.strictEqual(props.active, true);
+      const icon = container.querySelector(`.${classes.iconContainer}`);
+      const label = container.querySelector(`.${classes.label}`);
+
+      getByTestId('custom-icon');
+      expect(icon).to.not.equal(null);
+      expect(icon).to.not.have.attribute('data-mui-test').equal('CheckCircleIcon');
+      expect(label).to.have.class(classes.active);
+      expect(label).to.have.class(classes.completed);
     });
 
     it('should not render', () => {
-      const wrapper = shallow(
-        <StepLabel active completed>
-          Step One
-        </StepLabel>,
+      const { container } = render(
+        <Step active completed>
+          <StepLabel>Step One</StepLabel>
+        </Step>,
       );
-      const stepIcon = wrapper.find(StepIcon);
-      assert.strictEqual(stepIcon.length, 0);
+
+      const icon = container.querySelector(`.${iconClasses.root}`);
+      expect(icon).to.equal(null);
     });
   });
 
-  describe('prop: active', () => {
+  describe('<Step /> prop: active', () => {
     it('renders <Typography> with the className active', () => {
-      const wrapper = shallow(<StepLabel active>Step One</StepLabel>);
-      const text = wrapper.find(Typography);
-      assert.strictEqual(text.hasClass(classes.active), true);
+      const { container } = render(
+        <Step active>
+          <StepLabel>Step One</StepLabel>
+        </Step>,
+      );
+
+      const typography = container.querySelector(`.${typographyClasses.root}`);
+      expect(typography).to.have.class(classes.active);
     });
 
-    it('renders <StepIcon> with the prop active set to true', () => {
-      const wrapper = shallow(
-        <StepLabel icon={1} active>
-          Step One
-        </StepLabel>,
+    it('renders <StepIcon> with the <Step /> prop active set to true', () => {
+      const { container } = render(
+        <Stepper>
+          <Step active>
+            <StepLabel>Step One</StepLabel>
+          </Step>
+        </Stepper>,
       );
-      const stepIcon = wrapper.find(StepIcon);
-      assert.strictEqual(stepIcon.props().active, true);
+
+      const icon = container.querySelector(`.${iconClasses.root}`);
+      expect(icon).to.have.class(iconClasses.active);
     });
 
     it('renders <Typography> without the className active', () => {
-      const wrapper = shallow(<StepLabel active={false}>Step One</StepLabel>);
-      const text = wrapper.find(Typography);
-      assert.strictEqual(text.hasClass(classes.labelActive), false);
+      const { container } = render(
+        <Step active={false}>
+          <StepLabel>Step One</StepLabel>
+        </Step>,
+      );
+
+      const typography = container.querySelector(`.${typographyClasses.root}`);
+      expect(typography).to.not.have.class(classes.active);
     });
   });
 
-  describe('prop: completed', () => {
+  describe('<Step /> prop: completed', () => {
     it('renders <Typography> with the className completed', () => {
-      const wrapper = shallow(<StepLabel completed>Step One</StepLabel>);
-      const text = wrapper.find(Typography);
-      assert.strictEqual(text.hasClass(classes.completed), true);
+      const { container } = render(
+        <Step completed>
+          <StepLabel>Step One</StepLabel>
+        </Step>,
+      );
+
+      const typography = container.querySelector(`.${typographyClasses.root}`);
+      expect(typography).to.have.class(classes.active);
     });
 
     it('renders <StepIcon> with the prop completed set to true', () => {
-      const wrapper = shallow(
-        <StepLabel icon={1} completed>
-          Step One
-        </StepLabel>,
+      const { container } = render(
+        <Stepper>
+          <Step completed>
+            <StepLabel>Step One</StepLabel>
+          </Step>
+        </Stepper>,
       );
-      const stepIcon = wrapper.find(StepIcon);
-      assert.strictEqual(stepIcon.props().completed, true);
+
+      const icon = container.querySelector(`.${iconClasses.root}`);
+      expect(icon).to.have.class(iconClasses.active);
     });
   });
 
   describe('prop: error', () => {
     it('renders <Typography> with the className error', () => {
-      const wrapper = shallow(<StepLabel error>Step One</StepLabel>);
-      const text = wrapper.find(Typography);
-      assert.strictEqual(text.hasClass(classes.error), true);
+      const { container } = render(<StepLabel error>Step One</StepLabel>);
+
+      const typography = container.querySelector(`.${typographyClasses.root}`);
+      expect(typography).to.have.class(classes.error);
     });
 
     it('renders <StepIcon> with the prop error set to true', () => {
-      const wrapper = shallow(
-        <StepLabel icon={1} error>
-          Step One
-        </StepLabel>,
+      const { container } = render(
+        <Stepper>
+          <Step>
+            <StepLabel error>Step One</StepLabel>
+          </Step>
+        </Stepper>,
       );
-      const stepIcon = wrapper.find(StepIcon);
-      assert.strictEqual(stepIcon.props().error, true);
+
+      const icon = container.querySelector(`.${iconClasses.root}`);
+      expect(icon).to.have.class(classes.error);
     });
   });
 
-  describe('prop: disabled', () => {
+  describe('<Step /> prop: disabled', () => {
     it('renders with disabled className when disabled', () => {
-      const wrapper = shallow(
-        <StepLabel icon={1} disabled>
-          Step One
-        </StepLabel>,
+      const { container } = render(
+        <Step disabled>
+          <StepLabel>Step One</StepLabel>
+        </Step>,
       );
-      assert.strictEqual(wrapper.hasClass(classes.disabled), true);
+
+      const label = container.querySelector(`.${classes.root}`);
+      expect(label).to.have.class(classes.disabled);
     });
   });
 
   describe('prop: optional = Optional Text', () => {
     it('creates a <Typography> component with text "Optional Text"', () => {
-      const wrapper = shallow(
-        <StepLabel icon={1} optional={<Typography variant="caption">Optional Text</Typography>}>
+      const { getByText } = render(
+        <StepLabel optional={<Typography variant="caption">Optional Text</Typography>}>
           Step One
         </StepLabel>,
       );
-      assert.strictEqual(
-        wrapper
-          .find(Typography)
-          .at(1)
-          .contains('Optional Text'),
-        true,
-      );
+
+      getByText('Optional Text');
     });
   });
 });

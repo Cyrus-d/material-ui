@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -7,7 +7,7 @@ import { darken, fade, lighten } from '../styles/colorManipulator';
 import TableContext from '../Table/TableContext';
 import Tablelvl2Context from '../Table/Tablelvl2Context';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     ...theme.typography.body2,
@@ -42,17 +42,10 @@ export const styles = theme => ({
   },
   /* Styles applied to the root element if `size="small"`. */
   sizeSmall: {
-    padding: '6px 24px 6px 16px',
-    '&:last-child': {
-      paddingRight: 16,
-    },
+    padding: '6px 16px',
     '&$paddingCheckbox': {
       width: 24, // prevent the checkbox column from growing
-      padding: '0px 12px 0 16px',
-      '&:last-child': {
-        paddingLeft: 12,
-        paddingRight: 16,
-      },
+      padding: '0 12px 0 16px',
       '& > *': {
         padding: 0,
       },
@@ -62,17 +55,10 @@ export const styles = theme => ({
   paddingCheckbox: {
     width: 48, // prevent the checkbox column from growing
     padding: '0 0 0 4px',
-    '&:last-child': {
-      paddingLeft: 0,
-      paddingRight: 4,
-    },
   },
   /* Styles applied to the root element if `padding="none"`. */
   paddingNone: {
     padding: 0,
-    '&:last-child': {
-      padding: 0,
-    },
   },
   /* Styles applied to the root element if `align="left"`. */
   alignLeft: {
@@ -122,15 +108,18 @@ const TableCell = React.forwardRef(function TableCell(props, ref) {
   const table = React.useContext(TableContext);
   const tablelvl2 = React.useContext(Tablelvl2Context);
 
+  const isHeadCell = tablelvl2 && tablelvl2.variant === 'head';
+  let role;
   let Component;
   if (component) {
     Component = component;
+    role = isHeadCell ? 'columnheader' : 'cell';
   } else {
-    Component = tablelvl2 && tablelvl2.variant === 'head' ? 'th' : 'td';
+    Component = isHeadCell ? 'th' : 'td';
   }
 
   let scope = scopeProp;
-  if (!scope && tablelvl2 && tablelvl2.variant === 'head') {
+  if (!scope && isHeadCell) {
     scope = 'col';
   }
   const padding = paddingProp || (table && table.padding ? table.padding : 'default');
@@ -157,6 +146,7 @@ const TableCell = React.forwardRef(function TableCell(props, ref) {
         className,
       )}
       aria-sort={ariaSort}
+      role={role}
       scope={scope}
       {...other}
     />
@@ -164,13 +154,17 @@ const TableCell = React.forwardRef(function TableCell(props, ref) {
 });
 
 TableCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Set the text-align on the table cell content.
    *
    * Monetary or generally number fields **should be right aligned** as that allows
    * you to add them up quickly in your head without having to worry about decimals.
    */
-  align: PropTypes.oneOf(['inherit', 'left', 'center', 'right', 'justify']),
+  align: PropTypes.oneOf(['center', 'inherit', 'justify', 'left', 'right']),
   /**
    * The table cell contents.
    */
@@ -179,21 +173,21 @@ TableCell.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
    * Sets the padding applied to the cell.
    * By default, the Table parent component set the value (`default`).
    */
-  padding: PropTypes.oneOf(['default', 'checkbox', 'none']),
+  padding: PropTypes.oneOf(['checkbox', 'default', 'none']),
   /**
    * Set scope attribute.
    */
@@ -202,7 +196,7 @@ TableCell.propTypes = {
    * Specify the size of the cell.
    * By default, the Table parent component set the value (`medium`).
    */
-  size: PropTypes.oneOf(['small', 'medium']),
+  size: PropTypes.oneOf(['medium', 'small']),
   /**
    * Set aria-sort direction.
    */
@@ -211,7 +205,7 @@ TableCell.propTypes = {
    * Specify the cell type.
    * By default, the TableHead, TableBody or TableFooter parent component set the value.
    */
-  variant: PropTypes.oneOf(['head', 'body', 'footer']),
+  variant: PropTypes.oneOf(['body', 'footer', 'head']),
 };
 
 export default withStyles(styles, { name: 'MuiTableCell' })(TableCell);

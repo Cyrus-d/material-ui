@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,23 +11,26 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <Typography
-      component="div"
+    <div
       role="tabpanel"
       hidden={value !== index}
       id={`nav-tabpanel-${index}`}
       aria-labelledby={`nav-tab-${index}`}
       {...other}
     >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
 TabPanel.propTypes = {
   children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
 };
 
 function a11yProps(index) {
@@ -41,7 +44,7 @@ function LinkTab(props) {
   return (
     <Tab
       component="a"
-      onClick={event => {
+      onClick={(event) => {
         event.preventDefault();
       }}
       {...props}
@@ -49,7 +52,7 @@ function LinkTab(props) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -13,7 +13,7 @@ const AntTabs = withStyles({
   },
 })(Tabs);
 
-const AntTab = withStyles(theme => ({
+const AntTab = withStyles((theme) => ({
   root: {
     textTransform: 'none',
     minWidth: 72,
@@ -44,22 +44,22 @@ const AntTab = withStyles(theme => ({
     },
   },
   selected: {},
-}))(props => <Tab disableRipple {...props} />);
+}))((props) => <Tab disableRipple {...props} />);
 
 const StyledTabs = withStyles({
   indicator: {
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    '& > div': {
+    '& > span': {
       maxWidth: 40,
       width: '100%',
       backgroundColor: '#635ee7',
     },
   },
-})(props => <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />);
+})((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
-const StyledTab = withStyles(theme => ({
+const StyledTab = withStyles((theme) => ({
   root: {
     textTransform: 'none',
     color: '#fff',
@@ -70,9 +70,9 @@ const StyledTab = withStyles(theme => ({
       opacity: 1,
     },
   },
-}))(props => <Tab disableRipple {...props} />);
+}))((props) => <Tab disableRipple {...props} />);
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -106,7 +106,11 @@ export default function CustomizedTabs() {
         <Typography className={classes.padding} />
       </div>
       <div className={classes.demo2}>
-        <StyledTabs value={value} onChange={handleChange} aria-label="styled tabs example">
+        <StyledTabs
+          value={value}
+          onChange={handleChange}
+          aria-label="styled tabs example"
+        >
           <StyledTab label="Workflows" />
           <StyledTab label="Datasets" />
           <StyledTab label="Connections" />

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import * as React from 'react';
 import {
   createStyles,
@@ -14,6 +15,7 @@ import {
 import { ThemeProvider } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import { blue } from '@material-ui/core/colors';
+import { expectType } from '@material-ui/types';
 
 // Shared types for examples
 interface ComponentProps extends WithStyles<typeof styles> {
@@ -157,13 +159,13 @@ const t1: number = createMuiTheme().spacing(1);
 const t2: string = createMuiTheme().spacing(1, 2);
 const t3: string = createMuiTheme().spacing(1, 2, 3);
 const t4: string = createMuiTheme().spacing(1, 2, 3, 4);
-// $ExpectError
+// @ts-expect-error
 const t5 = createMuiTheme().spacing(1, 2, 3, 4, 5);
 
 function OverridesTheme() {
   return (
     <ThemeProvider theme={theme}>
-      <Button>{'Overrides'}</Button>
+      <Button>Overrides</Button>
     </ThemeProvider>
   );
 }
@@ -181,8 +183,8 @@ const StyledComponent = withStyles(styles)(({ theme, classes }: AllTheProps) => 
   <div className={classes.root}>{theme.palette.text.primary}</div>
 ));
 
-// missing prop theme
-<StyledComponent />; // $ExpectError
+// @ts-expect-error missing prop theme
+<StyledComponent />;
 
 const AllTheComposition = withTheme(StyledComponent);
 
@@ -203,11 +205,14 @@ const AllTheComposition = withTheme(StyledComponent);
 declare const themed: boolean;
 {
   // Test that withTheme: true guarantees the presence of the theme
-  const Foo = withStyles({}, { withTheme: true })(
+  const Foo = withStyles(
+    {},
+    { withTheme: true },
+  )(
     class extends React.Component<WithTheme> {
       hasRef() {
-        // innerRef does not exists, originally caused https://github.com/mui-org/material-ui/issues/14095
-        return Boolean(this.props.innerRef); // $ExpectError
+        // @ts-expect-error innerRef does not exists, originally caused https://github.com/mui-org/material-ui/issues/14095
+        return Boolean(this.props.innerRef);
       }
 
       render() {
@@ -217,9 +222,10 @@ declare const themed: boolean;
   );
   <Foo />;
 
-  const Bar = withStyles({}, { withTheme: true })(({ theme }: WithStyles<string, true>) => (
-    <div style={{ margin: theme.spacing(1) }} />
-  ));
+  const Bar = withStyles(
+    {},
+    { withTheme: true },
+  )(({ theme }: WithStyles<string, true>) => <div style={{ margin: theme.spacing(1) }} />);
   <Bar />;
 }
 
@@ -239,7 +245,7 @@ const DecoratedComponent = withStyles(styles)(
 <DecoratedComponent text="foo" />;
 
 // Allow nested pseudo selectors
-withStyles(theme =>
+withStyles((theme) =>
   createStyles({
     guttered: {
       '&:hover': {
@@ -258,14 +264,14 @@ withStyles(theme =>
   // allow top level media queries
   // https://github.com/mui-org/material-ui/issues/12277
 
-  // typescript thinks `content` is the CSS property not a classname
+  // TypeScript thinks `content` is the CSS property not a classname
   const ambiguousStyles = createStyles({
     content: {
       minHeight: '100vh',
     },
-    // $ExpectError
     '@media (min-width: 960px)': {
       content: {
+        // @ts-expect-error
         display: 'flex',
       },
     },
@@ -395,11 +401,10 @@ withStyles(theme =>
 
 {
   // https://github.com/mui-org/material-ui/issues/11164
-  const style: StyleRulesCallback<Theme, any, any> = theme => ({
+  const style: StyleRulesCallback<Theme, any, any> = (theme) => ({
     text: theme.typography.body2,
   });
 }
-
 {
   // can't provide own `classes` type
   interface Props {
@@ -407,25 +412,30 @@ withStyles(theme =>
   }
 
   class Component extends React.Component<Props & WithStyles<typeof styles>> {}
-  // $ExpectError
+  // @ts-expect-error
   const StyledComponent = withStyles(styles)(Component);
 
-  // implicit FunctionComponent
-  withStyles(styles)((props: Props) => null); // $ExpectError
-  withStyles(styles)((props: Props & WithStyles<typeof styles>) => null); // $ExpectError
-  withStyles(styles)((props: Props & { children?: React.ReactNode }) => null); // $ExpectError
+  // @ts-expect-error implicit FunctionComponent
+  withStyles(styles)((props: Props) => null);
+  // @ts-expect-error
+  withStyles(styles)((props: Props & WithStyles<typeof styles>) => null);
+  // @ts-expect-error
+  withStyles(styles)((props: Props & { children?: React.ReactNode }) => null);
   withStyles(styles)(
-    (props: Props & WithStyles<typeof styles> & { children?: React.ReactNode }) => null, // $ExpectError
+    // @ts-expect-error
+    (props: Props & WithStyles<typeof styles> & { children?: React.ReactNode }) => null,
   );
 
   // explicit not but with "Property 'children' is missing in type 'ValidationMap<Props>'".
   // which is not helpful
-  const StatelessComponent: React.FunctionComponent<Props> = props => null;
-  const StatelessComponentWithStyles: React.FunctionComponent<
-    Props & WithStyles<typeof styles>
-  > = props => null;
-  withStyles(styles)(StatelessComponent); // $ExpectError
-  withStyles(styles)(StatelessComponentWithStyles); // $ExpectError
+  const StatelessComponent: React.FunctionComponent<Props> = (props) => null;
+  const StatelessComponentWithStyles: React.FunctionComponent<Props & WithStyles<typeof styles>> = (
+    props,
+  ) => null;
+  // @ts-expect-error
+  withStyles(styles)(StatelessComponent);
+  // @ts-expect-error
+  withStyles(styles)(StatelessComponentWithStyles);
 }
 
 {
@@ -460,18 +470,17 @@ withStyles(theme =>
   const StyledMyButton = withStyles(styles)(MyButton);
 
   const CorrectUsage = () => <StyledMyButton nonDefaulted="2" />;
-  // Property 'nonDefaulted' is missing in type '{}'
-  const MissingPropUsage = () => <StyledMyButton />; // $ExpectError
+  // @ts-expect-error Property 'nonDefaulted' is missing in type '{}'
+  const MissingPropUsage = () => <StyledMyButton />;
 }
 
 {
   // theme is defaulted to type of Theme
-  const useStyles = makeStyles(theme => {
-    // $ExpectType Theme
-    const t = theme;
+  const useStyles = makeStyles((theme) => {
+    expectType<Theme, typeof theme>(theme);
     return {
       root: {
-        margin: t.spacing(1),
+        margin: theme.spacing(1),
       },
     };
   });
@@ -480,7 +489,7 @@ withStyles(theme =>
 {
   // https://github.com/mui-org/material-ui/pull/15546
   // Update type definition to let CSS properties be functions
-  interface testProps {
+  interface TestProps {
     foo: boolean;
   }
 
@@ -488,62 +497,56 @@ withStyles(theme =>
   {
     const useStyles = makeStyles({
       root: {
-        width: (prop: testProps) => (prop.foo ? 100 : 0),
+        width: (prop: TestProps) => (prop.foo ? 100 : 0),
       },
-      root2: (prop2: testProps) => ({
-        width: (prop: testProps) => (prop.foo && prop2.foo ? 100 : 0),
+      root2: (prop2: TestProps) => ({
+        width: (prop: TestProps) => (prop.foo && prop2.foo ? 100 : 0),
       }),
     });
 
     const styles = useStyles({ foo: true });
-    // $ExpectType string
-    const root = styles.root;
-    // $ExpectType string
-    const root2 = styles.root2;
+    expectType<Record<'root' | 'root2', string>, typeof styles>(styles);
   }
 
   // makeStyles accepts properties as functions using a callback
   {
-    const useStyles = makeStyles(theme => ({
+    const useStyles = makeStyles((theme) => ({
       root: {
-        width: (prop: testProps) => (prop.foo ? 100 : 0),
+        width: (prop: TestProps) => (prop.foo ? 100 : 0),
       },
-      root2: (prop2: testProps) => ({
-        width: (prop: testProps) => (prop.foo && prop2.foo ? 100 : 0),
+      root2: (prop2: TestProps) => ({
+        width: (prop: TestProps) => (prop.foo && prop2.foo ? 100 : 0),
         margin: theme.spacing(1),
       }),
     }));
 
     const styles = useStyles({ foo: true });
-    // $ExpectType string
-    const root = styles.root;
-    // $ExpectType string
-    const root2 = styles.root2;
+    expectType<Record<'root' | 'root2', string>, typeof styles>(styles);
   }
 
   // createStyles accepts properties as functions
   {
     const styles = createStyles({
       root: {
-        width: (prop: testProps) => (prop.foo ? 100 : 0),
+        width: (prop: TestProps) => (prop.foo ? 100 : 0),
       },
-      root2: (prop2: testProps) => ({
-        width: (prop: testProps) => (prop.foo && prop2.foo ? 100 : 0),
+      root2: (prop2: TestProps) => ({
+        width: (prop: TestProps) => (prop.foo && prop2.foo ? 100 : 0),
       }),
     });
 
-    // $ExpectType string
     const root = makeStyles(styles)({ foo: true }).root;
+    expectType<string, typeof root>(root);
   }
 
   // withStyles accepts properties as functions
   {
     withStyles({
       root: {
-        width: (prop: testProps) => (prop.foo ? 100 : 0),
+        width: (prop: TestProps) => (prop.foo ? 100 : 0),
       },
-      root2: (prop2: testProps) => ({
-        width: (prop: testProps) => (prop.foo && prop2.foo ? 100 : 0),
+      root2: (prop2: TestProps) => ({
+        width: (prop: TestProps) => (prop.foo && prop2.foo ? 100 : 0),
         margin: 8,
       }),
     });
@@ -551,12 +554,12 @@ withStyles(theme =>
 
   // withStyles accepts properties as functions using a callback
   {
-    withStyles(theme => ({
+    withStyles((theme) => ({
       root: {
-        width: (prop: testProps) => (prop.foo ? 100 : 0),
+        width: (prop: TestProps) => (prop.foo ? 100 : 0),
       },
-      root2: (prop2: testProps) => ({
-        width: (prop: testProps) => (prop.foo && prop2.foo ? 100 : 0),
+      root2: (prop2: TestProps) => ({
+        width: (prop: TestProps) => (prop.foo && prop2.foo ? 100 : 0),
         height: theme.spacing(1),
       }),
     }));
@@ -579,15 +582,16 @@ withStyles(theme =>
   // prop 'theme' must not be required
   <ComponentStyled value={1} />;
   <ComponentStyledWithTheme value={1} />;
-  // error: type {} is missing properties from 'Theme' ...
-  <ComponentStyledWithTheme value={1} theme={{}} />; // $ExpectError
-  // error: property 'theme' is missing in type ... (because the component requires it)
-  <ComponentWithThemeStyled value={1} />; // $ExpectError
-  <ComponentWithThemeStyledWithTheme value={1} />; // $ExpectError
-  // error: type {} is not assignable to type ...
-  <ComponentWithThemeStyledWithTheme value={1} theme={{}} />; // $ExpectError
-  // error: missing properties from type 'ZIndex' ...
-  <ComponentWithThemeStyledWithTheme value={1} theme={{ zIndex: { appBar: 100 } }} />; // $ExpectError
+  // @ts-expect-error type {} is missing properties from 'Theme' ...
+  <ComponentStyledWithTheme value={1} theme={{}} />;
+  // @ts-expect-error property 'theme' is missing in type ... (because the component requires it)
+  <ComponentWithThemeStyled value={1} />;
+  // @ts-expect-error
+  <ComponentWithThemeStyledWithTheme value={1} />;
+  // @ts-expect-error type {} is not assignable to type ...
+  <ComponentWithThemeStyledWithTheme value={1} theme={{}} />;
+  // @ts-expect-error missing properties from type 'ZIndex' ...
+  <ComponentWithThemeStyledWithTheme value={1} theme={{ zIndex: { appBar: 100 } }} />;
 
   const ComponentWithOptionalTheme: React.FC<{
     theme?: { zIndex: { [k: string]: number } };
@@ -598,10 +602,10 @@ withStyles(theme =>
 
   // prop 'theme' must not be required
   <ComponentWithOptionalThemeStyledWithTheme value={1} />;
-  // error: property 'zIndex' is missing in type {}
-  <ComponentWithOptionalThemeStyledWithTheme value={1} theme={{}} />; // $ExpectError
-  // error: missing properties from type 'Theme' ...
-  <ComponentWithOptionalThemeStyledWithTheme value={1} theme={{ zIndex: { appBar: 100 } }} />; // $ExpectError
+  // @ts-expect-error property 'zIndex' is missing in type {}
+  <ComponentWithOptionalThemeStyledWithTheme value={1} theme={{}} />;
+  // @ts-expect-error missing properties from type 'Theme' ...
+  <ComponentWithOptionalThemeStyledWithTheme value={1} theme={{ zIndex: { appBar: 100 } }} />;
 }
 
 {
@@ -610,31 +614,25 @@ withStyles(theme =>
 
   // Theme has default type
   styled(Button)(({ theme }) => {
-    // $ExpectType Theme
-    theme;
+    expectType<Theme, typeof theme>(theme);
 
     return { padding: theme.spacing(1) };
   });
 
-  interface myProps {
+  interface MyProps {
     testValue: boolean;
   }
 
   // Type of props follow all the way to css properties
-  styled(Button)<Theme, myProps>(({ theme, testValue }) => {
-    // $ExpectType Theme
-    theme;
-
-    // $ExpectType boolean
-    testValue;
+  styled(Button)<Theme, MyProps>(({ theme, testValue }) => {
+    expectType<Theme, typeof theme>(theme);
+    expectType<boolean, typeof testValue>(testValue);
 
     return {
-      padding: props => {
-        // $ExpectType myProps
-        props;
+      padding: (props) => {
+        expectType<MyProps, typeof props>(props);
 
-        // $ExpectType boolean
-        props.testValue;
+        expectType<boolean, typeof props.testValue>(props.testValue);
         return theme.spacing(1);
       },
     };
@@ -643,7 +641,7 @@ withStyles(theme =>
 
 function themeProviderTest() {
   <ThemeProvider theme={{ foo: 1 }}>{null}</ThemeProvider>;
-  // $ExpectError
+  // @ts-expect-error
   <ThemeProvider<Theme> theme={{ foo: 1 }}>{null}</ThemeProvider>;
   <ThemeProvider<Theme> theme={{ props: { MuiAppBar: { 'aria-atomic': 'true' } } }}>
     {null}

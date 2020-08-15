@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -30,7 +30,7 @@ export default function AcccessibleTable() {
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="caption table">
-        <caption>A barbone structure table example with a caption</caption>
+        <caption>A basic table example with a caption</caption>
         <TableHead>
           <TableRow>
             <TableCell>Dessert (100g serving)</TableCell>
@@ -41,7 +41,7 @@ export default function AcccessibleTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {rows.map((row) => (
             <TableRow key={row.name}>
               <TableCell component="th" scope="row">
                 {row.name}

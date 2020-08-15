@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -66,8 +66,8 @@ export default function HorizontalNonLinearAlternativeLabelStepper() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setSkipped(prevSkipped => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
       const newSkipped = new Set(prevSkipped.values());
       newSkipped.add(activeStep);
       return newSkipped;
@@ -102,7 +102,7 @@ export default function HorizontalNonLinearAlternativeLabelStepper() {
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleStep = (step: number) => () => {
@@ -143,20 +143,20 @@ export default function HorizontalNonLinearAlternativeLabelStepper() {
       <Stepper alternativeLabel nonLinear activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
-          const buttonProps: { optional?: React.ReactNode } = {};
+          const buttonProps: {
+            optional?: React.ReactNode;
+          } = {};
           if (isStepOptional(index)) {
-            buttonProps.optional = <Typography variant="caption">Optional</Typography>;
+            buttonProps.optional = (
+              <Typography variant="caption">Optional</Typography>
+            );
           }
           if (isStepSkipped(index)) {
             stepProps.completed = false;
           }
           return (
-            <Step key={label} {...stepProps}>
-              <StepButton
-                onClick={handleStep(index)}
-                completed={isStepComplete(index)}
-                {...buttonProps}
-              >
+            <Step key={label} completed={isStepComplete(index)} {...stepProps}>
+              <StepButton onClick={handleStep(index)} {...buttonProps}>
                 {label}
               </StepButton>
             </Step>
@@ -173,14 +173,19 @@ export default function HorizontalNonLinearAlternativeLabelStepper() {
           </div>
         ) : (
           <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <Typography className={classes.instructions}>
+              {getStepContent(activeStep)}
+            </Typography>
             <div>
-              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                className={classes.button}
+              >
                 Back
               </Button>
               <Button
                 variant="contained"
-                color="primary"
                 onClick={handleNext}
                 className={classes.button}
               >
@@ -189,7 +194,6 @@ export default function HorizontalNonLinearAlternativeLabelStepper() {
               {isStepOptional(activeStep) && !completed.has(activeStep) && (
                 <Button
                   variant="contained"
-                  color="primary"
                   onClick={handleSkip}
                   className={classes.button}
                 >
@@ -202,8 +206,10 @@ export default function HorizontalNonLinearAlternativeLabelStepper() {
                     Step {activeStep + 1} already completed
                   </Typography>
                 ) : (
-                  <Button variant="contained" color="primary" onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
+                  <Button variant="contained" onClick={handleComplete}>
+                    {completedSteps() === totalSteps() - 1
+                      ? 'Finish'
+                      : 'Complete Step'}
                   </Button>
                 ))}
             </div>

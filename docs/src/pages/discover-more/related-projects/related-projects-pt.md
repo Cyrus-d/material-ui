@@ -4,31 +4,40 @@
 
 Como o escopo dos problemas que o Material-UI resolve é limitado, tentamos interagir bem com outras bibliotecas. Sinta-se à vontade para enviar uma solicitação de pull request para adicionar outro projeto; será aceito se for adequado.
 
-## Recursos de Design
+## Recursos de design
 
-- **Sketch**: [Editor de tema](https://material.io/resources/theme-editor/) para Material Design feito pelo Google.
-- **Figma**: [Figma UI Kit](https://material.5ly.co/) para Material-UI feito pelo time Fively.
-- **Framer**: [Framer X Kit](https://packages.framer.com/package/material-ui/material-ui) for Material-UI.
+- **Sketch**: [Sketch para Material-UI](https://material-ui.com/store/items/sketch-react/?utm_source=docs&utm_medium=referral&utm_campaign=related-projects-sketch) — Um kit de interface de usuário grande com mais de 600 símbolos de Material-UI trabalhados à mão 💎.
+- **Figma**: [Figma para Material-UI](https://material-ui.com/store/items/figma-react/?utm_source=docs&utm_medium=referral&utm_campaign=related-projects-sketch) — Um kit de interface de usuário grande com mais de 600 componentes de Material-UI trabalhados à mão 🎨.
+- **Framer**: [Framer para Material-UI](https://packages.framer.com/package/material-ui/material-ui) — Um pequeno kit MIT de interface de usuário em preview, de componentes de Material-UI trabalhado a mão.
 
-Você não encontrou os recursos de design que sua equipe está procurando? Nos conte!
+Você não encontrou os recursos de design que sua equipe está procurando? [Nos conte!](mailto:design@material-ui.com)
 
 ## Imagens e ilustrações
 
 - [Unsplash](https://unsplash.com): 📷 Um ótimo recurso para encontrar fotos grátis de alta resolução e bonitas que você pode usar em seus projetos.
 - [unDraw](https://undraw.co/): 📐 Como Unsplash, mas para incríveis ilustrações vetoriais.
 
+## Ferramentas de IDE
+
+- [Material-UI Snippets](https://marketplace.visualstudio.com/items?itemName=vscodeshift.material-ui-snippets) extensão VSCode fornecendo snippets.
+- [Material-UI Codemorphs](https://marketplace.visualstudio.com/items?itemName=vscodeshift.material-ui-codemorphs) extensão VSCode fornecendo codemods.
+
 ## Componentes
 
 Esta é uma coleção de projetos de terceiros que estendem Material-UI.
 
-### Tabelas
+### Leiaute
 
-- [material-table](https://github.com/mbrn/material-table) Uma tabela de dados simples e poderosa para React baseado na tabela do Material-UI com alguns recursos adicionais. Eles suportam muitos formas de utilização (edição, filtragem, agrupamento, ordenação, seleção, i18n, árvore de dados e muito mais). Você deveria dar uma olhada.
+- [@mui-treasury/layout](https://mui-treasury.com/layout): Componentes para lidar com leiautes em geral de uma página. Você pode encontrar alguns exemplos, como este, [um clone de reactjs.org](https://mui-treasury.com/layout/clones/reactjs).
+
+### Table
+
+- [material-table](https://github.com/mbrn/material-table) Uma tabela de dados simples e poderosa para React baseado na tabela do Material-UI com alguns recursos adicionais. Ele suporta muitas formas de utilização (edição, filtragem, agrupamento, ordenação, seleção, i18n, árvore de dados e muito mais).
 - [dx-react-grid-material-ui](https://devexpress.github.io/devextreme-reactive/react/grid/) Uma grade de dados para Material-UI com paginação, ordenação, filtragem, agrupamento e funções de edição.([Com licenciamento de uso pago](https://js.devexpress.com/licensing/)).
 - [mui-datatables](https://github.com/gregnb/mui-datatables): Tabelas de dados responsivas para Material-UI com filtro, ordenação, pesquisa e muito mais.
 - [tubular-react](https://github.com/unosquare/tubular-react): Uma tabela de Material-UI com fonte de dados local ou remota. Com filtragem, classificação, pesquisa de texto livre, exportação para CSV localmente e agregações.
 
-### Notificações
+### Notificação
 
 - [notistack](https://github.com/iamhosseindhv/notistack): Facilita a exibição de snackbars (assim você não precisa ter que lidar com o estado de aberto/fechado delas).
 
@@ -36,12 +45,12 @@ Esta é uma coleção de projetos de terceiros que estendem Material-UI.
 
 - [material-ui-dropzone](https://github.com/Yuvaleros/material-ui-dropzone): Construído sobre o react-dropzone.
 
-### Formulários
+### Formulário
 
-- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Ligações para usar Mateiral-UI com formik.
-- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) Um conjunto de componentes do wrapper para facilitar o uso do Material UI com Redux Form.
-- [final-form-material-ui](https://github.com/Deadly0/final-form-material-ui) Um conjunto de componentes wrapper para facilitar o uso do Material UI com Final Form.
-- [mui-rff](https://github.com/lookfirst/mui-rff) A set of wrapper components to facilitate using Material UI with React Final Form.
+- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Bindings para usar Material-UI com [formik](https://jaredpalmer.com/formik).
+- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) Bindings para usar Material-UI com [Redux Form](https://redux-form.com/).
+- [mui-rff](https://github.com/lookfirst/mui-rff) Bindings para usar Material-UI com [React Final Form](https://final-form.org/react).
+- [data-driven-forms MUI mapper](https://github.com/data-driven-forms/react-forms/tree/master/packages/mui-component-mapper) Bindings para usar Material-UI com [Data Driven Forms](https://data-driven-forms.org/).
 
 ### Carrossel
 
@@ -55,13 +64,25 @@ Esta é uma coleção de projetos de terceiros que estendem Material-UI.
 
 - [material-ui-flat-pagination](https://github.com/szmslab/material-ui-flat-pagination): Um componente de paginação de design plano para Material-UI.
 
-### Schedulers/Calendars
+### Agenda/Calendário
 
-- [dx-react-scheduler-material-ui](https://devexpress.github.io/devextreme-reactive/react/scheduler/): A scheduler/calendar component for Material-UI with multiple calendar views, editing, recurrence appointments and date navigation features ([paid license](https://js.devexpress.com/licensing/)).
+- [dx-react-scheduler-material-ui](https://devexpress.github.io/devextreme-reactive/react/scheduler/): Um componente agenda/calendário para Material-UI com múltiplas visualizações de calendário, edição, compromissos de recorrência e recursos de navegação por data ([licença paga](https://js.devexpress.com/licensing/)).
 
-### Charts
+### Gráfico
 
-- [dx-react-chart-material-ui](https://devexpress.github.io/devextreme-reactive/react/chart/): Charts for Material-UI that visualizes data using a variety of series types, including bar, line, area, scatter, pie, and more ([paid license](https://js.devexpress.com/licensing/)).
+- [dx-react-chart-material-ui](https://devexpress.github.io/devextreme-reactive/react/chart/) Gráficos Material-UI para visualizar dados usando uma variedade de tipos de série, incluindo barra, linha, área, dispersão, pizza e muito mais ([licença paga](https://js.devexpress.com/licensing/)).
+
+### Dialog
+
+- [material-ui-confirm](https://github.com/jonatanklosko/material-ui-confirm): Fornece diálogos de confirmação fáceis de usar para simplificar as ações de confirmação do usuário sem escrever código boilerplate.
+
+### Seleção de cores
+
+- [material-ui-color](https://github.com/mikbry/material-ui-color): Coleções de componentes de cor para material-ui. Sem dependências, pequeno, altamente customizável e com suporte ao tema!
+
+## Blocos
+
+- [components-extra](https://github.com/alexandre-lelain/components-extra): Fornece um conjunto de componentes "molecule" construídos com base no Material-UI, com componentes de Footer, CookiesBanner, botão BackToTop e outros elementos complexos altamente customizados para ajudar os desenvolvedores a construir partes macro de sua interface muito rapidamente. Esses componentes são frequentemente duplicados em sites - esta biblioteca resolve exatamente este problema.
 
 ## Temas
 

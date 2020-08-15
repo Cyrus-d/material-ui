@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -23,7 +23,7 @@ export default function ResponsiveDialog() {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button variant="outlined" onClick={handleClickOpen}>
         Open responsive dialog
       </Button>
       <Dialog
@@ -32,18 +32,20 @@ export default function ResponsiveDialog() {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">
+          {"Use Google's location service?"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Let Google help apps determine location. This means sending anonymous location data to
-            Google, even when no apps are running.
+            Let Google help apps determine location. This means sending
+            anonymous location data to Google, even when no apps are running.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
+          <Button autoFocus onClick={handleClose}>
             Disagree
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={handleClose} autoFocus>
             Agree
           </Button>
         </DialogActions>

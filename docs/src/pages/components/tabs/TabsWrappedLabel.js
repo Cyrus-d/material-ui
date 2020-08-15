@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,23 +11,26 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <Typography
-      component="div"
+    <div
       role="tabpanel"
       hidden={value !== index}
       id={`wrapped-tabpanel-${index}`}
       aria-labelledby={`wrapped-tab-${index}`}
       {...other}
     >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
 TabPanel.propTypes = {
   children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+  index: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 function a11yProps(index) {
@@ -37,7 +40,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
@@ -55,7 +58,11 @@ export default function TabsWrappedLabel() {
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="wrapped label tabs example">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="wrapped label tabs example"
+        >
           <Tab
             value="one"
             label="New Arrivals in the Longest Text of Nonfiction"

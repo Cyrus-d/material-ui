@@ -1,83 +1,88 @@
-import React from 'react';
-import { assert } from 'chai';
-import { createShallow, createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { expect } from 'chai';
+import { getClasses, createClientRender, createMount, describeConformance } from 'test/utils';
 import Collapse from '../Collapse';
+import Stepper from '../Stepper';
+import Step from '../Step';
 import StepContent from './StepContent';
 
 describe('<StepContent />', () => {
   let classes;
-  let shallow;
-  let mount;
-  const defaultProps = {
-    orientation: 'vertical',
-  };
+  let collapseClasses;
+  const mount = createMount({ strict: true });
+  const render = createClientRender();
 
   before(() => {
     classes = getClasses(<StepContent />);
-    shallow = createShallow({ dive: true });
-    // StrictModeViolation: uses Collapse
-    mount = createMount({ strict: false });
+    collapseClasses = getClasses(<Collapse />);
   });
 
-  after(() => {
-    mount.cleanUp();
-  });
-
-  describeConformance(<StepContent {...defaultProps} />, () => ({
+  describeConformance(<StepContent />, () => ({
     classes,
     inheritComponent: 'div',
-    mount,
+    mount: (node) => {
+      const wrapper = mount(
+        <Stepper orientation="vertical">
+          <Step>{node}</Step>
+        </Stepper>,
+      );
+      return wrapper.find(Step).childAt(0).childAt(0).childAt(0);
+    },
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp'],
+    skip: ['componentProp', 'reactTestRenderer', 'refForwarding'],
   }));
 
-  it('merges styles and other props into the root node', () => {
-    const wrapper = shallow(
-      <StepContent
-        style={{ paddingRight: 200, color: 'purple', border: '1px solid tomato' }}
-        {...defaultProps}
-      >
-        Lorem ipsum
-      </StepContent>,
-    );
-    const props = wrapper.props();
-    assert.strictEqual(props.style.paddingRight, 200);
-    assert.strictEqual(props.style.color, 'purple');
-    assert.strictEqual(props.style.border, '1px solid tomato');
-  });
-
   it('renders children inside an Collapse component', () => {
-    const wrapper = shallow(
-      <StepContent {...defaultProps}>
-        <div className="test-content">This is my content!</div>
-      </StepContent>,
+    const { container, getByText } = render(
+      <Stepper orientation="vertical">
+        <Step>
+          <StepContent>
+            <div className="test-content">This is my content!</div>
+          </StepContent>
+        </Step>
+      </Stepper>,
     );
-    const collapse = wrapper.find(Collapse);
-    assert.strictEqual(collapse.length, 1);
-    const content = collapse.find('.test-content');
-    assert.strictEqual(content.length, 1);
-    assert.strictEqual(content.props().children, 'This is my content!');
+
+    const collapse = container.querySelector(`.${collapseClasses.root}`);
+    const innerDiv = container.querySelector(`.test-content`);
+
+    expect(collapse).to.not.equal(null);
+    expect(innerDiv).to.not.equal(null);
+    getByText('This is my content!');
   });
 
   describe('prop: transitionDuration', () => {
-    it('should apply the auto prop if supported', () => {
-      const wrapper = shallow(
-        <StepContent {...defaultProps}>
-          <div />
-        </StepContent>,
+    it('should use default Collapse component', () => {
+      const { container } = render(
+        <Stepper orientation="vertical">
+          <Step>
+            <StepContent>
+              <div />
+            </StepContent>
+          </Step>
+        </Stepper>,
       );
-      assert.strictEqual(wrapper.find(Collapse).props().timeout, 'auto');
+
+      const collapse = container.querySelector(`.${collapseClasses.root}`);
+      expect(collapse).to.not.equal(null);
     });
 
-    it('should not apply the auto prop if not supported', () => {
-      const TransitionComponent = props => <div {...props} />;
-      const wrapper = shallow(
-        <StepContent {...defaultProps} TransitionComponent={TransitionComponent}>
-          <div />
-        </StepContent>,
+    it('should use custom TransitionComponent', () => {
+      const TransitionComponent = () => <div data-testid="custom-transition" />;
+
+      const { container, getByTestId } = render(
+        <Stepper orientation="vertical">
+          <Step>
+            <StepContent TransitionComponent={TransitionComponent}>
+              <div />
+            </StepContent>
+          </Step>
+        </Stepper>,
       );
-      assert.strictEqual(wrapper.find(TransitionComponent).props().timeout, undefined);
+
+      const collapse = container.querySelector(`.${collapseClasses.container}`);
+      expect(collapse).to.equal(null);
+      getByTestId('custom-transition');
     });
   });
 });

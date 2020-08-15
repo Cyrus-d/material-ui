@@ -1,10 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import { createStyles, fade, Theme, makeStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  fade,
+  Theme,
+  makeStyles,
+} from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -38,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     searchIcon: {
-      width: theme.spacing(7),
+      padding: theme.spacing(0, 2),
       height: '100%',
       position: 'absolute',
       pointerEvents: 'none',
@@ -50,13 +55,15 @@ const useStyles = makeStyles((theme: Theme) =>
       color: 'inherit',
     },
     inputInput: {
-      padding: theme.spacing(1, 1, 1, 7),
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
       transition: theme.transitions.create('width'),
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: 120,
+        width: '12ch',
         '&:focus': {
-          width: 200,
+          width: '20ch',
         },
       },
     },

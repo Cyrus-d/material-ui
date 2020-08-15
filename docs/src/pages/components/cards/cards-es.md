@@ -9,7 +9,7 @@ components: Card, CardActionArea, CardActions, CardContent, CardHeader, CardMedi
 
 Las [Tarjetas](https://material.io/design/components/cards.html) son superficies que muestran contenido y acciones sobre un tema particular.
 
-They should be easy to scan for relevant and actionable information. Elements, like text and images, should be placed on them in a way that clearly indicates hierarchy.
+Deberían ser fáciles de visualizar sus acciones e información relevante. Los elementos como textos e imágenes deberían ubicarse de forma que indiquen jerarquía.
 
 ## Tarjeta simple
 
@@ -17,9 +17,9 @@ Aunque las tarjetas pueden permitir múltiples acciones, controles de la interfa
 
 {{"demo": "pages/components/cards/SimpleCard.js", "bg": true}}
 
-### Outlined Card
+### Tarjeta con bordes
 
-Set `variant="outlined` to render an outlined card.
+Usa `variant="outlined"` para mostrar una tarjeta con bordes.
 
 {{"demo": "pages/components/cards/OutlinedCard.js", "bg": true}}
 
@@ -48,3 +48,7 @@ Acciones adicionales dentro de las tarjetas son iniciadas explícitamente usando
 Acá un ejemplo de una tarjeta con control multimedia.
 
 {{"demo": "pages/components/cards/MediaControlCard.js", "bg": true}}
+
+## Personalización
+
+🎨 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/components/card).

@@ -5,11 +5,11 @@ components: Table, TableBody, TableCell, TableContainer, TableFooter, TableHead,
 
 # Table (tabla)
 
-<p class="description">Tables display sets of data. They can be fully customized.</p>
+<p class="description">Las tablas muestran conjuntos de datos. Pueden ser totalmente personalizadas.</p>
 
-[Tables](https://material.io/design/components/data-tables.html) display information in a way that’s easy to scan, so that users can look for patterns and insights. Se pueden integrar en contenido principal, tal como tarjetas.
+Las [tablas](https://material.io/design/components/data-tables.html) muestran información de una forma fácil de analizar, revelando así patrones e ideas a los usuarios. Se pueden integrar en contenido principal, tal como tarjetas.
 
-Tables can include:
+Las tablas pueden incluir:
 
 - Un elemento visual correspondiente
 - Navegación
@@ -23,7 +23,7 @@ Una tabla de datos contiene una cabecera en la parte superior con los nombres de
 
 Un checkbox debe acompañar a cada fila por si el usuario necesita seleccionar o manipular datos.
 
-Para facilitar la accesibilidad, la primera columna es un elemento `<th>`, con un `scope` de `"row"`. Esto permite a los lectores de pantalla identificar el valor de una celda por el nombre de su fila y columna.
+For accessibility, the first column is set to be a `<th>` element, with a `scope` of `"col"`. Esto permite a los lectores de pantalla identificar el valor de una celda por el nombre de su fila y columna.
 
 ## Tabla Sencilla
 
@@ -41,21 +41,21 @@ Un Ejemplo de una tabla densa sin florituras.
 
 Este ejemplo demuestra el uso del `Checkbox` y las filas cliqueables para seleccionar, con una `Toolbar` personalizado. Utiliza el componente `TableSortLabel` para ayudar a dar estilo a las cabeceras de las columnas.
 
-La Tabla tiene un ancho fijo para demostrar el desplazamiento horizontal. Para evitar que se desplacen los controles de paginación, el componente TablePagination se usa fuera de la Tabla. (El [ejemplo de la 'Acción de paginación de tabla personalizado'](#custom-table-pagination-action) de abajo demuestra la paginación dentro del TableFooter.)
+La Tabla tiene un ancho fijo para demostrar el desplazamiento horizontal. Para evitar que se desplacen los controles de paginación, el componente TablePagination se usa fuera de la Tabla. (El [ejemplo de la 'Acción de paginación de tabla personalizado'](#custom-pagination-actions) de abajo demuestra la paginación dentro del TableFooter.)
 
 {{"demo": "pages/components/tables/EnhancedTable.js", "bg": true}}
 
-## Customized tables
+## Tablas personalizadas
 
 Here is an example of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
 
 {{"demo": "pages/components/tables/CustomizedTables.js", "bg": true}}
 
-### Custom pagination options
+### Opciones de paginación personalizada
 
-It's possible to customise the options shown in the "Rows per page" select using the `rowsPerPageOptions` prop. You should either provide an array of:
+Es posible personalizar las opciones en el item "Filas por página" usando la propiedad `rowsPerPageOptions`. Debes proveer alguna de estas opciones de array:
 
-- **numbers**, each number will be used for the option's label and value.
+- **numbers**, cada número será usado para la etiqueta y el valor de la opción.
     
     ```jsx
     <TablePagination rowsPerPageOptions={[10, 50]} />
@@ -78,6 +78,12 @@ El atributo `Action`del componente `TablePagination` permite implementar accione
 An example of a table with scrollable rows and fixed column headers. It leverages the `stickyHeader` prop (⚠️ no IE 11 support).
 
 {{"demo": "pages/components/tables/StickyHeadTable.js", "bg": true}}
+
+## Collapsible table
+
+An example of a table with expandable rows, revealing more information. It utilizes the [`Collapse`](/api/collapse/) component.
+
+{{"demo": "pages/components/tables/CollapsibleTable.js", "bg": true}}
 
 ## Tabla Expandible
 

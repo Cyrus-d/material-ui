@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,7 +12,7 @@ import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Zoom from '@material-ui/core/Zoom';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     position: 'fixed',
     bottom: theme.spacing(2),
@@ -32,11 +32,16 @@ function ScrollTop(props) {
     threshold: 100,
   });
 
-  const handleClick = event => {
-    const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top-anchor');
+  const handleClick = (event) => {
+    const anchor = (event.target.ownerDocument || document).querySelector(
+      '#back-to-top-anchor',
+    );
 
     if (anchor) {
-      anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      anchor.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
   };
 

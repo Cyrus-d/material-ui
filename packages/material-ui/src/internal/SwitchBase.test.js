@@ -1,30 +1,17 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, describeConformance, act, createClientRender } from 'test/utils';
 import SwitchBase from './SwitchBase';
 import FormControl, { useFormControl } from '../FormControl';
 import IconButton from '../IconButton';
 
-const shouldSuccessOnce = name => func => () => {
-  global.successOnce = global.successOnce || {};
-
-  if (!global.successOnce[name]) {
-    func();
-    global.successOnce[name] = true;
-  }
-};
-
 describe('<SwitchBase />', () => {
   const render = createClientRender();
-  let mount;
+  const mount = createMount();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<SwitchBase icon="unchecked" checkedIcon="checked" type="checkbox" />);
   });
 
@@ -36,7 +23,6 @@ describe('<SwitchBase />', () => {
       mount,
       refInstanceof: window.HTMLSpanElement,
       testComponentPropWith: 'div',
-      after: () => mount.cleanUp(),
     }),
   );
 
@@ -69,7 +55,7 @@ describe('<SwitchBase />', () => {
       />,
     );
 
-    expect(getByTestId('TouchRipple')).to.be.ok;
+    expect(getByTestId('TouchRipple')).not.to.equal(null);
   });
 
   it('can disable the ripple ', () => {
@@ -83,7 +69,7 @@ describe('<SwitchBase />', () => {
       />,
     );
 
-    expect(queryByTestId('TouchRipple')).to.be.null;
+    expect(queryByTestId('TouchRipple')).to.equal(null);
   });
 
   it('should pass tabIndex to the input so it can be taken out of focus rotation', () => {
@@ -136,7 +122,7 @@ describe('<SwitchBase />', () => {
 
       expect(container.firstChild).to.have.class(classes.checked);
       expect(getByRole('checkbox')).to.have.property('checked', true);
-      expect(getByTestId('checked-icon')).to.be.ok;
+      expect(getByTestId('checked-icon')).not.to.equal(null);
     });
 
     it('should uncheck the checkbox', () => {
@@ -152,7 +138,7 @@ describe('<SwitchBase />', () => {
 
       expect(container.firstChild).not.to.have.class(classes.checked);
       expect(getByRole('checkbox')).to.have.property('checked', false);
-      expect(getByTestId('unchecked-icon')).to.be.ok;
+      expect(getByTestId('unchecked-icon')).not.to.equal(null);
     });
   });
 
@@ -169,24 +155,28 @@ describe('<SwitchBase />', () => {
 
     expect(container.firstChild).to.have.class(classes.checked);
     expect(checkbox).to.have.property('checked', true);
-    expect(getByTestId('checked-icon')).to.be.ok;
+    expect(getByTestId('checked-icon')).not.to.equal(null);
 
-    checkbox.click();
+    act(() => {
+      checkbox.click();
+    });
 
     expect(container.firstChild).not.to.have.class(classes.checked);
     expect(checkbox).to.have.property('checked', false);
-    expect(getByTestId('unchecked-icon')).to.be.ok;
+    expect(getByTestId('unchecked-icon')).not.to.equal(null);
 
-    checkbox.click();
+    act(() => {
+      checkbox.click();
+    });
 
     expect(container.firstChild).to.have.class(classes.checked);
     expect(checkbox).to.have.property('checked', true);
-    expect(getByTestId('checked-icon')).to.be.ok;
+    expect(getByTestId('checked-icon')).not.to.equal(null);
   });
 
   describe('handleInputChange()', () => {
     it('should call onChange when uncontrolled', () => {
-      const handleChange = spy(event => event.target.checked);
+      const handleChange = spy((event) => event.target.checked);
       const { getByRole } = render(
         <SwitchBase
           icon="unchecked"
@@ -196,7 +186,9 @@ describe('<SwitchBase />', () => {
         />,
       );
 
-      getByRole('checkbox').click();
+      act(() => {
+        getByRole('checkbox').click();
+      });
 
       expect(handleChange.callCount).to.equal(1);
       // event.target.check is true
@@ -224,7 +216,7 @@ describe('<SwitchBase />', () => {
 
     describe('prop: inputProps', () => {
       it('should be able to add aria', () => {
-        const { getByLabelText } = render(
+        const { getByRole } = render(
           <SwitchBase
             icon="unchecked"
             checkedIcon="checked"
@@ -233,7 +225,7 @@ describe('<SwitchBase />', () => {
           />,
         );
 
-        expect(getByLabelText('foo')).to.have.property('type', 'checkbox');
+        expect(getByRole('checkbox', { name: 'foo' })).to.have.property('type', 'checkbox');
       });
     });
 
@@ -259,17 +251,18 @@ describe('<SwitchBase />', () => {
   describe('with FormControl', () => {
     describe('enabled', () => {
       it('should not have the disabled class', () => {
-        const { getByTestId } = render(
+        const { getByRole, getByTestId } = render(
           <FormControl>
             <SwitchBase data-testid="root" icon="unchecked" checkedIcon="checked" type="checkbox" />
           </FormControl>,
         );
 
         expect(getByTestId('root')).not.to.have.class(classes.disabled);
+        expect(getByRole('checkbox')).not.to.have.attribute('disabled');
       });
 
       it('should be overridden by props', () => {
-        const { getByTestId } = render(
+        const { getByRole, getByTestId } = render(
           <FormControl>
             <SwitchBase
               disabled
@@ -282,23 +275,25 @@ describe('<SwitchBase />', () => {
         );
 
         expect(getByTestId('root')).to.have.class(classes.disabled);
+        expect(getByRole('checkbox')).to.have.attribute('disabled');
       });
     });
 
     describe('disabled', () => {
       it('should have the disabled class', () => {
-        const { getByTestId } = render(
+        const { getByRole, getByTestId } = render(
           <FormControl disabled>
             <SwitchBase data-testid="root" icon="unchecked" checkedIcon="checked" type="checkbox" />
           </FormControl>,
         );
 
         expect(getByTestId('root')).to.have.class(classes.disabled);
+        expect(getByRole('checkbox')).to.have.attribute('disabled');
       });
 
       it('should be overridden by props', () => {
-        const { getByTestId } = render(
-          <FormControl>
+        const { getByRole, getByTestId } = render(
+          <FormControl disabled>
             <SwitchBase
               disabled={false}
               data-testid="root"
@@ -310,6 +305,7 @@ describe('<SwitchBase />', () => {
         );
 
         expect(getByTestId('root')).not.to.have.class(classes.disabled);
+        expect(getByRole('checkbox')).not.to.have.attribute('disabled');
       });
     });
   });
@@ -327,7 +323,6 @@ describe('<SwitchBase />', () => {
         <FormControl>
           <FocusMonitor data-testid="focus-monitor" />
           <SwitchBase
-            data-testid="root"
             onBlur={handleBlur}
             onFocus={handleFocus}
             icon="unchecked"
@@ -338,12 +333,16 @@ describe('<SwitchBase />', () => {
       );
       const checkbox = getByRole('checkbox');
 
-      checkbox.focus();
+      act(() => {
+        checkbox.focus();
+      });
 
       expect(getByTestId('focus-monitor')).to.have.text('focused: true');
       expect(handleFocus.callCount).to.equal(1);
 
-      checkbox.blur();
+      act(() => {
+        checkbox.blur();
+      });
 
       expect(getByTestId('focus-monitor')).to.have.text('focused: false');
       expect(handleBlur.callCount).to.equal(1);
@@ -351,45 +350,46 @@ describe('<SwitchBase />', () => {
   });
 
   describe('check transitioning between controlled states throws errors', () => {
-    beforeEach(() => {
-      consoleErrorMock.spy();
-    });
+    it('should error when uncontrolled and changed to controlled', function test() {
+      if (global['didWarnControlledToUncontrolled']) {
+        this.skip();
+      }
 
-    afterEach(() => {
-      consoleErrorMock.reset();
-    });
-
-    it(
-      'should error when uncontrolled and changed to controlled',
-      shouldSuccessOnce('didWarnUncontrolledToControlled')(() => {
-        const wrapper = render(
+      let setProps;
+      expect(() => {
+        ({ setProps } = render(
           <SwitchBase icon="unchecked" checkedIcon="checked" type="checkbox" />,
-        );
+        ));
+      }).not.toErrorDev();
 
-        expect(consoleErrorMock.callCount()).to.equal(0);
+      expect(() => {
+        setProps({ checked: true });
+        global['didWarnControlledToUncontrolled'] = true;
+      }).toErrorDev([
+        'Warning: A component is changing an uncontrolled input of type checkbox to be controlled.',
+        'Material-UI: A component is changing the uncontrolled checked state of SwitchBase to be controlled.',
+      ]);
+    });
 
-        wrapper.setProps({ checked: true });
-        expect(consoleErrorMock.callCount()).to.equal(1);
-        expect(consoleErrorMock.args()[0][0]).to.include(
-          'A component is changing an uncontrolled input of type %s to be controlled.',
-        );
-      }),
-    );
+    it('should error when controlled and changed to uncontrolled', function test() {
+      if (global['didWarnControlledToUncontrolled']) {
+        this.skip();
+      }
 
-    it(
-      'should error when controlled and changed to uncontrolled',
-      shouldSuccessOnce('didWarnControlledToUncontrolled')(() => {
-        const { setProps } = render(
+      let setProps;
+      expect(() => {
+        ({ setProps } = render(
           <SwitchBase icon="unchecked" checkedIcon="checked" type="checkbox" checked={false} />,
-        );
-        expect(consoleErrorMock.callCount()).to.equal(0);
+        ));
+      }).not.toErrorDev();
 
+      expect(() => {
         setProps({ checked: undefined });
-        expect(consoleErrorMock.callCount()).to.equal(1);
-        expect(consoleErrorMock.args()[0][0]).to.include(
-          'A component is changing a controlled input of type %s to be uncontrolled.',
-        );
-      }),
-    );
+        global['didWarnControlledToUncontrolled'] = true;
+      }).toErrorDev([
+        'Warning: A component is changing a controlled input of type checkbox to be uncontrolled.',
+        'Material-UI: A component is changing the controlled checked state of SwitchBase to be uncontrolled.',
+      ]);
+    });
   });
 });

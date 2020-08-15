@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -17,7 +17,10 @@ function ListItemLink(props) {
   const { icon, primary, to } = props;
 
   const renderLink = React.useMemo(
-    () => React.forwardRef((itemProps, ref) => <RouterLink to={to} ref={ref} {...itemProps} />),
+    () =>
+      React.forwardRef((itemProps, ref) => (
+        <RouterLink to={to} ref={ref} {...itemProps} />
+      )),
     [to],
   );
 
@@ -51,7 +54,9 @@ export default function ListRouter() {
       <div className={classes.root}>
         <Route>
           {({ location }) => (
-            <Typography gutterBottom>Current route: {location.pathname}</Typography>
+            <Typography gutterBottom>
+              Current route: {location.pathname}
+            </Typography>
           )}
         </Route>
         <Paper elevation={0}>

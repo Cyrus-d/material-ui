@@ -6,7 +6,7 @@
 
 Add a `ThemeProvider` to the top level of your app to pass a theme down the React component tree. Then, you can access the theme object in style functions.
 
-> This example creates a new theme. See the [theming section](/customization/theming/) for how to customize the default Material-UI theme.
+> Este ejemplo crea un objeto de tema para componentes construidos a medida. Si pretende utilizar algunos de los componentes de Material-UI, necesita proporcionar una estructura de tema más rica utilizando el método `createMuiTheme()`. Dirígete a la sección [temática](/customization/theming/) para aprender cómo construir tu tema personalizado de Material-UI.
 
 ```jsx
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -77,7 +77,7 @@ Usted puedes anidar multiples proveedores de tema. This can be really useful whe
 
 {{"demo": "pages/styles/advanced/ThemeNesting.js"}}
 
-El tema interno **sobreescribirá** el tema exterior. Puede ampliar el tema externo proporcionando una función:
+El tema interno **sobrescribirá** el tema exterior. Puede ampliar el tema externo proporcionando una función:
 
 ```jsx
 <ThemeProvider theme={…} >
@@ -387,13 +387,13 @@ You can [follow the server side guide](/guides/server-rendering/) for a more det
 
 There is [an official Gatsby plugin](https://github.com/hupe1980/gatsby-plugin-material-ui) that enables server-side rendering for `@material-ui/styles`. Refer to the plugin's page for setup and usage instructions.
 
-Refer to [this example Gatsby project](https://github.com/mui-org/material-ui/blob/master/examples/gatsby) for an up-to-date usage example.
+Refer to [this example Gatsby project](https://github.com/mui-org/material-ui/blob/next/examples/gatsby) for an up-to-date usage example.
 
 ### Next.js
 
-You need to have a custom `pages/_document.js`, then copy [this logic](https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_document.js) to inject the server-side rendered styles into the `<head>` element.
+You need to have a custom `pages/_document.js`, then copy [this logic](https://github.com/mui-org/material-ui/blob/next/examples/nextjs/pages/_document.js) to inject the server-side rendered styles into the `<head>` element.
 
-Refer to [this example project](https://github.com/mui-org/material-ui/blob/master/examples/nextjs) for an up-to-date usage example.
+Refer to [this example project](https://github.com/mui-org/material-ui/blob/next/examples/nextjs) for an up-to-date usage example.
 
 ## Class names
 

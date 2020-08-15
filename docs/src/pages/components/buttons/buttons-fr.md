@@ -1,6 +1,6 @@
 ---
 title: Composant React Button
-components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
+components: Button, IconButton, ButtonBase
 ---
 
 # Button (bouton)
@@ -18,8 +18,6 @@ components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
 ## Contained Buttons (boutons contenus)
 
 [Les boutons contenus](https://material.io/design/components/buttons.html#contained-button) sont très accentués, ils se distinguent par leur utilisation de l'élévation et du remplissage. Ils contiennent des actions qui sont essentielles à votre application.
-
-Le dernier exemple de cette démo montre comment utiliser un bouton de téléchargement.
 
 {{"demo": "pages/components/buttons/ContainedButtons.js"}}
 
@@ -46,43 +44,15 @@ Les boutons surbrillance sont également une alternative moins importante que le
 
 {{"demo": "pages/components/buttons/OutlinedButtons.js"}}
 
-## Grouped Buttons
+## Handling clicks
 
-The `ButtonGroup` component can be used to group buttons.
+All components accept an `onClick` handler that is applied to the root DOM element.
 
-{{"demo": "pages/components/buttons/GroupedButtons.js"}}
+```jsx
+<Button onClick={() => { alert('clicked') }}>Click me</Button>
+```
 
-### Group sizes and colors
-
-{{"demo": "pages/components/buttons/GroupSizesColors.js"}}
-
-### Group orientation
-
-{{"demo": "pages/components/buttons/GroupOrientation.js"}}
-
-### Split Button
-
-ButtonGroup can also be used to create a split button. The dropdown can change the button action (as in this example), or be used to immediately trigger a related action.
-
-{{"demo": "pages/components/buttons/SplitButton.js"}}
-
-## Boutons d'action flottant
-
-A [bouton d'action flottante](https://material.io/design/components/buttons-floating-action-button.html) (FAB) effectue la première, ou la plus courante, l' action sur un écran. Il apparaît devant tout le contenu de l'écran, généralement sous la forme d'une forme circulaire avec une icône en son centre. Il existe deux types de FAB: régulier et étendu.
-
-Utilisez un FAB uniquement si c'est le moyen le plus approprié pour présenter l'action principale d'un écran.
-
-Un seul bouton d’action flottante est recommandé par écran pour représenter l’action la plus courante.
-
-{{"demo": "pages/components/buttons/FloatingActionButtons.js"}}
-
-Le bouton d'action flottante s'anime sur l'écran en tant que matériau en expansion, par défaut.
-
-Un bouton d'action flottant qui s'étend sur plusieurs écrans latéraux (tels que des écrans à onglets) devrait disparaître brièvement, puis sur si son action change.
-
-La transition Zoom peut être utilisée pour y parvenir. Notez que, comme les animations sortantes et entrantes sont déclenchées simultanément, nous utilisons `enterDelay` pour permettre à l'animation du bouton d'action flottant sortant de se terminer avant l'entrée de la nouvelle.
-
-{{"demo": "pages/components/buttons/FloatingActionButtonZoom.js", "bg": true}}
+Note that the documentation [avoids](/guides/api/#native-properties) mentioning native props (there are a lot) in the API section of the components.
 
 ## Upload button
 
@@ -114,13 +84,13 @@ Here are some examples of customizing the component. Vous pouvez en savoir plus 
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js", "defaultCodeOpen": false}}
 
-👑 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/components/button).
+🎨 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/styles/button).
 
 ## Boutons complexes
 
 Les boutons texte, les boutons contained, les bouton d'action flottante et les boutons icône sont tous basés sur le composant `ButtonBase`. Vous pouvez tirer parti de ce composant de niveau inférieur pour créer des interactions personnalisées.
 
-{{"demo": "pages/components/buttons/ButtonBases.js"}}
+{{"demo": "pages/components/buttons/ButtonBase.js"}}
 
 ## Bibliothèque de routage tierce
 
@@ -147,7 +117,7 @@ If you wish to use `not-allowed`, you have two options:
 
 However:
 
-- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements)
+- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements).
 - The cursor won't change if you render something other than a button element, for instance, a link `<a>` element.
 
 2. **DOM change**. You can wrap the button:

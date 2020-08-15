@@ -1,19 +1,16 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, createClientRender, describeConformance } from 'test/utils';
 import OutlinedInput from './OutlinedInput';
 import InputBase from '../InputBase';
 
 describe('<OutlinedInput />', () => {
   let classes;
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
 
   before(() => {
     classes = getClasses(<OutlinedInput />);
-    mount = createMount({ strict: true });
   });
 
   describeConformance(<OutlinedInput labelWidth={0} />, () => ({
@@ -22,7 +19,6 @@ describe('<OutlinedInput />', () => {
     mount,
     refInstanceof: window.HTMLDivElement,
     skip: ['componentProp'],
-    after: () => mount.cleanUp(),
   }));
 
   it('should render a NotchedOutline', () => {
@@ -30,6 +26,6 @@ describe('<OutlinedInput />', () => {
       <OutlinedInput classes={{ notchedOutline: 'notched-outlined' }} labelWidth={0} />,
     );
 
-    expect(container.querySelector('.notched-outlined')).to.be.ok;
+    expect(container.querySelector('.notched-outlined')).not.to.equal(null);
   });
 });

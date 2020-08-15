@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "types": ["mocha", "node", "react"]
+  },
+  "include": ["../../test/utils/createDOM.d.ts"]
+}

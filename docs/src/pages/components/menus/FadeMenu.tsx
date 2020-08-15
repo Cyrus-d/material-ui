@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,7 +18,11 @@ export default function FadeMenu() {
 
   return (
     <div>
-      <Button aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}>
+      <Button
+        aria-controls="fade-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
         Open with fade transition
       </Button>
       <Menu

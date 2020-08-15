@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Box from '@material-ui/core/Box';
 
 export default function AlignSelf() {
@@ -16,10 +16,10 @@ export default function AlignSelf() {
           Item 1
         </Box>
         <Box p={1} bgcolor="grey.300" alignSelf="flex-end">
-          Item 1
+          Item 2
         </Box>
         <Box p={1} bgcolor="grey.300">
-          Item 1
+          Item 3
         </Box>
       </Box>
     </div>

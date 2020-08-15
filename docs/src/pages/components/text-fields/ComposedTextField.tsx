@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import FilledInput from '@material-ui/core/FilledInput';
 import FormControl from '@material-ui/core/FormControl';
@@ -18,14 +18,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function ComposedTextField() {
-  const [labelWidth, setLabelWidth] = React.useState(0);
   const [name, setName] = React.useState('Composed TextField');
-  const labelRef = React.useRef<HTMLLabelElement>(null);
   const classes = useStyles();
-
-  React.useEffect(() => {
-    setLabelWidth(labelRef.current!.offsetWidth);
-  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -45,7 +39,9 @@ export default function ComposedTextField() {
           onChange={handleChange}
           aria-describedby="component-helper-text"
         />
-        <FormHelperText id="component-helper-text">Some important helper text</FormHelperText>
+        <FormHelperText id="component-helper-text">
+          Some important helper text
+        </FormHelperText>
       </FormControl>
       <FormControl disabled>
         <InputLabel htmlFor="component-disabled">Name</InputLabel>
@@ -63,19 +59,21 @@ export default function ComposedTextField() {
         <FormHelperText id="component-error-text">Error</FormHelperText>
       </FormControl>
       <FormControl variant="outlined">
-        <InputLabel ref={labelRef} htmlFor="component-outlined">
-          Name
-        </InputLabel>
+        <InputLabel htmlFor="component-outlined">Name</InputLabel>
         <OutlinedInput
           id="component-outlined"
           value={name}
           onChange={handleChange}
-          labelWidth={labelWidth}
+          label="Name"
         />
       </FormControl>
       <FormControl variant="filled">
         <InputLabel htmlFor="component-filled">Name</InputLabel>
-        <FilledInput id="component-filled" value={name} onChange={handleChange} />
+        <FilledInput
+          id="component-filled"
+          value={name}
+          onChange={handleChange}
+        />
       </FormControl>
     </form>
   );

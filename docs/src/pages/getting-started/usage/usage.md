@@ -14,16 +14,12 @@ Please refer to each component's [demo page](/components/buttons/) to see how th
 Here's a quick example to get you started, **it's literally all you need**:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 
 function App() {
-  return (
-    <Button variant="contained" color="primary">
-      Hello World
-    </Button>
-  );
+  return <Button variant="contained">Hello World</Button>;
 }
 
 ReactDOM.render(<App />, document.querySelector('#app'));
@@ -31,7 +27,7 @@ ReactDOM.render(<App />, document.querySelector('#app'));
 
 Yes, this really is all you need to get started, as you can see in this live and interactive demo:
 
-{{"demo": "pages/getting-started/usage/Usage.js", "hideHeader": true, "bg": true}}
+{{"demo": "pages/getting-started/usage/Usage.js", "hideToolbar": true, "bg": true}}
 
 ## Globals
 
@@ -45,7 +41,7 @@ To ensure proper rendering and touch zooming for all devices, add the responsive
 ```html
 <meta
   name="viewport"
-  content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+  content="minimum-scale=1, initial-scale=1, width=device-width"
 />
 ```
 

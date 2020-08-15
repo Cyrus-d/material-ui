@@ -5,11 +5,11 @@ components: Table, TableBody, TableCell, TableContainer, TableFooter, TableHead,
 
 # Table (tabelle)
 
-<p class="description">Tables display sets of data. They can be fully customized.</p>
+<p class="description">Tabellen zeigen Datensätze an. Sie können vollständig angepasst werden.</p>
 
 [Tables](https://material.io/design/components/data-tables.html) display information in a way that’s easy to scan, so that users can look for patterns and insights. Sie können wie Karten in den Primär-Inhalt eingebettet werden.
 
-Tables can include:
+Tabellen können beinhalten:
 
 - Eine entsprechende Visualisierung
 - Navigation
@@ -23,7 +23,7 @@ Eine Daten-Tabelle enthält oben eine Kopfzeile, welche die Spaltennamen auflist
 
 Jede Zeile sollte ein Optionsfeld begleiten, falls die Nutzer die Daten auswählen oder ändern müssen.
 
-Für die Zugänglichkeit, ist die erste Spalte ein `<th>` Element, welches ein `scope` von `"row"` hat. Dies ermöglicht es Lesern, mithilfe von Zeilen- und Spaltenname den Inhalt einer Zelle zu ermitteln.
+For accessibility, the first column is set to be a `<th>` element, with a `scope` of `"col"`. Dies ermöglicht es Lesern, mithilfe von Zeilen- und Spaltenname den Inhalt einer Zelle zu ermitteln.
 
 ## Einfache Tabelle
 
@@ -41,7 +41,7 @@ Ein einfaches Beispiel für einen dichte Tabelle ohne Schnörkel.
 
 Dieses Beispiel demonstriert die Nutzung von `Optionsfeld` und klickbaren Zeilen zur Auswahl mit einer benutzerdefinierten `Werkzeugleiste`. Es verwendet die `TableSortLabel` Komponente, um Spaltenüberschriften zu formatieren.
 
-Der Tabelle wurde eine feste Breite zugewiesen, um das horizontale Scrollen zu veranschaulichen. Um zu verhindern, dass die Paginierungssteuerelemente einen Bildlauf ausführen, wird die TablePagination-Komponente außerhalb der Tabelle verwendet. (Das [‚Custom Tabelle Paginierung Aktion‘ Beispiel](#custom-table-pagination-action) unten zeigt die Paginierung im TableFooter.)
+Der Tabelle wurde eine feste Breite zugewiesen, um das horizontale Scrollen zu veranschaulichen. Um zu verhindern, dass die Paginierungssteuerelemente einen Bildlauf ausführen, wird die TablePagination-Komponente außerhalb der Tabelle verwendet. (Das [‚Custom Tabelle Paginierung Aktion‘ Beispiel](#custom-pagination-actions) unten zeigt die Paginierung im TableFooter.)
 
 {{"demo": "pages/components/tables/EnhancedTable.js", "bg": true}}
 
@@ -79,6 +79,12 @@ An example of a table with scrollable rows and fixed column headers. It leverage
 
 {{"demo": "pages/components/tables/StickyHeadTable.js", "bg": true}}
 
+## Collapsible table
+
+An example of a table with expandable rows, revealing more information. It utilizes the [`Collapse`](/api/collapse/) component.
+
+{{"demo": "pages/components/tables/CollapsibleTable.js", "bg": true}}
+
 ## Überspannende Tabellen
 
 Ein einfaches Beispiel mit überspannenden Zeilen & Spalten.
@@ -111,7 +117,7 @@ Für fortgeschrittenere Anwendungsfälle können Ihnen folgende Projekte helfen:
 
 ## Barrierefreiheit
 
-(WAI tutorial: https://www.w3.org/WAI/tutorials/tables/)
+(WAI Tutorial: https://www.w3.org/WAI/tutorials/tables/)
 
 ### Caption
 

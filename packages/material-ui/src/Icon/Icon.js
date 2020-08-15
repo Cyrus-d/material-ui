@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import capitalize from '../utils/capitalize';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     userSelect: 'none',
@@ -14,6 +14,7 @@ export const styles = theme => ({
     // Chrome fix for https://bugs.chromium.org/p/chromium/issues/detail?id=820541
     // To remove at some point.
     overflow: 'hidden',
+    display: 'inline-block', // allow overflow hidden to take action
     flexShrink: 0,
   },
   /* Styles applied to the root element if `color="primary"`. */
@@ -36,6 +37,7 @@ export const styles = theme => ({
   colorDisabled: {
     color: theme.palette.action.disabled,
   },
+  /* Styles applied to the root element if `fontSize="inherit"`. */
   fontSizeInherit: {
     fontSize: 'inherit',
   },
@@ -78,6 +80,10 @@ const Icon = React.forwardRef(function Icon(props, ref) {
 });
 
 Icon.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The name of the icon font ligature.
    */
@@ -86,7 +92,7 @@ Icon.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -94,16 +100,16 @@ Icon.propTypes = {
   /**
    * The color of the component. It supports those theme colors that make sense for this component.
    */
-  color: PropTypes.oneOf(['inherit', 'primary', 'secondary', 'action', 'error', 'disabled']),
+  color: PropTypes.oneOf(['action', 'disabled', 'error', 'inherit', 'primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
    * The fontSize applied to the icon. Defaults to 24px, but can be configure to inherit font size.
    */
-  fontSize: PropTypes.oneOf(['inherit', 'default', 'small', 'large']),
+  fontSize: PropTypes.oneOf(['default', 'inherit', 'large', 'small']),
 };
 
 Icon.muiName = 'Icon';

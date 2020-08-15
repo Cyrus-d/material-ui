@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Container from '@material-ui/core/Container';
 import Typography from '../components/Typography';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     marginTop: theme.spacing(8),
     marginBottom: theme.spacing(4),
@@ -149,7 +149,7 @@ function ProductCategories(props) {
         For all tastes and all desires
       </Typography>
       <div className={classes.images}>
-        {images.map(image => (
+        {images.map((image) => (
           <ButtonBase
             key={image.title}
             className={classes.imageWrapper}

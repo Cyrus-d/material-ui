@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '../components/Typography';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     padding: theme.spacing(2),
   },
@@ -23,7 +23,10 @@ function FormFeedback(props) {
     <div
       className={clsx(
         props.classes.root,
-        { [props.classes.error]: props.error, [props.classes.success]: props.success },
+        {
+          [props.classes.error]: props.error,
+          [props.classes.success]: props.success,
+        },
         props.className,
       )}
     >

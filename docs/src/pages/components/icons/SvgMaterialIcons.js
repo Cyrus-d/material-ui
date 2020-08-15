@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -16,7 +16,7 @@ import FourKIcon from '@material-ui/icons/FourK';
 import ThreeSixtyIcon from '@material-ui/icons/ThreeSixty';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.text.primary,
   },

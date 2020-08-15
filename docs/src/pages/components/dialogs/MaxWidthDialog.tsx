@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
@@ -45,17 +45,21 @@ export default function MaxWidthDialog() {
     setOpen(false);
   };
 
-  const handleMaxWidthChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleMaxWidthChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setMaxWidth(event.target.value as DialogProps['maxWidth']);
   };
 
-  const handleFullWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFullWidthChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setFullWidth(event.target.checked);
   };
 
   return (
     <React.Fragment>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button variant="outlined" onClick={handleClickOpen}>
         Open max-width dialog
       </Button>
       <Dialog
@@ -93,16 +97,14 @@ export default function MaxWidthDialog() {
             <FormControlLabel
               className={classes.formControlLabel}
               control={
-                <Switch checked={fullWidth} onChange={handleFullWidthChange} value="fullWidth" />
+                <Switch checked={fullWidth} onChange={handleFullWidthChange} />
               }
               label="Full width"
             />
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
+          <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

@@ -1,5 +1,10 @@
-import React from 'react';
-import { withStyles, Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import {
+  withStyles,
+  Theme,
+  createStyles,
+  makeStyles,
+} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -24,13 +29,23 @@ const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
       '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.action.hover,
+      },
+      // hide last border
+      '&:last-child td, &:last-child th': {
+        border: 0,
       },
     },
   }),
 )(TableRow);
 
-function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
+function createData(
+  name: string,
+  calories: number,
+  fat: number,
+  carbs: number,
+  protein: number,
+) {
   return { name, calories, fat, carbs, protein };
 }
 
@@ -64,7 +79,7 @@ export default function CustomizedTables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {rows.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">
                 {row.name}

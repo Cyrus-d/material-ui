@@ -13,13 +13,23 @@
  */
 const appList = [
   {
+    title: 'd-cide',
+    description:
+      'A progressive Web App to make rational decisions in workshops. ' +
+      'It uses Material-UI with a neumorphic custom theme.',
+    image: 'dcide.jpg',
+    link: 'https://d-cide.me/',
+    source: 'https://github.com/cjoecker/d-cide',
+    dateAdded: '2020-07-01',
+  },
+  {
     title: 'QuintoAndar',
     description:
       'QuintoAndar is a company that uses technology and ' +
       'design to simplify the rental of residential real estate.',
     image: 'quintoandar.png',
     link: 'https://www.quintoandar.com.br/',
-    similarWebVisits: 3000,
+    similarWebVisits: 6000,
     dateAdded: '2019-05-08',
   },
   {
@@ -29,7 +39,7 @@ const appList = [
       'Skyrim, Wolfenstein, The Elder Scrolls, more. Your source for news, features & community.',
     image: 'bethesda.jpg',
     link: 'https://bethesda.net/',
-    similarWebVisits: 18600,
+    similarWebVisits: 4000,
     dateAdded: '2019-01-01',
   },
   {
@@ -39,7 +49,7 @@ const appList = [
       'education-to-employment programs and career coaching services for students worldwide. ',
     image: 'openclassrooms.jpg',
     link: 'https://openclassrooms.com/en/',
-    similarWebVisits: 10190,
+    similarWebVisits: 6000,
     dateAdded: '2018-01-34',
   },
   {
@@ -51,7 +61,7 @@ const appList = [
       'idraulica… Ritira in negozio o ricevi comodamente a casa. 🇮🇹',
     image: 'leroymerlin.jpg',
     link: 'https://www.leroymerlin.it/',
-    similarWebVisits: 4400,
+    similarWebVisits: 5700,
     dateAdded: '2019-01-01',
   },
   {
@@ -62,7 +72,7 @@ const appList = [
       'and read programming tutorials from our community of developers.',
     image: 'codementor.jpg',
     link: 'https://www.codementor.io/',
-    similarWebVisits: 2980,
+    similarWebVisits: 1500,
     dateAdded: '2018-01-34',
   },
   {
@@ -70,7 +80,7 @@ const appList = [
     description: 'Japan Music Network. 🇯🇵',
     image: 'barks.jpg',
     link: 'https://www.barks.jp/',
-    similarWebVisits: 2700,
+    similarWebVisits: 3000,
     dateAdded: '2019-01-01',
   },
   {
@@ -90,7 +100,7 @@ const appList = [
       'magazines and real time streams, personalized for you. 🇫🇷',
     image: 'sfrpresse.jpg',
     link: 'https://sfrpresse.sfr.fr/',
-    similarWebVisits: 710,
+    similarWebVisits: 800,
     dateAdded: '2018-01-25',
   },
   {
@@ -111,7 +121,7 @@ const appList = [
       'Join the global community of readers and writers!',
     image: 'sweek.jpg',
     link: 'https://sweek.com/',
-    similarWebVisits: 383,
+    similarWebVisits: 200,
     dateAdded: '2019-01-01',
   },
   {
@@ -137,12 +147,13 @@ const appList = [
     description: 'NEO blockchain explorer and wallet.',
     image: 'neotracker.jpg',
     link: 'https://neotracker.io/',
-    similarWebVisits: 350,
+    similarWebVisits: 30,
     dateAdded: '2019-01-01',
   },
   {
     title: 'EQ3',
-    description: 'Modern Furniture & Accessories, designed in Canada, for everyday living.',
+    description:
+      'Modern Furniture & Accessories, designed in Canada, for everyday living.',
     image: 'eq3.jpg',
     link: 'https://www.eq3.com/ca/en/',
     similarWebVisits: 256,
@@ -156,7 +167,7 @@ const appList = [
       'online. The marketing website is also built with Material-UI: https://www.housecallpro.com/',
     image: 'housecall.jpg',
     link: 'https://pro.housecall.io/pro/log_in',
-    similarWebVisits: 214,
+    similarWebVisits: 750,
     dateAdded: '2019-01-01',
   },
   {
@@ -166,7 +177,7 @@ const appList = [
       'de forma direta e segura no Brasil. 🇧🇷',
     image: 'bitcambio.jpg',
     link: 'https://bitcambio.com.br/',
-    similarWebVisits: 148,
+    similarWebVisits: 50,
     dateAdded: '2019-01-01',
   },
   {
@@ -197,9 +208,8 @@ const appList = [
       'accounts. Create, transfer, stake, vote and more with Scatter!',
     image: 'eostoolkit.jpg',
     link: 'https://www.eostoolkit.io/',
-    source: 'https://github.com/generEOS/eostoolkit',
-    stars: 48,
-    similarWebVisits: 123,
+    source: 'https://github.com/eostoolkit/eostoolkit',
+    stars: 76,
     dateAdded: '2019-01-01',
   },
   {
@@ -209,7 +219,7 @@ const appList = [
       'with more than 200K advertising options, and more than 1M satisfied customers.',
     image: 'themediaant.jpg',
     link: 'https://www.themediaant.com/',
-    similarWebVisits: 112,
+    similarWebVisits: 90,
     dateAdded: '2019-01-01',
   },
   {
@@ -241,7 +251,8 @@ const appList = [
   },
   {
     title: 'LessWrong',
-    description: 'LessWrong is a community blog devoted to the art of human rationality.',
+    description:
+      'LessWrong is a community blog devoted to the art of human rationality.',
     image: 'lesswrong.jpg',
     link: 'https://www.lesswrong.com/',
     similarWebVisits: 774,
@@ -323,12 +334,12 @@ const appList = [
   {
     title: 'Builder Book',
     description:
-      'An open source web app to write and host documentation or sell books. ' +
-      'Built with React, Material-UI, Next, Express, Mongoose, MongoDB.',
+      'Books to learn how to build full-stack, production-ready JavaScript web applications from scratch. ' +
+      'Learn React, Material-UI, Next, Express, Mongoose, MongoDB, third party APIs, and more.',
     image: 'builderbook.jpg',
     link: 'https://builderbook.org/',
     source: 'https://github.com/builderbook/builderbook',
-    stars: 1576,
+    stars: 1837,
     dateAdded: '2018-01-05',
   },
   {
@@ -348,7 +359,8 @@ const appList = [
     dateAdded: '2019-01-01',
   },
   {
-    title: 'Cryptoverview: A friendly Dashboard for your cryptocurrency portfolio',
+    title:
+      'Cryptoverview: A friendly Dashboard for your cryptocurrency portfolio',
     description:
       "Cryptoverview is a responsive webapp that displays a user's Bittrex portfolio, " +
       'trending currencies and market caps. It provides some fancy charts, ' +
@@ -375,14 +387,16 @@ const appList = [
   },
   {
     title: 'Rare Bits',
-    description: 'Rare Bits is a marketplace where users can buy, sell and discover crypto assets.',
+    description:
+      'Rare Bits is a marketplace where users can buy, sell and discover crypto assets.',
     image: 'rarebits.jpg',
     link: 'https://rarebits.io/',
     dateAdded: '2019-01-01',
   },
   {
     title: 'Roast',
-    description: 'Roast.io makes web hosting HTML and JS single-page apps fast, secure, and easy.',
+    description:
+      'Roast.io makes web hosting HTML and JS single-page apps fast, secure, and easy.',
     image: 'roast.jpg',
     link: 'https://www.roast.io/',
     dateAdded: '2019-01-01',
@@ -453,20 +467,11 @@ const appList = [
   },
   {
     title: 'SlidesUp',
-    description: 'SlidesUp is a platform to help conference organizers plan their events.',
+    description:
+      'SlidesUp is a platform to help conference organizers plan their events.',
     image: 'slidesup.jpg',
     link: 'https://slidesup.com/',
     dateAdded: '2018-01-03',
-  },
-  {
-    title: 'Trafikito',
-    description:
-      'Free servers monitoring solution which can track any output of any command and do ' +
-      'automated action. By default it tracks average load, CPU, HDD, RAM and sends email when ' +
-      'something is going wrong.',
-    image: 'trafikito-monitoring.jpg',
-    link: 'https://trafikito.com/',
-    dateAdded: '2018-01-20',
   },
   {
     title: 'Hokan',
@@ -494,7 +499,8 @@ const appList = [
   },
   {
     title: 'Typekev',
-    description: 'The personal site of Kevin Gonzalez, featuring his witty chatbot.',
+    description:
+      'The personal site of Kevin Gonzalez, featuring his witty chatbot.',
     image: 'typekev.jpg',
     link: 'https://typekev.com/',
     source: 'https://github.com/typekev/typekev-site',
@@ -540,13 +546,6 @@ const appList = [
     dateAdded: '2018-01-10',
   },
   {
-    title: 'PhotoUtils',
-    description: 'Online photo editor. 6 simple and free image editing tools.',
-    image: 'photoutils.jpg',
-    link: 'https://photoutils.com/',
-    dateAdded: '2018-01-32',
-  },
-  {
     title: 'npm registry browser',
     description:
       'An open source web app that lets you search the npm registry ' +
@@ -563,7 +562,8 @@ const appList = [
       'An open source Chrome extension allowing you to import and execute JavaScript code ' +
       'snippets from GitHub.',
     image: 'snippets.jpg',
-    link: 'https://chrome.google.com/webstore/detail/snippets/dcibnkkafifbanoclgjbkmkbogijndin',
+    link:
+      'https://chrome.google.com/webstore/detail/snippets/dcibnkkafifbanoclgjbkmkbogijndin',
     source: 'https://github.com/richardscarrott/snippets',
     stars: 42,
     dateAdded: '2018-01-19',
@@ -580,13 +580,6 @@ const appList = [
     dateAdded: '2018-01-35',
   },
   {
-    title: 'Persona',
-    description: 'Zero knowledge digital identity management system built on blockchain.',
-    link: 'https://persona.im/',
-    image: 'persona.jpg',
-    dateAdded: '2019-01-27',
-  },
-  {
     title: 'MQTT Explorer',
     description:
       'A comprehensive MQTT Client which visualizes broker traffic in a hierarchical view. ' +
@@ -599,16 +592,6 @@ const appList = [
     dateAdded: '2019-03-25',
   },
   {
-    title: 'Learnseeker',
-    description:
-      'A data driven 1-1 tuition matching platform. ' +
-      'Incubated at the National University of Singapore. ' +
-      "It's based on one of our premium theme.",
-    link: 'https://learnseeker.sg/',
-    image: 'learnseeker.jpg',
-    dateAdded: '2019-03-26',
-  },
-  {
     title: 'TagSpaces',
     description:
       'TagSpaces is an offline, open source, file manager.' +
@@ -618,6 +601,44 @@ const appList = [
     source: 'https://github.com/tagspaces/tagspaces',
     stars: 1874,
     dateAdded: '2019-11-01',
+  },
+  {
+    title: 'HiFiveWork',
+    description: 'HiFiveWork, the cool tool for leave management',
+    image: 'hifivework.png',
+    link: 'https://www.hifivework.com/#/',
+    dateAdded: '2020-01-08',
+  },
+  {
+    title: 'TradeNBA',
+    description:
+      'NBA trade machine and social analysis tools for the basketball community.',
+    image: 'tradenba.jpg',
+    link: 'https://tradenba.com/',
+    similarWebVisits: 160,
+    dateAdded: '2020-01-20',
+  },
+  {
+    title: 'CinemaPlus',
+    description:
+      'Cinema Plus is an online Movie Ticket Booking web app with MERN Stack.',
+    image: 'cinemaplus.jpg',
+    link: 'https://elcinema.herokuapp.com/',
+    similarWebVisits: 100,
+    source: 'https://github.com/georgesimos/cinema-plus',
+    stars: 4,
+    dateAdded: '2020-01-31',
+  },
+  {
+    title: 'A Clone of Google Keep',
+    description:
+      'A twin-looking Google Keep clone with light/dark Material theme as adapted exactly in Google Keep,' +
+      ' with a GraphQL backend written in Golang',
+    image: 'googlekeepclone.jpg',
+    link: 'http://googlekeep-anselm94.herokuapp.com/',
+    source: 'https://github.com/anselm94/googlekeepclone',
+    stars: 14,
+    dateAdded: '2020-03-25',
   },
 ];
 

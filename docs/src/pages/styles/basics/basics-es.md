@@ -11,7 +11,7 @@ In previous versions, Material-UI has used LESS, then a custom inline-style solu
 Material-UI's styling solution is inspired by many other styling libraries such as [styled-components](https://www.styled-components.com/) and [emotion](https://emotion.sh/).
 
 - 💅 You can expect [the same advantages](https://www.styled-components.com/docs/basics#motivation) as styled-components.
-- 🚀 It's [blazing fast](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-benchmark/README.md#material-uistyles).
+- 🚀 It's [blazing fast](https://github.com/mui-org/material-ui/blob/next/packages/material-ui-benchmark/README.md#material-uistyles).
 - 🧩 It's extensible via a [plugin](https://github.com/cssinjs/jss/blob/master/docs/plugins.md) API.
 - ⚡️ It uses [JSS](https://github.com/cssinjs/jss) at its core – a [high performance](https://github.com/cssinjs/jss/blob/master/docs/performance.md) JavaScript to CSS compiler which works at runtime and server-side.
 - 📦 Less than [15 KB gzipped](https://bundlephobia.com/result?p=@material-ui/styles); and no bundle size increase if used alongside Material-UI.
@@ -37,7 +37,7 @@ There are 3 possible APIs you can use to generate and apply styles, however they
 ### Hook API
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -66,7 +66,7 @@ export default function Hook() {
 Note: this only applies to the calling syntax – style definitions still use a JSS object. You can also [change this behavior](/styles/advanced/#string-templates), with some limitations.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -90,7 +90,7 @@ export default function StyledComponents() {
 ### Higher-order component API
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';

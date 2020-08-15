@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -6,7 +6,7 @@ import Tab from '@material-ui/core/Tab';
 export default function DisabledTabs() {
   const [value, setValue] = React.useState(2);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

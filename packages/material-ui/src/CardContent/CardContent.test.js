@@ -1,19 +1,13 @@
-import React from 'react';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { getClasses, createMount, describeConformance } from 'test/utils';
 import CardContent from './CardContent';
 
 describe('<CardContent />', () => {
-  let mount;
+  const mount = createMount();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<CardContent />);
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<CardContent />, () => ({

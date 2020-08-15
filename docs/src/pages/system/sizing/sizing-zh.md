@@ -1,6 +1,6 @@
 # Sizing
 
-<p class="description">Easily make an element as wide or as tall (relative to its parent) with the width and height utilities.</p>
+<p class="description">使用 width 和 height 工具集轻松地将元素设置宽或高（相对于其父元素）。</p>
 
 ## 支持的值
 
@@ -52,3 +52,4 @@ import { sizing } from '@material-ui/system';
 | `height`    | `height`    | `height`     | none      |
 | `maxHeight` | `maxHeight` | `max-height` | none      |
 | `minHeight` | `minHeight` | `min-height` | none      |
+| `boxSizing` | `boxSizing` | `box-sizing` | none      |

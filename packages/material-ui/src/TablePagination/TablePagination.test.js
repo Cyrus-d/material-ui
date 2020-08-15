@@ -1,70 +1,66 @@
-import React from 'react';
-import { assert } from 'chai';
+import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import PropTypes from 'prop-types';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
-import Select from '../Select';
-import IconButton from '../IconButton';
+import {
+  getClasses,
+  createMount,
+  describeConformance,
+  fireEvent,
+  createClientRender,
+} from 'test/utils';
 import TableFooter from '../TableFooter';
 import TableCell from '../TableCell';
-import Typography from '../Typography';
 import TableRow from '../TableRow';
 import TablePagination from './TablePagination';
 
 describe('<TablePagination />', () => {
   const noop = () => {};
   let classes;
-  let mount;
-
-  function mountInTable(node) {
-    const wrapper = mount(
-      <table>
-        <tbody>
-          <tr>{node}</tr>
-        </tbody>
-      </table>,
-    );
-    return wrapper.find('tr').childAt(0);
-  }
+  const mount = createMount();
+  const render = createClientRender();
 
   before(() => {
     classes = getClasses(
-      <TablePagination count={1} onChangePage={() => {}} page={0} rowsPerPage={10} />,
+      <TablePagination count={1} onChangePage={noop} page={0} rowsPerPage={10} />,
     );
-    // StrictModeViolation: test uses #html()
-    mount = createMount({ strict: false });
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(
-    <TablePagination count={1} onChangePage={() => {}} page={0} rowsPerPage={10} />,
+    <TablePagination count={1} onChangePage={noop} page={0} rowsPerPage={10} />,
     () => ({
       classes,
       inheritComponent: TableCell,
-      mount: mountInTable,
+      mount: (node) => {
+        const wrapper = mount(
+          <table>
+            <tbody>
+              <tr>{node}</tr>
+            </tbody>
+          </table>,
+        );
+        return wrapper.find('tr').childAt(0);
+      },
+
       refInstanceof: window.HTMLTableCellElement,
       // can only use `td` in a tr so we just fake a different component
-      testComponentPropWith: props => <td {...props} />,
+      testComponentPropWith: (props) => <td {...props} />,
     }),
   );
 
-  describe('mount', () => {
+  describe('prop: labelDisplayedRows', () => {
     it('should use the labelDisplayedRows callback', () => {
       let labelDisplayedRowsCalled = false;
       function labelDisplayedRows({ from, to, count, page }) {
         labelDisplayedRowsCalled = true;
-        assert.strictEqual(from, 11);
-        assert.strictEqual(to, 20);
-        assert.strictEqual(count, 42);
-        assert.strictEqual(page, 1);
+        expect(from).to.equal(11);
+        expect(to).to.equal(20);
+        expect(count).to.equal(42);
+        expect(page).to.equal(1);
         return `Page ${page}`;
       }
 
-      const wrapper = mount(
+      const { container } = render(
         <table>
           <TableFooter>
             <TableRow>
@@ -80,12 +76,14 @@ describe('<TablePagination />', () => {
           </TableFooter>
         </table>,
       );
-      assert.strictEqual(labelDisplayedRowsCalled, true);
-      assert.strictEqual(wrapper.html().includes('Page 1'), true);
+      expect(labelDisplayedRowsCalled).to.equal(true);
+      expect(container.innerHTML.includes('Page 1')).to.equal(true);
     });
+  });
 
-    it('should use labelRowsPerPage', () => {
-      const wrapper = mount(
+  describe('prop: labelRowsPerPage', () => {
+    it('labels the select for the current page', () => {
+      const { getAllByRole } = render(
         <table>
           <TableFooter>
             <TableRow>
@@ -95,17 +93,49 @@ describe('<TablePagination />', () => {
                 onChangePage={noop}
                 onChangeRowsPerPage={noop}
                 rowsPerPage={10}
-                labelRowsPerPage="Zeilen pro Seite:"
+                labelRowsPerPage="lines per page:"
               />
             </TableRow>
           </TableFooter>
         </table>,
       );
-      assert.strictEqual(wrapper.html().includes('Zeilen pro Seite:'), true);
+
+      // will be `getByRole('combobox')` in aria 1.2
+      const [combobox] = getAllByRole('button');
+      expect(combobox).toHaveAccessibleName('lines per page: 10');
     });
 
+    it('accepts React nodes', () => {
+      const { getAllByRole } = render(
+        <table>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                count={1}
+                page={0}
+                onChangePage={noop}
+                onChangeRowsPerPage={noop}
+                rowsPerPage={10}
+                labelRowsPerPage={
+                  <React.Fragment>
+                    <em>lines</em> per page:
+                  </React.Fragment>
+                }
+              />
+            </TableRow>
+          </TableFooter>
+        </table>,
+      );
+
+      // will be `getByRole('combobox')` in aria 1.2
+      const [combobox] = getAllByRole('button');
+      expect(combobox).toHaveAccessibleName('lines per page: 10');
+    });
+  });
+
+  describe('prop: page', () => {
     it('should disable the back button on the first page', () => {
-      const wrapper = mount(
+      const { getAllByRole } = render(
         <table>
           <TableFooter>
             <TableRow>
@@ -121,14 +151,13 @@ describe('<TablePagination />', () => {
         </table>,
       );
 
-      const backButton = wrapper.find(IconButton).at(0);
-      const nextButton = wrapper.find(IconButton).at(1);
-      assert.strictEqual(backButton.props().disabled, true);
-      assert.strictEqual(nextButton.props().disabled, false);
+      const [, backButton, nextButton] = getAllByRole('button');
+      expect(backButton).to.have.property('disabled', true);
+      expect(nextButton).to.have.property('disabled', false);
     });
 
     it('should disable the next button on the last page', () => {
-      const wrapper = mount(
+      const { getAllByRole } = render(
         <table>
           <TableFooter>
             <TableRow>
@@ -144,15 +173,16 @@ describe('<TablePagination />', () => {
         </table>,
       );
 
-      const backButton = wrapper.find(IconButton).at(0);
-      const nextButton = wrapper.find(IconButton).at(1);
-      assert.strictEqual(backButton.props().disabled, false);
-      assert.strictEqual(nextButton.props().disabled, true);
+      const [, backButton, nextButton] = getAllByRole('button');
+      expect(backButton).to.have.property('disabled', false);
+      expect(nextButton).to.have.property('disabled', true);
     });
+  });
 
+  describe('prop: onChangePage', () => {
     it('should handle next button clicks properly', () => {
       let page = 1;
-      const wrapper = mount(
+      const { getByRole } = render(
         <table>
           <TableFooter>
             <TableRow>
@@ -170,14 +200,14 @@ describe('<TablePagination />', () => {
         </table>,
       );
 
-      const nextButton = wrapper.find(IconButton).at(1);
-      nextButton.simulate('click');
-      assert.strictEqual(page, 2);
+      const nextButton = getByRole('button', { name: 'Go to next page' });
+      fireEvent.click(nextButton);
+      expect(page).to.equal(2);
     });
 
     it('should handle back button clicks properly', () => {
       let page = 1;
-      const wrapper = mount(
+      const { getByRole } = render(
         <table>
           <TableFooter>
             <TableRow>
@@ -195,13 +225,15 @@ describe('<TablePagination />', () => {
         </table>,
       );
 
-      const nextButton = wrapper.find(IconButton).at(0);
-      nextButton.simulate('click');
-      assert.strictEqual(page, 0);
+      const backButton = getByRole('button', { name: 'Go to previous page' });
+      fireEvent.click(backButton);
+      expect(page).to.equal(0);
     });
+  });
 
+  describe('label', () => {
     it('should display 0 as start number if the table is empty ', () => {
-      const wrapper = mount(
+      const { container } = render(
         <table>
           <TableFooter>
             <TableRow>
@@ -216,17 +248,11 @@ describe('<TablePagination />', () => {
           </TableFooter>
         </table>,
       );
-      assert.strictEqual(
-        wrapper
-          .find(Typography)
-          .at(1)
-          .text(),
-        '0-0 of 0',
-      );
+      expect(container.querySelectorAll('p')[1]).to.have.text('0-0 of 0');
     });
 
     it('should hide the rows per page selector if there are less than two options', () => {
-      const wrapper = mount(
+      const { container, queryByRole } = render(
         <table>
           <TableFooter>
             <TableRow>
@@ -243,43 +269,137 @@ describe('<TablePagination />', () => {
         </table>,
       );
 
-      assert.strictEqual(wrapper.text().indexOf('Rows per page'), -1);
-      assert.strictEqual(wrapper.find(Select).length, 0);
+      expect(container).to.not.include.text('Rows per page');
+      expect(queryByRole('listbox')).to.equal(null);
     });
   });
 
-  describe('warnings', () => {
-    before(() => {
-      consoleErrorMock.spy();
-    });
+  describe('prop: count=-1', () => {
+    it('should display the "of more than" text and keep the nextButton enabled', () => {
+      const Test = () => {
+        const [page, setPage] = React.useState(0);
+        return (
+          <table>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  page={page}
+                  rowsPerPage={10}
+                  count={-1}
+                  onChangePage={(_, newPage) => {
+                    setPage(newPage);
+                  }}
+                />
+              </TableRow>
+            </TableFooter>
+          </table>
+        );
+      };
 
-    after(() => {
-      consoleErrorMock.reset();
-      PropTypes.resetWarningCache();
-    });
+      const { container, getByRole } = render(<Test />);
 
-    it('should raise a warning if the page prop is out of range', () => {
-      assert.strictEqual(consoleErrorMock.callCount(), 0);
-      mount(
+      expect(container).to.have.text('Rows per page:101-10 of more than 10');
+      fireEvent.click(getByRole('button', { name: 'Go to next page' }));
+      expect(container).to.have.text('Rows per page:1011-20 of more than 20');
+    });
+  });
+
+  describe('prop: showFirstButton', () => {
+    it('should change the page', () => {
+      const handleChangePage = spy();
+      const { getByRole } = render(
         <table>
           <TableFooter>
             <TableRow>
               <TablePagination
-                page={2}
-                count={20}
+                showFirstButton
+                page={1}
                 rowsPerPage={10}
-                onChangePage={noop}
-                onChangeRowsPerPage={noop}
+                count={98}
+                onChangePage={handleChangePage}
               />
             </TableRow>
           </TableFooter>
         </table>,
       );
-      assert.strictEqual(consoleErrorMock.callCount(), 1);
-      assert.include(
-        consoleErrorMock.args()[0][0],
-        'Material-UI: the page prop of a TablePagination is out of range (0 to 1, but page is 2).',
+
+      fireEvent.click(getByRole('button', { name: 'Go to first page' }));
+      expect(handleChangePage.args[0][1]).to.equal(0);
+    });
+  });
+
+  describe('prop: showLastButton', () => {
+    it('should change the page', () => {
+      const handleChangePage = spy();
+      const { getByRole } = render(
+        <table>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                showLastButton
+                page={0}
+                rowsPerPage={10}
+                count={98}
+                onChangePage={handleChangePage}
+              />
+            </TableRow>
+          </TableFooter>
+        </table>,
       );
+
+      fireEvent.click(getByRole('button', { name: 'Go to last page' }));
+      expect(handleChangePage.args[0][1]).to.equal(9);
+    });
+  });
+
+  describe('warnings', () => {
+    before(() => {
+      PropTypes.resetWarningCache();
+    });
+
+    it('should raise a warning if the page prop is out of range', () => {
+      expect(() => {
+        PropTypes.checkPropTypes(
+          TablePagination.Naked.propTypes,
+          {
+            classes: {},
+            page: 2,
+            count: 20,
+            rowsPerPage: 10,
+            onChangePage: noop,
+            onChangeRowsPerPage: noop,
+          },
+          'prop',
+          'MockedTablePagination',
+        );
+      }).toErrorDev(
+        'Material-UI: The page prop of a TablePagination is out of range (0 to 1, but page is 2).',
+      );
+    });
+  });
+
+  describe('prop: SelectProps', () => {
+    it('does allow manual label ids', () => {
+      const { getAllByRole } = render(
+        <table>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                count={1}
+                page={0}
+                onChangePage={noop}
+                onChangeRowsPerPage={noop}
+                rowsPerPage={10}
+                SelectProps={{ id: 'foo', labelId: 'bar' }}
+              />
+            </TableRow>
+          </TableFooter>
+        </table>,
+      );
+
+      // will be `getByRole('combobox')` in aria 1.2
+      const [combobox] = getAllByRole('button');
+      expect(combobox).toHaveAccessibleName('Rows per page: 10');
     });
   });
 });

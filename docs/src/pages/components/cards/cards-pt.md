@@ -3,7 +3,7 @@ title: Componente React para Cartão
 components: Card, CardActionArea, CardActions, CardContent, CardHeader, CardMedia, Collapse, Paper
 ---
 
-# Card (cartão)
+# Cartão
 
 <p class="description">Cartões contêm conteúdo e ações sobre um único assunto.</p>
 
@@ -17,9 +17,9 @@ Apesar dos componentes cartões poderem suportar múltiplas ações tais como: c
 
 {{"demo": "pages/components/cards/SimpleCard.js", "bg": true}}
 
-### Outlined Card
+### Cartão Delineado
 
-Set `variant="outlined` to render an outlined card.
+Defina `variant="outlined"` para renderizar um cartão delineado.
 
 {{"demo": "pages/components/cards/OutlinedCard.js", "bg": true}}
 
@@ -48,3 +48,7 @@ Ações suplementares dentro do cartão são explicitamente chamadas usando íco
 Aqui está um exemplo de um controle de mídia do cartão.
 
 {{"demo": "pages/components/cards/MediaControlCard.js", "bg": true}}
+
+## Customização
+
+🎨 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://mui-treasury.com/components/card).

@@ -1,8 +1,8 @@
 # @material-ui/system
 
-<p class="description">Styled system & style functions for building powerful design systems.</p>
+<p class="description">风格化系统 & 风格化功能，构建强大的设计系统。</p>
 
-## 开始
+## 开始使用
 
 `@material-ui/system` 提供了一些底层工具函数，我们称之为 "*style functions*"，它们可以用于建立强大的设计系统。 以下是这个库的一些特点：
 
@@ -12,7 +12,7 @@
 - 🦎可以和任何主题对象 (theme object) 配合
 - 💅使用广为流行的 CSS-in-JS 样式方案
 - 📦体积小 [4KB gzipped](https://bundlephobia.com/result?p=@material-ui/system)
-- 🚀 [快速](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-benchmark/README.md#material-uisystem)，性能不是运行时问题
+- 🚀 [快速](https://github.com/mui-org/material-ui/blob/next/packages/material-ui-benchmark/README.md#material-uisystem)，性能不是运行时问题
 
 值得关注的是，整个仓库的函数都是无副作用的(side-effect free)，它们拥有这样的类型签名： `({ theme, ...style })=> style`。
 
@@ -105,7 +105,7 @@ export default function App() {
 - [spacing](/system/spacing/#api)
 - [typography](/system/typography/#api)
 
-If you are already using `@material-ui/core`, you can use the [Box component](/components/box/) (using JSS internally):
+如果你已经在使用`@material-ui/core`，那么你可以使用[Box 组件](/components/box/)（内部使用了JSS）
 
 ```jsx
 import Box from '@material-ui/core/Box';
@@ -188,7 +188,7 @@ const theme = {
 
 ### Collocation
 
-If you want to group the breakpoint values, you can use the `breakpoints()` helper.
+如果你想对断点值进行分组，可以使用 `breakpoints()` 助手。
 
 ```jsx
 import { compose, spacing, palette, breakpoints } from '@material-ui/system';
@@ -230,7 +230,7 @@ const Box = styled.div`
 
 你可以使用这个函数来创建你自己的样式工具。
 
-Not all CSS properties are supported. 不过如果你想，你可以支持一个新的属性。 改变的主题路径的前缀也是可以的。
+不是所有的CSS的属性都被支持。 不过如果你想，你可以支持一个新的属性。 改变的主题路径的前缀也是可以的。
 
 #### 参数
 
@@ -246,7 +246,7 @@ Not all CSS properties are supported. 不过如果你想，你可以支持一个
 
 #### 例子
 
-You can create a component that supports some CSS grid properties like `grid-gap`. By supplying `spacing` as the `themeKey` you can reuse logic enabling the behavior we see in other spacing properties like `padding`.
+你可以创建一个支持一些CSS的网格属性的组件，如`grid-gap`。 将 `spacing` 作为 `themeKey`，你可以重用该逻辑，从而实现我们在其他间隔属性（如 `padding`）中看到的行为。
 
 ```jsx
 import styled from 'styled-components';
@@ -262,7 +262,7 @@ const Grid = styled(Box)`${gridGap}`;
 const example = <Grid display="grid" gridGap={[2, 3]}>...</Grid>;
 ```
 
-You can also customize the prop name by adding both a `prop` and `cssProperty` and transform the value by adding a `transform` function.
+你还可以添加 `prop` 和 `cssProperty` 来自定义属性名称，并使用 `transform` 函数来转换值(value)。
 
 ```jsx
 import styled from 'styled-components';
@@ -306,7 +306,7 @@ export const bgcolor = style({
 const palette = compose(textColor, bgcolor);
 ```
 
-## 变种(Variants)
+## 变种
 
 帮助函数 `style()` 也可用于根据主题来返回不同的属性给样式对象。 在在这个例子中， `variant` 属性可以是 `theme.typography` 对象的任意键(key)。
 
@@ -314,7 +314,7 @@ const palette = compose(textColor, bgcolor);
 
 ## CSS 属性
 
-If you want to support custom CSS values, you can use the `css()` helper. 它可以处理的 `css` 属性。
+如果你想要自定义CSS值，你可以使用`css()`。 它可以处理的 `css` 属性。
 
 {{"demo": "pages/system/basics/CssProp.js", "defaultCodeOpen": true}}
 
@@ -334,9 +334,9 @@ styled-system在[解释它如何工作](https://github.com/jxnblk/styled-system/
 
 - [Tachyons](https://tachyons.io/) (2014年) 是第一个促进了 [原子 CSS 模式(Atomic CSS pattern)](https://css-tricks.com/lets-define-exactly-atomic-css/) 发展的CSS库。
 - TachyTachyons (2017年) 跟随了 [Tailwind CSS](https://tailwindcss.com/) 的脚步 他们让原子CSS更受欢迎。
-- [Twitter Bootstrap](https://getbootstrap.com/docs/4.1/utilities/borders/) 在v2，v3, 和v4中一步步介绍了原子类名 The way they group their "Helper classes" was used as inspiration.
+- [Twitter Bootstrap](https://getbootstrap.com/docs/4.1/utilities/borders/) 在v2，v3, 和v4中一步步介绍了原子类名 这种对 “助手类” 分组方式让他们得到启发。
 - 在 React 世界中， [Styled System](https://github.com/jxnblk/styled-system) (2017年) 是第一个推动样式函数的。 它可以做出一个通用的 Box 组件来已经衍生其他组件，这种方式可以替换原子CSS之中的辅助原子类的做法。
-- Large companies such as Pinterest, GitHub, and Segment.io are using the same approach in different flavours: 
+- Pinterest、GitHub 和 Segment.io 等大公司都在使用不同风格的相同方法： 
   - [Evergreen Box](https://evergreen.segment.com/components/layout-primitives/)
   - [Gestalt Box](https://pinterest.github.io/gestalt/#/Box)
   - [Primer Box](https://primer.style/components/docs/Box)

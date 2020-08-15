@@ -1,69 +1,58 @@
-import React from 'react';
-import { assert } from 'chai';
-import { mount } from 'enzyme';
+import * as React from 'react';
+import { expect } from 'chai';
 import { spy, useFakeTimers, stub } from 'sinon';
+import { createClientRender } from 'test/utils';
 import ScrollbarSize from './ScrollbarSize';
 
 describe('<ScrollbarSize />', () => {
-  const defaultProps = {
-    onChange: () => {},
-  };
   let clock;
 
-  before(() => {
+  beforeEach(() => {
     clock = useFakeTimers();
   });
 
-  after(() => {
+  afterEach(() => {
     clock.restore();
   });
 
+  const render = createClientRender();
+
   describe('mount', () => {
-    let wrapper;
-
-    afterEach(() => {
-      wrapper.unmount();
-    });
-
-    it('should not call on initial load', () => {
-      const onChange = spy();
-      wrapper = mount(<ScrollbarSize {...defaultProps} />);
-      assert.strictEqual(onChange.callCount, 0);
-    });
-
     it('should call on initial load', () => {
       const onChange = spy();
-      wrapper = mount(<ScrollbarSize {...defaultProps} onChange={onChange} />);
-      assert.strictEqual(onChange.callCount, 1);
-      assert.strictEqual(onChange.calledWith(0), true);
+      render(<ScrollbarSize onChange={onChange} />);
+
+      expect(onChange.callCount).to.equal(1);
     });
   });
 
   describe('prop: onChange', () => {
-    let onChange;
-    let wrapper;
-
-    beforeEach(() => {
-      onChange = spy();
-      wrapper = mount(<ScrollbarSize {...defaultProps} onChange={onChange} />);
-      // find internal div and simulate scrollbar
-      stub(wrapper.find('div').instance(), 'offsetHeight').get(() => 17);
-      stub(wrapper.find('div').instance(), 'clientHeight').get(() => 0);
-    });
-
     it('should call on first resize event', () => {
-      assert.strictEqual(onChange.callCount, 1);
+      const onChange = spy();
+      const { container } = render(<ScrollbarSize onChange={onChange} />);
+      stub(container.firstChild, 'offsetHeight').get(() => 20);
+      stub(container.firstChild, 'clientHeight').get(() => 0);
+
+      expect(onChange.callCount).to.equal(1);
       window.dispatchEvent(new window.Event('resize', {}));
       clock.tick(166);
-      assert.strictEqual(onChange.callCount, 2);
-      assert.strictEqual(onChange.calledWith(17), true);
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.args[1][0]).to.equal(20);
     });
 
-    it('should not call on second resize event', () => {
-      assert.strictEqual(onChange.callCount, 1);
+    it('should not call if height has not changed from previous resize', () => {
+      const onChange = spy();
+      const { container } = render(<ScrollbarSize onChange={onChange} />);
+      stub(container.firstChild, 'offsetHeight').get(() => 20);
+      stub(container.firstChild, 'clientHeight').get(() => 0);
+
+      expect(onChange.callCount).to.equal(1);
       window.dispatchEvent(new window.Event('resize', {}));
       clock.tick(166);
-      assert.strictEqual(onChange.callCount, 2);
+      window.dispatchEvent(new window.Event('resize', {}));
+      clock.tick(166);
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.args[1][0]).to.equal(20);
     });
   });
 });

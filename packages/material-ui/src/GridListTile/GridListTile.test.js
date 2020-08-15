@@ -1,21 +1,15 @@
-import React from 'react';
-import { assert } from 'chai';
+import * as React from 'react';
+import { expect } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import { getClasses, createMount, describeConformance } from 'test/utils';
 import GridListTile from './GridListTile';
 
 describe('<GridListTile />', () => {
-  let mount;
+  const mount = createMount();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<GridListTile />);
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<GridListTile />, () => ({
@@ -37,13 +31,13 @@ describe('<GridListTile />', () => {
       const children = <img src={tileData.img} alt="foo" />;
       const wrapper = mount(<GridListTile>{children}</GridListTile>);
 
-      assert.strictEqual(wrapper.containsMatchingElement(children), true);
+      expect(wrapper.containsMatchingElement(children)).to.equal(true);
     });
 
     it('should not change non image child', () => {
       const children = <div />;
       const wrapper = mount(<GridListTile>{children}</GridListTile>);
-      assert.strictEqual(wrapper.containsMatchingElement(children), true);
+      expect(wrapper.containsMatchingElement(children)).to.equal(true);
     });
   });
 
@@ -78,10 +72,10 @@ describe('<GridListTile />', () => {
         removeEventListener: () => {},
       };
       mountMockImage(imgEl);
-      assert.strictEqual(imgEl.classList.remove.callCount, 1);
-      assert.strictEqual(imgEl.classList.remove.args[0][0], classes.imgFullWidth);
-      assert.strictEqual(imgEl.classList.add.callCount, 1);
-      assert.strictEqual(imgEl.classList.add.args[0][0], classes.imgFullHeight);
+      expect(imgEl.classList.remove.callCount).to.equal(1);
+      expect(imgEl.classList.remove.args[0][0]).to.equal(classes.imgFullWidth);
+      expect(imgEl.classList.add.callCount).to.equal(1);
+      expect(imgEl.classList.add.args[0][0]).to.equal(classes.imgFullHeight);
     });
 
     it('should fit the width', () => {
@@ -94,10 +88,10 @@ describe('<GridListTile />', () => {
         removeEventListener: () => {},
       };
       mountMockImage(imgEl);
-      assert.strictEqual(imgEl.classList.remove.callCount, 1);
-      assert.strictEqual(imgEl.classList.remove.args[0][0], classes.imgFullHeight);
-      assert.strictEqual(imgEl.classList.add.callCount, 1);
-      assert.strictEqual(imgEl.classList.add.args[0][0], classes.imgFullWidth);
+      expect(imgEl.classList.remove.callCount).to.equal(1);
+      expect(imgEl.classList.remove.args[0][0]).to.equal(classes.imgFullHeight);
+      expect(imgEl.classList.add.callCount).to.equal(1);
+      expect(imgEl.classList.add.args[0][0]).to.equal(classes.imgFullWidth);
     });
   });
 
@@ -122,20 +116,20 @@ describe('<GridListTile />', () => {
         removeEventListener: () => {},
       };
       mountMockImage(imgEl);
-      assert.strictEqual(imgEl.classList.remove.callCount, 1);
-      assert.strictEqual(imgEl.classList.remove.args[0][0], classes.imgFullHeight);
-      assert.strictEqual(imgEl.classList.add.callCount, 1);
-      assert.strictEqual(imgEl.classList.add.args[0][0], classes.imgFullWidth);
+      expect(imgEl.classList.remove.callCount).to.equal(1);
+      expect(imgEl.classList.remove.args[0][0]).to.equal(classes.imgFullHeight);
+      expect(imgEl.classList.add.callCount).to.equal(1);
+      expect(imgEl.classList.add.args[0][0]).to.equal(classes.imgFullWidth);
 
       window.dispatchEvent(new window.Event('resize', {}));
-      assert.strictEqual(imgEl.classList.remove.callCount, 1);
+      expect(imgEl.classList.remove.callCount).to.equal(1);
       clock.tick(166);
 
-      assert.strictEqual(imgEl.classList.remove.callCount, 2);
-      assert.strictEqual(imgEl.classList.remove.callCount, 2);
-      assert.strictEqual(imgEl.classList.remove.args[1][0], classes.imgFullHeight);
-      assert.strictEqual(imgEl.classList.add.callCount, 2);
-      assert.strictEqual(imgEl.classList.add.args[1][0], classes.imgFullWidth);
+      expect(imgEl.classList.remove.callCount).to.equal(2);
+      expect(imgEl.classList.remove.callCount).to.equal(2);
+      expect(imgEl.classList.remove.args[1][0]).to.equal(classes.imgFullHeight);
+      expect(imgEl.classList.add.callCount).to.equal(2);
+      expect(imgEl.classList.add.args[1][0]).to.equal(classes.imgFullWidth);
     });
   });
 });

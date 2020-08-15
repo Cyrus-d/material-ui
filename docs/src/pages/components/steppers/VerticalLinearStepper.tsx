@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -54,11 +54,11 @@ export default function VerticalLinearStepper() {
   const steps = getSteps();
 
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleReset = () => {
@@ -70,7 +70,15 @@ export default function VerticalLinearStepper() {
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((label, index) => (
           <Step key={label}>
-            <StepLabel>{label}</StepLabel>
+            <StepLabel
+              optional={
+                index === 2 ? (
+                  <Typography variant="caption">Last step</Typography>
+                ) : null
+              }
+            >
+              {label}
+            </StepLabel>
             <StepContent>
               <Typography>{getStepContent(index)}</Typography>
               <div className={classes.actionsContainer}>
@@ -84,7 +92,6 @@ export default function VerticalLinearStepper() {
                   </Button>
                   <Button
                     variant="contained"
-                    color="primary"
                     onClick={handleNext}
                     className={classes.button}
                   >

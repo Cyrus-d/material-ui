@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from '@material-ui/icons/Done';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -57,7 +57,13 @@ export default function OutlinedChips() {
         deleteIcon={<DoneIcon />}
         variant="outlined"
       />
-      <Chip label="Clickable link" component="a" href="#chip" clickable variant="outlined" />
+      <Chip
+        label="Clickable link"
+        component="a"
+        href="#chip"
+        clickable
+        variant="outlined"
+      />
       <Chip
         avatar={<Avatar>M</Avatar>}
         label="Primary clickable"
@@ -76,7 +82,12 @@ export default function OutlinedChips() {
         deleteIcon={<DoneIcon />}
         variant="outlined"
       />
-      <Chip label="Deletable primary" onDelete={handleDelete} color="primary" variant="outlined" />
+      <Chip
+        label="Deletable primary"
+        onDelete={handleDelete}
+        color="primary"
+        variant="outlined"
+      />
       <Chip
         icon={<FaceIcon />}
         label="Deletable secondary"

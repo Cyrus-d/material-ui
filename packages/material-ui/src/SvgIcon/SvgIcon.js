@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import capitalize from '../utils/capitalize';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     userSelect: 'none',
@@ -79,8 +79,8 @@ const SvgIcon = React.forwardRef(function SvgIcon(props, ref) {
       focusable="false"
       viewBox={viewBox}
       color={htmlColor}
-      aria-hidden={titleAccess ? null : 'true'}
-      role={titleAccess ? 'img' : 'presentation'}
+      aria-hidden={titleAccess ? undefined : true}
+      role={titleAccess ? 'img' : undefined}
       ref={ref}
       {...other}
     >
@@ -115,7 +115,7 @@ SvgIcon.propTypes = {
   color: PropTypes.oneOf(['action', 'disabled', 'error', 'inherit', 'primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -129,7 +129,7 @@ SvgIcon.propTypes = {
   /**
    * The shape-rendering attribute. The behavior of the different options is described on the
    * [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/shape-rendering).
-   * If you are having issues with blurry icons you should investigate this property.
+   * If you are having issues with blurry icons you should investigate this prop.
    */
   shapeRendering: PropTypes.string,
   /**

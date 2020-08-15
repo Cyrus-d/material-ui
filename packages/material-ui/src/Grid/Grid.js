@@ -9,7 +9,7 @@
 // Follow this flexbox Guide to better understand the underlying model:
 // - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -21,7 +21,7 @@ const GRID_SIZES = ['auto', true, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 function generateGrid(globalStyles, theme, breakpoint) {
   const styles = {};
 
-  GRID_SIZES.forEach(size => {
+  GRID_SIZES.forEach((size) => {
     const key = `grid-${breakpoint}-${size}`;
 
     if (size === true) {
@@ -31,6 +31,7 @@ function generateGrid(globalStyles, theme, breakpoint) {
         flexGrow: 1,
         maxWidth: '100%',
       };
+
       return;
     }
 
@@ -40,6 +41,7 @@ function generateGrid(globalStyles, theme, breakpoint) {
         flexGrow: 0,
         maxWidth: 'none',
       };
+
       return;
     }
 
@@ -71,7 +73,7 @@ function getOffset(val, div = 1) {
 function generateGutter(theme, breakpoint) {
   const styles = {};
 
-  SPACINGS.forEach(spacing => {
+  SPACINGS.forEach((spacing) => {
     const themeSpacing = theme.spacing(spacing);
 
     if (themeSpacing === 0) {
@@ -96,8 +98,8 @@ function generateGutter(theme, breakpoint) {
 // alignItems: 'flex-start',
 // flexWrap: 'nowrap',
 // justifyContent: 'flex-start',
-export const styles = theme => ({
-  /* Styles applied to the root element */
+export const styles = (theme) => ({
+  /* Styles applied to the root element. */
   root: {},
   /* Styles applied to the root element if `container={true}`. */
   container: {
@@ -123,7 +125,7 @@ export const styles = theme => ({
   'direction-xs-column-reverse': {
     flexDirection: 'column-reverse',
   },
-  /* Styles applied to the root element if `direction="rwo-reverse"`. */
+  /* Styles applied to the root element if `direction="row-reverse"`. */
   'direction-xs-row-reverse': {
     flexDirection: 'row-reverse',
   },
@@ -171,24 +173,24 @@ export const styles = theme => ({
   'align-content-xs-space-around': {
     alignContent: 'space-around',
   },
-  /* Styles applied to the root element if `justify="center"`. */
-  'justify-xs-center': {
+  /* Styles applied to the root element if `justifyContent="center"`. */
+  'justify-content-xs-center': {
     justifyContent: 'center',
   },
-  /* Styles applied to the root element if `justify="flex-end"`. */
-  'justify-xs-flex-end': {
+  /* Styles applied to the root element if `justifyContent="flex-end"`. */
+  'justify-content-xs-flex-end': {
     justifyContent: 'flex-end',
   },
-  /* Styles applied to the root element if `justify="space-between"`. */
-  'justify-xs-space-between': {
+  /* Styles applied to the root element if `justifyContent="space-between"`. */
+  'justify-content-xs-space-between': {
     justifyContent: 'space-between',
   },
-  /* Styles applied to the root element if `justify="space-around"`. */
-  'justify-xs-space-around': {
+  /* Styles applied to the root element if `justifyContent="space-around"`. */
+  'justify-content-xs-space-around': {
     justifyContent: 'space-around',
   },
-  /* Styles applied to the root element if `justify="space-evenly"`. */
-  'justify-xs-space-evenly': {
+  /* Styles applied to the root element if `justifyContent="space-evenly"`. */
+  'justify-content-xs-space-evenly': {
     justifyContent: 'space-evenly',
   },
   ...generateGutter(theme, 'xs'),
@@ -209,7 +211,7 @@ const Grid = React.forwardRef(function Grid(props, ref) {
     container = false,
     direction = 'row',
     item = false,
-    justify = 'flex-start',
+    justifyContent = 'flex-start',
     lg = false,
     md = false,
     sm = false,
@@ -232,7 +234,7 @@ const Grid = React.forwardRef(function Grid(props, ref) {
       [classes[`wrap-xs-${String(wrap)}`]]: wrap !== 'wrap',
       [classes[`align-items-xs-${String(alignItems)}`]]: alignItems !== 'stretch',
       [classes[`align-content-xs-${String(alignContent)}`]]: alignContent !== 'stretch',
-      [classes[`justify-xs-${String(justify)}`]]: justify !== 'flex-start',
+      [classes[`justify-content-xs-${String(justifyContent)}`]]: justifyContent !== 'flex-start',
       [classes[`grid-xs-${String(xs)}`]]: xs !== false,
       [classes[`grid-sm-${String(sm)}`]]: sm !== false,
       [classes[`grid-md-${String(md)}`]]: md !== false,
@@ -246,23 +248,27 @@ const Grid = React.forwardRef(function Grid(props, ref) {
 });
 
 Grid.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Defines the `align-content` style property.
    * It's applied for all screen sizes.
    */
   alignContent: PropTypes.oneOf([
-    'stretch',
     'center',
-    'flex-start',
     'flex-end',
-    'space-between',
+    'flex-start',
     'space-around',
+    'space-between',
+    'stretch',
   ]),
   /**
    * Defines the `align-items` style property.
    * It's applied for all screen sizes.
    */
-  alignItems: PropTypes.oneOf(['flex-start', 'center', 'flex-end', 'stretch', 'baseline']),
+  alignItems: PropTypes.oneOf(['baseline', 'center', 'flex-end', 'flex-start', 'stretch']),
   /**
    * The content of the component.
    */
@@ -271,14 +277,14 @@ Grid.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -290,7 +296,7 @@ Grid.propTypes = {
    * Defines the `flex-direction` style property.
    * It is applied for all screen sizes.
    */
-  direction: PropTypes.oneOf(['row', 'row-reverse', 'column', 'column-reverse']),
+  direction: PropTypes.oneOf(['column-reverse', 'column', 'row-reverse', 'row']),
   /**
    * If `true`, the component will have the flex *item* behavior.
    * You should be wrapping *items* with a *container*.
@@ -300,49 +306,64 @@ Grid.propTypes = {
    * Defines the `justify-content` style property.
    * It is applied for all screen sizes.
    */
-  justify: PropTypes.oneOf([
-    'flex-start',
+  justifyContent: PropTypes.oneOf([
     'center',
     'flex-end',
-    'space-between',
+    'flex-start',
     'space-around',
+    'space-between',
     'space-evenly',
   ]),
   /**
    * Defines the number of grids the component is going to use.
    * It's applied for the `lg` breakpoint and wider screens if not overridden.
    */
-  lg: PropTypes.oneOf([false, 'auto', true, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+  lg: PropTypes.oneOfType([
+    PropTypes.oneOf(['auto', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+    PropTypes.bool,
+  ]),
   /**
    * Defines the number of grids the component is going to use.
    * It's applied for the `md` breakpoint and wider screens if not overridden.
    */
-  md: PropTypes.oneOf([false, 'auto', true, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+  md: PropTypes.oneOfType([
+    PropTypes.oneOf(['auto', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+    PropTypes.bool,
+  ]),
   /**
    * Defines the number of grids the component is going to use.
    * It's applied for the `sm` breakpoint and wider screens if not overridden.
    */
-  sm: PropTypes.oneOf([false, 'auto', true, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+  sm: PropTypes.oneOfType([
+    PropTypes.oneOf(['auto', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+    PropTypes.bool,
+  ]),
   /**
    * Defines the space between the type `item` component.
    * It can only be used on a type `container` component.
    */
-  spacing: PropTypes.oneOf(SPACINGS),
+  spacing: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
   /**
    * Defines the `flex-wrap` style property.
    * It's applied for all screen sizes.
    */
-  wrap: PropTypes.oneOf(['nowrap', 'wrap', 'wrap-reverse']),
+  wrap: PropTypes.oneOf(['nowrap', 'wrap-reverse', 'wrap']),
   /**
    * Defines the number of grids the component is going to use.
    * It's applied for the `xl` breakpoint and wider screens.
    */
-  xl: PropTypes.oneOf([false, 'auto', true, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+  xl: PropTypes.oneOfType([
+    PropTypes.oneOf(['auto', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+    PropTypes.bool,
+  ]),
   /**
    * Defines the number of grids the component is going to use.
    * It's applied for all the screen sizes with the lowest priority.
    */
-  xs: PropTypes.oneOf([false, 'auto', true, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+  xs: PropTypes.oneOfType([
+    PropTypes.oneOf(['auto', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+    PropTypes.bool,
+  ]),
   /**
    * If `true`, it sets `min-width: 0` on the item.
    * Refer to the limitations section of the documentation to better understand the use case.
@@ -359,7 +380,7 @@ if (process.env.NODE_ENV !== 'production') {
     alignContent: requireProp('container'),
     alignItems: requireProp('container'),
     direction: requireProp('container'),
-    justify: requireProp('container'),
+    justifyContent: requireProp('container'),
     lg: requireProp('item'),
     md: requireProp('item'),
     sm: requireProp('item'),

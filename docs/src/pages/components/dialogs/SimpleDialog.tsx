@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
@@ -40,11 +40,19 @@ function SimpleDialog(props: SimpleDialogProps) {
   };
 
   return (
-    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="simple-dialog-title"
+      open={open}
+    >
       <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
       <List>
-        {emails.map(email => (
-          <ListItem button onClick={() => handleListItemClick(email)} key={email}>
+        {emails.map((email) => (
+          <ListItem
+            button
+            onClick={() => handleListItemClick(email)}
+            key={email}
+          >
             <ListItemAvatar>
               <Avatar className={classes.avatar}>
                 <PersonIcon />
@@ -53,13 +61,17 @@ function SimpleDialog(props: SimpleDialogProps) {
             <ListItemText primary={email} />
           </ListItem>
         ))}
-        <ListItem autoFocus button onClick={() => handleListItemClick('addAccount')}>
+        <ListItem
+          autoFocus
+          button
+          onClick={() => handleListItemClick('addAccount')}
+        >
           <ListItemAvatar>
             <Avatar>
               <AddIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary="add account" />
+          <ListItemText primary="Add account" />
         </ListItem>
       </List>
     </Dialog>
@@ -83,10 +95,14 @@ export default function SimpleDialogDemo() {
     <div>
       <Typography variant="subtitle1">Selected: {selectedValue}</Typography>
       <br />
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button variant="outlined" onClick={handleClickOpen}>
         Open simple dialog
       </Button>
-      <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
+      <SimpleDialog
+        selectedValue={selectedValue}
+        open={open}
+        onClose={handleClose}
+      />
     </div>
   );
 }

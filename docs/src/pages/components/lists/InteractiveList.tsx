@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function generate(element: React.ReactElement) {
-  return [0, 1, 2].map(value =>
+  return [0, 1, 2].map((value) =>
     React.cloneElement(element, {
       key: value,
     }),
@@ -51,8 +51,7 @@ export default function InteractiveList() {
           control={
             <Checkbox
               checked={dense}
-              onChange={event => setDense(event.target.checked)}
-              value="dense"
+              onChange={(event) => setDense(event.target.checked)}
             />
           }
           label="Enable dense"
@@ -61,8 +60,7 @@ export default function InteractiveList() {
           control={
             <Checkbox
               checked={secondary}
-              onChange={event => setSecondary(event.target.checked)}
-              value="secondary"
+              onChange={(event) => setSecondary(event.target.checked)}
             />
           }
           label="Enable secondary text"

@@ -1,9 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import debounce from '../utils/debounce';
 import withStyles from '../styles/withStyles';
 import isMuiElement from '../utils/isMuiElement';
+import { ownerWindow } from '../utils';
 
 export const styles = {
   /* Styles applied to the root element. */
@@ -51,30 +52,16 @@ const fit = (imgEl, classes) => {
   }
 };
 
-function ensureImageCover(imgEl, classes) {
-  if (!imgEl) {
-    return;
-  }
-
-  if (imgEl.complete) {
-    fit(imgEl, classes);
-  } else {
-    imgEl.addEventListener('load', () => {
-      fit(imgEl, classes);
-    });
-  }
-}
-
 const GridListTile = React.forwardRef(function GridListTile(props, ref) {
   // cols rows default values are for docs only
   const {
     children,
     classes,
     className,
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     cols = 1,
     component: Component = 'li',
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     rows = 1,
     ...other
   } = props;
@@ -82,7 +69,28 @@ const GridListTile = React.forwardRef(function GridListTile(props, ref) {
   const imgRef = React.useRef(null);
 
   React.useEffect(() => {
-    ensureImageCover(imgRef.current, classes);
+    const img = imgRef.current;
+
+    if (!img) {
+      return undefined;
+    }
+
+    let listener;
+
+    if (img.complete) {
+      fit(img, classes);
+    } else {
+      listener = () => {
+        fit(img, classes);
+      };
+      img.addEventListener('load', listener);
+    }
+
+    return () => {
+      if (listener) {
+        img.removeEventListener('load', listener);
+      }
+    };
   });
 
   React.useEffect(() => {
@@ -90,17 +98,18 @@ const GridListTile = React.forwardRef(function GridListTile(props, ref) {
       fit(imgRef.current, classes);
     });
 
-    window.addEventListener('resize', handleResize);
+    const containerWindow = ownerWindow(imgRef.current);
+    containerWindow.addEventListener('resize', handleResize);
     return () => {
       handleResize.clear();
-      window.removeEventListener('resize', handleResize);
+      containerWindow.removeEventListener('resize', handleResize);
     };
   }, [classes]);
 
   return (
     <Component className={clsx(classes.root, className)} ref={ref} {...other}>
       <div className={classes.tile}>
-        {React.Children.map(children, child => {
+        {React.Children.map(children, (child) => {
           if (!React.isValidElement(child)) {
             return null;
           }
@@ -119,6 +128,10 @@ const GridListTile = React.forwardRef(function GridListTile(props, ref) {
 });
 
 GridListTile.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Theoretically you can pass any node as children, but the main use case is to pass an img,
    * in which case GridListTile takes care of making the image "cover" available space
@@ -129,7 +142,7 @@ GridListTile.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -140,7 +153,7 @@ GridListTile.propTypes = {
   cols: PropTypes.number,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**

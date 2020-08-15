@@ -1,26 +1,20 @@
-import React from 'react';
-import { assert } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { expect } from 'chai';
+import { getClasses, createMount, describeConformance } from 'test/utils';
 import Backdrop from './Backdrop';
+import Fade from '../Fade';
 
 describe('<Backdrop />', () => {
-  let mount;
+  const mount = createMount({ strict: true });
   let classes;
 
   before(() => {
-    // StrictModeViolation: uses Fade
-    mount = createMount({ strict: false });
     classes = getClasses(<Backdrop open />);
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<Backdrop open />, () => ({
     classes,
-    inheritComponent: 'div',
+    inheritComponent: Fade,
     mount,
     refInstanceof: window.HTMLDivElement,
     skip: [
@@ -36,6 +30,6 @@ describe('<Backdrop />', () => {
         <h1>Hello World</h1>
       </Backdrop>,
     );
-    assert.strictEqual(wrapper.contains(<h1>Hello World</h1>), true);
+    expect(wrapper.contains(<h1>Hello World</h1>)).to.equal(true);
   });
 });

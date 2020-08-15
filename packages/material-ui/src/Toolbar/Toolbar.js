@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     position: 'relative',
@@ -54,6 +54,10 @@ const Toolbar = React.forwardRef(function Toolbar(props, ref) {
 });
 
 Toolbar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Toolbar children, usually a mixture of `IconButton`, `Button` and `Typography`.
    */
@@ -62,14 +66,14 @@ Toolbar.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -79,7 +83,7 @@ Toolbar.propTypes = {
   /**
    * The variant to use.
    */
-  variant: PropTypes.oneOf(['regular', 'dense']),
+  variant: PropTypes.oneOf(['dense', 'regular']),
 };
 
 export default withStyles(styles, { name: 'MuiToolbar' })(Toolbar);

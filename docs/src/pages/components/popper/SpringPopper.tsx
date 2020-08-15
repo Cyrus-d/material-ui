@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Popper from '@material-ui/core/Popper';
 import { useSpring, animated } from 'react-spring/web.cjs'; // web.cjs is required for IE 11 support
@@ -20,7 +20,10 @@ interface FadeProps {
   onExited?: () => {};
 }
 
-const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(props, ref) {
+const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(
+  props,
+  ref,
+) {
   const { in: open, children, onEnter, onExited, ...other } = props;
   const style = useSpring({
     from: { opacity: 0 },

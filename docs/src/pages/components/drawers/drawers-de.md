@@ -19,7 +19,7 @@ The Drawer can be cancelled by clicking the overlay or pressing the Esc key. It 
 
 {{"demo": "pages/components/drawers/TemporaryDrawer.js"}}
 
-## Wischbare Navigationsleisten
+### Swipeable
 
 Sie können die Leiste mit der `SwipeableDrawer` Komponente einklappbar machen.
 
@@ -66,7 +66,7 @@ Die Mini-Variante wird für Anwendungsbereiche empfohlen, die neben Inhalten ein
 
 ## Permanente Navigationsleiste
 
-Permanent navigation drawers are always visible and pinned to the left edge, at the same elevation as the content or background. They cannot be closed.
+Permanent navigation drawers are always visible and pinned to the left edge, at the same elevation as the content or background. Sie können nicht geschlossen werden.
 
 Permanente Navigationsleisten sind die **empfohlene Standardeinstellung für Desktop**.
 

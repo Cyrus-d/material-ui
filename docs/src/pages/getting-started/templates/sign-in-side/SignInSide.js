@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -26,7 +26,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
   },
@@ -34,7 +34,9 @@ const useStyles = makeStyles(theme => ({
     backgroundImage: 'url(https://source.unsplash.com/random)',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
-      theme.palette.type === 'dark' ? theme.palette.grey[900] : theme.palette.grey[50],
+      theme.palette.type === 'light'
+        ? theme.palette.grey[50]
+        : theme.palette.grey[900],
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   },
@@ -103,7 +105,6 @@ export default function SignInSide() {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
               className={classes.submit}
             >
               Sign In

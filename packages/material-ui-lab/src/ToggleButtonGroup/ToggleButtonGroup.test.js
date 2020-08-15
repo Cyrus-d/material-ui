@@ -1,19 +1,16 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '@material-ui/core/test-utils/describeConformance';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, describeConformance, createClientRender } from 'test/utils';
 import ToggleButtonGroup from './ToggleButtonGroup';
 import ToggleButton from '../ToggleButton';
 
 describe('<ToggleButtonGroup />', () => {
-  let mount;
+  const mount = createMount();
   let classes;
   const render = createClientRender();
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(
       <ToggleButtonGroup>
         <ToggleButton value="hello" />
@@ -22,7 +19,6 @@ describe('<ToggleButtonGroup />', () => {
   });
 
   describeConformance(<ToggleButtonGroup />, () => ({
-    after: () => mount.cleanUp(),
     classes,
     inheritComponent: 'div',
     mount,
@@ -31,9 +27,19 @@ describe('<ToggleButtonGroup />', () => {
   }));
 
   it('renders a `group`', () => {
-    const { getByLabelText } = render(<ToggleButtonGroup aria-label="my group" />);
+    const { queryByRole } = render(<ToggleButtonGroup aria-label="my group" />);
 
-    expect(getByLabelText('my group')).to.have.attribute('role', 'group');
+    expect(queryByRole('group', { name: 'my group' })).not.to.equal(null);
+  });
+
+  it('can render group orientation vertically', () => {
+    const { getByRole } = render(
+      <ToggleButtonGroup orientation="vertical">
+        <ToggleButton value="one">1</ToggleButton>
+      </ToggleButtonGroup>,
+    );
+    expect(getByRole('group')).to.have.class('MuiToggleButtonGroup-vertical');
+    expect(getByRole('button')).to.have.class('MuiToggleButtonGroup-groupedVertical');
   });
 
   describe('exclusive', () => {

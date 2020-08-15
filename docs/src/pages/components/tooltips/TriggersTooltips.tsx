@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -17,7 +17,7 @@ export default function TriggersTooltips() {
 
   return (
     <div>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Tooltip disableFocusListener title="Add">
             <Button>Hover or touch</Button>

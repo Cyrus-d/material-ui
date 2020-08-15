@@ -1,9 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ThemeProvider } from '@material-ui/styles';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
-import { act, createClientRender } from 'test/utils/createClientRender';
-import createServerRender from 'test/utils/createServerRender';
+import { act, createClientRender, createServerRender } from 'test/utils';
 import mediaQuery from 'css-mediaquery';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -11,15 +9,15 @@ import useMediaQuery from './useMediaQuery';
 
 function createMatchMedia(width, ref) {
   const listeners = [];
-  return query => {
+  return (query) => {
     const instance = {
       matches: mediaQuery.match(query, {
         width,
       }),
-      addListener: listener => {
+      addListener: (listener) => {
         listeners.push(listener);
       },
-      removeListener: listener => {
+      removeListener: (listener) => {
         const index = listeners.indexOf(listener);
         if (index > -1) {
           listeners.splice(index, 1);
@@ -193,7 +191,7 @@ describe('useMediaQuery', () => {
     it('should be able to change the query dynamically', () => {
       const ref = React.createRef();
       const text = () => ref.current.textContent;
-      const Test = props => {
+      const Test = (props) => {
         const matches = useMediaQuery(props.query, {
           defaultMatches: true,
         });
@@ -215,7 +213,7 @@ describe('useMediaQuery', () => {
     it('should observe the media query', () => {
       const ref = React.createRef();
       const text = () => ref.current.textContent;
-      const Test = props => {
+      const Test = (props) => {
         const matches = useMediaQuery(props.query);
         React.useEffect(() => values(matches));
         return <span ref={ref}>{`${matches}`}</span>;
@@ -249,7 +247,7 @@ describe('useMediaQuery', () => {
       }
 
       const Test = () => {
-        const ssrMatchMedia = query => ({
+        const ssrMatchMedia = (query) => ({
           matches: mediaQuery.match(query, {
             width: 3000,
           }),
@@ -269,23 +267,19 @@ describe('useMediaQuery', () => {
   });
 
   describe('warnings', () => {
-    beforeEach(() => {
-      consoleErrorMock.spy();
-    });
-
-    afterEach(() => {
-      consoleErrorMock.reset();
-      PropTypes.resetWarningCache();
-    });
-
     it('warns on invalid `query` argument', () => {
       function MyComponent() {
         useMediaQuery(() => '(min-width:2000px)');
         return null;
       }
 
-      render(<MyComponent />);
-      expect(consoleErrorMock.args()[0][0]).to.include('the `query` argument provided is invalid');
+      expect(() => {
+        render(<MyComponent />);
+      }).toErrorDev([
+        'Material-UI: The `query` argument provided is invalid',
+        // logs warning twice in StrictMode
+        'Material-UI: The `query` argument provided is invalid',
+      ]);
     });
   });
 });

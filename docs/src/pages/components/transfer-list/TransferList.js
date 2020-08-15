@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -9,7 +9,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     margin: 'auto',
   },
@@ -24,11 +24,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function not(a, b) {
-  return a.filter(value => b.indexOf(value) === -1);
+  return a.filter((value) => b.indexOf(value) === -1);
 }
 
 function intersection(a, b) {
-  return a.filter(value => b.indexOf(value) !== -1);
+  return a.filter((value) => b.indexOf(value) !== -1);
 }
 
 export default function TransferList() {
@@ -40,7 +40,7 @@ export default function TransferList() {
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
 
-  const handleToggle = value => () => {
+  const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -75,20 +75,27 @@ export default function TransferList() {
     setRight([]);
   };
 
-  const customList = items => (
+  const customList = (items) => (
     <Paper className={classes.paper}>
       <List dense component="div" role="list">
-        {items.map(value => {
+        {items.map((value) => {
           const labelId = `transfer-list-item-${value}-label`;
 
           return (
-            <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+            <ListItem
+              key={value}
+              role="listitem"
+              button
+              onClick={handleToggle(value)}
+            >
               <ListItemIcon>
                 <Checkbox
                   checked={checked.indexOf(value) !== -1}
                   tabIndex={-1}
                   disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
+                  inputProps={{
+                    'aria-labelledby': labelId,
+                  }}
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={`List item ${value + 1}`} />
@@ -101,7 +108,13 @@ export default function TransferList() {
   );
 
   return (
-    <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+    <Grid
+      container
+      spacing={2}
+      justifyContent="center"
+      alignItems="center"
+      className={classes.root}
+    >
       <Grid item>{customList(left)}</Grid>
       <Grid item>
         <Grid container direction="column" alignItems="center">

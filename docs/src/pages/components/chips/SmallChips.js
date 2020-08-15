@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from '@material-ui/icons/Done';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -30,7 +30,12 @@ export default function SmallChips() {
   return (
     <div className={classes.root}>
       <Chip size="small" label="Basic" />
-      <Chip size="small" avatar={<Avatar>M</Avatar>} label="Clickable" onClick={handleClick} />
+      <Chip
+        size="small"
+        avatar={<Avatar>M</Avatar>}
+        label="Clickable"
+        onClick={handleClick}
+      />
       <Chip
         size="small"
         avatar={<Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />}
@@ -51,7 +56,13 @@ export default function SmallChips() {
         onDelete={handleDelete}
         deleteIcon={<DoneIcon />}
       />
-      <Chip size="small" label="Clickable Link" component="a" href="#chip" clickable />
+      <Chip
+        size="small"
+        label="Clickable Link"
+        component="a"
+        href="#chip"
+        clickable
+      />
       <Chip
         size="small"
         avatar={<Avatar>M</Avatar>}
@@ -70,7 +81,12 @@ export default function SmallChips() {
         onDelete={handleDelete}
         deleteIcon={<DoneIcon />}
       />
-      <Chip size="small" label="Deletable Primary" onDelete={handleDelete} color="primary" />
+      <Chip
+        size="small"
+        label="Deletable Primary"
+        onDelete={handleDelete}
+        color="primary"
+      />
       <Chip
         size="small"
         icon={<FaceIcon />}

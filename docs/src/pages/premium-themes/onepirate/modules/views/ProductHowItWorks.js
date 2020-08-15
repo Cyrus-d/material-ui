@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -6,7 +6,7 @@ import Container from '@material-ui/core/Container';
 import Button from '../components/Button';
 import Typography from '../components/Typography';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     display: 'flex',
     backgroundColor: theme.palette.secondary.light,
@@ -62,7 +62,12 @@ function ProductHowItWorks(props) {
           className={classes.curvyLines}
           alt="curvy lines"
         />
-        <Typography variant="h4" marked="center" className={classes.title} component="h2">
+        <Typography
+          variant="h4"
+          marked="center"
+          className={classes.title}
+          component="h2"
+        >
           How it works
         </Typography>
         <div>
@@ -89,7 +94,8 @@ function ProductHowItWorks(props) {
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  First come, first served. Our offers are in limited quantities, so be quick.
+                  First come, first served. Our offers are in limited
+                  quantities, so be quick.
                 </Typography>
               </div>
             </Grid>

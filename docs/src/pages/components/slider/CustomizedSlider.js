@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: 300 + theme.spacing(3) * 2,
   },
@@ -61,8 +61,9 @@ const IOSSlider = withStyles({
     boxShadow: iOSBoxShadow,
     marginTop: -14,
     marginLeft: -14,
-    '&:focus,&:hover,&$active': {
-      boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)',
+    '&:focus, &:hover, &$active': {
+      boxShadow:
+        '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)',
       // Reset on touch devices, it doesn't add specificity
       '@media (hover: none)': {
         boxShadow: iOSBoxShadow,
@@ -71,7 +72,7 @@ const IOSSlider = withStyles({
   },
   active: {},
   valueLabel: {
-    left: 'calc(-50% + 11px)',
+    left: 'calc(-50% + 12px)',
     top: -22,
     '& *': {
       background: 'transparent',
@@ -110,7 +111,7 @@ const PrettoSlider = withStyles({
     border: '2px solid currentColor',
     marginTop: -8,
     marginLeft: -12,
-    '&:focus,&:hover,&$active': {
+    '&:focus, &:hover, &$active': {
       boxShadow: 'inherit',
     },
   },
@@ -141,9 +142,9 @@ const AirbnbSlider = withStyles({
     border: '1px solid currentColor',
     marginTop: -12,
     marginLeft: -13,
-    boxShadow: '#ebebeb 0px 2px 2px',
-    '&:focus,&:hover,&$active': {
-      boxShadow: '#ccc 0px 2px 3px 1px',
+    boxShadow: '#ebebeb 0 2px 2px',
+    '&:focus, &:hover, &$active': {
+      boxShadow: '#ccc 0 2px 3px 1px',
     },
     '& .bar': {
       // display: inline-block !important;
@@ -155,9 +156,6 @@ const AirbnbSlider = withStyles({
     },
   },
   active: {},
-  valueLabel: {
-    left: 'calc(-50% + 4px)',
-  },
   track: {
     height: 3,
   },
@@ -184,10 +182,19 @@ export default function CustomizedSlider() {
   return (
     <div className={classes.root}>
       <Typography gutterBottom>iOS</Typography>
-      <IOSSlider aria-label="ios slider" defaultValue={60} marks={marks} valueLabelDisplay="on" />
+      <IOSSlider
+        aria-label="ios slider"
+        defaultValue={60}
+        marks={marks}
+        valueLabelDisplay="on"
+      />
       <div className={classes.margin} />
       <Typography gutterBottom>pretto.fr</Typography>
-      <PrettoSlider valueLabelDisplay="auto" aria-label="pretto slider" defaultValue={20} />
+      <PrettoSlider
+        valueLabelDisplay="auto"
+        aria-label="pretto slider"
+        defaultValue={20}
+      />
       <div className={classes.margin} />
       <Typography gutterBottom>Tooltip value label</Typography>
       <Slider
@@ -199,7 +206,9 @@ export default function CustomizedSlider() {
       <Typography gutterBottom>Airbnb</Typography>
       <AirbnbSlider
         ThumbComponent={AirbnbThumbComponent}
-        getAriaLabel={index => (index === 0 ? 'Minimum price' : 'Maximum price')}
+        getAriaLabel={(index) =>
+          index === 0 ? 'Minimum price' : 'Maximum price'
+        }
         defaultValue={[20, 40]}
       />
     </div>

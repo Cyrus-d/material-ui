@@ -1,9 +1,9 @@
 ---
-title: React Transition（过渡动画）组件
+title: React Transition 过渡动画组件
 components: Collapse, Fade, Grow, Slide, Zoom
 ---
 
-# Transitions（过渡动画）
+# Transitions 过渡动画
 
 <p class="description">过渡动画使 UI 更富有表现力并且易于使用。</p>
 
@@ -31,19 +31,19 @@ export default Main() {
 }
 ```
 
-## Collapse（折叠）
+## Collapse 折叠
 
-Expand vertically from the top of the child element. The `collapsedHeight` property can be used to set the minimum height when not expanded.
+从子元素顶部垂直扩展。 `collapsedHeight` 属性可以用于设置未扩展时的最小高度值。
 
 {{"demo": "pages/components/transitions/SimpleCollapse.js", "bg": true}}
 
-## Fade（淡入淡出）
+## Fade 淡入淡出
 
 从透明淡入至不透明。
 
 {{"demo": "pages/components/transitions/SimpleFade.js", "bg": true}}
 
-## Grow（扩展）
+## Grow 扩展
 
 从子元素的中心向外扩展，同时从透明淡入至不透明。
 
@@ -51,18 +51,28 @@ Expand vertically from the top of the child element. The `collapsedHeight` prope
 
 {{"demo": "pages/components/transitions/SimpleGrow.js", "bg": true}}
 
-## Slide（滑动）
+## Slide 滑动
 
-Slide in from the edge of the screen. The `direction` property controls which edge of the screen the transition starts from.
+从屏幕边缘滑入。 `direction` 属性控制从屏幕的哪一个边缘开始。
 
-过渡(Transition) 组件的 `mountOnEnter` 属性保证了只有 `in` 是`true`时，子组件才会被渲染。 这可以保证相对上定位好的组件不会从屏幕外面的位置滚动到视图中。 同样的， 在组件从屏幕中过渡完后，`unmountOnExit` 属性将次组件从 DOM 中移除。
+过渡组件的 `mountOnEnter` 属性使子组件无法被挂载，直到 `in` 为 `true`。 这可以保证相对上定位好的组件不会从屏幕外面的位置滚动到视图中。 同样的， 在组件从屏幕中过渡完后，`unmountOnExit` 属性将次组件从 DOM 中移除。
 
 {{"demo": "pages/components/transitions/SimpleSlide.js", "bg": true}}
 
-## Zoom（放大）
+## Zoom 放大
 
 从子元素的中心向外扩展。
 
 此示例还演示了如何延迟过渡的开始。
 
 {{"demo": "pages/components/transitions/SimpleZoom.js", "bg": true}}
+
+## TransitionComponent prop
+
+这些组件接收 `TransitionComponent` prop 以自定义默认的过渡。 您可以使用上述的任何组件或者是您自己的组件。 它应遵守以下条件：
+
+- 在 prop 中应该有一个 `in` 属性。 这对应于 打开/关闭 状态。
+- 在进入过渡开始时调用 prop 中的 `onEnter` 回调。
+- 在退出过渡完成后调用 prop 中的 `onExited` 回调。 这两个回调允许在关闭并完全过渡 (when closed and fully transitioned) 时卸载子内容。
+
+欲了解更多关于创建自定义过渡的信息，请访问 [React Transition Group Transition docs](http://reactcommunity.org/react-transition-group/transition)。

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
 import Link from 'docs/src/modules/components/Link';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   item: {
     display: 'block',
     paddingTop: 0,
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AppDrawerNavItem(props) {
+export default function AppDrawerNavItem(props) {
   const {
     children,
     depth,
@@ -56,7 +56,7 @@ function AppDrawerNavItem(props) {
   const [open, setOpen] = React.useState(openImmediately);
 
   const handleClick = () => {
-    setOpen(oldOpen => !oldOpen);
+    setOpen((oldOpen) => !oldOpen);
   };
 
   const style = {
@@ -67,6 +67,7 @@ function AppDrawerNavItem(props) {
     return (
       <ListItem className={classes.itemLeaf} disableGutters {...other}>
         <Button
+          color="inherit"
           component={Link}
           naked
           activeClassName={`drawer-active ${classes.active}`}
@@ -86,6 +87,7 @@ function AppDrawerNavItem(props) {
   return (
     <ListItem className={classes.item} disableGutters {...other}>
       <Button
+        color="inherit"
         classes={{
           root: classes.button,
           label: topLevel ? 'algolia-lvl0' : '',
@@ -112,5 +114,3 @@ AppDrawerNavItem.propTypes = {
   title: PropTypes.string.isRequired,
   topLevel: PropTypes.bool,
 };
-
-export default AppDrawerNavItem;

@@ -17,7 +17,7 @@ Thanks for writing tests! Here's a quick run-down on our current setup.
 - [mocha](https://mochajs.org/)
 - [karma](https://karma-runner.github.io/latest/index.html)
 - [enzyme](https://airbnb.io/enzyme/) (old tests only)
-- [vrtest](https://github.com/nathanmarks/vrtest)
+- [vrtest-mui](https://github.com/mui-org/vrtest-mui)
 - [docker](https://docs.docker.com/)
 - [jsdom](https://github.com/jsdom/jsdom)
 
@@ -39,6 +39,65 @@ Deciding where to put a test is (like naming things) a hard problem:
 - If you find yourself using a lot of `data-testid` attributes or you're accessing
   a lot of styles consider adding a component (that doesn't require any interaction)
   to `test/regressions/tests/` e.g. `test/regressions/tests/List/ListWithSomeStyleProp`
+
+### Unexpected calls to `console.error` or `console.war`
+
+By default our test suite fails if any test recorded `console.error` or `console.warn` calls:
+![unexpected console.error call](./unexpected-console-error-call.png)
+
+The failure message includes the name of the test.
+The logged error is prefixed with the test file as well as suffixed with the full test name and test file.
+This should help locating the test in case the top of the stack can't be read due to excessive error messages.
+The error includes the logged message as well as the stacktrace of that message.
+Unfortunately the stacktrace is currently duplicated due to `chai`.
+
+You can explicitly [expect no console calls](#writing-a-test-for-consoleerror-or-consolewarn) for when you're adding a regression test.
+This makes the test more readable and properly fails the test in watchmode if the test had unexpected `console` calls.
+
+### Writing a test for `console.error` or `console.warn`
+
+If you add a new warning via `console.error` or `console.warn` you should add tests that expect this message.
+For tests that expect a call you can use our custom `toWarnDev` or `toErrorDev` matchers.
+The expected messages must be a subset of the actual messages and match the casing.
+The order of these message must match as well.
+
+Example:
+
+```jsx
+function SomeComponent({ variant }) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (variant === 'unexpected') {
+      console.error("That variant doesn't make sense.");
+    }
+    if (variant !== undefined) {
+      console.error('`variant` is deprecated.');
+    }
+  }
+
+  return <div />;
+}
+expect(() => {
+  render(<SomeComponent variant="unexpected" />);
+}).toErrorDev(["That variant doesn't make sense.", '`variant` is deprecated.']);
+```
+
+```js
+function SomeComponent({ variant }) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (variant === 'unexpected') {
+      console.error("That variant doesn't make sense.");
+    }
+    if (variant !== undefined) {
+      console.error('`variant` is deprecated.');
+    }
+  }
+
+  return <div />;
+}
+expect(() => {
+  render(<SomeComponent />);
+}).not.toErrorDev();
+```
 
 #### Visual regression tests
 
@@ -68,11 +127,11 @@ If you want to `grep` for certain tests add `-g STRING_TO_GREP`.
 
 First, we have the **unit test** suite.
 It uses [mocha](https://mochajs.org) and a thin wrapper around `@testing-library/react`.
-Here is an [example](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/Dialog/Dialog.test.js#L87) with the `Dialog` component.
+Here is an [example](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/Dialog/Dialog.test.js#L87) with the `Dialog` component.
 
 Next, we have the **integration** tests. They are mostly used for components that
 act as composite widgets like `Select` or `Menu`.
-Here is an [example](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/test/integration/Menu.test.js#L28) with the `Menu` component.
+Here is an [example](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/test/integration/Menu.test.js#L28) with the `Menu` component.
 
 #### Create HTML coverage reports
 
@@ -110,7 +169,7 @@ Next, we are using [docker](https://github.com/docker/docker) to take screenshot
 ![before](/test/docs-regressions-before.png)
 ![diff](/test/docs-regressions-diff.png)
 
-Here is an [example](https://github.com/mui-org/material-ui/blob/master/test/regressions/tests/Menu/SimpleMenuList.js#L6) with the `Menu` component.
+Here is an [example](https://github.com/mui-org/material-ui/blob/next/test/regressions/tests/Menu/SimpleMenuList.js#L6) with the `Menu` component.
 
 #### Installation
 

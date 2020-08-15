@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
@@ -17,7 +17,10 @@ export default function RangeSlider() {
   const classes = useStyles();
   const [value, setValue] = React.useState<number[]>([20, 37]);
 
-  const handleChange = (event: any, newValue: number | number[]) => {
+  const handleChange = (
+    event: React.SyntheticEvent,
+    newValue: number | number[],
+  ) => {
     setValue(newValue as number[]);
   };
 

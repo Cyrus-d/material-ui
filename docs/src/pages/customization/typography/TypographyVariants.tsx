@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -19,12 +19,12 @@ const theme = createMuiTheme({
 
 export default function TypographyVariants() {
   return (
-    <ThemeProvider theme={theme}>
-      <div>
+    <div>
+      <ThemeProvider theme={theme}>
         <Typography variant="subtitle1">subtitle</Typography>
         <Typography>body1</Typography>
         <Button>Button</Button>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </div>
   );
 }

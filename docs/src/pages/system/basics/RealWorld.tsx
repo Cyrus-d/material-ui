@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -20,12 +20,14 @@ export default function RealWorld() {
             </Box>
           </Grid>
           <Grid item>
-            <Typography>You have lost connection to the internet. This app is offline.</Typography>
+            <Typography>
+              You have lost connection to the internet. This app is offline.
+            </Typography>
           </Grid>
         </Grid>
-        <Grid container justify="flex-end" spacing={1}>
+        <Grid container justifyContent="flex-end" spacing={1}>
           <Grid item>
-            <Button color="primary">Turn on wifi</Button>
+            <Button>Turn on wifi</Button>
           </Grid>
         </Grid>
       </Paper>

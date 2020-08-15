@@ -12,7 +12,7 @@
 - 🦎 Work with any theme object.
 - 💅 Work with the most popular CSS-in-JS solutions.
 - 📦 Less than [4 KB gzipped](https://bundlephobia.com/result?p=@material-ui/system).
-- 🚀 [Fast enough](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-benchmark/README.md#material-uisystem) not to be a bottleneck at runtime.
+- 🚀 [Fast enough](https://github.com/mui-org/material-ui/blob/next/packages/material-ui-benchmark/README.md#material-uisystem) not to be a bottleneck at runtime.
 
 It's important to understand that this package exposes pure (side-effect free) style functions with this signature: `({ theme, ...style }) => style`, **that's it**.
 
@@ -53,7 +53,7 @@ This Box component now supports new [spacing properties](/system/spacing/#api) a
 
 The component can be styled providing any valid CSS values.
 
-### Theming
+### Thématisation
 
 But most of the time, you want to rely on a theme's values to increase the UI consistency. It's preferable to have a predetermined set of padding and color values. Import the theme provider of your styling solution.
 

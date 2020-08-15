@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -69,13 +69,23 @@ function QontoStepIcon(props) {
         [classes.active]: active,
       })}
     >
-      {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
+      {completed ? (
+        <Check className={classes.completed} />
+      ) : (
+        <div className={classes.circle} />
+      )}
     </div>
   );
 }
 
 QontoStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   */
   active: PropTypes.bool,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   */
   completed: PropTypes.bool,
 };
 
@@ -149,12 +159,21 @@ function ColorlibStepIcon(props) {
 }
 
 ColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   */
   active: PropTypes.bool,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   */
   completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
   icon: PropTypes.node,
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
@@ -190,11 +209,11 @@ export default function CustomizedSteppers() {
   const steps = getSteps();
 
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleReset = () => {
@@ -204,21 +223,29 @@ export default function CustomizedSteppers() {
   return (
     <div className={classes.root}>
       <Stepper alternativeLabel activeStep={activeStep}>
-        {steps.map(label => (
+        {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
-      <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
-        {steps.map(label => (
+      <Stepper
+        alternativeLabel
+        activeStep={activeStep}
+        connector={<QontoConnector />}
+      >
+        {steps.map((label) => (
           <Step key={label}>
             <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
-      <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-        {steps.map(label => (
+      <Stepper
+        alternativeLabel
+        activeStep={activeStep}
+        connector={<ColorlibConnector />}
+      >
+        {steps.map((label) => (
           <Step key={label}>
             <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
           </Step>
@@ -236,14 +263,19 @@ export default function CustomizedSteppers() {
           </div>
         ) : (
           <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <Typography className={classes.instructions}>
+              {getStepContent(activeStep)}
+            </Typography>
             <div>
-              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                className={classes.button}
+              >
                 Back
               </Button>
               <Button
                 variant="contained"
-                color="primary"
                 onClick={handleNext}
                 className={classes.button}
               >

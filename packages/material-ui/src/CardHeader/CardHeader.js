@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -20,8 +20,9 @@ export const styles = {
   action: {
     flex: '0 0 auto',
     alignSelf: 'flex-start',
-    marginTop: -8,
+    marginTop: -4,
     marginRight: -8,
+    marginBottom: -4,
   },
   /* Styles applied to the content wrapper element. */
   content: {
@@ -92,6 +93,10 @@ const CardHeader = React.forwardRef(function CardHeader(props, ref) {
 });
 
 CardHeader.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The action to display in the card header.
    */
@@ -101,19 +106,23 @@ CardHeader.propTypes = {
    */
   avatar: PropTypes.node,
   /**
+   * @ignore
+   */
+  children: PropTypes.node,
+  /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
-  component: PropTypes.elementType,
+  component: PropTypes /* @typescript-to-proptypes-ignore */.elementType,
   /**
    * If `true`, `subheader` and `title` won't be wrapped by a Typography component.
    * This can be useful to render an alternative Typography variant by wrapping

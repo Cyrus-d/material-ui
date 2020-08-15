@@ -1,10 +1,7 @@
-/* eslint-disable react/prop-types */
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import createServerRender from 'test/utils/createServerRender';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
-import { createClientRender } from 'test/utils/createClientRender';
+import { createServerRender, createClientRender } from 'test/utils';
 import Portal from './Portal';
 
 describe('<Portal />', () => {
@@ -17,22 +14,25 @@ describe('<Portal />', () => {
       return;
     }
 
-    beforeEach(() => {
-      consoleErrorMock.spy();
-    });
-
-    afterEach(() => {
-      consoleErrorMock.reset();
-    });
-
     it('render nothing on the server', () => {
       const markup1 = serverRender(<div>Bar</div>);
       expect(markup1.text()).to.equal('Bar');
 
-      const markup2 = serverRender(
-        <Portal>
-          <div>Bar</div>
-        </Portal>,
+      let markup2;
+      expect(() => {
+        markup2 = serverRender(
+          <Portal>
+            <div>Bar</div>
+          </Portal>,
+        );
+      }).toErrorDev(
+        // Known issue due to using SSR APIs in a browser environment.
+        // We use 3x useLayoutEffect in the component.
+        [
+          'Warning: useLayoutEffect does nothing on the server',
+          'Warning: useLayoutEffect does nothing on the server',
+          'Warning: useLayoutEffect does nothing on the server',
+        ],
       );
       expect(markup2.text()).to.equal('');
     });
@@ -197,7 +197,7 @@ describe('<Portal />', () => {
 
   it('should call ref after child effect', () => {
     const callOrder = [];
-    const handleRef = node => {
+    const handleRef = (node) => {
       if (node) {
         callOrder.push('ref');
       }

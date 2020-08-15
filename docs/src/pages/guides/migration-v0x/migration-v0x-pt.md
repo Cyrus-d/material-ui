@@ -6,7 +6,7 @@
 
 ### Woah - a API é diferente! Isso significa que 1.0 é completamente diferente, vou ter que aprender o básico de novo, e a migração será praticamente impossível?
 
-Estou feliz que você tenha perguntado! A resposta é não. Os principais conceitos não mudaram. You will notice that the API provides more flexibility, but this has a cost – lower-level components that abstract less complexity.
+Estou feliz que você tenha perguntado! A resposta é não. Os principais conceitos não mudaram. Você vai notar que a API oferece mais flexibilidade, mas isso tem um custo – componentes de nível inferior que abstraem menos complexidade.
 
 ### O que motivou uma mudança tão grande?
 
@@ -47,7 +47,7 @@ Material-UI foi iniciado [4 anos atrás](https://github.com/mui-org/material-ui/
 3. `MuiThemeProvider` é opcional para v1.x., mas se você tem um tema customizado, você é livre para usar as versões v0.x e v1.x do componente, ao mesmo tempo, como neste exemplo:
 
   ```jsx
-  import React from 'react';
+  import * as React from 'react';
   import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'; // v1.x
   import { MuiThemeProvider as V0MuiThemeProvider} from 'material-ui';
   import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -187,4 +187,4 @@ Caminho de atualização do RaisedButton:
 
 ### Continua…
 
-Você migrou sua aplicação com sucesso e deseja ajudar a comunidade? There is an open issue in order to finish this migration guide [#7195](https://github.com/mui-org/material-ui/issues/7195). Qualquer pull request é bem-vindo 😊.
+Você migrou sua aplicação com sucesso e deseja ajudar a comunidade? Existe um problema em aberto para concluir este guia de migração [#7195](https://github.com/mui-org/material-ui/issues/7195). Qualquer pull request é bem-vindo 😊.

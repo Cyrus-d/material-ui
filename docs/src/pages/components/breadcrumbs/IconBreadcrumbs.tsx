@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -30,7 +30,12 @@ export default function IconBreadcrumbs() {
 
   return (
     <Breadcrumbs aria-label="breadcrumb">
-      <Link color="inherit" href="/" onClick={handleClick} className={classes.link}>
+      <Link
+        color="inherit"
+        href="/"
+        onClick={handleClick}
+        className={classes.link}
+      >
         <HomeIcon className={classes.icon} />
         Material-UI
       </Link>

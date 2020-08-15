@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -18,12 +18,12 @@ export default function CircularDeterminate() {
   const [progress, setProgress] = React.useState(0);
 
   React.useEffect(() => {
-    function tick() {
-      // reset when reaching 100%
-      setProgress(oldProgress => (oldProgress >= 100 ? 0 : oldProgress + 1));
-    }
+    const timer = setInterval(() => {
+      setProgress((prevProgress) =>
+        prevProgress >= 100 ? 0 : prevProgress + 10,
+      );
+    }, 800);
 
-    const timer = setInterval(tick, 20);
     return () => {
       clearInterval(timer);
     };
@@ -31,8 +31,11 @@ export default function CircularDeterminate() {
 
   return (
     <div className={classes.root}>
+      <CircularProgress variant="determinate" value={25} />
+      <CircularProgress variant="determinate" value={50} />
+      <CircularProgress variant="determinate" value={75} />
+      <CircularProgress variant="determinate" value={100} />
       <CircularProgress variant="determinate" value={progress} />
-      <CircularProgress variant="determinate" value={progress} color="secondary" />
     </div>
   );
 }

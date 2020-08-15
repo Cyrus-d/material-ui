@@ -1,6 +1,7 @@
-/* eslint-disable no-use-before-define */
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import * as React from 'react';
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
+import NoSsr from '@material-ui/core/NoSsr';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
@@ -31,10 +32,14 @@ const InputWrapper = styled('div')`
 
   & input {
     font-size: 14px;
-    line-height: 26px;
-    padding: 2px 6px;
+    height: 30px;
+    box-sizing: border-box;
+    padding: 4px 6px;
+    width: 0;
+    min-width: 30px;
     flex-grow: 1;
     border: 0;
+    margin: 0;
     outline: 0;
   }
 `;
@@ -78,8 +83,7 @@ const Tag = styled(({ label, onDelete, ...props }) => (
 
 const Listbox = styled('ul')`
   width: 300px;
-  margin: 0;
-  margin-top: 2px;
+  margin: 2px 0 0;
   padding: 0;
   position: absolute;
   list-style: none;
@@ -139,31 +143,33 @@ export default function CustomizedHook() {
     defaultValue: [top100Films[1]],
     multiple: true,
     options: top100Films,
-    getOptionLabel: option => option.title,
+    getOptionLabel: (option) => option.title,
   });
 
   return (
-    <div>
-      <div {...getRootProps()}>
-        <Label {...getInputLabelProps()}>Customized hook</Label>
-        <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-          {value.map((option: FilmOptionType, index: number) => (
-            <Tag label={option.title} {...getTagProps({ index })} />
-          ))}
-          <input {...getInputProps()} />
-        </InputWrapper>
+    <NoSsr>
+      <div>
+        <div {...getRootProps()}>
+          <Label {...getInputLabelProps()}>Customized hook</Label>
+          <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
+            {value.map((option: FilmOptionType, index: number) => (
+              <Tag label={option.title} {...getTagProps({ index })} />
+            ))}
+            <input {...getInputProps()} />
+          </InputWrapper>
+        </div>
+        {groupedOptions.length > 0 ? (
+          <Listbox {...getListboxProps()}>
+            {groupedOptions.map((option, index) => (
+              <li {...getOptionProps({ option, index })}>
+                <span>{option.title}</span>
+                <CheckIcon fontSize="small" />
+              </li>
+            ))}
+          </Listbox>
+        ) : null}
       </div>
-      {groupedOptions.length > 0 ? (
-        <Listbox {...getListboxProps()}>
-          {groupedOptions.map((option, index) => (
-            <li {...getOptionProps({ option, index })}>
-              <span>{option.title}</span>
-              <CheckIcon fontSize="small" />
-            </li>
-          ))}
-        </Listbox>
-      ) : null}
-    </div>
+    </NoSsr>
   );
 }
 
@@ -181,19 +187,34 @@ const top100Films = [
   { title: '12 Angry Men', year: 1957 },
   { title: "Schindler's List", year: 1993 },
   { title: 'Pulp Fiction', year: 1994 },
-  { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
+  {
+    title: 'The Lord of the Rings: The Return of the King',
+    year: 2003,
+  },
   { title: 'The Good, the Bad and the Ugly', year: 1966 },
   { title: 'Fight Club', year: 1999 },
-  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
+  {
+    title: 'The Lord of the Rings: The Fellowship of the Ring',
+    year: 2001,
+  },
+  {
+    title: 'Star Wars: Episode V - The Empire Strikes Back',
+    year: 1980,
+  },
   { title: 'Forrest Gump', year: 1994 },
   { title: 'Inception', year: 2010 },
-  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
+  {
+    title: 'The Lord of the Rings: The Two Towers',
+    year: 2002,
+  },
   { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
   { title: 'Goodfellas', year: 1990 },
   { title: 'The Matrix', year: 1999 },
   { title: 'Seven Samurai', year: 1954 },
-  { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
+  {
+    title: 'Star Wars: Episode IV - A New Hope',
+    year: 1977,
+  },
   { title: 'City of God', year: 2002 },
   { title: 'Se7en', year: 1995 },
   { title: 'The Silence of the Lambs', year: 1991 },
@@ -226,7 +247,11 @@ const top100Films = [
   { title: 'Apocalypse Now', year: 1979 },
   { title: 'Alien', year: 1979 },
   { title: 'Sunset Boulevard', year: 1950 },
-  { title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb', year: 1964 },
+  {
+    title:
+      'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
+    year: 1964,
+  },
   { title: 'The Great Dictator', year: 1940 },
   { title: 'Cinema Paradiso', year: 1988 },
   { title: 'The Lives of Others', year: 2006 },
@@ -246,7 +271,10 @@ const top100Films = [
   { title: 'Citizen Kane', year: 1941 },
   { title: 'North by Northwest', year: 1959 },
   { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
+  {
+    title: 'Star Wars: Episode VI - Return of the Jedi',
+    year: 1983,
+  },
   { title: 'Reservoir Dogs', year: 1992 },
   { title: 'Braveheart', year: 1995 },
   { title: 'M', year: 1931 },
@@ -257,7 +285,10 @@ const top100Films = [
   { title: 'Taxi Driver', year: 1976 },
   { title: 'Lawrence of Arabia', year: 1962 },
   { title: 'Double Indemnity', year: 1944 },
-  { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
+  {
+    title: 'Eternal Sunshine of the Spotless Mind',
+    year: 2004,
+  },
   { title: 'Amadeus', year: 1984 },
   { title: 'To Kill a Mockingbird', year: 1962 },
   { title: 'Toy Story 3', year: 2010 },

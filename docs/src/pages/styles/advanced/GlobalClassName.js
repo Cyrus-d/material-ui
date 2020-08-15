@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { TextField, NoSsr } from '@material-ui/core';
 
@@ -22,7 +22,11 @@ const StyledTextField = styled(TextField)`
 export default function GlobalClassName() {
   return (
     <NoSsr>
-      <StyledTextField label="Deterministic" variant="outlined" id="deterministic-outlined-input" />
+      <StyledTextField
+        label="Deterministic"
+        variant="outlined"
+        id="deterministic-outlined-input"
+      />
     </NoSsr>
   );
 }

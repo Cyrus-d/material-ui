@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
@@ -22,7 +22,7 @@ const styles = {
 export default function DynamicInlineStyle() {
   const [color, setColor] = React.useState('default');
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setColor(event.target.checked ? 'blue' : 'default');
   };
 
@@ -45,7 +45,7 @@ export default function DynamicInlineStyle() {
           ...(color === 'blue' ? styles.buttonBlue : {}),
         }}
       >
-        {'dynamic inline-style'}
+        dynamic inline-style
       </Button>
     </React.Fragment>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,6 +11,11 @@ import Paper from '@material-ui/core/Paper';
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
+  },
+  hideLastBorder: {
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
   },
 });
 
@@ -42,8 +47,8 @@ export default function DenseTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
-            <TableRow key={row.name}>
+          {rows.map((row) => (
+            <TableRow key={row.name} className={classes.hideLastBorder}>
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>

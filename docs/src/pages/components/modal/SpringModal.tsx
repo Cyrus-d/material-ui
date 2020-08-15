@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -27,7 +27,10 @@ interface FadeProps {
   onExited?: () => {};
 }
 
-const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(props, ref) {
+const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(
+  props,
+  ref,
+) {
   const { in: open, children, onEnter, onExited, ...other } = props;
   const style = useSpring({
     from: { opacity: 0 },

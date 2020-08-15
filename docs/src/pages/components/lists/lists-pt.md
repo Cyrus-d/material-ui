@@ -67,9 +67,9 @@ A caixa de seleção é uma ação secundária, sem interferir com o estado do i
 
 {{"demo": "pages/components/lists/CheckboxListSecondary.js", "bg": true}}
 
-### Seletor
+### Interruptor
 
-O seletor é uma ação secundária, sem interferir com o estado do item da lista.
+O interruptor é uma ação secundária, sem interferir com o estado do item da lista.
 
 {{"demo": "pages/components/lists/SwitchListSecondary.js", "bg": true}}
 
@@ -92,3 +92,7 @@ No exemplo a seguir, nós demonstramos como usar [react-window](https://github.c
 {{"demo": "pages/components/lists/VirtualizedList.js", "bg": true}}
 
 O uso de [react-window](https://github.com/bvaughn/react-window), quando possível, é recomendado. Se no seu caso esta biblioteca não resolver, você deve considerar o uso de [react-virtualized](https://github.com/bvaughn/react-virtualized), e em seguida, como alternativa [react-virtuoso](https://github.com/petyosi/react-virtuoso).
+
+## Customização
+
+🎨 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://mui-treasury.com/styles/list-item).

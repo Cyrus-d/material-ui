@@ -1,9 +1,9 @@
-import memoize from './memoize';
 import { readFileSync } from 'fs';
 import { parseSync } from '@babel/core';
 import traverse from '@babel/traverse';
+import memoize from './memoize';
 
-const getJSExports = memoize(file => {
+const getJSExports = memoize((file) => {
   const result = new Set();
 
   const ast = parseSync(readFileSync(file, 'utf8'), {

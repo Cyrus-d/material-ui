@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,7 +8,7 @@ import Switch from '@material-ui/core/Switch';
 export default function DynamicThemeNesting() {
   const [color, setColor] = React.useState('default');
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setColor(event.target.checked ? 'blue' : 'default');
   };
 
@@ -41,7 +41,7 @@ export default function DynamicThemeNesting() {
       />
       <ThemeProvider theme={theme}>
         <Button variant="contained" color="secondary">
-          {'Theme nesting'}
+          Theme nesting
         </Button>
       </ThemeProvider>
     </React.Fragment>

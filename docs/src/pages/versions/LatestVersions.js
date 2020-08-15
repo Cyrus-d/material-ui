@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -30,7 +30,7 @@ function LatestVersions(props) {
                 variant="body2"
                 color="secondary"
                 rel="nofollow"
-                href="https://material-ui.netlify.com/"
+                href="https://material-ui.netlify.app/"
               >
                 Documentation
               </Link>
@@ -54,7 +54,7 @@ function LatestVersions(props) {
                 variant="body2"
                 color="secondary"
                 rel="nofollow"
-                href="https://next--material-ui.netlify.com/"
+                href="https://next--material-ui.netlify.app/"
               >
                 Documentation
               </Link>

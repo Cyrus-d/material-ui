@@ -1,6 +1,5 @@
 // https://github.com/airbnb/enzyme/issues/1792
 import 'core-js/modules/es6.array.from';
-
 import './utils/init';
 
 const integrationContext = require.context(
@@ -10,5 +9,8 @@ const integrationContext = require.context(
 );
 integrationContext.keys().forEach(integrationContext);
 
-const unitContext = require.context('../packages/material-ui/src/', true, /\.test\.js$/);
-unitContext.keys().forEach(unitContext);
+const coreUnitContext = require.context('../packages/material-ui/src/', true, /\.test\.js$/);
+coreUnitContext.keys().forEach(coreUnitContext);
+
+const labUnitContext = require.context('../packages/material-ui-lab/src/', true, /\.test\.js$/);
+labUnitContext.keys().forEach(labUnitContext);

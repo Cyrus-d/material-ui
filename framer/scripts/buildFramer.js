@@ -62,11 +62,11 @@ function options(type, separator) {
   let optionsString = '';
   if (type.value) {
     if (type.name === 'enum') {
-      type.value.forEach(value => {
+      type.value.forEach((value) => {
         optionsString += `${value.value}${separator}`;
       });
     } else if (type.name === 'union') {
-      type.value.forEach(value => {
+      type.value.forEach((value) => {
         optionsString += `${value.name}${separator}`;
       });
     }
@@ -90,8 +90,11 @@ function getTemplateStrings(reactAPI) {
   let controls = '';
   let style = '';
 
-  reactAPI.propNames.forEach(propName => {
+  reactAPI.propNames.forEach((propName) => {
     const prop = reactAPI.props[propName];
+    if (prop === undefined) {
+      throw new TypeError(`Prop '${propName}' does not exist in component '${reactAPI.name}'.`);
+    }
     prop.name = propName;
 
     if (ignore(reactAPI, prop)) {
@@ -101,55 +104,65 @@ function getTemplateStrings(reactAPI) {
     /**
      * TS Interface
      */
-    const propTypeTS = Object.assign({}, prop.type);
+    const propTypeTS = { ...prop.type };
 
-    // TODO: Refactor as switch?
-    if (propTypeTS.name === 'bool') {
-      propTypeTS.name = 'boolean';
-    }
-    if (propTypeTS.name === 'color') {
-      propTypeTS.name = 'string';
-    }
-    if (propTypeTS.name === 'file') {
-      propTypeTS.name = 'string';
-    }
-    if (propTypeTS.name === 'image') {
-      propTypeTS.name = 'string';
-    }
-    if (propTypeTS.name === 'node') {
-      propTypeTS.name = 'React.ReactNode';
-    }
-    if (propTypeTS.name === 'element') {
-      propTypeTS.name = 'React.ReactElement<any>';
-    }
-    if (propTypeTS.name === 'func') {
-      propTypeTS.name = '() => void';
-    }
-    if (propTypeTS.name === 'array') {
-      propTypeTS.name = 'string[]';
+    //  Refactored as switch
+
+    switch (propTypeTS.name) {
+      case 'bool':
+        propTypeTS.name = 'boolean';
+        break;
+
+      case 'color':
+      case 'file':
+      case 'image':
+        propTypeTS.name = 'string';
+        break;
+
+      case 'node':
+        propTypeTS.name = 'React.ReactNode';
+        break;
+
+      case 'element':
+        propTypeTS.name = 'React.ReactElement<any>';
+        break;
+
+      case 'func':
+        propTypeTS.name = '() => void';
+        break;
+
+      case 'array':
+        propTypeTS.name = 'string[]';
+        break;
+
+      default:
+        break;
     }
 
-    tsInterface += `  ${propName}${propTypeTS.required ? '' : '?'}: ${
-      propTypeTS.value ? `${options(propTypeTS, ' | ')}` : `${propTypeTS.name}`
-    };\n`;
+    tsInterface += `  ${propName}${
+      propTypeTS.required || prop.defaultValue !== undefined ? '' : '?'
+    }: ${propTypeTS.value ? `${options(propTypeTS, ' | ')}` : `${propTypeTS.name}`};\n`;
 
+    const preventTypeWidening = propTypeTS.name === 'enum';
     /**
      * Default values
      */
     if (prop.defaultValue) {
-      defaults += `  ${propName}: ${prop.defaultValue.value},\n`;
+      defaults += `  ${propName}: ${prop.defaultValue.value}${
+        preventTypeWidening ? ` as ${prop.defaultValue.value}` : ''
+      },\n`;
     }
 
     /**
      * Property controls
      */
-    const propTypeControls = Object.assign({}, prop.type);
+    const propTypeControls = { ...prop.type };
 
     if (propTypeControls.name === 'bool') {
       propTypeControls.name = 'boolean';
     }
 
-    const { name, value, hidden, title, ...other } = propTypeControls;
+    const { name, value, hidden, raw, title, ...other } = propTypeControls;
 
     if (!ignoredControls.includes(prop.name)) {
       controls += `
@@ -172,7 +185,7 @@ ${propName}: {
 
   if (componentSettings[reactAPI.name].style) {
     const keys = Object.keys(componentSettings[reactAPI.name].style);
-    keys.forEach(key => {
+    keys.forEach((key) => {
       style += `  ${key}: '${componentSettings[reactAPI.name].style[key]}',\n`;
     });
   }
@@ -188,7 +201,7 @@ ${propName}: {
 }
 
 function ensureExists(pat, mask, cb) {
-  mkdir(pat, mask, err => {
+  mkdir(pat, mask, (err) => {
     if (err) {
       if (err.code === 'EEXIST') {
         cb(null); // ignore the error if the folder already exists
@@ -202,7 +215,7 @@ function ensureExists(pat, mask, cb) {
 }
 
 function writeFile(reactAPI) {
-  ensureExists(framerDirectory, 0o744, err => {
+  ensureExists(framerDirectory, 0o744, (err) => {
     if (err) {
       console.log('Error creating directory', framerDirectory);
       return;
@@ -252,7 +265,7 @@ function buildFramer(componentObject) {
 function run() {
   const components = findComponents(path.resolve(process.cwd(), args[2]));
 
-  components.forEach(component => {
+  components.forEach((component) => {
     if (args[4]) {
       if (args[4] === path.parse(component.filename).name) {
         buildFramer(component);

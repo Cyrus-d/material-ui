@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import withWidth from '@material-ui/core/withWidth';
 import Typography from '@material-ui/core/Typography';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
@@ -16,7 +16,7 @@ function WithWidth(props: { width: Breakpoint }) {
   const Component = components[width] || 'span';
 
   return (
-    <Typography variant="subtitle1">
+    <Typography>
       <Component>{`Current width: ${width}`}</Component>
     </Typography>
   );

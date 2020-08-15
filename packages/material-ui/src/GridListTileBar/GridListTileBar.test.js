@@ -1,22 +1,16 @@
-import React from 'react';
-import { assert } from 'chai';
-import { createMount, createShallow, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { expect } from 'chai';
+import { createShallow, getClasses, createMount, describeConformance } from 'test/utils';
 import GridListTileBar from './GridListTileBar';
 
 describe('<GridListTileBar />', () => {
   let classes;
-  let mount;
+  const mount = createMount();
   let shallow;
 
   before(() => {
     classes = getClasses(<GridListTileBar title="classes" />);
-    mount = createMount({ strict: true });
     shallow = createShallow({ dive: true });
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<GridListTileBar title="conform?" />, () => ({
@@ -37,11 +31,7 @@ describe('<GridListTileBar />', () => {
     it('should renders title', () => {
       const wrapper = shallow(<GridListTileBar title={tileData.title} />);
 
-      assert.strictEqual(
-        wrapper.children('div').text(),
-        tileData.title,
-        'should contain the title',
-      );
+      expect(wrapper.children('div').text()).to.equal(tileData.title);
     });
   });
 });

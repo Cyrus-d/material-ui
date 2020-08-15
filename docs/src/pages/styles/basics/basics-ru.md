@@ -11,7 +11,7 @@ Material-UI стремится обеспечить прочную основу 
 Подход к стилизации Material-UI вдохновлен многими другими библиотеками стилей, такими как [ styled-components ](https://www.styled-components.com/) и [ emotion](https://emotion.sh/).
 
 - 💅 Вы можете ожидать [всех преимуществ](https://www.styled-components.com/docs/basics#motivation), которые имеются в styled-components.
-- 🚀 [невероятно быстро](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-benchmark/README.md#material-uistyles) ,
+- 🚀 [невероятно быстро](https://github.com/mui-org/material-ui/blob/next/packages/material-ui-benchmark/README.md#material-uistyles) ,
 - 🧩 возможность расширения с помощью [плагина](https://github.com/cssinjs/jss/blob/master/docs/plugins.md) API.
 - ⚡️ решение использует [ JSS ](https://github.com/cssinjs/jss) в своей основе - [ высокая производительность ](https://github.com/cssinjs/jss/blob/master/docs/performance.md) компилятора JavaScript в CSS, который работает и во время выполнения и на стороне сервера.
 - 📦 Менее [ 15 КБ в архиве ](https://bundlephobia.com/result?p=@material-ui/styles) ; и не увеличивает размер пакета, если используется вместе с Material-UI.
@@ -37,7 +37,7 @@ yarn add @material-ui/styles
 ### Hook API
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -66,7 +66,7 @@ export default function Hook() {
 Примечание: это относится только к синтаксису вызова. Для определения стилей по-прежнему используется объект JSS. Вы можете [ изменить это поведение ](/styles/advanced/#string-templates) (с некоторыми ограничениями).
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -90,7 +90,7 @@ export default function StyledComponents() {
 ### Higher-order component API
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -204,7 +204,7 @@ Material-UI's styles are powered by the [@material-ui/styles](https://www.npmjs.
 
 Чтобы устранить необходимость постоянного подключения темы, к реэкспортированным модулям применяется дефолтная тема Material-UI. Это относится к модулям: `makeStyles`, `styled`, `withTheme`, `useTheme` и `withStyles` 
 
-For instance:
+Например:
 
 ```js
 // Re-export with a default theme

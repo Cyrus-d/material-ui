@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
@@ -43,11 +43,19 @@ export default function CustomizedInputBase() {
         placeholder="Search Google Maps"
         inputProps={{ 'aria-label': 'search google maps' }}
       />
-      <IconButton type="submit" className={classes.iconButton} aria-label="search">
+      <IconButton
+        type="submit"
+        className={classes.iconButton}
+        aria-label="search"
+      >
         <SearchIcon />
       </IconButton>
       <Divider className={classes.divider} orientation="vertical" />
-      <IconButton color="primary" className={classes.iconButton} aria-label="directions">
+      <IconButton
+        color="primary"
+        className={classes.iconButton}
+        aria-label="directions"
+      >
         <DirectionsIcon />
       </IconButton>
     </Paper>

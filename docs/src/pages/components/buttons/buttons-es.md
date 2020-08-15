@@ -1,6 +1,6 @@
 ---
 title: Componente de React Button
-components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
+components: Button, IconButton, ButtonBase
 ---
 
 # Button (botón)
@@ -19,11 +19,9 @@ components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
 
 Los [Botones contenidos](https://material.io/design/components/buttons.html#contained-button) son de alto énfasis, distinguidos por el uso de elevación y relleno. Contienen acciones que son primarias para la aplicación.
 
-El último ejemplo de esta demostración muestra cómo usar un botón de subir archivos.
-
 {{"demo": "pages/components/buttons/ContainedButtons.js"}}
 
-You can remove the elevation with the `disableElevation` prop.
+Se puede eliminar la elevación con la prop `disableElevation`.
 
 {{"demo": "pages/components/buttons/DisableElevation.js"}}
 
@@ -40,51 +38,23 @@ En las tarjetas, los botones de texto ayudan a mantener un énfasis en el conten
 
 ## Botones con Contorno
 
-[Los botones con contorno](https://material.io/design/components/buttons.html#outlined-button) son botones de énfasis intermedio. Estos contienen acciones que son importantes, sin ser primarias, dentro de una aplicación.
+[Botones con contorno (outlined)](https://material.io/design/components/buttons.html#outlined-button) son de énfasis medio. Contienen acciones que son importantes, pero no primarias en la app.
 
-Los botones con contorno tambien son una alternativa de énfasis más bajo que los botones contenidos, y de énfasis más alto que los botones de texto.
+Los botones delineados también son una alternativa de menos énfasis que los botones contenidos, o de mayor énfasis que los botones de texto.
 
 {{"demo": "pages/components/buttons/OutlinedButtons.js"}}
 
-## Botones Agrupados
+## Handling clicks
 
-Los `ButtonGroup` pueden ser usados para agrupar botones.
+All components accept an `onClick` handler that is applied to the root DOM element.
 
-{{"demo": "pages/components/buttons/GroupedButtons.js"}}
+```jsx
+<Button onClick={() => { alert('clicked') }}>Click me</Button>
+```
 
-### Group sizes and colors
+Note that the documentation [avoids](/guides/api/#native-properties) mentioning native props (there are a lot) in the API section of the components.
 
-{{"demo": "pages/components/buttons/GroupSizesColors.js"}}
-
-### Group orientation
-
-{{"demo": "pages/components/buttons/GroupOrientation.js"}}
-
-### Split Button
-
-ButtonGroup can also be used to create a split button. The dropdown can change the button action (as in this example), or be used to immediately trigger a related action.
-
-{{"demo": "pages/components/buttons/SplitButton.js"}}
-
-## Botones de acción flotantes
-
-Un [botón de acción flotante](https://material.io/design/components/buttons-floating-action-button.html) (BAF) desempeña la acción principal, o más común, en una pantalla. Aparece en frente de todo el contenido de la pantalla, normalmente como una forma circular con un icono en el centro. Los BAF existen en dos formas: regular, y extendido.
-
-Sólo se recomienda usar un BAF si es la manera más apta para presentar la acción primaria de una pantalla.
-
-Se recomienda solo un botón flotante por pantalla para representar la acción más común.
-
-{{"demo": "pages/components/buttons/FloatingActionButtons.js"}}
-
-El botón de acción flotante aparece en la página animado como un pedazo de material en expansión, por defecto.
-
-Un botón de acción flotante que aparece en varias páginas laterales (como páginas en pestañas) debe desaparecer por un momento, y luego aparecer de nuevo si su acción cambia.
-
-La transición Zoom se puede usar para lograr esto. Ten en cuenta que ya que las animaciones de salida y de entrada son desencadenados al mismo tiempo, usamos `enterDelay` para permitir que termine la animación del Botón de Acción Flotante saliente antes de que entre el nuevo.
-
-{{"demo": "pages/components/buttons/FloatingActionButtonZoom.js", "bg": true}}
-
-## Upload button
+## Botón de subida
 
 {{"demo": "pages/components/buttons/UploadButtons.js"}}
 
@@ -108,23 +78,23 @@ Los iconos son también apropiados para botones toggle que permiten marcar o des
 
 {{"demo": "pages/components/buttons/IconButtons.js"}}
 
-## Customized buttons
+## Botones Personalizados
 
 Here are some examples of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js", "defaultCodeOpen": false}}
 
-👑 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/components/button).
+🎨 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/styles/button).
 
 ## Botones Complejos
 
 Los Botones de Texto, los Botones Contenidos, los Botones de Acción Flotantes y los Botones con Iconos se construyen sobre el mismo componente: el `ButtonBase`. Se puede sacar partido de este componente básico para construir interacciones personalizadas.
 
-{{"demo": "pages/components/buttons/ButtonBases.js"}}
+{{"demo": "pages/components/buttons/ButtonBase.js"}}
 
 ## Librería externa de routing
 
-One common use case is to use the button to trigger navigation to a new page. El componente `ButtonBase` provee un atributo para tratar este uso: `component`. Sin embargo, para ciertos rellenos `ButtonBase` requiere el nodo DOM del componente proporcionado. Esto se logra adjuntando una referencia al componente y esperando que el componente reenvíe esta referencia al nodo DOM subyacente. Given that many of the interactive components rely on `ButtonBase`, you should be able to take advantage of it everywhere.
+Un caso de uso común es emplear el botón para iniciar la navegación hacia una nueva página. El componente `ButtonBase` provee un atributo para tratar este uso: `component`. Sin embargo, para ciertos rellenos `ButtonBase` requiere el nodo DOM del componente proporcionado. Esto se logra adjuntando una referencia al componente y esperando que el componente reenvíe esta referencia al nodo DOM subyacente. Given that many of the interactive components rely on `ButtonBase`, you should be able to take advantage of it everywhere.
 
 Here is an [integration example with react-router](/guides/composition/#button).
 
@@ -147,7 +117,7 @@ If you wish to use `not-allowed`, you have two options:
 
 However:
 
-- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements)
+- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements).
 - The cursor won't change if you render something other than a button element, for instance, a link `<a>` element.
 
 2. **DOM change**. You can wrap the button:

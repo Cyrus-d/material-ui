@@ -4,14 +4,14 @@
 
 ## Official examples
 
-You can find some example projects in the [GitHub repository](https://github.com/mui-org/material-ui) under the [`/examples`](https://github.com/mui-org/material-ui/tree/master/examples) folder:
+You can find some example projects in the [GitHub repository](https://github.com/mui-org/material-ui) under the [`/examples`](https://github.com/mui-org/material-ui/tree/next/examples) folder:
 
-- [Create React App](https://github.com/mui-org/material-ui/tree/master/examples/create-react-app)
-- [Gatsby](https://github.com/mui-org/material-ui/tree/master/examples/gatsby)
-- [Next.js](https://github.com/mui-org/material-ui/tree/master/examples/nextjs)
-- [Preact](https://github.com/mui-org/material-ui/tree/master/examples/preact)
-- [CDN](https://github.com/mui-org/material-ui/tree/master/examples/cdn)
-- [Plain server-side](https://github.com/mui-org/material-ui/tree/master/examples/ssr)
+- [Create React App](https://github.com/mui-org/material-ui/tree/next/examples/create-react-app) ([TypeScript version](https://github.com/mui-org/material-ui/tree/next/examples/create-react-app-with-typescript))
+- [Gatsby](https://github.com/mui-org/material-ui/tree/next/examples/gatsby)
+- [Next.js](https://github.com/mui-org/material-ui/tree/next/examples/nextjs) ([TypeScript version](https://github.com/mui-org/material-ui/tree/next/examples/nextjs-with-typescript))
+- [Preact](https://github.com/mui-org/material-ui/tree/next/examples/preact)
+- [CDN](https://github.com/mui-org/material-ui/tree/next/examples/cdn)
+- [Plain server-side](https://github.com/mui-org/material-ui/tree/next/examples/ssr)
 - And more
 
 Create React App is an awesome project for learning React.
@@ -19,12 +19,12 @@ Have a look at [the alternatives available](https://github.com/facebook/create-r
 
 The source code for this documentation site is also included in the repository.
 This is a slightly more complex project.
-Check out the [`/docs`](https://github.com/mui-org/material-ui/tree/master/docs) folder for
+Check out the [`/docs`](https://github.com/mui-org/material-ui/tree/next/docs) folder for
 build instructions.
 
 ## More advanced example projects
 
-If you want to start with a more complete and real-world example, you could take a look at the [premium themes & templates](https://themes.material-ui.com/) or:
+If you want to start with a more complete and real-world example, you could take a look at the [premium themes & templates](https://material-ui.com/store/?utm_source=docs&utm_medium=referral&utm_campaign=example-projects-store) or:
 
 ### Free
 
@@ -37,12 +37,13 @@ If you want to start with a more complete and real-world example, you could take
   - All PWA features included (SW, Notifications, deferred installation prompt and more)
   - Optimized and scalable performance (all ~100 points on Lighthouse)
 
-- [React + Material-UI + Firebase](https://github.com/Phoqe/react-material-ui-firebase):
+- [RMUIF](https://github.com/rmuif/web):
 
-  - Bootstrapped with Create React App, the same tooling works out of the box
-  - Built on top of Firebase with Authentication, Cloud Firestore, Cloud Functions, Storage, and Performance Monitoring working from the start
-  - Robust routing with React Router including error handling
-  - Extensive mobile support with full-screen dialogs and react-swipeable-views for tabs
+  - Bootstrapped with Create React App
+  - Firebase back-end with most of their products for the web included, e.g., Authentication and Cloud Firestore
+  - Routing with React Router, including protected routes and error handling
+  - Extensive and well-tested mobile support with full-screen dialogs and swipeable tabs
+  - Cross-platform application monitoring with Sentry
 
 - [Material Sense](https://github.com/alexanmtz/material-sense):
 
@@ -50,6 +51,14 @@ If you want to start with a more complete and real-world example, you could take
   - React Router included with a navigation example
   - A docker container with an Nginx server for production build
   - Created with Create React App
+
+- [React SaaS Template](https://github.com/dunky11/react-saas-template):
+
+  - Created with Create React App
+  - Features a landing page, a blog, an area to login/register and an admin-dashboard
+  - Fully routed using react-router
+  - Lazy loads components to boost performance
+  - Components for statistics, text with emoji support, image upload and much more...
 
 ### Paid
 

@@ -1,7 +1,8 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import debounce from '../utils/debounce';
 import useForkRef from '../utils/useForkRef';
+import { ownerWindow } from '../utils';
 
 function getStyleValue(computedStyle, property) {
   return parseInt(computedStyle[property], 10) || 0;
@@ -27,23 +28,29 @@ const styles = {
 };
 
 const TextareaAutosize = React.forwardRef(function TextareaAutosize(props, ref) {
-  const { onChange, rows, rowsMax, rowsMin: rowsMinProp = 1, style, value, ...other } = props;
-
-  const rowsMin = rows || rowsMinProp;
+  const { onChange, maxRows, minRows = 1, style, value, ...other } = props;
 
   const { current: isControlled } = React.useRef(value != null);
   const inputRef = React.useRef(null);
   const handleRef = useForkRef(ref, inputRef);
   const shadowRef = React.useRef(null);
+  const renders = React.useRef(0);
   const [state, setState] = React.useState({});
 
   const syncHeight = React.useCallback(() => {
     const input = inputRef.current;
-    const computedStyle = window.getComputedStyle(input);
+    const containerWindow = ownerWindow(input);
+    const computedStyle = containerWindow.getComputedStyle(input);
 
     const inputShallow = shadowRef.current;
     inputShallow.style.width = computedStyle.width;
     inputShallow.value = input.value || props.placeholder || 'x';
+    if (inputShallow.value.slice(-1) === '\n') {
+      // Certain fonts which overflow the line height will cause the textarea
+      // to report a different scrollHeight depending on whether the last line
+      // is empty. Make it non-empty to avoid this issue.
+      inputShallow.value += ' ';
+    }
 
     const boxSizing = computedStyle['box-sizing'];
     const padding =
@@ -62,11 +69,11 @@ const TextareaAutosize = React.forwardRef(function TextareaAutosize(props, ref) 
     // The height of the outer content
     let outerHeight = innerHeight;
 
-    if (rowsMin) {
-      outerHeight = Math.max(Number(rowsMin) * singleRowHeight, outerHeight);
+    if (minRows) {
+      outerHeight = Math.max(Number(minRows) * singleRowHeight, outerHeight);
     }
-    if (rowsMax) {
-      outerHeight = Math.min(Number(rowsMax) * singleRowHeight, outerHeight);
+    if (maxRows) {
+      outerHeight = Math.min(Number(maxRows) * singleRowHeight, outerHeight);
     }
     outerHeight = Math.max(outerHeight, singleRowHeight);
 
@@ -74,33 +81,48 @@ const TextareaAutosize = React.forwardRef(function TextareaAutosize(props, ref) 
     const outerHeightStyle = outerHeight + (boxSizing === 'border-box' ? padding + border : 0);
     const overflow = Math.abs(outerHeight - innerHeight) <= 1;
 
-    setState(prevState => {
-      // Need a large enough different to update the height.
+    setState((prevState) => {
+      // Need a large enough difference to update the height.
       // This prevents infinite rendering loop.
       if (
-        (outerHeightStyle > 0 &&
+        renders.current < 20 &&
+        ((outerHeightStyle > 0 &&
           Math.abs((prevState.outerHeightStyle || 0) - outerHeightStyle) > 1) ||
-        prevState.overflow !== overflow
+          prevState.overflow !== overflow)
       ) {
+        renders.current += 1;
         return {
           overflow,
           outerHeightStyle,
         };
       }
 
+      if (process.env.NODE_ENV !== 'production') {
+        if (renders.current === 20) {
+          console.error(
+            [
+              'Material-UI: Too many re-renders. The layout is unstable.',
+              'TextareaAutosize limits the number of renders to prevent an infinite loop.',
+            ].join('\n'),
+          );
+        }
+      }
+
       return prevState;
     });
-  }, [rowsMax, rowsMin, props.placeholder]);
+  }, [maxRows, minRows, props.placeholder]);
 
   React.useEffect(() => {
     const handleResize = debounce(() => {
+      renders.current = 0;
       syncHeight();
     });
 
-    window.addEventListener('resize', handleResize);
+    const containerWindow = ownerWindow(inputRef.current);
+    containerWindow.addEventListener('resize', handleResize);
     return () => {
       handleResize.clear();
-      window.removeEventListener('resize', handleResize);
+      containerWindow.removeEventListener('resize', handleResize);
     };
   }, [syncHeight]);
 
@@ -108,7 +130,13 @@ const TextareaAutosize = React.forwardRef(function TextareaAutosize(props, ref) 
     syncHeight();
   });
 
-  const handleChange = event => {
+  React.useEffect(() => {
+    renders.current = 0;
+  }, [value]);
+
+  const handleChange = (event) => {
+    renders.current = 0;
+
     if (!isControlled) {
       syncHeight();
     }
@@ -125,10 +153,10 @@ const TextareaAutosize = React.forwardRef(function TextareaAutosize(props, ref) 
         onChange={handleChange}
         ref={handleRef}
         // Apply the rows prop to get a "correct" first SSR paint
-        rows={rowsMin}
+        rows={minRows}
         style={{
           height: state.outerHeightStyle,
-          // Need a large enough different to allow scrolling.
+          // Need a large enough difference to allow scrolling.
           // This prevents infinite rendering loop.
           overflow: state.overflow ? 'hidden' : null,
           ...style,
@@ -148,10 +176,22 @@ const TextareaAutosize = React.forwardRef(function TextareaAutosize(props, ref) 
 });
 
 TextareaAutosize.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * @ignore
    */
   className: PropTypes.string,
+  /**
+   * Maximum number of rows to display.
+   */
+  maxRows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * Minimum number of rows to display.
+   */
+  minRows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * @ignore
    */
@@ -161,27 +201,17 @@ TextareaAutosize.propTypes = {
    */
   placeholder: PropTypes.string,
   /**
-   * Use `rowsMin` instead. The prop will be removed in v5.
-   *
-   * @deprecated
-   */
-  rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  /**
-   * Maximum number of rows to display.
-   */
-  rowsMax: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  /**
-   * Minimum number of rows to display.
-   */
-  rowsMin: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  /**
    * @ignore
    */
   style: PropTypes.object,
   /**
    * @ignore
    */
-  value: PropTypes.any,
+  value: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.number,
+    PropTypes.string,
+  ]),
 };
 
 export default TextareaAutosize;

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import HiddenJs from './HiddenJs';
 import HiddenCss from './HiddenCss';
@@ -58,25 +58,25 @@ function Hidden(props) {
 }
 
 Hidden.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The content of the component.
    */
   children: PropTypes.node,
   /**
-   * @ignore
-   */
-  className: PropTypes.string,
-  /**
    * Specify which implementation to use.  'js' is the default, 'css' works better for
    * server-side rendering.
    */
-  implementation: PropTypes.oneOf(['js', 'css']),
+  implementation: PropTypes.oneOf(['css', 'js']),
   /**
    * You can use this prop when choosing the `js` implementation with server-side rendering.
    *
    * As `window.innerWidth` is unavailable on the server,
    * we default to rendering an empty component during the first mount.
-   * You might want to use an heuristic to approximate
+   * You might want to use a heuristic to approximate
    * the screen width of the client browser screen width.
    *
    * For instance, you could be using the user-agent or the client-hints.
@@ -104,7 +104,7 @@ Hidden.propTypes = {
    */
   only: PropTypes.oneOfType([
     PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
-    PropTypes.arrayOf(PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl'])),
+    PropTypes.arrayOf(PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired),
   ]),
   /**
    * If `true`, screens this size and down will be hidden.

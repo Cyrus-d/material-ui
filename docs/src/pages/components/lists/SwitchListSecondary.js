@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -10,7 +10,7 @@ import Switch from '@material-ui/core/Switch';
 import WifiIcon from '@material-ui/icons/Wifi';
 import BluetoothIcon from '@material-ui/icons/Bluetooth';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     maxWidth: 360,
@@ -22,7 +22,7 @@ export default function SwitchListSecondary() {
   const classes = useStyles();
   const [checked, setChecked] = React.useState(['wifi']);
 
-  const handleToggle = value => () => {
+  const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -36,7 +36,10 @@ export default function SwitchListSecondary() {
   };
 
   return (
-    <List subheader={<ListSubheader>Settings</ListSubheader>} className={classes.root}>
+    <List
+      subheader={<ListSubheader>Settings</ListSubheader>}
+      className={classes.root}
+    >
       <ListItem>
         <ListItemIcon>
           <WifiIcon />
@@ -47,7 +50,9 @@ export default function SwitchListSecondary() {
             edge="end"
             onChange={handleToggle('wifi')}
             checked={checked.indexOf('wifi') !== -1}
-            inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
+            inputProps={{
+              'aria-labelledby': 'switch-list-label-wifi',
+            }}
           />
         </ListItemSecondaryAction>
       </ListItem>
@@ -61,7 +66,9 @@ export default function SwitchListSecondary() {
             edge="end"
             onChange={handleToggle('bluetooth')}
             checked={checked.indexOf('bluetooth') !== -1}
-            inputProps={{ 'aria-labelledby': 'switch-list-label-bluetooth' }}
+            inputProps={{
+              'aria-labelledby': 'switch-list-label-bluetooth',
+            }}
           />
         </ListItemSecondaryAction>
       </ListItem>

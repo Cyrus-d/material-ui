@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -63,12 +63,12 @@ export default function HorizontalNonLinearStepperWithError() {
       newSkipped.delete(activeStep);
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleSkip = () => {
@@ -78,12 +78,12 @@ export default function HorizontalNonLinearStepperWithError() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setSkipped(prevSkipped => {
+    setSkipped((prevSkipped) => {
       const newSkipped = new Set(prevSkipped.values());
       newSkipped.add(activeStep);
       return newSkipped;
     });
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleReset = () => {
@@ -95,7 +95,10 @@ export default function HorizontalNonLinearStepperWithError() {
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
-          const labelProps: { optional?: React.ReactNode; error?: boolean } = {};
+          const labelProps: {
+            optional?: React.ReactNode;
+            error?: boolean;
+          } = {};
           if (isStepOptional(index)) {
             labelProps.optional = (
               <Typography variant="caption" color="error">
@@ -128,15 +131,20 @@ export default function HorizontalNonLinearStepperWithError() {
           </div>
         ) : (
           <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <Typography className={classes.instructions}>
+              {getStepContent(activeStep)}
+            </Typography>
             <div>
-              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                className={classes.button}
+              >
                 Back
               </Button>
               {isStepOptional(activeStep) && (
                 <Button
                   variant="contained"
-                  color="primary"
                   onClick={handleSkip}
                   className={classes.button}
                 >
@@ -145,7 +153,6 @@ export default function HorizontalNonLinearStepperWithError() {
               )}
               <Button
                 variant="contained"
-                color="primary"
                 onClick={handleNext}
                 className={classes.button}
               >

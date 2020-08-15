@@ -1,20 +1,19 @@
 // @inheritedComponent ButtonBase
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { fade, withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import { capitalize } from '@material-ui/core/utils';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     ...theme.typography.button,
     boxSizing: 'border-box',
     borderRadius: theme.shape.borderRadius,
-    height: 48,
-    padding: '0px 12px',
+    padding: 11,
     border: `1px solid ${fade(theme.palette.action.active, 0.12)}`,
     color: fade(theme.palette.action.active, 0.38),
     '&$selected': {
@@ -56,14 +55,12 @@ export const styles = theme => ({
   },
   /* Styles applied to the root element if `size="small"`. */
   sizeSmall: {
-    height: 40,
-    padding: '0px 8px',
+    padding: 7,
     fontSize: theme.typography.pxToRem(13),
   },
   /* Styles applied to the root element if `size="large"`. */
   sizeLarge: {
-    height: 56,
-    padding: '0px 16px',
+    padding: 15,
     fontSize: theme.typography.pxToRem(15),
   },
 });
@@ -75,7 +72,6 @@ const ToggleButton = React.forwardRef(function ToggleButton(props, ref) {
     className,
     disabled = false,
     disableFocusRipple = false,
-    disableRipple = false,
     onChange,
     onClick,
     selected,
@@ -84,7 +80,7 @@ const ToggleButton = React.forwardRef(function ToggleButton(props, ref) {
     ...other
   } = props;
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     if (onClick) {
       onClick(event, value);
       if (event.isDefaultPrevented()) {
@@ -114,7 +110,6 @@ const ToggleButton = React.forwardRef(function ToggleButton(props, ref) {
       onClick={handleChange}
       onChange={onChange}
       value={value}
-      disableRipple={disableRipple}
       aria-pressed={selected}
       {...other}
     >
@@ -124,15 +119,19 @@ const ToggleButton = React.forwardRef(function ToggleButton(props, ref) {
 });
 
 ToggleButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The content of the button.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -143,11 +142,13 @@ ToggleButton.propTypes = {
   disabled: PropTypes.bool,
   /**
    * If `true`, the  keyboard focus ripple will be disabled.
-   * `disableRipple` must also be true.
    */
   disableFocusRipple: PropTypes.bool,
   /**
    * If `true`, the ripple effect will be disabled.
+   *
+   * ⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure
+   * to highlight the element by applying separate styles with the `focusVisibleClassName`.
    */
   disableRipple: PropTypes.bool,
   /**
@@ -163,9 +164,10 @@ ToggleButton.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * @ignore
+   * The size of the button.
+   * The prop defaults to the value injected by the parent ToggleButtonGroup component.
    */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   /**
    * The value to associate with the button when selected in a
    * ToggleButtonGroup.

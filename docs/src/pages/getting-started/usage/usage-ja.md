@@ -11,7 +11,7 @@ Material-UIコンポーネントは独立して機能します。 **They are sel
 以下に簡単な例を示します。**文字通り必要なものすべてです**:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 
@@ -28,7 +28,7 @@ ReactDOM.render(<App />, document.querySelector('#app'));
 
 そうです。これは本当に始めるのに必要な全てです。この編集可能なデモで確認できるように:
 
-{{"demo": "pages/getting-started/usage/Usage.js", "hideHeader": true, "bg": true}}
+{{"demo": "pages/getting-started/usage/Usage.js", "hideToolbar": true, "bg": true}}
 
 ## Globals
 
@@ -41,7 +41,7 @@ Material-UI is developed mobile-first, a strategy in which we first write code f
 ```html
 <meta
   name="viewport"
-  content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+  content="minimum-scale=1, initial-scale=1, width=device-width"
 />
 ```
 

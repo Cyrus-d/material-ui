@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
@@ -17,12 +17,18 @@ const maxSpacing = 20;
 
 export default function DensityTool() {
   const dispatch = React.useContext(DispatchContext);
-  const handleDensityChange = event => {
-    dispatch({ type: 'SET_DENSE', payload: event.target.checked });
+  const handleDensityChange = (event) => {
+    dispatch({
+      type: 'SET_DENSE',
+      payload: event.target.checked,
+    });
   };
 
   const handleSpacingChange = (event, value) => {
-    dispatch({ type: 'SET_SPACING', payload: value || +event.target.value });
+    dispatch({
+      type: 'SET_SPACING',
+      payload: value || +event.target.value,
+    });
   };
 
   const increaseSpacing = () => {
@@ -40,7 +46,7 @@ export default function DensityTool() {
   const theme = useTheme();
   const spacingUnit = theme.spacing(1);
 
-  const t = useSelector(state => state.options.t);
+  const t = useSelector((state) => state.options.t);
 
   return (
     <Grid container spacing={2}>
@@ -64,7 +70,10 @@ export default function DensityTool() {
           </Typography>
         </Grid>
         <Grid item>
-          <IconButton aria-label={t('increaseSpacing')} onClick={decreaseSpacing}>
+          <IconButton
+            aria-label={t('increaseSpacing')}
+            onClick={decreaseSpacing}
+          >
             <DecreaseIcon />
           </IconButton>
           <Input
@@ -79,13 +88,16 @@ export default function DensityTool() {
               'aria-labelledby': 'input-slider',
             }}
           />
-          <IconButton aria-label={t('decreaseSpacing')} onClick={increaseSpacing}>
+          <IconButton
+            aria-label={t('decreaseSpacing')}
+            onClick={increaseSpacing}
+          >
             <IncreaseIcon />
           </IconButton>
         </Grid>
       </Grid>
       <Grid item>
-        <Button color="primary" variant="contained" onClick={resetDensity}>
+        <Button variant="contained" onClick={resetDensity}>
           {t('resetDensity')}
         </Button>
       </Grid>

@@ -1,27 +1,12 @@
-import React from 'react';
-import { assert } from 'chai';
+import * as React from 'react';
+import { expect } from 'chai';
 import sinon, { spy, stub, useFakeTimers } from 'sinon';
-import { createMount } from '@material-ui/core/test-utils';
-import describeConformance from '@material-ui/core/test-utils/describeConformance';
+import { createMount, describeConformance, act, createClientRender, fireEvent } from 'test/utils';
 import TextareaAutosize from './TextareaAutosize';
 
-function getStyle(wrapper) {
-  return wrapper
-    .find('textarea')
-    .at(0)
-    .props().style;
-}
-
 describe('<TextareaAutosize />', () => {
-  let mount;
-
-  before(() => {
-    mount = createMount({ strict: true });
-  });
-
-  after(() => {
-    mount.cleanUp();
-  });
+  const mount = createMount();
+  const render = createClientRender();
 
   describeConformance(<TextareaAutosize />, () => ({
     inheritComponent: 'textarea',
@@ -38,27 +23,24 @@ describe('<TextareaAutosize />', () => {
 
     const getComputedStyleStub = {};
 
-    function setLayout(wrapper, { getComputedStyle, scrollHeight, lineHeight }) {
-      const input = wrapper
-        .find('textarea')
-        .at(0)
-        .instance();
-      const shadow = wrapper
-        .find('textarea')
-        .at(1)
-        .instance();
+    function setLayout(
+      input,
+      shadow,
+      { getComputedStyle, scrollHeight, lineHeight: lineHeightArg },
+    ) {
+      const lineHeight = typeof lineHeightArg === 'function' ? lineHeightArg : () => lineHeightArg;
 
       getComputedStyleStub[input] = getComputedStyle;
 
       let index = 0;
       stub(shadow, 'scrollHeight').get(() => {
         index += 1;
-        return index % 2 === 1 ? scrollHeight : lineHeight;
+        return index % 2 === 1 ? scrollHeight : lineHeight();
       });
     }
 
     before(() => {
-      stub(window, 'getComputedStyle').value(node => getComputedStyleStub[node] || {});
+      stub(window, 'getComputedStyle').value((node) => getComputedStyleStub[node] || {});
     });
 
     after(() => {
@@ -68,21 +50,22 @@ describe('<TextareaAutosize />', () => {
     describe('resize', () => {
       let clock;
 
-      before(() => {
+      beforeEach(() => {
         clock = useFakeTimers();
       });
 
-      after(() => {
+      afterEach(() => {
         clock.restore();
       });
 
       it('should handle the resize event', () => {
-        const wrapper = mount(<TextareaAutosize />);
-        assert.deepEqual(getStyle(wrapper), {
-          height: 0,
-          overflow: 'hidden',
-        });
-        setLayout(wrapper, {
+        const { container } = render(<TextareaAutosize />);
+        const input = container.querySelector('textarea[aria-hidden=null]');
+        const shadow = container.querySelector('textarea[aria-hidden=true]');
+        expect(input.style).to.have.property('height', '0px');
+        expect(input.style).to.have.property('overflow', 'hidden');
+
+        setLayout(input, shadow, {
           getComputedStyle: {
             'box-sizing': 'content-box',
           },
@@ -90,40 +73,45 @@ describe('<TextareaAutosize />', () => {
           lineHeight: 15,
         });
         window.dispatchEvent(new window.Event('resize', {}));
-        clock.tick(166);
-        wrapper.update();
-        assert.deepEqual(getStyle(wrapper), {
-          height: 30,
-          overflow: 'hidden',
+
+        act(() => {
+          clock.tick(166);
         });
+
+        expect(input.style).to.have.property('height', '30px');
+        expect(input.style).to.have.property('overflow', 'hidden');
       });
     });
 
     it('should update when uncontrolled', () => {
       const handleChange = spy();
-      const wrapper = mount(<TextareaAutosize onChange={handleChange} />);
-      assert.deepEqual(getStyle(wrapper), { height: 0, overflow: 'hidden' });
-      setLayout(wrapper, {
+      const { container } = render(<TextareaAutosize onChange={handleChange} />);
+      const input = container.querySelector('textarea[aria-hidden=null]');
+      const shadow = container.querySelector('textarea[aria-hidden=true]');
+      expect(input.style).to.have.property('height', '0px');
+      expect(input.style).to.have.property('overflow', 'hidden');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'content-box',
         },
         scrollHeight: 30,
         lineHeight: 15,
       });
-      wrapper
-        .find('textarea')
-        .at(0)
-        .simulate('change');
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: 30, overflow: 'hidden' });
-      assert.strictEqual(handleChange.callCount, 1);
+      input.focus();
+      fireEvent.change(document.activeElement, { target: { value: 'a' } });
+      expect(input.style).to.have.property('height', '30px');
+      expect(input.style).to.have.property('overflow', 'hidden');
+      expect(handleChange.callCount).to.equal(1);
     });
 
     it('should take the border into account with border-box', () => {
       const border = 5;
-      const wrapper = mount(<TextareaAutosize />);
-      assert.deepEqual(getStyle(wrapper), { height: 0, overflow: 'hidden' });
-      setLayout(wrapper, {
+      const { container, forceUpdate } = render(<TextareaAutosize />);
+      const input = container.querySelector('textarea[aria-hidden=null]');
+      const shadow = container.querySelector('textarea[aria-hidden=true]');
+      expect(input.style).to.have.property('height', '0px');
+      expect(input.style).to.have.property('overflow', 'hidden');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'border-box',
           'border-bottom-width': `${border}px`,
@@ -131,15 +119,17 @@ describe('<TextareaAutosize />', () => {
         scrollHeight: 30,
         lineHeight: 15,
       });
-      wrapper.setProps();
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: 30 + border, overflow: 'hidden' });
+      forceUpdate();
+      expect(input.style).to.have.property('height', `${30 + border}px`);
+      expect(input.style).to.have.property('overflow', 'hidden');
     });
 
     it('should take the padding into account with content-box', () => {
       const padding = 5;
-      const wrapper = mount(<TextareaAutosize />);
-      setLayout(wrapper, {
+      const { container, forceUpdate } = render(<TextareaAutosize />);
+      const input = container.querySelector('textarea[aria-hidden=null]');
+      const shadow = container.querySelector('textarea[aria-hidden=true]');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'content-box',
           'padding-top': `${padding}px`,
@@ -147,95 +137,131 @@ describe('<TextareaAutosize />', () => {
         scrollHeight: 30,
         lineHeight: 15,
       });
-      wrapper.setProps();
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: 30 - padding, overflow: 'hidden' });
+      forceUpdate();
+      expect(input.style).to.have.property('height', `${30 - padding}px`);
+      expect(input.style).to.have.property('overflow', 'hidden');
     });
 
-    it('should have at least height of "rows"', () => {
-      const rows = 3;
+    it('should have at least height of "minRows"', () => {
+      const minRows = 3;
       const lineHeight = 15;
-      const wrapper = mount(<TextareaAutosize rows={rows} />);
-      setLayout(wrapper, {
+      const { container, forceUpdate } = render(<TextareaAutosize minRows={minRows} />);
+      const input = container.querySelector('textarea[aria-hidden=null]');
+      const shadow = container.querySelector('textarea[aria-hidden=true]');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'content-box',
         },
         scrollHeight: 30,
         lineHeight,
       });
-      wrapper.setProps();
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: lineHeight * rows, overflow: null });
+      forceUpdate();
+      expect(input.style).to.have.property('height', `${lineHeight * minRows}px`);
+      expect(input.style).to.have.property('overflow', '');
     });
 
-    it('should have at max "rowsMax" rows', () => {
-      const rowsMax = 3;
+    it('should have at max "maxRows" rows', () => {
+      const maxRows = 3;
       const lineHeight = 15;
-      const wrapper = mount(<TextareaAutosize rowsMax={rowsMax} />);
-      setLayout(wrapper, {
+      const { container, forceUpdate } = render(<TextareaAutosize maxRows={maxRows} />);
+      const input = container.querySelector('textarea[aria-hidden=null]');
+      const shadow = container.querySelector('textarea[aria-hidden=true]');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'content-box',
         },
         scrollHeight: 100,
         lineHeight,
       });
-      wrapper.setProps();
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: lineHeight * rowsMax, overflow: null });
+      forceUpdate();
+      expect(input.style).to.have.property('height', `${lineHeight * maxRows}px`);
+      expect(input.style).to.have.property('overflow', '');
     });
 
-    it('should show scrollbar when having more rows than "rowsMax"', () => {
-      const rowsMax = 3;
+    it('should show scrollbar when having more rows than "maxRows"', () => {
+      const maxRows = 3;
       const lineHeight = 15;
-      const wrapper = mount(<TextareaAutosize rowsMax={rowsMax} />);
-      setLayout(wrapper, {
+      const { container, forceUpdate } = render(<TextareaAutosize maxRows={maxRows} />);
+      const input = container.querySelector('textarea[aria-hidden=null]');
+      const shadow = container.querySelector('textarea[aria-hidden=true]');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'border-box',
         },
         scrollHeight: lineHeight * 2,
         lineHeight,
       });
-      wrapper.setProps();
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: lineHeight * 2, overflow: 'hidden' });
-      setLayout(wrapper, {
+      forceUpdate();
+      expect(input.style).to.have.property('height', `${lineHeight * 2}px`);
+      expect(input.style).to.have.property('overflow', 'hidden');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'border-box',
         },
         scrollHeight: lineHeight * 3,
         lineHeight,
       });
-      wrapper.setProps();
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: lineHeight * 3, overflow: 'hidden' });
-      setLayout(wrapper, {
+      forceUpdate();
+      expect(input.style).to.have.property('height', `${lineHeight * 3}px`);
+      expect(input.style).to.have.property('overflow', 'hidden');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'border-box',
         },
         scrollHeight: lineHeight * 4,
         lineHeight,
       });
-      wrapper.setProps();
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: lineHeight * 3, overflow: null });
+      forceUpdate();
+      expect(input.style).to.have.property('height', `${lineHeight * 3}px`);
+      expect(input.style).to.have.property('overflow', '');
     });
 
-    it('should update its height when the "rowsMax" prop changes', () => {
+    it('should update its height when the "maxRows" prop changes', () => {
       const lineHeight = 15;
-      const wrapper = mount(<TextareaAutosize rowsMax={3} />);
-      setLayout(wrapper, {
+      const { container, forceUpdate, setProps } = render(<TextareaAutosize maxRows={3} />);
+      const input = container.querySelector('textarea[aria-hidden=null]');
+      const shadow = container.querySelector('textarea[aria-hidden=true]');
+      setLayout(input, shadow, {
         getComputedStyle: {
           'box-sizing': 'content-box',
         },
         scrollHeight: 100,
         lineHeight,
       });
-      wrapper.setProps();
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: lineHeight * 3, overflow: null });
-      wrapper.setProps({ rowsMax: 2 });
-      wrapper.update();
-      assert.deepEqual(getStyle(wrapper), { height: lineHeight * 2, overflow: null });
+      forceUpdate();
+      expect(input.style).to.have.property('height', `${lineHeight * 3}px`);
+      expect(input.style).to.have.property('overflow', '');
+      setProps({ maxRows: 2 });
+      expect(input.style).to.have.property('height', `${lineHeight * 2}px`);
+      expect(input.style).to.have.property('overflow', '');
+    });
+
+    describe('warnings', () => {
+      it('warns if layout is unstable but not crash', () => {
+        const { container, forceUpdate } = render(<TextareaAutosize maxRows={3} />);
+        const input = container.querySelector('textarea[aria-hidden=null]');
+        const shadow = container.querySelector('textarea[aria-hidden=true]');
+        let index = 0;
+        setLayout(input, shadow, {
+          getComputedStyle: {
+            'box-sizing': 'content-box',
+          },
+          scrollHeight: 100,
+          lineHeight: () => {
+            index += 1;
+            return 15 + index;
+          },
+        });
+
+        expect(() => {
+          forceUpdate();
+        }).toErrorDev([
+          'Material-UI: Too many re-renders.',
+          // strict mode renders twice
+          'Material-UI: Too many re-renders.',
+          'Material-UI: Too many re-renders.',
+        ]);
+      });
     });
   });
 });

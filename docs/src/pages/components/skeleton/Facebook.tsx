@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -35,7 +35,12 @@ function Media(props: MediaProps) {
       <CardHeader
         avatar={
           loading ? (
-            <Skeleton variant="circle" width={40} height={40} />
+            <Skeleton
+              animation="wave"
+              variant="circular"
+              width={40}
+              height={40}
+            />
           ) : (
             <Avatar
               alt="Ted talk"
@@ -50,11 +55,32 @@ function Media(props: MediaProps) {
             </IconButton>
           )
         }
-        title={loading ? <Skeleton height={10} width="80%" style={{ marginBottom: 6 }} /> : 'Ted'}
-        subheader={loading ? <Skeleton height={10} width="40%" /> : '5 hours ago'}
+        title={
+          loading ? (
+            <Skeleton
+              animation="wave"
+              height={10}
+              width="80%"
+              style={{ marginBottom: 6 }}
+            />
+          ) : (
+            'Ted'
+          )
+        }
+        subheader={
+          loading ? (
+            <Skeleton animation="wave" height={10} width="40%" />
+          ) : (
+            '5 hours ago'
+          )
+        }
       />
       {loading ? (
-        <Skeleton variant="rect" className={classes.media} />
+        <Skeleton
+          animation="wave"
+          variant="rectangular"
+          className={classes.media}
+        />
       ) : (
         <CardMedia
           className={classes.media}
@@ -65,8 +91,12 @@ function Media(props: MediaProps) {
       <CardContent>
         {loading ? (
           <React.Fragment>
-            <Skeleton height={10} style={{ marginBottom: 6 }} />
-            <Skeleton height={10} width="80%" />
+            <Skeleton
+              animation="wave"
+              height={10}
+              style={{ marginBottom: 6 }}
+            />
+            <Skeleton animation="wave" height={10} width="80%" />
           </React.Fragment>
         ) : (
           <Typography variant="body2" color="textSecondary" component="p">

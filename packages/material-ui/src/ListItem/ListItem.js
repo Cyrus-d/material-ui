@@ -1,15 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { chainPropTypes } from '@material-ui/utils';
+import { chainPropTypes, elementTypeAcceptingRef } from '@material-ui/utils';
 import withStyles from '../styles/withStyles';
+import { fade } from '../styles/colorManipulator';
 import ButtonBase from '../ButtonBase';
 import isMuiElement from '../utils/isMuiElement';
 import useForkRef from '../utils/useForkRef';
 import ListContext from '../List/ListContext';
-import ReactDOM from 'react-dom';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the (normally root) `component` element. May be wrapped by a `container`. */
   root: {
     display: 'flex',
@@ -23,13 +23,19 @@ export const styles = theme => ({
     paddingTop: 8,
     paddingBottom: 8,
     '&$focusVisible': {
-      backgroundColor: theme.palette.action.selected,
+      backgroundColor: theme.palette.action.focus,
     },
-    '&$selected, &$selected:hover': {
-      backgroundColor: theme.palette.action.selected,
+    '&$selected': {
+      backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+      '&$focusVisible': {
+        backgroundColor: fade(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+        ),
+      },
     },
     '&$disabled': {
-      opacity: 0.5,
+      opacity: theme.palette.action.disabledOpacity,
     },
   },
   /* Styles applied to the `container` element if `children` includes `ListItemSecondaryAction`. */
@@ -72,6 +78,16 @@ export const styles = theme => ({
         backgroundColor: 'transparent',
       },
     },
+    '&$selected:hover': {
+      backgroundColor: fade(
+        theme.palette.primary.main,
+        theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+      ),
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+      },
+    },
   },
   /* Styles applied to the `component` element if `children` includes `ListItemSecondaryAction`. */
   secondaryAction: {
@@ -112,7 +128,9 @@ const ListItem = React.forwardRef(function ListItem(props, ref) {
   const childContext = {
     dense: dense || context.dense || false,
     alignItems,
+    disableGutters,
   };
+
   const listItemRef = React.useRef(null);
   useEnhancedEffect(() => {
     if (autoFocus) {
@@ -120,7 +138,7 @@ const ListItem = React.forwardRef(function ListItem(props, ref) {
         listItemRef.current.focus();
       } else if (process.env.NODE_ENV !== 'production') {
         console.error(
-          'Material-UI: unable to set focus to a ListItem whose component has not been rendered.',
+          'Material-UI: Unable to set focus to a ListItem whose component has not been rendered.',
         );
       }
     }
@@ -130,11 +148,7 @@ const ListItem = React.forwardRef(function ListItem(props, ref) {
   const hasSecondaryAction =
     children.length && isMuiElement(children[children.length - 1], ['ListItemSecondaryAction']);
 
-  const handleOwnRef = React.useCallback(instance => {
-    // #StrictMode ready
-    listItemRef.current = ReactDOM.findDOMNode(instance);
-  }, []);
-  const handleRef = useForkRef(handleOwnRef, ref);
+  const handleRef = useForkRef(listItemRef, ref);
 
   const componentProps = {
     className: clsx(
@@ -154,6 +168,7 @@ const ListItem = React.forwardRef(function ListItem(props, ref) {
     disabled,
     ...other,
   };
+
   let Component = componentProp || 'li';
 
   if (button) {
@@ -199,10 +214,14 @@ const ListItem = React.forwardRef(function ListItem(props, ref) {
 });
 
 ListItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Defines the `align-items` style property.
    */
-  alignItems: PropTypes.oneOf(['flex-start', 'center']),
+  alignItems: PropTypes.oneOf(['center', 'flex-start']),
   /**
    * If `true`, the list item will be focused during the first mount.
    * Focus will also be triggered if the value changes from false to true.
@@ -217,7 +236,7 @@ ListItem.propTypes = {
    * The content of the component. If a `ListItemSecondaryAction` is used it must
    * be the last child.
    */
-  children: chainPropTypes(PropTypes.node, props => {
+  children: chainPropTypes(PropTypes.node, (props) => {
     const children = React.Children.toArray(props.children);
 
     // React.Children.toArray(props.children).findLastIndex(isListItemSecondaryAction)
@@ -233,7 +252,7 @@ ListItem.propTypes = {
     //  is ListItemSecondaryAction the last child of ListItem
     if (secondaryActionIndex !== -1 && secondaryActionIndex !== children.length - 1) {
       return new Error(
-        'Material-UI: you used an element after ListItemSecondaryAction. ' +
+        'Material-UI: You used an element after ListItemSecondaryAction. ' +
           'For ListItem to detect that it has a secondary action ' +
           'you must pass it as the last child to ListItem.',
       );
@@ -245,21 +264,20 @@ ListItem.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
-   * By default, it's a `li` when `button` is `false` and a `div` when `button` is `true`.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
    * The container component used when a `ListItemSecondaryAction` is the last child.
    */
-  ContainerComponent: PropTypes.elementType,
+  ContainerComponent: elementTypeAcceptingRef,
   /**
    * Props applied to the container component if used.
    */

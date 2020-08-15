@@ -1,13 +1,13 @@
 ---
-title: React Badge（徽章）组件
+title: React Badge 徽章组件
 components: Badge
 ---
 
-# Badge（徽章）
+# Badge 徽章
 
 <p class="description">徽章会在其子项的右上角生成一个小徽章。</p>
 
-## 简单的徽章
+## 基本徽章
 
 这个示例是个包含了文本的徽章，同时使用了主色和副色。 徽章会对其子元素生效。
 
@@ -23,19 +23,21 @@ components: Badge
 
 徽章组件的隐显可以通过 `invisible` 属性来设置。
 
-当 badgeContent 为零时，徽章组件将会自动隐藏。 您可以通过 `showZero` 属性来覆盖它。
-
 {{"demo": "pages/components/badges/BadgeVisibility.js"}}
+
+当 badgeContent 为零时，徽章组件将会自动隐藏。 您可以使用 `showZero` 属性覆盖它。
+
+{{"demo": "pages/components/badges/ShowZeroBadge.js"}}
 
 ## 最大值
 
-您可以使用 `max` 属性来限制徽章组件内容的取值。
+您可以使用 `max` 属性来限制徽章内容的最大值。
 
 {{"demo": "pages/components/badges/BadgeMax.js"}}
 
-## 圆点徽章组件
+## 圆点徽章
 
-`dot` 属性会徽章组件渲染成一个小点。 这样的组件可以作为一个提示的工具，来说明有些值已经改变，但是不需要计数。
+`dot` 属性会使得徽章渲染为一个小点。 这样的组件可以作为一个提示的工具，来说明有些值已经改变，但是不需要计数。
 
 {{"demo": "pages/components/badges/DotBadge.js"}}
 
@@ -47,6 +49,6 @@ components: Badge
 
 ## 徽章组件的校准
 
-您可以使用 `horizontalAlignment` 和 `verticalAlignment` 这两个属性，在封装的组件任意角落显示徽章组件。
+你可以使用 `anchorOrigin` 属性来移动徽章到包裹元素的任何角落。
 
-{{"demo": "pages/components/badges/BadgeAlignment.js", "hideHeader": true}}
+{{"demo": "pages/components/badges/BadgeAlignment.js", "hideToolbar": true}}

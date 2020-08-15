@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -46,7 +46,11 @@ export default function FeaturedPost(props) {
             </CardContent>
           </div>
           <Hidden xsDown>
-            <CardMedia className={classes.cardMedia} image={post.image} title={post.imageTitle} />
+            <CardMedia
+              className={classes.cardMedia}
+              image={post.image}
+              title={post.imageTitle}
+            />
           </Hidden>
         </Card>
       </CardActionArea>

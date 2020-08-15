@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '../internal/svg-icons/Add';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     height: 24,
@@ -19,7 +19,7 @@ export const styles = theme => ({
   iconOpen: {
     transform: 'rotate(45deg)',
   },
-  /* Styles applied to the icon when and `openIcon` is provided and if `open={true}`. */
+  /* Styles applied to the icon when an `openIcon` is provided and if `open={true}`. */
   iconWithOpenIconOpen: {
     opacity: 0,
   },

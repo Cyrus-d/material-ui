@@ -3,7 +3,7 @@ title: Componente React de Campo de Texto
 components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, InputBase, InputLabel, OutlinedInput, TextField
 ---
 
-# Text Field (campo de texto)
+# Campo de Texto
 
 <p class="description">Campos de texto permitem que os usuários digitem e editem texto.</p>
 
@@ -13,65 +13,65 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 
 O componente wrapper `TextField` é um controle de formulário completo, incluindo um rótulo, entrada e texto de ajuda.
 
-It supports standard, outlined and filled styling.
+O `TextField` suporta 3 variações: O estilo padrão, com contorno e preenchido.
 
 {{"demo": "pages/components/text-fields/BasicTextFields.js"}}
 
-**Note:** The standard variant of the `TextField` is no longer documented in the [Material Design guidelines](https://material.io/) ([here's why](https://medium.com/google-design/the-evolution-of-material-designs-text-fields-603688b3fe03)), but Material-UI will continue to support it.
+**Observação:** A variante padrão do `TextField` não é mais documentada em [Material Design guidelines](https://material.io/) ([entenda o porque](https://medium.com/google-design/the-evolution-of-material-designs-text-fields-603688b3fe03)).
 
-## Form props
+## Propriedades do formulário
 
-Standard form attributes are supported e.g. `required`, `disabled`, `type`, etc. as well as a `helperText` which is used to give context about a field’s input, such as how the input will be used.
+Os atributos são suportados pelo `TextField`, como por exemplo `required`, `disabled`, `type`, etc. assim como o `helperText` que é utilizada para dar contexto sobre um campo de entrada, tais como, a entrada que será usada.
 
 {{"demo": "pages/components/text-fields/FormPropsTextFields.js"}}
 
-## Validation
+## Validação
 
-The `error` prop toggles the error state, the `helperText` prop can then be used to provide feedback to the user about the error.
+A propriedade `error` habilita o estado de erro, e, utilizando a propriedade `helperText` será fornecido um "feedback" ao usuário sobre o erro.
 
 {{"demo": "pages/components/text-fields/ValidationTextFields.js"}}
 
-## Multiline
+## Multilinha
 
-The `multiline` prop transforms the text field into a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) or a [TextareaAutosize](/components/textarea-autosize/).
+A propriedade `multiline` transforma o `textfield` em um `<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea">TextArea</a>.</p>
 
-{{"demo": "pages/components/text-fields/MultilineTextFields.js"}}
+<p>{{"demo": "pages/components/text-fields/MultilineTextFields.js"}}</p>
 
-## Select
+<h2>Seleção</h2>
 
-The `select` prop makes the text field use the [Select](/components/selects/) component internally.
+<p>A propriedade <code>select` transforma o `textfield` em um componente [Select](/components/selects/).
 
 {{"demo": "pages/components/text-fields/SelectTextFields.js"}}
 
 ## Ícones
 
-There are multiple ways to display an icon with a text field.
+Há muitas formas de incluir um icone em um `textfield`.
 
 {{"demo": "pages/components/text-fields/InputWithIcon.js"}}
 
 ### Decoração de inputs
 
-The main way is with an `InputAdornment`. Estes podem ser usados para adicionar um prefixo, sufixo ou uma ação para uma entrada. Por exemplo, você pode usar um botão com ícone para ocultar ou revelar a senha.
+A forma principal é utilizando um `InputAdornment`. Estes podem ser usados para adicionar um prefixo, sufixo ou uma ação para uma entrada. Por exemplo, você pode usar um botão com ícone para ocultar ou revelar a senha.
 
 {{"demo": "pages/components/text-fields/InputAdornments.js"}}
 
 ## Tamanhos
 
-Fancy smaller inputs? Use a propriedade `size`.
+Gosta mais de campos de texto menores? Use a propriedade `size`.
 
 {{"demo": "pages/components/text-fields/TextFieldSizes.js"}}
 
 ## Leiaute
 
-`margin` can be used to alter the vertical spacing of inputs. Using `none` (default) will not apply margins to the `FormControl`, whereas `dense` and `normal` will. `dense` and `normal` alter other styles to meet the specification.
+A propriedade `margin` pode ser utilizada para alterar o espaçamento vertical entre os inputs. Usar `none` (padrão) não aplicará margens para o `FormControl`, enquanto `dense` e `normal` irá. As definições de `dense` e `normal` altera outros estilos para atender a especificação.
 
-`fullWidth` can be used to make the input take up the full width of its container.
+A propriedade `fullWidth` pode ser usada para fazer com que o campo ocupe a largura total de seu contêiner.
 
 {{"demo": "pages/components/text-fields/LayoutTextFields.js"}}
 
-## Uncontrolled vs Controlled
+## Não controlado vs Controlado
 
-The component can be controlled or uncontrolled
+O componente pode ser controlado ou não controlado.
 
 {{"demo": "pages/components/text-fields/StateTextFields.js"}}
 
@@ -89,11 +89,11 @@ Você também pode ter notado que algumas propriedades de entrada nativas do HTM
 
 ## Cor
 
-The `color` prop changes the highlight color of the text field when focused.
+A propriedade `color` altera a cor do destaque do campo de texto quando focado.
 
 {{"demo": "pages/components/text-fields/ColorTextFields.js"}}
 
-## Inputs Costumizados
+## Campos customizados
 
 Aqui estão alguns exemplos de customização do componente. Você pode aprender mais sobre isso na [página de documentação de sobrescritas](/customization/components/).
 
@@ -102,6 +102,8 @@ Aqui estão alguns exemplos de customização do componente. Você pode aprender
 A customização não para no CSS, você pode usar composição para criar componentes personalizados e dar ao seu aplicativo uma sensação única. Abaixo há um exemplo usando o componente [`InputBase`](/api/input-base/), inspirado pelo Google Maps.
 
 {{"demo": "pages/components/text-fields/CustomizedInputBase.js", "bg": true}}
+
+🎨 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://mui-treasury.com/styles/text-field).
 
 ## Limitações
 
@@ -171,7 +173,7 @@ function MeuInputComponente(props) {
 
 ## Acessibilidade
 
-Para que o campo de texto seja acessível, **a entrada deve estar vinculada ao rótulo e ao texto auxiliar**. Os nós DOM subjacentes devem ter essa estrutura.
+Para que o campo de texto seja acessível, **a entrada deve estar vinculada ao rótulo e ao texto auxiliar**. Os nós DOM subjacentes devem ter essa estrutura:
 
 ```jsx
 <div class="form-control">
@@ -196,7 +198,6 @@ Para que o campo de texto seja acessível, **a entrada deve estar vinculada ao r
 
 Para usos mais avançados, você pode tirar vantagem com:
 
-- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Ligações para usar Mateiral-UI com formik.
-- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) Um conjunto de componentes do wrapper para facilitar o uso do Material UI com Redux Form.
-- [final-form-material-ui](https://github.com/Deadly0/final-form-material-ui) Um conjunto de componentes wrapper para facilitar o uso do Material UI com Final Form.
-- [mui-rff](https://github.com/lookfirst/mui-rff) A set of wrapper components to facilitate using Material UI with React Final Form.
+- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Bindings para usar Material-UI com [formik](https://jaredpalmer.com/formik).
+- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) Bindings para usar Material-UI com [Redux Form](https://redux-form.com/).
+- [mui-rff](https://github.com/lookfirst/mui-rff) Bindings para usar Material-UI com [React Final Form](https://final-form.org/react).

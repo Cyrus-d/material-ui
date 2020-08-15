@@ -1,26 +1,26 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
-import debounce from '../utils/debounce';
 import { Transition } from 'react-transition-group';
 import { elementAcceptingRef } from '@material-ui/utils';
+import debounce from '../utils/debounce';
 import useForkRef from '../utils/useForkRef';
 import useTheme from '../styles/useTheme';
 import { duration } from '../styles/transitions';
 import { reflow, getTransitionProps } from '../transitions/utils';
+import { ownerWindow } from '../utils';
 
 // Translate the node so he can't be seen on the screen.
 // Later, we gonna translate back the node to his original location
 // with `none`.`
 function getTranslateValue(direction, node) {
   const rect = node.getBoundingClientRect();
-
+  const containerWindow = ownerWindow(node);
   let transform;
 
   if (node.fakeTransform) {
     transform = node.fakeTransform;
   } else {
-    const computedStyle = window.getComputedStyle(node);
+    const computedStyle = containerWindow.getComputedStyle(node);
     transform =
       computedStyle.getPropertyValue('-webkit-transform') ||
       computedStyle.getPropertyValue('transform');
@@ -30,16 +30,13 @@ function getTranslateValue(direction, node) {
   let offsetY = 0;
 
   if (transform && transform !== 'none' && typeof transform === 'string') {
-    const transformValues = transform
-      .split('(')[1]
-      .split(')')[0]
-      .split(',');
+    const transformValues = transform.split('(')[1].split(')')[0].split(',');
     offsetX = parseInt(transformValues[4], 10);
     offsetY = parseInt(transformValues[5], 10);
   }
 
   if (direction === 'left') {
-    return `translateX(${window.innerWidth}px) translateX(-${rect.left - offsetX}px)`;
+    return `translateX(${containerWindow.innerWidth}px) translateX(${offsetX - rect.left}px)`;
   }
 
   if (direction === 'right') {
@@ -47,7 +44,7 @@ function getTranslateValue(direction, node) {
   }
 
   if (direction === 'up') {
-    return `translateY(${window.innerHeight}px) translateY(-${rect.top - offsetY}px)`;
+    return `translateY(${containerWindow.innerHeight}px) translateY(${offsetY - rect.top}px)`;
   }
 
   // direction === 'down'
@@ -78,84 +75,97 @@ const Slide = React.forwardRef(function Slide(props, ref) {
     direction = 'down',
     in: inProp,
     onEnter,
+    onEntered,
     onEntering,
     onExit,
     onExited,
+    onExiting,
     style,
     timeout = defaultTimeout,
+    // eslint-disable-next-line react/prop-types
+    TransitionComponent = Transition,
     ...other
   } = props;
 
   const theme = useTheme();
   const childrenRef = React.useRef(null);
-  /**
-   * used in cloneElement(children, { ref: handleRef })
-   */
-  const handleOwnRef = React.useCallback(instance => {
-    // #StrictMode ready
-    childrenRef.current = ReactDOM.findDOMNode(instance);
-  }, []);
-  const handleRefIntermediary = useForkRef(children.ref, handleOwnRef);
+  const handleRefIntermediary = useForkRef(children.ref, childrenRef);
   const handleRef = useForkRef(handleRefIntermediary, ref);
 
-  const handleEnter = (_, isAppearing) => {
-    const node = childrenRef.current;
+  const normalizedTransitionCallback = (callback) => (isAppearing) => {
+    if (callback) {
+      // onEnterXxx and onExitXxx callbacks have a different arguments.length value.
+      if (isAppearing === undefined) {
+        callback(childrenRef.current);
+      } else {
+        callback(childrenRef.current, isAppearing);
+      }
+    }
+  };
+
+  const handleEnter = normalizedTransitionCallback((node, isAppearing) => {
     setTranslateValue(direction, node);
     reflow(node);
 
     if (onEnter) {
       onEnter(node, isAppearing);
     }
-  };
+  });
 
-  const handleEntering = (_, isAppearing) => {
-    const node = childrenRef.current;
+  const handleEntering = normalizedTransitionCallback((node, isAppearing) => {
     const transitionProps = getTransitionProps(
       { timeout, style },
       {
         mode: 'enter',
       },
     );
+
     node.style.webkitTransition = theme.transitions.create('-webkit-transform', {
       ...transitionProps,
       easing: theme.transitions.easing.easeOut,
     });
+
     node.style.transition = theme.transitions.create('transform', {
       ...transitionProps,
       easing: theme.transitions.easing.easeOut,
     });
+
     node.style.webkitTransform = 'none';
     node.style.transform = 'none';
     if (onEntering) {
       onEntering(node, isAppearing);
     }
-  };
+  });
 
-  const handleExit = () => {
-    const node = childrenRef.current;
+  const handleEntered = normalizedTransitionCallback(onEntered);
+  const handleExiting = normalizedTransitionCallback(onExiting);
+
+  const handleExit = normalizedTransitionCallback((node) => {
     const transitionProps = getTransitionProps(
       { timeout, style },
       {
         mode: 'exit',
       },
     );
+
     node.style.webkitTransition = theme.transitions.create('-webkit-transform', {
       ...transitionProps,
       easing: theme.transitions.easing.sharp,
     });
+
     node.style.transition = theme.transitions.create('transform', {
       ...transitionProps,
       easing: theme.transitions.easing.sharp,
     });
+
     setTranslateValue(direction, node);
 
     if (onExit) {
       onExit(node);
     }
-  };
+  });
 
-  const handleExited = () => {
-    const node = childrenRef.current;
+  const handleExited = normalizedTransitionCallback((node) => {
     // No need for transitions when the component is hidden
     node.style.webkitTransition = '';
     node.style.transition = '';
@@ -163,7 +173,7 @@ const Slide = React.forwardRef(function Slide(props, ref) {
     if (onExited) {
       onExited(node);
     }
-  };
+  });
 
   const updatePosition = React.useCallback(() => {
     if (childrenRef.current) {
@@ -183,10 +193,11 @@ const Slide = React.forwardRef(function Slide(props, ref) {
       }
     });
 
-    window.addEventListener('resize', handleResize);
+    const containerWindow = ownerWindow(childrenRef.current);
+    containerWindow.addEventListener('resize', handleResize);
     return () => {
       handleResize.clear();
-      window.removeEventListener('resize', handleResize);
+      containerWindow.removeEventListener('resize', handleResize);
     };
   }, [direction, inProp]);
 
@@ -199,11 +210,14 @@ const Slide = React.forwardRef(function Slide(props, ref) {
   }, [inProp, updatePosition]);
 
   return (
-    <Transition
+    <TransitionComponent
+      nodeRef={childrenRef}
       onEnter={handleEnter}
+      onEntered={handleEntered}
       onEntering={handleEntering}
       onExit={handleExit}
       onExited={handleExited}
+      onExiting={handleExiting}
       appear
       in={inProp}
       timeout={timeout}
@@ -220,11 +234,15 @@ const Slide = React.forwardRef(function Slide(props, ref) {
           ...childProps,
         });
       }}
-    </Transition>
+    </TransitionComponent>
   );
 });
 
 Slide.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * A single child content element.
    */
@@ -232,7 +250,7 @@ Slide.propTypes = {
   /**
    * Direction the child node will enter from.
    */
-  direction: PropTypes.oneOf(['left', 'right', 'up', 'down']),
+  direction: PropTypes.oneOf(['down', 'left', 'right', 'up']),
   /**
    * If `true`, show the component; triggers the enter or exit animation.
    */
@@ -241,6 +259,10 @@ Slide.propTypes = {
    * @ignore
    */
   onEnter: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onEntered: PropTypes.func,
   /**
    * @ignore
    */
@@ -256,6 +278,10 @@ Slide.propTypes = {
   /**
    * @ignore
    */
+  onExiting: PropTypes.func,
+  /**
+   * @ignore
+   */
   style: PropTypes.object,
   /**
    * The duration for the transition, in milliseconds.
@@ -263,7 +289,11 @@ Slide.propTypes = {
    */
   timeout: PropTypes.oneOfType([
     PropTypes.number,
-    PropTypes.shape({ enter: PropTypes.number, exit: PropTypes.number }),
+    PropTypes.shape({
+      appear: PropTypes.number,
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
   ]),
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -13,8 +13,11 @@ export default function SwitchesGroup() {
     antoine: true,
   });
 
-  const handleChange = name => event => {
-    setState({ ...state, [name]: event.target.checked });
+  const handleChange = (event) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   return (
@@ -22,16 +25,32 @@ export default function SwitchesGroup() {
       <FormLabel component="legend">Assign responsibility</FormLabel>
       <FormGroup>
         <FormControlLabel
-          control={<Switch checked={state.gilad} onChange={handleChange('gilad')} value="gilad" />}
+          control={
+            <Switch
+              checked={state.gilad}
+              onChange={handleChange}
+              name="gilad"
+            />
+          }
           label="Gilad Gray"
         />
         <FormControlLabel
-          control={<Switch checked={state.jason} onChange={handleChange('jason')} value="jason" />}
+          control={
+            <Switch
+              checked={state.jason}
+              onChange={handleChange}
+              name="jason"
+            />
+          }
           label="Jason Killian"
         />
         <FormControlLabel
           control={
-            <Switch checked={state.antoine} onChange={handleChange('antoine')} value="antoine" />
+            <Switch
+              checked={state.antoine}
+              onChange={handleChange}
+              name="antoine"
+            />
           }
           label="Antoine Llorca"
         />

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -19,7 +19,7 @@ const StyledMenu = styled(({ className, ...props }) => (
 export default function StyledComponentsPortal() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -33,7 +33,6 @@ export default function StyledComponentsPortal() {
         aria-owns={anchorEl ? 'simple-menu' : undefined}
         aria-haspopup="true"
         variant="contained"
-        color="primary"
         onClick={handleClick}
       >
         Open Menu

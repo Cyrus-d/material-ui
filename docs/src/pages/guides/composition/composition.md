@@ -20,7 +20,7 @@ as the parent component may need to control the wrapped components props.
 Let's see an example:
 
 ```jsx
-const WrappedIcon = props => <Icon {...props} />;
+const WrappedIcon = (props) => <Icon {...props} />;
 WrappedIcon.muiName = Icon.muiName;
 ```
 
@@ -32,10 +32,10 @@ Material-UI allows you to change the root element that will be rendered via a pr
 
 ### How does it work?
 
-The component will render like this:
+The custom component will be rendered by Material-UI like this:
 
 ```js
-return React.createElement(props.component, props)
+return React.createElement(props.component, props);
 ```
 
 For example, by default a `List` component will render a `<ul>` element.
@@ -67,9 +67,11 @@ import { Link } from 'react-router-dom';
 function ListItemLink(props) {
   const { icon, primary, to } = props;
 
+  const CustomLink = (props) => <Link to={to} {...props} />;
+
   return (
     <li>
-      <ListItem button component={props => <Link to={to} {...props} />}>
+      <ListItem button component={CustomLink}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={primary} />
       </ListItem>
@@ -81,7 +83,7 @@ function ListItemLink(props) {
 ⚠️ However, since we are using an inline function to change the rendered component, React will unmount the link every time `ListItemLink` is rendered. Not only will React update the DOM unnecessarily, the ripple effect of the `ListItem` will also not work correctly.
 
 The solution is simple: **avoid inline functions and pass a static component to the `component` prop** instead.
-Let's change the `ListItemLink` to the following:
+Let's change the `ListItemLink` component so `CustomLink` always reference the same component:
 
 ```jsx
 import { Link } from 'react-router-dom';
@@ -89,7 +91,7 @@ import { Link } from 'react-router-dom';
 function ListItemLink(props) {
   const { icon, primary, to } = props;
 
-  const renderLink = React.useMemo(
+  const CustomLink = React.useMemo(
     () =>
       React.forwardRef((linkProps, ref) => (
         <Link ref={ref} to={to} {...linkProps} />
@@ -99,7 +101,7 @@ function ListItemLink(props) {
 
   return (
     <li>
-      <ListItem button component={renderLink}>
+      <ListItem button component={CustomLink}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={primary} />
       </ListItem>
@@ -107,8 +109,6 @@ function ListItemLink(props) {
   );
 }
 ```
-
-`renderLink` will now always reference the same component.
 
 ### Caveat with prop forwarding
 
@@ -165,31 +165,32 @@ ref forwarding. However, only the following component types can be given a `ref`
 
 If you don't use one of the above types when using your components in conjunction with Material-UI, you might see a warning from
 React in your console similar to:
+
 > Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
 
 Be aware that you will still get this warning for `lazy` and `memo` components if their
 wrapped component can't hold a ref.
 
 In some instances an additional warning is issued to help with debugging, similar to:
-> Invalid prop `component` supplied to `ComponentName`. Expected an element type that can hold a ref.
 
+> Invalid prop `component` supplied to `ComponentName`. Expected an element type that can hold a ref.
 
 Only the two most common use cases are covered. For more information see [this section in the official React docs](https://reactjs.org/docs/forwarding-refs.html).
 
 ```diff
-- const MyButton = props => <div role="button" {...props} />;
-+ const MyButton = React.forwardRef((props, ref) => <div role="button" {...props} ref={ref} />);
+-const MyButton = props => <div role="button" {...props} />;
++const MyButton = React.forwardRef((props, ref) => <div role="button" {...props} ref={ref} />);
 <Button component={MyButton} />;
 ```
 
 ```diff
-- const SomeContent = props => <div {...props}>Hello, World!</div>;
-+ const SomeContent = React.forwardRef((props, ref) => <div {...props} ref={ref}>Hello, World!</div>);
+-const SomeContent = props => <div {...props}>Hello, World!</div>;
++const SomeContent = React.forwardRef((props, ref) => <div {...props} ref={ref}>Hello, World!</div>);
 <Tooltip title="Hello, again."><SomeContent /></Tooltip>;
 ```
 
 To find out if the Material-UI component you're using has this requirement, check
-out the the props API documentation for that component. If you need to forward refs
+out the props API documentation for that component. If you need to forward refs
 the description will link to this section.
 
 ### Caveat with StrictMode
@@ -212,4 +213,3 @@ class Component extends React.Component {
 -export default Component;
 +export default React.forwardRef((props, ref) => <Component {...props} forwardedRef={ref} />);
 ```
-

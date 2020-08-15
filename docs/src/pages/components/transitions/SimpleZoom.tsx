@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Switch from '@material-ui/core/Switch';
 import Paper from '@material-ui/core/Paper';
 import Zoom from '@material-ui/core/Zoom';
@@ -33,7 +33,7 @@ export default function SimpleZoom() {
   const [checked, setChecked] = React.useState(false);
 
   const handleChange = () => {
-    setChecked(prev => !prev);
+    setChecked((prev) => !prev);
   };
 
   return (
@@ -46,14 +46,25 @@ export default function SimpleZoom() {
         <Zoom in={checked}>
           <Paper elevation={4} className={classes.paper}>
             <svg className={classes.svg}>
-              <polygon points="0,100 50,00, 100,100" className={classes.polygon} />
+              <polygon
+                points="0,100 50,00, 100,100"
+                className={classes.polygon}
+              />
             </svg>
           </Paper>
         </Zoom>
-        <Zoom in={checked} style={{ transitionDelay: checked ? '500ms' : '0ms' }}>
+        <Zoom
+          in={checked}
+          style={{
+            transitionDelay: checked ? '500ms' : '0ms',
+          }}
+        >
           <Paper elevation={4} className={classes.paper}>
             <svg className={classes.svg}>
-              <polygon points="0,100 50,00, 100,100" className={classes.polygon} />
+              <polygon
+                points="0,100 50,00, 100,100"
+                className={classes.polygon}
+              />
             </svg>
           </Paper>
         </Zoom>

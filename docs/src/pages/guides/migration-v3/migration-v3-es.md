@@ -4,7 +4,7 @@
 
 Looking for the v3 docs? [Find them here](https://material-ui.com/versions/).
 
-> This document is a work in progress. Have you upgraded your site and run into something that's not covered here? [Add your changes on GitHub](https://github.com/mui-org/material-ui/blob/master/docs/src/pages/guides/migration-v3/migration-v3.md).
+> This document is a work in progress. Have you upgraded your site and run into something that's not covered here? [Add your changes on GitHub](https://github.com/mui-org/material-ui/blob/next/docs/src/pages/guides/migration-v3/migration-v3.md).
 
 ## Introduction
 
@@ -79,6 +79,14 @@ yarn add @material-ui/styles
   -const DeepChild = withTheme()(DeepChildRaw);
   +const DeepChild = withTheme(DeepChildRaw);
   ```
+
+- Rename `convertHexToRGB` to `hexToRgb`.
+
+  ```diff
+  -import { convertHexToRgb } from '@material-ui/core/styles/colorManipulator';
+  +import { hexToRgb } from '@material-ui/core/styles';
+  ```
+
 - Scope the [keyframes API](https://cssinjs.org/jss-syntax/#keyframes-animation). You should apply the following changes in your codebase.
   It helps isolating the animation logic:
 
@@ -331,7 +339,7 @@ This change is explained in more detail in the [TypeScript guide](/guides/typesc
   +<Tabs variant="scrollable" />
   ```
 
-### Table (tabla)
+### Table (Tabla)
 
 - [TableCell] Remove the deprecated `numeric` property:
   

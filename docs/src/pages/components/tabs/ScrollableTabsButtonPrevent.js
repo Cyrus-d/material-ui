@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -18,23 +18,26 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <Typography
-      component="div"
+    <div
       role="tabpanel"
       hidden={value !== index}
       id={`scrollable-prevent-tabpanel-${index}`}
       aria-labelledby={`scrollable-prevent-tab-${index}`}
       {...other}
     >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
 TabPanel.propTypes = {
   children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
 };
 
 function a11yProps(index) {
@@ -44,7 +47,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
@@ -71,10 +74,18 @@ export default function ScrollableTabsButtonPrevent() {
           aria-label="scrollable prevent tabs example"
         >
           <Tab icon={<PhoneIcon />} aria-label="phone" {...a11yProps(0)} />
-          <Tab icon={<FavoriteIcon />} aria-label="favorite" {...a11yProps(1)} />
+          <Tab
+            icon={<FavoriteIcon />}
+            aria-label="favorite"
+            {...a11yProps(1)}
+          />
           <Tab icon={<PersonPinIcon />} aria-label="person" {...a11yProps(2)} />
           <Tab icon={<HelpIcon />} aria-label="help" {...a11yProps(3)} />
-          <Tab icon={<ShoppingBasket />} aria-label="shopping" {...a11yProps(4)} />
+          <Tab
+            icon={<ShoppingBasket />}
+            aria-label="shopping"
+            {...a11yProps(4)}
+          />
           <Tab icon={<ThumbDown />} aria-label="up" {...a11yProps(5)} />
           <Tab icon={<ThumbUp />} aria-label="down" {...a11yProps(6)} />
         </Tabs>

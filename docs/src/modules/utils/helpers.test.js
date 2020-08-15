@@ -1,9 +1,9 @@
-import { assert } from 'chai';
+import { expect } from 'chai';
 import { getDependencies } from './helpers';
 
 describe('docs getDependencies helpers', () => {
   const s1 = `
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
@@ -21,9 +21,9 @@ const styles = theme => ({
 `;
 
   it('should handle @ dependencies', () => {
-    assert.deepEqual(getDependencies(s1), {
+    expect(getDependencies(s1)).to.deep.equal({
       '@foo-bar/bip': 'latest',
-      '@material-ui/core': 'latest',
+      '@material-ui/core': 'next',
       'prop-types': 'latest',
       'react-dom': 'latest',
       react: 'latest',
@@ -32,7 +32,7 @@ const styles = theme => ({
 
   it('should handle * dependencies', () => {
     const source = `
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from '@unexisting/thing';
 import Draggable from 'react-draggable';
@@ -45,8 +45,8 @@ import { withStyles } from '@material-ui/core/styles';
 const suggestions = [
 `;
 
-    assert.deepEqual(getDependencies(source), {
-      '@material-ui/core': 'latest',
+    expect(getDependencies(source)).to.deep.equal({
+      '@material-ui/core': 'next',
       '@unexisting/thing': 'latest',
       'autosuggest-highlight': 'latest',
       'prop-types': 'latest',
@@ -57,9 +57,9 @@ const suggestions = [
   });
 
   it('should support next dependencies', () => {
-    assert.deepEqual(getDependencies(s1, { reactVersion: 'next' }), {
+    expect(getDependencies(s1, { reactVersion: 'next' })).to.deep.equal({
       '@foo-bar/bip': 'latest',
-      '@material-ui/core': 'latest',
+      '@material-ui/core': 'next',
       'prop-types': 'latest',
       'react-dom': 'next',
       react: 'next',
@@ -68,20 +68,18 @@ const suggestions = [
 
   it('should support direct import', () => {
     const source = `
-import 'date-fns';
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
+import DateFnsAdapter from "@material-ui/pickers/adapter/date-fns";
+import { LocalizationProvider as MuiPickersLocalizationProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 `;
 
-    assert.deepEqual(getDependencies(source), {
-      'date-fns': 'next',
-      '@date-io/date-fns': 'latest',
-      '@material-ui/pickers': 'latest',
-      '@material-ui/core': 'latest',
+    expect(getDependencies(source)).to.deep.equal({
+      'date-fns': 'latest',
+      '@material-ui/pickers': 'next',
+      '@material-ui/core': 'next',
       'prop-types': 'latest',
       'react-dom': 'latest',
       react: 'latest',
@@ -89,9 +87,9 @@ import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pi
   });
 
   it('can collect required @types packages', () => {
-    assert.deepEqual(getDependencies(s1, { codeLanguage: 'TS' }), {
+    expect(getDependencies(s1, { codeLanguage: 'TS' })).to.deep.equal({
       '@foo-bar/bip': 'latest',
-      '@material-ui/core': 'latest',
+      '@material-ui/core': 'next',
       'prop-types': 'latest',
       'react-dom': 'latest',
       react: 'latest',
@@ -105,18 +103,18 @@ import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pi
 
   it('should handle multilines', () => {
     const source = `
-import 'date-fns';
-import React from 'react';
+import * as React from 'react';
+import DateFnsAdapter from '@material-ui/pickers/adapter/date-fns';
 import {
-  MuiPickersUtilsProvider,
+  LocalizationProvider as MuiPickersLocalizationProvider,
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
     `;
 
-    assert.deepEqual(getDependencies(source), {
-      'date-fns': 'next',
-      '@material-ui/pickers': 'latest',
+    expect(getDependencies(source)).to.deep.equal({
+      'date-fns': 'latest',
+      '@material-ui/pickers': 'next',
       react: 'latest',
       'react-dom': 'latest',
     });
@@ -127,9 +125,9 @@ import {
 import lab from '@material-ui/lab';
     `;
 
-    assert.deepEqual(getDependencies(source), {
-      '@material-ui/core': 'latest',
-      '@material-ui/lab': 'latest',
+    expect(getDependencies(source)).to.deep.equal({
+      '@material-ui/core': 'next',
+      '@material-ui/lab': 'next',
       react: 'latest',
       'react-dom': 'latest',
     });

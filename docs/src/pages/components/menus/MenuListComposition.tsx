@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -25,11 +25,14 @@ export default function MenuListComposition() {
   const anchorRef = React.useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
-    setOpen(prevOpen => !prevOpen);
+    setOpen((prevOpen) => !prevOpen);
   };
 
   const handleClose = (event: React.MouseEvent<EventTarget>) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
       return;
     }
 
@@ -71,15 +74,28 @@ export default function MenuListComposition() {
         >
           Toggle Menu Grow
         </Button>
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+        <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          transition
+          disablePortal
+        >
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}
-              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+              style={{
+                transformOrigin:
+                  placement === 'bottom' ? 'center top' : 'center bottom',
+              }}
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                  <MenuList
+                    autoFocusItem={open}
+                    id="menu-list-grow"
+                    onKeyDown={handleListKeyDown}
+                  >
                     <MenuItem onClick={handleClose}>Profile</MenuItem>
                     <MenuItem onClick={handleClose}>My account</MenuItem>
                     <MenuItem onClick={handleClose}>Logout</MenuItem>

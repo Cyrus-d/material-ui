@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import { createMuiTheme, ThemeProvider, Theme } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -41,7 +41,7 @@ export default function DynamicThemeNesting() {
       />
       <ThemeProvider<Theme> theme={theme}>
         <Button variant="contained" color="secondary">
-          {'Theme nesting'}
+          Theme nesting
         </Button>
       </ThemeProvider>
     </React.Fragment>

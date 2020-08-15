@@ -1,10 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import PropTypes from 'prop-types';
-import { getClasses, createMount } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
-import { act, createClientRender, fireEvent, queries } from 'test/utils/createClientRender';
+import {
+  getClasses,
+  createMount,
+  describeConformance,
+  act,
+  createClientRender,
+  fireEvent,
+  queries,
+} from 'test/utils';
 import ListItemText from '../ListItemText';
 import ListItemSecondaryAction from '../ListItemSecondaryAction';
 import ListItem from './ListItem';
@@ -15,13 +20,12 @@ const NoContent = React.forwardRef(() => {
 });
 
 describe('<ListItem />', () => {
-  let mount;
-  const render = createClientRender({ strict: false });
+  const mount = createMount({ strict: true });
+  const render = createClientRender();
   let classes;
 
   before(() => {
     classes = getClasses(<ListItem />);
-    mount = createMount({ strict: true });
   });
 
   describeConformance(<ListItem />, () => ({
@@ -29,7 +33,6 @@ describe('<ListItem />', () => {
     inheritComponent: 'li',
     mount,
     refInstanceof: window.HTMLLIElement,
-    after: () => mount.cleanUp(),
   }));
 
   it('should render with gutters classes', () => {
@@ -60,7 +63,7 @@ describe('<ListItem />', () => {
       const { setProps } = render(
         <ListItem>
           <ListContext.Consumer>
-            {options => {
+            {(options) => {
               context = options;
             }}
           </ListContext.Consumer>
@@ -83,7 +86,7 @@ describe('<ListItem />', () => {
       const listItem = getByRole('listitem');
 
       expect(listItem).to.have.class(classes.container);
-      expect(listItem.querySelector(`div.${classes.root}`)).to.be.ok;
+      expect(listItem.querySelector(`div.${classes.root}`)).not.to.equal(null);
     });
 
     it('should accept a component property', () => {
@@ -96,7 +99,7 @@ describe('<ListItem />', () => {
       const listItem = getByRole('listitem');
 
       expect(listItem).to.have.class(classes.container);
-      expect(listItem.querySelector(`span.${classes.root}`)).to.be.ok;
+      expect(listItem.querySelector(`span.${classes.root}`)).not.to.equal(null);
     });
 
     it('should accept a button property', () => {
@@ -109,7 +112,7 @@ describe('<ListItem />', () => {
       const listItem = getByRole('listitem');
 
       expect(listItem).to.have.class(classes.container);
-      expect(queries.getByRole(listItem, 'button')).to.be.ok;
+      expect(queries.getByRole(listItem, 'button')).not.to.equal(null);
     });
 
     it('should accept a ContainerComponent property', () => {
@@ -123,7 +126,22 @@ describe('<ListItem />', () => {
 
       expect(listItem).to.have.property('nodeName', 'DIV');
       expect(listItem).to.have.class(classes.container);
-      expect(listItem.querySelector(`div.${classes.root}`)).to.be.ok;
+      expect(listItem.querySelector(`div.${classes.root}`)).not.to.equal(null);
+    });
+
+    it('can autofocus a custom ContainerComponent', () => {
+      const { getByRole } = render(
+        <ListItem
+          autoFocus
+          ContainerComponent="div"
+          ContainerProps={{ role: 'listitem', tabIndex: -1 }}
+        >
+          <ListItemText primary="primary" />
+          <ListItemSecondaryAction />
+        </ListItem>,
+      );
+
+      expect(getByRole('listitem')).toHaveFocus();
     });
 
     it('should allow customization of the wrapper', () => {
@@ -141,34 +159,31 @@ describe('<ListItem />', () => {
 
     describe('warnings', () => {
       beforeEach(() => {
-        consoleErrorMock.spy();
-      });
-
-      afterEach(() => {
-        consoleErrorMock.reset();
         PropTypes.resetWarningCache();
       });
 
       it('warns if it cant detect the secondary action properly', () => {
-        render(
-          <ListItem>
-            <ListItemSecondaryAction>I should have come last :(</ListItemSecondaryAction>
-            <ListItemText>My position doesn not matter.</ListItemText>
-          </ListItem>,
-        );
-
-        expect(consoleErrorMock.callCount()).to.equal(1);
-        expect(consoleErrorMock.args()[0][0]).to.include(
-          'Warning: Failed prop type: Material-UI: you used an element',
-        );
+        expect(() => {
+          PropTypes.checkPropTypes(
+            ListItem.Naked.propTypes,
+            {
+              classes: {},
+              children: [
+                <ListItemSecondaryAction>I should have come last :(</ListItemSecondaryAction>,
+                <ListItemText>My position doesn not matter.</ListItemText>,
+              ],
+            },
+            'prop',
+            'MockedName',
+          );
+        }).toErrorDev('Warning: Failed prop type: Material-UI: You used an element');
       });
 
       it('should warn (but not error) with autoFocus with a function component with no content', () => {
-        render(<ListItem component={NoContent} autoFocus />);
-
-        expect(consoleErrorMock.callCount()).to.equal(1);
-        expect(consoleErrorMock.args()[0][0]).to.include(
-          'Material-UI: unable to set focus to a ListItem whose component has not been rendered.',
+        expect(() => {
+          render(<ListItem component={NoContent} autoFocus />);
+        }).toErrorDev(
+          'Material-UI: Unable to set focus to a ListItem whose component has not been rendered.',
         );
       });
     });

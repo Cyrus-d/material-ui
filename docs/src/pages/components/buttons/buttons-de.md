@@ -1,6 +1,6 @@
 ---
 title: Button React Komponente
-components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
+components: Button, IconButton, ButtonBase
 ---
 
 # Button (schaltfläche)
@@ -18,8 +18,6 @@ components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
 ## Contained Buttons
 
 [Contained buttons](https://material.io/design/components/buttons.html#contained-button) sind hervorgehoben und unterscheiden sich durch die Verwendung von Höhe und Füllung. Sie enthalten Aktionen, die für Ihre App vorrangig sind.
-
-Das letzte Beispiel dieser Demo zeigt, wie Sie eine Schaltfläche zum Hochladen verwenden.
 
 {{"demo": "pages/components/buttons/ContainedButtons.js"}}
 
@@ -46,51 +44,23 @@ Outlined Buttons sind auch eine Alternative mit geringerer Betonung als Containe
 
 {{"demo": "pages/components/buttons/OutlinedButtons.js"}}
 
-## Grouped Buttons
+## Handling clicks
 
-The `ButtonGroup` component can be used to group buttons.
+All components accept an `onClick` handler that is applied to the root DOM element.
 
-{{"demo": "pages/components/buttons/GroupedButtons.js"}}
+```jsx
+<Button onClick={() => { alert('clicked') }}>Click me</Button>
+```
 
-### Group sizes and colors
+Note that the documentation [avoids](/guides/api/#native-properties) mentioning native props (there are a lot) in the API section of the components.
 
-{{"demo": "pages/components/buttons/GroupSizesColors.js"}}
-
-### Gruppenorientierung
-
-{{"demo": "pages/components/buttons/GroupOrientation.js"}}
-
-### Split Button
-
-Eine ButtonGroup kann auch verwendet werden um einen geteilten Button zu erstellen. Ein Dropdown kann verwendet werden um die Button-Aktion zu ändern (wie im unteren Beispiel gezeigt) oder die Aktion direkt zu aktivieren.
-
-{{"demo": "pages/components/buttons/SplitButton.js"}}
-
-## Floating Action Buttons
-
-Ein [Floating Action Button](https://material.io/design/components/buttons-floating-action-button.html) (FAB) führt die primäre oder gebräuchlichste Aktion auf einem Bildschirm aus. Es wird vor allen Bildschirminhalten angezeigt, normalerweise als Kreisform mit einem Symbol in der Mitte. Es gibt zwei Arten von FABs: normal und erweitert.
-
-Verwenden Sie eine FAB nur, wenn dies für die Darstellung der Hauptaktion eines Bildschirms am besten geeignet ist.
-
-Es wird nur eine Floating Action Button pro Bildschirm empfohlen, um die am häufigsten verwendete Aktion darzustellen.
-
-{{"demo": "pages/components/buttons/FloatingActionButtons.js"}}
-
-Der floating-action-button, wird standardmäßig als expandierendes Material auf dem Bildschirm animiert.
-
-Ein floating-action-button, der sich über mehrere seitliche Bildschirme (wie tabbed-screens) erstreckt, sollte kurz verschwinden und dann wieder erscheinen, wenn sich seine Aktion ändert.
-
-Hierzu kann der Zoom-Übergang verwendet werden. Da sowohl die vorhandenen als auch die eingegebenen Animationen gleichzeitig ausgelöst werden, verwenden wir `enterDelay`, um die Animation der ausgehenden Floating Action Buttons zu beenden, bevor die neue Animation eintritt.
-
-{{"demo": "pages/components/buttons/FloatingActionButtonZoom.js", "bg": true}}
-
-## Upload button
+## Upload-Button
 
 {{"demo": "pages/components/buttons/UploadButtons.js"}}
 
 ## Größen
 
-Fancy larger or smaller buttons? Use the `size` property.
+Fancy larger or smaller buttons? Verwende die Eigenschaft `size`.
 
 {{"demo": "pages/components/buttons/ButtonSizes.js"}}
 
@@ -114,13 +84,13 @@ Hier sind einige Beispiele, wie man die Komponente anpassen kann. Mehr dazu erfa
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js", "defaultCodeOpen": false}}
 
-👑 Wenn Sie nach Inspiration suchen, sehen sie sich [MUI Treasury's Anpassungs-Beispiele](https://mui-treasury.com/components/button) an.
+🎨 Wenn Sie nach Inspiration suchen, sehen sie sich [MUI Treasury's Anpassungs-Beispiele](https://mui-treasury.com/styles/button) an.
 
-## Complex Buttons
+## Komplexe Buttons
 
 Die Text Buttons, die Contained Buttons, die Floatin Action Buttons und die Icon Buttons basieren auf derselben Komponente: der `ButtonBase`. Sie können die Vorteile dieser grundlegenden Komponente zum erstellen von benutzerdefinierten Interaktionen nutzen.
 
-{{"demo": "pages/components/buttons/ButtonBases.js"}}
+{{"demo": "pages/components/buttons/ButtonBase.js"}}
 
 ## Drittanbieter-Routing Bibliothek
 
@@ -130,13 +100,13 @@ Hier ist ein [Integrationsbeispiel mit react-router](/guides/composition/#button
 
 ## Einschränkungen
 
-### Cursor not-allowed
+### Cursor nicht erlaubt
 
 The ButtonBase component sets `pointer-events: none;` on disabled buttons, which prevents the appearance of a disabled cursor.
 
 If you wish to use `not-allowed`, you have two options:
 
-1. **CSS only**. You can remove the pointer events style on the disabled state of the `<button>` element:
+1. **Nur CSS**. You can remove the pointer events style on the disabled state of the `<button>` element:
 
   ```css
   .MuiButtonBase-root:disabled {
@@ -145,12 +115,12 @@ If you wish to use `not-allowed`, you have two options:
   }
   ```
 
-However:
+Aber:
 
-- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements)
+- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements).
 - The cursor won't change if you render something other than a button element, for instance, a link `<a>` element.
 
-2. **DOM change**. You can wrap the button:
+2. **DOM-Anderung**. You can wrap the button:
 
   ```jsx
   <span style={{ cursor: 'not-allowed' }}>

@@ -1,6 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { useThemeVariants } from '@material-ui/styles';
 import CancelIcon from '../internal/svg-icons/Cancel';
 import withStyles from '../styles/withStyles';
 import { emphasize, fade } from '../styles/colorManipulator';
@@ -9,7 +10,7 @@ import unsupportedProp from '../utils/unsupportedProp';
 import capitalize from '../utils/capitalize';
 import ButtonBase from '../ButtonBase';
 
-export const styles = theme => {
+export const styles = (theme) => {
   const backgroundColor =
     theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700];
   const deleteIconColor = fade(theme.palette.text.primary, 0.26);
@@ -151,6 +152,8 @@ export const styles = theme => {
         marginRight: 3,
       },
     },
+    /* Styles applied to the root element if `variant="default"`. */
+    default: {},
     /* Styles applied to the root element if `variant="outlined"` and `color="primary"`. */
     outlinedPrimary: {
       color: theme.palette.primary.main,
@@ -167,7 +170,7 @@ export const styles = theme => {
         backgroundColor: fade(theme.palette.secondary.main, theme.palette.action.hoverOpacity),
       },
     },
-    // TODO remove in V5
+    // TODO v5: remove
     /* Styles applied to the `avatar` element. */
     avatar: {},
     /* Styles applied to the `avatar` element if `size="small"`. */
@@ -197,7 +200,7 @@ export const styles = theme => {
     iconColorSecondary: {
       color: 'inherit',
     },
-    /* Styles applied to the label `span` element`. */
+    /* Styles applied to the label `span` element. */
     label: {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -205,6 +208,7 @@ export const styles = theme => {
       paddingRight: 12,
       whiteSpace: 'nowrap',
     },
+    /* Styles applied to the label `span` element if `size="small"`. */
     labelSmall: {
       paddingLeft: 8,
       paddingRight: 8,
@@ -259,6 +263,10 @@ export const styles = theme => {
   };
 };
 
+function isDeleteKeyboardEvent(keyboardEvent) {
+  return keyboardEvent.key === 'Backspace' || keyboardEvent.key === 'Delete';
+}
+
 /**
  * Chips represent complex entities in small blocks, such as a contact.
  */
@@ -276,6 +284,7 @@ const Chip = React.forwardRef(function Chip(props, ref) {
     label,
     onClick,
     onDelete,
+    onKeyDown,
     onKeyUp,
     size = 'medium',
     variant = 'default',
@@ -285,7 +294,7 @@ const Chip = React.forwardRef(function Chip(props, ref) {
   const chipRef = React.useRef(null);
   const handleRef = useForkRef(chipRef, ref);
 
-  const handleDeleteIconClick = event => {
+  const handleDeleteIconClick = (event) => {
     // Stop the event from bubbling up to the `Chip`
     event.stopPropagation();
     if (onDelete) {
@@ -293,21 +302,31 @@ const Chip = React.forwardRef(function Chip(props, ref) {
     }
   };
 
-  const handleKeyUp = event => {
+  const handleKeyDown = (event) => {
+    // Ignore events from children of `Chip`.
+    if (event.currentTarget === event.target && isDeleteKeyboardEvent(event)) {
+      // will be handled in keyUp, otherwise some browsers
+      // might init navigation
+      event.preventDefault();
+    }
+
+    if (onKeyDown) {
+      onKeyDown(event);
+    }
+  };
+
+  const handleKeyUp = (event) => {
+    // Ignore events from children of `Chip`.
+    if (event.currentTarget === event.target) {
+      if (onDelete && isDeleteKeyboardEvent(event)) {
+        onDelete(event);
+      } else if (event.key === 'Escape' && chipRef.current) {
+        chipRef.current.blur();
+      }
+    }
+
     if (onKeyUp) {
       onKeyUp(event);
-    }
-
-    // Ignore events from children of `Chip`.
-    if (event.currentTarget !== event.target) {
-      return;
-    }
-
-    const key = event.key;
-    if (onDelete && (key === 'Backspace' || key === 'Delete')) {
-      onDelete(event);
-    } else if (key === 'Escape' && chipRef.current) {
-      chipRef.current.blur();
     }
   };
 
@@ -364,17 +383,30 @@ const Chip = React.forwardRef(function Chip(props, ref) {
   if (process.env.NODE_ENV !== 'production') {
     if (avatar && icon) {
       console.error(
-        'Material-UI: the Chip component can not handle the avatar ' +
+        'Material-UI: The Chip component can not handle the avatar ' +
           'and the icon prop at the same time. Pick one.',
       );
     }
   }
+
+  const themeVariantsClasses = useThemeVariants(
+    {
+      ...props,
+      clickable,
+      color,
+      disabled,
+      size,
+      variant,
+    },
+    'MuiChip',
+  );
 
   return (
     <Component
       role={clickable || onDelete ? 'button' : undefined}
       className={clsx(
         classes.root,
+        classes[variant],
         {
           [classes.disabled]: disabled,
           [classes.sizeSmall]: small,
@@ -383,15 +415,16 @@ const Chip = React.forwardRef(function Chip(props, ref) {
           [classes[`clickableColor${capitalize(color)}`]]: clickable && color !== 'default',
           [classes.deletable]: onDelete,
           [classes[`deletableColor${capitalize(color)}`]]: onDelete && color !== 'default',
-          [classes.outlined]: variant === 'outlined',
           [classes.outlinedPrimary]: variant === 'outlined' && color === 'primary',
           [classes.outlinedSecondary]: variant === 'outlined' && color === 'secondary',
         },
+        themeVariantsClasses,
         className,
       )}
       aria-disabled={disabled ? true : undefined}
       tabIndex={clickable || onDelete ? 0 : undefined}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       ref={handleRef}
       {...moreProps}
@@ -411,6 +444,10 @@ const Chip = React.forwardRef(function Chip(props, ref) {
 });
 
 Chip.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Avatar element.
    */
@@ -424,7 +461,7 @@ Chip.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -443,7 +480,7 @@ Chip.propTypes = {
   color: PropTypes.oneOf(['default', 'primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -482,7 +519,7 @@ Chip.propTypes = {
   /**
    * The size of the chip.
    */
-  size: PropTypes.oneOf(['small', 'medium']),
+  size: PropTypes.oneOf(['medium', 'small']),
   /**
    * The variant to use.
    */

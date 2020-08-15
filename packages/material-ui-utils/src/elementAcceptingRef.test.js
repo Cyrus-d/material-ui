@@ -1,15 +1,11 @@
 /* eslint-disable react/prefer-stateless-function */
-import { assert } from 'chai';
+import { expect } from 'chai';
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createMount } from '@material-ui/core/test-utils';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
 import elementAcceptingRef from './elementAcceptingRef';
 
 describe('elementAcceptingRef', () => {
-  let mount;
-
   function checkPropType(element, required = false) {
     PropTypes.checkPropTypes(
       { children: required ? elementAcceptingRef.isRequired : elementAcceptingRef },
@@ -19,20 +15,7 @@ describe('elementAcceptingRef', () => {
     );
   }
 
-  before(() => {
-    mount = createMount({ strict: true });
-  });
-
-  after(() => {
-    mount.cleanUp();
-  });
-
   beforeEach(() => {
-    consoleErrorMock.spy();
-  });
-
-  afterEach(() => {
-    consoleErrorMock.reset();
     PropTypes.resetWarningCache();
   });
 
@@ -40,23 +23,21 @@ describe('elementAcceptingRef', () => {
     let rootNode;
 
     function assertPass(element, options = {}) {
-      const { failsOnMount = false, shouldMount = true } = options;
+      const { shouldMount = true } = options;
 
-      checkPropType(element);
-      if (shouldMount) {
-        ReactDOM.render(
-          <React.Suspense fallback={<p />}>
-            {React.cloneElement(element, { ref: React.createRef() })}
-          </React.Suspense>,
-          rootNode,
-        );
+      function testAct() {
+        checkPropType(element);
+        if (shouldMount) {
+          ReactDOM.render(
+            <React.Suspense fallback={<p />}>
+              {React.cloneElement(element, { ref: React.createRef() })}
+            </React.Suspense>,
+            rootNode,
+          );
+        }
       }
 
-      assert.strictEqual(
-        consoleErrorMock.callCount(),
-        failsOnMount ? 1 : 0,
-        `but got '${consoleErrorMock.args()[0]}'`,
-      );
+      expect(testAct).not.toErrorDev();
     }
 
     before(() => {
@@ -109,7 +90,9 @@ describe('elementAcceptingRef', () => {
     });
 
     it('accepts lazy', () => {
-      const Component = React.lazy(() => Promise.resolve({ default: props => <div {...props} /> }));
+      const Component = React.lazy(() =>
+        Promise.resolve({ default: (props) => <div {...props} /> }),
+      );
 
       // should actually fail when mounting since the ref is forwarded to a function component
       // but since this happens in a promise our consoleErrorMock doesn't catch it properly
@@ -128,26 +111,24 @@ describe('elementAcceptingRef', () => {
 
   describe('rejections', () => {
     function assertFail(Component, hint) {
-      checkPropType(Component);
-
-      assert.strictEqual(consoleErrorMock.callCount(), 1);
-      assert.include(
-        consoleErrorMock.args()[0][0],
+      expect(() => {
+        checkPropType(Component);
+      }).toErrorDev(
         'Invalid props `children` supplied to `DummyComponent`. ' +
           `Expected an element that can hold a ref. ${hint}`,
       );
     }
 
     it('rejects undefined values when required', () => {
-      checkPropType(undefined, true);
-      assert.strictEqual(consoleErrorMock.callCount(), 1);
-      assert.include(consoleErrorMock.args()[0][0], 'marked as required');
+      expect(() => {
+        checkPropType(undefined, true);
+      }).toErrorDev('marked as required');
     });
 
     it('rejects null values when required', () => {
-      checkPropType(null, true);
-      assert.strictEqual(consoleErrorMock.callCount(), 1);
-      assert.include(consoleErrorMock.args()[0][0], 'marked as required');
+      expect(() => {
+        checkPropType(null, true);
+      }).toErrorDev('marked as required');
     });
 
     it('rejects function components', () => {

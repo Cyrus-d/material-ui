@@ -2,7 +2,7 @@
 
 <p class="description">Material-UIコンポーネントを使用していなくても使う事が出来ます。</p>
 
-Material-UI aims to provide a strong foundation for building dynamic UIs. For the sake of simplicity, **we expose the styling solution used in Material-UI components** as the `@material-ui/styles` package. You can use it, but you don't have to, since Material-UI is also [interoperable with](/guides/interoperability/) all the other major styling solutions.
+Material-UIは、動的なUIを構築するための強固な基盤を提供することを目指しています。 シンプルにするため、**Material-UIで使われているスタイリングソリューションを`@material-ui/styles`で公開しています。** これを使うこともできますが、Material-UIは他の主要なスタイリングソリューション全てと[相互運用が可能](/guides/interoperability/)なので、必要というわけではありません。
 
 ## Material-UIのスタイリングソリューションを使用する理由
 
@@ -11,14 +11,14 @@ In previous versions, Material-UI has used LESS, then a custom inline-style solu
 Material-UI's styling solution is inspired by many other styling libraries such as [styled-components](https://www.styled-components.com/) and [emotion](https://emotion.sh/).
 
 - 💅 You can expect [the same advantages](https://www.styled-components.com/docs/basics#motivation) as styled-components.
-- 🚀 It's [blazing fast](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-benchmark/README.md#material-uistyles).
+- 🚀 It's [blazing fast](https://github.com/mui-org/material-ui/blob/next/packages/material-ui-benchmark/README.md#material-uistyles).
 - 🧩 It's extensible via a [plugin](https://github.com/cssinjs/jss/blob/master/docs/plugins.md) API.
 - ⚡️ It uses [JSS](https://github.com/cssinjs/jss) at its core – a [high performance](https://github.com/cssinjs/jss/blob/master/docs/performance.md) JavaScript to CSS compiler which works at runtime and server-side.
 - 📦 Less than [15 KB gzipped](https://bundlephobia.com/result?p=@material-ui/styles); and no bundle size increase if used alongside Material-UI.
 
 ## インストール
 
-> `@material-ui/styles` is re-exported as `@material-ui/core/styles` - you only need to install it if you wish to use it independently from Material-UI.
+> `@material-ui/styles`は`@material-ui/core/styles`を切り出したものです。Material-UIを使わない場合のみインストールの必要があります。
 
 インストールして`package.json` のdependenciesに保存します。次を実行してください。
 
@@ -37,7 +37,7 @@ yarn add @material-ui/styles
 ### Hook API
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -66,7 +66,7 @@ export default function Hook() {
 注：これは呼び出し構文にのみ適用されます。スタイル定義は引き続きJSSオブジェクトを使用します。 [この動作を変更することもできます](/styles/advanced/#string-templates) が、いくつかの制限があります。
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -90,7 +90,7 @@ export default function StyledComponents() {
 ### Higher-order component API
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -123,7 +123,7 @@ export default withStyles(styles)(HigherOrderComponent);
 
 ## Nesting selectors
 
-You can nest selectors to target elements inside the current class or component. The following example uses the Hook API, but it works the same way with the other APIs.
+現在のクラスやコンポーネント内のターゲット要素に、セレクターを入れ子にすることができます。 以下の例はHook APIを使用していますが、他のAPIでも同様に機能します。
 
 ```js
 const useStyles = makeStyles({

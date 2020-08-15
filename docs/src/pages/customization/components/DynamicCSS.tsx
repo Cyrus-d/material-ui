@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -6,7 +6,7 @@ import Switch from '@material-ui/core/Switch';
 
 interface Styles {
   color: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   [key: string]: any;
 }
 
@@ -16,13 +16,10 @@ interface ColorsMapping {
   [key: string]: any;
 }
 
-interface ButtonStyles extends WithStyles<typeof styles> {
-  color: string;
-}
-
 // Like https://github.com/brunobertolini/styled-by
-const styledBy = (property: string, mapping: ColorsMapping) => (props: Styles) =>
-  mapping[props[property]];
+const styledBy = (property: string, mapping: ColorsMapping) => (
+  props: Styles,
+) => mapping[props[property]];
 
 const styles = {
   root: {
@@ -42,7 +39,13 @@ const styles = {
   },
 };
 
-const StyledButton = withStyles(styles)(({ classes, color, ...other }: ButtonStyles) => (
+interface ButtonStyles extends WithStyles<typeof styles> {
+  color: string;
+}
+
+const StyledButton = withStyles(
+  styles,
+)(({ classes, color, ...other }: ButtonStyles) => (
   <Button className={classes.root} {...other} />
 ));
 

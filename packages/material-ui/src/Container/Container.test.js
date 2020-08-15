@@ -1,23 +1,17 @@
-import React from 'react';
-import { assert } from 'chai';
-import { createMount, findOutermostIntrinsic, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { expect } from 'chai';
+import { findOutermostIntrinsic, getClasses, createMount, describeConformance } from 'test/utils';
 import Container from './Container';
 
 describe('<Container />', () => {
-  let mount;
+  const mount = createMount();
   let classes;
   const defaultProps = {
     children: <div />,
   };
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<Container {...defaultProps} />);
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<Container {...defaultProps} />, () => ({
@@ -31,9 +25,9 @@ describe('<Container />', () => {
     it('should support different maxWidth values', () => {
       let wrapper;
       wrapper = mount(<Container {...defaultProps} />);
-      assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes.maxWidthLg), true);
+      expect(findOutermostIntrinsic(wrapper).hasClass(classes.maxWidthLg)).to.equal(true);
       wrapper = mount(<Container {...defaultProps} maxWidth={false} />);
-      assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes.maxWidthLg), false);
+      expect(findOutermostIntrinsic(wrapper).hasClass(classes.maxWidthLg)).to.equal(false);
     });
   });
 });

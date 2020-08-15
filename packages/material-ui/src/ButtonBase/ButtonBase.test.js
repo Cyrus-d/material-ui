@@ -1,14 +1,19 @@
 // @ts-check
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import {
+  getClasses,
+  createMount,
+  describeConformance,
+  act,
+  createClientRender,
+  fireEvent,
+  screen,
+} from 'test/utils';
+import * as PropTypes from 'prop-types';
 import TouchRipple from './TouchRipple';
 import ButtonBase from './ButtonBase';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
-import { act, createClientRender, fireEvent } from 'test/utils/createClientRender';
-import * as PropTypes from 'prop-types';
 
 /**
  * @param {HTMLElement} element
@@ -16,7 +21,7 @@ import * as PropTypes from 'prop-types';
 function focusVisible(element) {
   act(() => {
     element.blur();
-    fireEvent.keyDown(document.activeElement || document.body, { key: 'Tab' });
+    fireEvent.keyDown(document.body, { key: 'Tab' });
     element.focus();
   });
 }
@@ -32,7 +37,7 @@ describe('<ButtonBase />', () => {
   /**
    * @type {ReturnType<typeof createMount>}
    */
-  let mount;
+  const mount = createMount();
   /**
    * @type {Record<string, string>}
    */
@@ -41,7 +46,6 @@ describe('<ButtonBase />', () => {
   let canFireDragEvents = true;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<ButtonBase />);
     // browser testing config
     try {
@@ -59,7 +63,6 @@ describe('<ButtonBase />', () => {
     mount,
     refInstanceof: window.HTMLButtonElement,
     testComponentPropWith: 'a',
-    after: () => mount.cleanUp(),
   }));
 
   describe('root node', () => {
@@ -74,9 +77,7 @@ describe('<ButtonBase />', () => {
       );
       const checkbox = getByRole('checkbox');
       expect(checkbox).to.have.property('nodeName', 'SPAN');
-      expect(checkbox)
-        .attribute('tabIndex')
-        .to.equal('0');
+      expect(checkbox).attribute('tabIndex').to.equal('0');
     });
 
     it('should not apply role="button" if type="button"', () => {
@@ -124,31 +125,28 @@ describe('<ButtonBase />', () => {
 
   describe('event callbacks', () => {
     it('should fire event callbacks', () => {
-      const eventHandlerNames = [
-        'onClick',
-        'onFocus',
-        'onBlur',
-        'onKeyUp',
-        'onKeyDown',
-        'onMouseDown',
-        'onMouseLeave',
-        'onMouseUp',
-      ];
-
-      /**
-       * @type {Record<string, import('sinon').SinonSpy>}
-       */
-      const handlers = {};
-      eventHandlerNames.forEach(handlerName => {
-        handlers[handlerName] = spy();
-      });
+      const onClick = spy();
+      const onBlur = spy();
+      const onFocus = spy();
+      const onKeyUp = spy();
+      const onKeyDown = spy();
+      const onMouseDown = spy();
+      const onMouseLeave = spy();
+      const onMouseUp = spy();
       const onDragEnd = spy();
       const onTouchStart = spy();
       const onTouchEnd = spy();
 
       const { getByText } = render(
         <ButtonBase
-          {...handlers}
+          onClick={onClick}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          onKeyUp={onKeyUp}
+          onKeyDown={onKeyDown}
+          onMouseDown={onMouseDown}
+          onMouseLeave={onMouseLeave}
+          onMouseUp={onMouseUp}
           onDragEnd={onDragEnd}
           onTouchEnd={onTouchEnd}
           onTouchStart={onTouchStart}
@@ -174,13 +172,29 @@ describe('<ButtonBase />', () => {
         expect(onDragEnd.callCount).to.equal(1);
       }
 
-      eventHandlerNames.forEach(n => {
-        // onKeyDown -> keyDown
-        const eventType = n.charAt(2).toLowerCase() + n.slice(3);
-        // @ts-ignore eventType isn't a literal here, need const expression
-        fireEvent[eventType](button);
-        expect(handlers[n].callCount, `should have called the ${n} handler`).to.equal(1);
-      });
+      fireEvent.mouseDown(button);
+      expect(onMouseDown.callCount).to.equal(1);
+
+      fireEvent.mouseUp(button);
+      expect(onMouseUp.callCount).to.equal(1);
+
+      fireEvent.click(button);
+      expect(onClick.callCount).to.equal(1);
+
+      button.focus();
+      expect(onFocus.callCount).to.equal(1);
+
+      fireEvent.keyDown(button);
+      expect(onKeyDown.callCount).to.equal(1);
+
+      fireEvent.keyUp(button);
+      expect(onKeyUp.callCount).to.equal(1);
+
+      button.blur();
+      expect(onBlur.callCount).to.equal(1);
+
+      fireEvent.mouseLeave(button);
+      expect(onMouseLeave.callCount).to.equal(1);
     });
   });
 
@@ -374,6 +388,54 @@ describe('<ButtonBase />', () => {
           button.querySelectorAll('.ripple-visible .child:not(.child-leaving)'),
         ).to.have.lengthOf(0);
       });
+
+      it('should not crash when changes enableRipple from false to true', () => {
+        function App() {
+          /** @type {React.MutableRefObject<import('./ButtonBase').ButtonBaseActions | null>} */
+          const buttonRef = React.useRef(null);
+          const [enableRipple, setRipple] = React.useState(false);
+
+          React.useEffect(() => {
+            if (buttonRef.current) {
+              buttonRef.current.focusVisible();
+            } else {
+              throw new Error('buttonRef.current must be available');
+            }
+          }, []);
+
+          return (
+            <div>
+              <button
+                type="button"
+                data-testid="trigger"
+                onClick={() => {
+                  setRipple(true);
+                }}
+              >
+                Trigger crash
+              </button>
+              <ButtonBase
+                autoFocus
+                action={buttonRef}
+                TouchRippleProps={{
+                  classes: {
+                    ripplePulsate: 'ripple-pulsate',
+                  },
+                }}
+                focusRipple
+                disableRipple={!enableRipple}
+              >
+                the button
+              </ButtonBase>
+            </div>
+          );
+        }
+
+        const { container, getByTestId } = render(<App />);
+
+        fireEvent.click(getByTestId('trigger'));
+        expect(container.querySelectorAll('.ripple-pulsate')).to.have.lengthOf(1);
+      });
     });
   });
 
@@ -552,6 +614,9 @@ describe('<ButtonBase />', () => {
 
   describe('prop: component', () => {
     it('should allow to use a link component', () => {
+      /**
+       * @type {React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement>>}
+       */
       const Link = React.forwardRef((props, ref) => (
         <div data-testid="link" ref={ref} {...props} />
       ));
@@ -562,7 +627,7 @@ describe('<ButtonBase />', () => {
   });
 
   describe('event: focus', () => {
-    it('when disabled should not call onFocus', () => {
+    it('when disabled should be called onFocus', () => {
       const onFocusSpy = spy();
       const { getByRole } = render(
         <ButtonBase component="div" disabled onFocus={onFocusSpy}>
@@ -570,9 +635,11 @@ describe('<ButtonBase />', () => {
         </ButtonBase>,
       );
 
-      getByRole('button').focus();
+      act(() => {
+        getByRole('button').focus();
+      });
 
-      expect(onFocusSpy.callCount).to.equal(0);
+      expect(onFocusSpy.callCount).to.equal(1);
     });
 
     it('has a focus-visible polyfill', () => {
@@ -585,6 +652,51 @@ describe('<ButtonBase />', () => {
       expect(button).not.to.have.class(classes.focusVisible);
       focusVisible(button);
       expect(button).to.have.class(classes.focusVisible);
+    });
+
+    it('removes foucs-visible if focus is re-targetted', () => {
+      /**
+       * @type {string[]}
+       */
+      const eventLog = [];
+      function Test() {
+        /**
+         * @type {React.Ref<HTMLButtonElement>}
+         */
+        const focusRetargetRef = React.useRef(null);
+        return (
+          <div
+            onFocus={() => {
+              const { current: focusRetarget } = focusRetargetRef;
+              if (focusRetarget === null) {
+                throw new TypeError('Nothing to focous. Test cannot work.');
+              }
+              focusRetarget.focus();
+            }}
+          >
+            <button ref={focusRetargetRef} type="button">
+              you cannot escape me
+            </button>
+            <ButtonBase
+              onBlur={() => eventLog.push('blur')}
+              onFocus={() => eventLog.push('focus')}
+              onFocusVisible={() => eventLog.push('focus-visible')}
+            >
+              Hello
+            </ButtonBase>
+          </div>
+        );
+      }
+      const { getByText } = render(<Test />);
+      const buttonBase = getByText('Hello');
+      const focusRetarget = getByText('you cannot escape me');
+      simulatePointerDevice();
+
+      focusVisible(buttonBase);
+
+      expect(focusRetarget).toHaveFocus();
+      expect(eventLog).to.deep.equal(['focus-visible', 'focus', 'blur']);
+      expect(buttonBase).not.to.have.class(classes.focusVisible);
     });
 
     it('onFocusVisibleHandler() should propagate call to onFocusVisible prop', () => {
@@ -607,7 +719,7 @@ describe('<ButtonBase />', () => {
       // so we need to check if we're resilient against it
       const { getByText } = render(<ButtonBase autoFocus>Hello</ButtonBase>);
 
-      expect(getByText('Hello')).to.have.focus;
+      expect(getByText('Hello')).toHaveFocus();
     });
   });
 
@@ -621,14 +733,16 @@ describe('<ButtonBase />', () => {
 
       const button = getByText('Hello');
 
-      button.focus();
-      fireEvent.keyDown(document.activeElement || document.body, { key: 'Enter' });
+      act(() => {
+        button.focus();
+        fireEvent.keyDown(button, { key: 'Enter' });
+      });
 
       expect(container.querySelectorAll('.ripple-visible')).to.have.lengthOf(1);
 
       // technically the second keydown should be fire with repeat: true
       // but that isn't implemented in IE 11 so we shouldn't mock it here either
-      fireEvent.keyDown(document.activeElement || document.body, { key: 'Enter' });
+      fireEvent.keyDown(button, { key: 'Enter' });
 
       expect(container.querySelectorAll('.ripple-visible')).to.have.lengthOf(1);
     });
@@ -636,7 +750,11 @@ describe('<ButtonBase />', () => {
     describe('prop: onKeyDown', () => {
       it('call it when keydown events are dispatched', () => {
         const onKeyDownSpy = spy();
-        const { getByText } = render(<ButtonBase onKeyDown={onKeyDownSpy}>Hello</ButtonBase>);
+        const { getByText } = render(
+          <ButtonBase autoFocus onKeyDown={onKeyDownSpy}>
+            Hello
+          </ButtonBase>,
+        );
 
         fireEvent.keyDown(getByText('Hello'));
 
@@ -674,49 +792,56 @@ describe('<ButtonBase />', () => {
           </ButtonBase>,
         );
 
-        expect(getByText('Hello').querySelector('.touch-ripple')).to.be.null;
+        expect(getByText('Hello').querySelector('.touch-ripple')).to.equal(null);
       });
     });
 
     describe('keyboard accessibility for non interactive elements', () => {
-      it('does not call onClick when a spacebar is pressed on the element', () => {
-        const onClickSpy = spy(event => event.defaultPrevented);
+      it('does not call onClick when a spacebar is pressed on the element but prevents the default', () => {
+        const onKeyDown = spy((event) => event.defaultPrevented);
+        const onClickSpy = spy((event) => event.defaultPrevented);
         const { getByRole } = render(
-          <ButtonBase onClick={onClickSpy} component="div">
+          <ButtonBase onClick={onClickSpy} onKeyDown={onKeyDown} component="div">
             Hello
           </ButtonBase>,
         );
         const button = getByRole('button');
-        button.focus();
 
-        fireEvent.keyDown(document.activeElement || document.body, {
-          key: ' ',
+        act(() => {
+          button.focus();
+          fireEvent.keyDown(button, {
+            key: ' ',
+          });
         });
 
         expect(onClickSpy.callCount).to.equal(0);
+        // defaultPrevented?
+        expect(onKeyDown.returnValues[0]).to.equal(true);
       });
 
       it('does call onClick when a spacebar is released on the element', () => {
-        const onClickSpy = spy(event => event.defaultPrevented);
+        const onClickSpy = spy((event) => event.defaultPrevented);
         const { getByRole } = render(
           <ButtonBase onClick={onClickSpy} component="div">
             Hello
           </ButtonBase>,
         );
         const button = getByRole('button');
-        button.focus();
 
-        fireEvent.keyUp(document.activeElement || document.body, {
-          key: ' ',
+        act(() => {
+          button.focus();
+          fireEvent.keyUp(button, {
+            key: ' ',
+          });
         });
 
         expect(onClickSpy.callCount).to.equal(1);
         // defaultPrevented?
-        expect(onClickSpy.returnValues[0]).to.equal(true);
+        expect(onClickSpy.returnValues[0]).to.equal(false);
       });
 
       it('does not call onClick when a spacebar is released and the default is prevented', () => {
-        const onClickSpy = spy(event => event.defaultPrevented);
+        const onClickSpy = spy((event) => event.defaultPrevented);
         const { getByRole } = render(
           <ButtonBase
             onClick={onClickSpy}
@@ -724,7 +849,7 @@ describe('<ButtonBase />', () => {
               /**
                * @param {React.SyntheticEvent} event
                */
-              event => event.preventDefault()
+              (event) => event.preventDefault()
             }
             component="div"
           >
@@ -732,27 +857,31 @@ describe('<ButtonBase />', () => {
           </ButtonBase>,
         );
         const button = getByRole('button');
-        button.focus();
 
-        fireEvent.keyUp(document.activeElement || document.body, {
-          key: ' ',
+        act(() => {
+          button.focus();
+          fireEvent.keyUp(button, {
+            key: ' ',
+          });
         });
 
         expect(onClickSpy.callCount).to.equal(0);
       });
 
       it('calls onClick when Enter is pressed on the element', () => {
-        const onClickSpy = spy(event => event.defaultPrevented);
+        const onClickSpy = spy((event) => event.defaultPrevented);
         const { getByRole } = render(
           <ButtonBase onClick={onClickSpy} component="div">
             Hello
           </ButtonBase>,
         );
         const button = getByRole('button');
-        button.focus();
 
-        fireEvent.keyDown(document.activeElement || document.body, {
-          key: 'Enter',
+        act(() => {
+          button.focus();
+          fireEvent.keyDown(button, {
+            key: 'Enter',
+          });
         });
 
         expect(onClickSpy.calledOnce).to.equal(true);
@@ -761,7 +890,7 @@ describe('<ButtonBase />', () => {
       });
 
       it('does not call onClick if Enter was pressed on a child', () => {
-        const onClickSpy = spy(event => event.defaultPrevented);
+        const onClickSpy = spy((event) => event.defaultPrevented);
         const onKeyDownSpy = spy();
         render(
           <ButtonBase onClick={onClickSpy} onKeyDown={onKeyDownSpy} component="div">
@@ -769,7 +898,7 @@ describe('<ButtonBase />', () => {
           </ButtonBase>,
         );
 
-        fireEvent.keyDown(document.activeElement, {
+        fireEvent.keyDown(document.querySelector('input'), {
           key: 'Enter',
         });
 
@@ -778,7 +907,7 @@ describe('<ButtonBase />', () => {
       });
 
       it('does not call onClick if Space was released on a child', () => {
-        const onClickSpy = spy(event => event.defaultPrevented);
+        const onClickSpy = spy();
         const onKeyUpSpy = spy();
         render(
           <ButtonBase onClick={onClickSpy} onKeyUp={onKeyUpSpy} component="div">
@@ -786,7 +915,7 @@ describe('<ButtonBase />', () => {
           </ButtonBase>,
         );
 
-        fireEvent.keyUp(document.activeElement, {
+        fireEvent.keyUp(document.querySelector('input'), {
           key: ' ',
         });
 
@@ -795,16 +924,18 @@ describe('<ButtonBase />', () => {
       });
 
       it('prevents default with an anchor and empty href', () => {
-        const onClickSpy = spy(event => event.defaultPrevented);
+        const onClickSpy = spy((event) => event.defaultPrevented);
         const { getByRole } = render(
           <ButtonBase component="a" onClick={onClickSpy}>
             Hello
           </ButtonBase>,
         );
-
         const button = getByRole('button');
-        button.focus();
-        fireEvent.keyDown(document.activeElement || document.body, { key: 'Enter' });
+
+        act(() => {
+          button.focus();
+          fireEvent.keyDown(button, { key: 'Enter' });
+        });
 
         expect(onClickSpy.calledOnce).to.equal(true);
         // defaultPrevented?
@@ -813,16 +944,19 @@ describe('<ButtonBase />', () => {
 
       it('should ignore anchors with href', () => {
         const onClick = spy();
-        const onKeyDown = spy(event => event.defaultPrevented);
+        const onKeyDown = spy((event) => event.defaultPrevented);
         const { getByText } = render(
           <ButtonBase component="a" href="href" onClick={onClick} onKeyDown={onKeyDown}>
             Hello
           </ButtonBase>,
         );
         const button = getByText('Hello');
-        button.focus();
-        fireEvent.keyDown(document.activeElement || document.body, {
-          key: 'Enter',
+
+        act(() => {
+          button.focus();
+          fireEvent.keyDown(button, {
+            key: 'Enter',
+          });
         });
 
         expect(onClick.calledOnce).to.equal(false);
@@ -846,24 +980,23 @@ describe('<ButtonBase />', () => {
 
       // @ts-ignore
       expect(typeof buttonActionsRef.current.focusVisible).to.equal('function');
-      // @ts-ignore
-      buttonActionsRef.current.focusVisible();
-      expect(getByText('Hello')).to.have.focus;
+
+      act(() => {
+        // @ts-ignore
+        buttonActionsRef.current.focusVisible();
+      });
+
+      expect(getByText('Hello')).toHaveFocus();
       expect(getByText('Hello')).to.match('.focusVisible');
     });
   });
 
   describe('warnings', () => {
     beforeEach(() => {
-      consoleErrorMock.spy();
-    });
-
-    afterEach(() => {
-      consoleErrorMock.reset();
       PropTypes.resetWarningCache();
     });
 
-    it('warns on invalid `component` prop', () => {
+    it('warns on invalid `component` prop: ref forward', () => {
       // Only run the test on node. On the browser the thrown error is not caught
       if (!/jsdom/.test(window.navigator.userAgent)) {
         return;
@@ -877,12 +1010,71 @@ describe('<ButtonBase />', () => {
         return <button type="button" {...props} />;
       }
 
-      // cant match the error message here because flakiness with mocha watchmode
-      render(<ButtonBase component={Component} />);
-
-      expect(consoleErrorMock.args()[0][0]).to.include(
-        'Invalid prop `component` supplied to `ForwardRef(ButtonBase)`. Expected an element type that can hold a ref',
+      expect(() => {
+        PropTypes.checkPropTypes(
+          // @ts-ignore `Naked` is internal
+          ButtonBase.Naked.propTypes,
+          { classes: {}, component: Component },
+          'prop',
+          'MockedName',
+        );
+      }).toErrorDev(
+        'Invalid prop `component` supplied to `MockedName`. Expected an element type that can hold a ref',
       );
+    });
+
+    it('warns on invalid `component` prop: prop forward', () => {
+      const Component = React.forwardRef((props, ref) => (
+        <button type="button" ref={ref} {...props}>
+          Hello
+        </button>
+      ));
+
+      // cant match the error message here because flakiness with mocha watchmode
+
+      expect(() => {
+        render(<ButtonBase component={Component} />);
+      }).toErrorDev('Please make sure the children prop is rendered in this custom component.');
+    });
+  });
+
+  describe('prop: type', () => {
+    it('is `button` by default', () => {
+      render(<ButtonBase />);
+
+      expect(screen.getByRole('button')).to.have.property('type', 'button');
+    });
+
+    it('can be changed to other button types', () => {
+      render(<ButtonBase type="submit" />);
+
+      expect(screen.getByRole('button')).to.have.property('type', 'submit');
+    });
+
+    it('allows non-standard values', () => {
+      // @ts-expect-error `@types/react` only lists standard values
+      render(<ButtonBase type="fictional-type" />);
+
+      expect(screen.getByRole('button')).to.have.attribute('type', 'fictional-type');
+      // By spec non-supported types result in the default type for `<button>` which is `submit`
+      expect(screen.getByRole('button')).to.have.property('type', 'submit');
+    });
+
+    it('is forwarded to anchor components', () => {
+      render(<ButtonBase component="a" href="some-recording.ogg" download type="audio/ogg" />);
+
+      expect(screen.getByRole('link')).to.have.attribute('type', 'audio/ogg');
+      expect(screen.getByRole('link')).to.have.property('type', 'audio/ogg');
+    });
+
+    it('is forwarded to custom components', () => {
+      /**
+       * @type {React.ForwardRefExoticComponent<React.ButtonHTMLAttributes<HTMLButtonElement>>}
+       */
+      const CustomButton = React.forwardRef((props, ref) => <button ref={ref} {...props} />);
+      render(<ButtonBase component={CustomButton} type="reset" />);
+
+      expect(screen.getByRole('button')).to.have.property('type', 'reset');
     });
   });
 });

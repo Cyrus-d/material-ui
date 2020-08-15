@@ -1,25 +1,26 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createClientRender } from 'test/utils/createClientRender';
-import createServerRender from 'test/utils/createServerRender';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '@material-ui/core/test-utils/describeConformance';
+import {
+  createClientRender,
+  getClasses,
+  createMount,
+  describeConformance,
+  createServerRender,
+} from 'test/utils';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import ToggleButton from './ToggleButton';
 
 describe('<ToggleButton />', () => {
-  let mount;
+  const mount = createMount();
   let classes;
   const render = createClientRender();
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<ToggleButton value="classes">Hello World</ToggleButton>);
   });
 
   describeConformance(<ToggleButton value="X">Hello, World!</ToggleButton>, () => ({
-    after: () => mount.cleanUp(),
     classes,
     inheritComponent: ButtonBase,
     mount,
@@ -37,7 +38,7 @@ describe('<ToggleButton />', () => {
     expect(getByTestId('root')).to.have.class(classes.selected);
   });
 
-  it('should render a disabled button if `distabled={true}`', () => {
+  it('should render a disabled button if `disabled={true}`', () => {
     const { getByRole } = render(
       <ToggleButton disabled value="hello">
         Hello World
@@ -104,7 +105,11 @@ describe('<ToggleButton />', () => {
     it('should not be called if the click is prevented', () => {
       const handleChange = spy();
       const { getByRole } = render(
-        <ToggleButton value="one" onChange={handleChange} onClick={event => event.preventDefault()}>
+        <ToggleButton
+          value="one"
+          onChange={handleChange}
+          onClick={(event) => event.preventDefault()}
+        >
           Hello
         </ToggleButton>,
       );

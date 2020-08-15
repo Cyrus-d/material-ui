@@ -1,11 +1,19 @@
-/* eslint-disable no-use-before-define */
-import React from 'react';
-import { useTheme, fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import * as React from 'react';
+import {
+  useTheme,
+  fade,
+  makeStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core/styles';
 import Popper from '@material-ui/core/Popper';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CloseIcon from '@material-ui/icons/Close';
 import DoneIcon from '@material-ui/icons/Done';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, {
+  AutocompleteCloseReason,
+} from '@material-ui/lab/Autocomplete';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import InputBase from '@material-ui/core/InputBase';
 
@@ -46,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
       boxShadow: '0 3px 12px rgba(27,31,35,.15)',
       borderRadius: 3,
       width: 300,
-      zIndex: 1,
+      zIndex: theme.zIndex.modal,
       fontSize: 13,
       color: '#586069',
       backgroundColor: '#f6f8fa',
@@ -121,7 +129,10 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function GitHubLabel() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [value, setValue] = React.useState<LabelType[]>([labels[1], labels[11]]);
+  const [value, setValue] = React.useState<LabelType[]>([
+    labels[1],
+    labels[11],
+  ]);
   const [pendingValue, setPendingValue] = React.useState<LabelType[]>([]);
   const theme = useTheme();
 
@@ -130,7 +141,13 @@ export default function GitHubLabel() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (
+    event: React.ChangeEvent<{}>,
+    reason: AutocompleteCloseReason,
+  ) => {
+    if (reason === 'toggleInput') {
+      return;
+    }
     setValue(pendingValue);
     if (anchorEl) {
       anchorEl.focus();
@@ -153,7 +170,7 @@ export default function GitHubLabel() {
           <span>Labels</span>
           <SettingsIcon />
         </ButtonBase>
-        {value.map((label: LabelType) => (
+        {value.map((label) => (
           <div
             key={label.name}
             className={classes.tag}
@@ -184,20 +201,32 @@ export default function GitHubLabel() {
             popperDisablePortal: classes.popperDisablePortal,
           }}
           value={pendingValue}
-          onChange={(event, newValue) => {
+          onChange={(event, newValue, reason) => {
+            if (
+              event.type === 'keydown' &&
+              (event as React.KeyboardEvent).key === 'Backspace' &&
+              reason === 'remove-option'
+            ) {
+              return;
+            }
             setPendingValue(newValue);
           }}
           disableCloseOnSelect
           disablePortal
           renderTags={() => null}
           noOptionsText="No labels"
-          renderOption={(option: LabelType, { selected }) => (
+          renderOption={(option, { selected }) => (
             <React.Fragment>
               <DoneIcon
                 className={classes.iconSelected}
-                style={{ visibility: selected ? 'visible' : 'hidden' }}
+                style={{
+                  visibility: selected ? 'visible' : 'hidden',
+                }}
               />
-              <span className={classes.color} style={{ backgroundColor: option.color }} />
+              <span
+                className={classes.color}
+                style={{ backgroundColor: option.color }}
+              />
               <div className={classes.text}>
                 {option.name}
                 <br />
@@ -205,7 +234,9 @@ export default function GitHubLabel() {
               </div>
               <CloseIcon
                 className={classes.close}
-                style={{ visibility: selected ? 'visible' : 'hidden' }}
+                style={{
+                  visibility: selected ? 'visible' : 'hidden',
+                }}
               />
             </React.Fragment>
           )}
@@ -217,8 +248,8 @@ export default function GitHubLabel() {
             bi = bi === -1 ? value.length + labels.indexOf(b) : bi;
             return ai - bi;
           })}
-          getOptionLabel={(option: LabelType) => option.name}
-          renderInput={params => (
+          getOptionLabel={(option) => option.name}
+          renderInput={(params) => (
             <InputBase
               ref={params.InputProps.ref}
               inputProps={params.inputProps}

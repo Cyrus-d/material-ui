@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     '& > * + *': {
       marginTop: theme.spacing(2),
@@ -27,7 +27,11 @@ export default function CustomSeparator() {
         <Link color="inherit" href="/" onClick={handleClick}>
           Material-UI
         </Link>
-        <Link color="inherit" href="/getting-started/installation/" onClick={handleClick}>
+        <Link
+          color="inherit"
+          href="/getting-started/installation/"
+          onClick={handleClick}
+        >
           Core
         </Link>
         <Typography color="textPrimary">Breadcrumb</Typography>
@@ -36,16 +40,27 @@ export default function CustomSeparator() {
         <Link color="inherit" href="/" onClick={handleClick}>
           Material-UI
         </Link>
-        <Link color="inherit" href="/getting-started/installation/" onClick={handleClick}>
+        <Link
+          color="inherit"
+          href="/getting-started/installation/"
+          onClick={handleClick}
+        >
           Core
         </Link>
         <Typography color="textPrimary">Breadcrumb</Typography>
       </Breadcrumbs>
-      <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+      <Breadcrumbs
+        separator={<NavigateNextIcon fontSize="small" />}
+        aria-label="breadcrumb"
+      >
         <Link color="inherit" href="/" onClick={handleClick}>
           Material-UI
         </Link>
-        <Link color="inherit" href="/getting-started/installation/" onClick={handleClick}>
+        <Link
+          color="inherit"
+          href="/getting-started/installation/"
+          onClick={handleClick}
+        >
           Core
         </Link>
         <Typography color="textPrimary">Breadcrumb</Typography>

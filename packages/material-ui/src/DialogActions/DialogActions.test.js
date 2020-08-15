@@ -1,19 +1,13 @@
-import React from 'react';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { getClasses, createMount, describeConformance } from 'test/utils';
 import DialogActions from './DialogActions';
 
 describe('<DialogActions />', () => {
-  let mount;
+  const mount = createMount();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<DialogActions />);
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<DialogActions />, () => ({

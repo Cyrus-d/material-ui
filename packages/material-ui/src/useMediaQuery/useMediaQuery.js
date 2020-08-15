@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import { getThemeProps, useTheme } from '@material-ui/styles';
 
-function useMediaQuery(queryInput, options = {}) {
+export default function useMediaQuery(queryInput, options = {}) {
   const theme = useTheme();
   const props = getThemeProps({
     theme,
@@ -13,7 +13,7 @@ function useMediaQuery(queryInput, options = {}) {
     if (typeof queryInput === 'function' && theme === null) {
       console.error(
         [
-          'Material-UI: the `query` argument provided is invalid.',
+          'Material-UI: The `query` argument provided is invalid.',
           'You are providing a function without a theme in the context.',
           'One of the parent elements needs to use a ThemeProvider.',
         ].join('\n'),
@@ -78,7 +78,10 @@ function useMediaQuery(queryInput, options = {}) {
     };
   }, [query, matchMedia, supportMatchMedia]);
 
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useDebugValue({ query, match });
+  }
+
   return match;
 }
-
-export default useMediaQuery;

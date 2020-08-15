@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
@@ -19,7 +19,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
-const styles = theme => ({
+const styles = (theme) => ({
   secondaryBar: {
     zIndex: 0,
   },
@@ -97,7 +97,12 @@ function Header(props) {
               </Typography>
             </Grid>
             <Grid item>
-              <Button className={classes.button} variant="outlined" color="inherit" size="small">
+              <Button
+                className={classes.button}
+                variant="outlined"
+                color="inherit"
+                size="small"
+              >
                 Web setup
               </Button>
             </Grid>
@@ -114,15 +119,14 @@ function Header(props) {
       <AppBar
         component="div"
         className={classes.secondaryBar}
-        color="primary"
         position="static"
         elevation={0}
       >
         <Tabs value={0} textColor="inherit">
-          <Tab textColor="inherit" label="Users" />
-          <Tab textColor="inherit" label="Sign-in method" />
-          <Tab textColor="inherit" label="Templates" />
-          <Tab textColor="inherit" label="Usage" />
+          <Tab label="Users" />
+          <Tab label="Sign-in method" />
+          <Tab label="Templates" />
+          <Tab label="Usage" />
         </Tabs>
       </AppBar>
     </React.Fragment>

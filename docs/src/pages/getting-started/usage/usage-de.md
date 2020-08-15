@@ -11,7 +11,7 @@ Sie können jede Komponente, wie in der Dokumentation beschrieben, verwenden. Bi
 Hier ist ein kurzes Beispiel für den Einstieg. **Es ist wirklich alles, was Sie brauchen**:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 
@@ -28,7 +28,7 @@ ReactDOM.render(<App />, document.querySelector('#app'));
 
 Ja, das ist tatsächlich alles, das Sie für den Start brauchen. In dieser interaktiven Live-Demo können Sie dies ausprobieren:
 
-{{"demo": "pages/getting-started/usage/Usage.js", "hideHeader": true, "bg": true}}
+{{"demo": "pages/getting-started/usage/Usage.js", "hideToolbar": true, "bg": true}}
 
 ## Globale Objekte
 
@@ -41,7 +41,7 @@ Material-UI is developed mobile-first, a strategy in which we first write code f
 ```html
 <meta
   name="viewport"
-  content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+  content="minimum-scale=1, initial-scale=1, width=device-width"
 />
 ```
 

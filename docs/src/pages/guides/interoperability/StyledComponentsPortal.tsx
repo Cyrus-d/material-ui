@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -33,7 +33,6 @@ export default function StyledComponentsPortal() {
         aria-owns={anchorEl ? 'simple-menu' : undefined}
         aria-haspopup="true"
         variant="contained"
-        color="primary"
         onClick={handleClick}
       >
         Open Menu

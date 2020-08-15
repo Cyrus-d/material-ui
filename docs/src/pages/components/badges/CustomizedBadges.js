@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
-const StyledBadge = withStyles(theme => ({
+const StyledBadge = withStyles((theme) => ({
   badge: {
     right: -3,
     top: 13,
@@ -16,7 +16,7 @@ const StyledBadge = withStyles(theme => ({
 export default function CustomizedBadges() {
   return (
     <IconButton aria-label="cart">
-      <StyledBadge badgeContent={4} color="primary">
+      <StyledBadge badgeContent={4} color="secondary">
         <ShoppingCartIcon />
       </StyledBadge>
     </IconButton>

@@ -11,7 +11,7 @@
 Вот краткий пример для начала, **это буквально все что вам нужно**:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 
@@ -28,7 +28,7 @@ ReactDOM.render(<App />, document.querySelector('#app'));
 
 Да, это действительно все, что вам нужно для начала, как вы можете увидеть в этой интерактивной демонстрации:
 
-{{"demo": "pages/getting-started/usage/Usage.js", "hideHeader": true, "bg": true}}
+{{"demo": "pages/getting-started/usage/Usage.js", "hideToolbar": true, "bg": true}}
 
 ## Глобальная настройка
 
@@ -40,8 +40,8 @@ Material-UI разработан используя подход Mobile First, �
 
 ```html
 <meta
- name="viewport"
- content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+  name="viewport"
+  content="minimum-scale=1, initial-scale=1, width=device-width"
 />
 ```
 

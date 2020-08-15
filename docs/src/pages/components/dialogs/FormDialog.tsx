@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -20,15 +20,19 @@ export default function FormDialog() {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button variant="outlined" onClick={handleClickOpen}>
         Open form dialog
       </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates
-            occasionally.
+            To subscribe to this website, please enter your email address here.
+            We will send updates occasionally.
           </DialogContentText>
           <TextField
             autoFocus
@@ -40,12 +44,8 @@ export default function FormDialog() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Subscribe
-          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>Subscribe</Button>
         </DialogActions>
       </Dialog>
     </div>

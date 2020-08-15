@@ -1,8 +1,7 @@
-import React from 'react';
-import { assert } from 'chai';
+import * as React from 'react';
+import { expect } from 'chai';
 import { spy } from 'sinon';
 import PropTypes from 'prop-types';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
 import { mount } from 'enzyme';
 import { isMuiElement, setRef, useForkRef } from '.';
 import { Input, ListItemSecondaryAction, SvgIcon } from '..';
@@ -13,10 +12,10 @@ describe('utils/index.js', () => {
       const Component = () => null;
       Component.muiName = 'Component';
 
-      assert.strictEqual(isMuiElement(<Component />, ['Component']), true);
-      assert.strictEqual(isMuiElement(<div />, ['Input']), false);
-      assert.strictEqual(isMuiElement(null, ['SvgIcon']), false);
-      assert.strictEqual(isMuiElement('TextNode', ['SvgIcon']), false);
+      expect(isMuiElement(<Component />, ['Component'])).to.equal(true);
+      expect(isMuiElement(<div />, ['Input'])).to.equal(false);
+      expect(isMuiElement(null, ['SvgIcon'])).to.equal(false);
+      expect(isMuiElement('TextNode', ['SvgIcon'])).to.equal(false);
     });
 
     it('should be truthy for matching components', () => {
@@ -25,7 +24,7 @@ describe('utils/index.js', () => {
         [ListItemSecondaryAction, 'ListItemSecondaryAction'],
         [SvgIcon, 'SvgIcon'],
       ].forEach(([Component, muiName]) => {
-        assert.strictEqual(isMuiElement(<Component />, [muiName]), true);
+        expect(isMuiElement(<Component />, [muiName])).to.equal(true);
       });
     });
   });
@@ -37,8 +36,8 @@ describe('utils/index.js', () => {
 
       setRef(ref, instance);
 
-      assert.strictEqual(ref.called, true);
-      assert.strictEqual(ref.firstCall.args[0], instance);
+      expect(ref.called).to.equal(true);
+      expect(ref.firstCall.args[0]).to.equal(instance);
     });
 
     it('can handle ref objects', () => {
@@ -47,7 +46,7 @@ describe('utils/index.js', () => {
 
       setRef(ref, instance);
 
-      assert.strictEqual(ref.current, instance);
+      expect(ref.current).to.equal(instance);
     });
 
     it('ignores falsy refs without errors', () => {
@@ -59,25 +58,17 @@ describe('utils/index.js', () => {
     });
 
     it('throws on legacy string refs', () => {
-      assert.throws(() => setRef('stringRef1', 'proxy'));
+      expect(() => setRef('stringRef1', 'proxy')).to.throw();
     });
   });
 
   describe('useForkRef', () => {
-    beforeEach(() => {
-      consoleErrorMock.spy();
-    });
-
-    afterEach(() => {
-      consoleErrorMock.reset();
-    });
-
     it('returns a single ref-setter function that forks the ref to its inputs', () => {
       function Component(props) {
         const { innerRef } = props;
         const ownRef = React.useRef(null);
         const [, forceUpdate] = React.useState(0);
-        React.useEffect(() => forceUpdate(n => !n), []);
+        React.useEffect(() => forceUpdate((n) => !n), []);
 
         const handleRef = useForkRef(innerRef, ownRef);
 
@@ -89,10 +80,11 @@ describe('utils/index.js', () => {
       };
 
       const outerRef = React.createRef();
-      mount(<Component innerRef={outerRef} />);
 
-      assert.strictEqual(outerRef.current.textContent, 'has a ref');
-      assert.strictEqual(consoleErrorMock.callCount(), 0);
+      expect(() => {
+        mount(<Component innerRef={outerRef} />);
+      }).not.toErrorDev();
+      expect(outerRef.current.textContent).to.equal('has a ref');
     });
 
     it('forks if only one of the branches requires a ref', () => {
@@ -104,10 +96,11 @@ describe('utils/index.js', () => {
         return <div ref={handleRef}>{String(hasRef)}</div>;
       });
 
-      const wrapper = mount(<Component />);
-
-      assert.strictEqual(wrapper.containsMatchingElement(<div>true</div>), true);
-      assert.strictEqual(consoleErrorMock.callCount(), 0);
+      let wrapper;
+      expect(() => {
+        wrapper = mount(<Component />);
+      }).not.toErrorDev();
+      expect(wrapper.containsMatchingElement(<div>true</div>)).to.equal(true);
     });
 
     it('does nothing if none of the forked branches requires a ref', () => {
@@ -124,12 +117,13 @@ describe('utils/index.js', () => {
         return <div />;
       }
 
-      mount(
-        <Outer>
-          <Inner />
-        </Outer>,
-      );
-      assert.strictEqual(consoleErrorMock.callCount(), 0);
+      expect(() => {
+        mount(
+          <Outer>
+            <Inner />
+          </Outer>,
+        );
+      }).not.toErrorDev();
     });
 
     describe('changing refs', () => {
@@ -148,34 +142,37 @@ describe('utils/index.js', () => {
       };
 
       it('handles changing from no ref to some ref', () => {
-        const wrapper = mount(<Div id="test" />);
+        let wrapper;
 
-        assert.strictEqual(consoleErrorMock.callCount(), 0);
+        expect(() => {
+          wrapper = mount(<Div id="test" />);
+        }).not.toErrorDev();
 
         const ref = React.createRef();
-        wrapper.setProps({ leftRef: ref });
-
-        assert.strictEqual(ref.current.id, 'test');
-        assert.strictEqual(consoleErrorMock.callCount(), 0);
+        expect(() => {
+          wrapper.setProps({ leftRef: ref });
+        }).not.toErrorDev();
+        expect(ref.current.id).to.equal('test');
       });
 
       it('cleans up detached refs', () => {
         const firstLeftRef = React.createRef();
         const firstRightRef = React.createRef();
         const secondRightRef = React.createRef();
+        let wrapper;
 
-        const wrapper = mount(<Div leftRef={firstLeftRef} rightRef={firstRightRef} id="test" />);
-
-        assert.strictEqual(consoleErrorMock.callCount(), 0);
-        assert.strictEqual(firstLeftRef.current.id, 'test');
-        assert.strictEqual(firstRightRef.current.id, 'test');
-        assert.strictEqual(secondRightRef.current, null);
+        expect(() => {
+          wrapper = mount(<Div leftRef={firstLeftRef} rightRef={firstRightRef} id="test" />);
+        }).not.toErrorDev();
+        expect(firstLeftRef.current.id).to.equal('test');
+        expect(firstRightRef.current.id).to.equal('test');
+        expect(secondRightRef.current).to.equal(null);
 
         wrapper.setProps({ rightRef: secondRightRef });
 
-        assert.strictEqual(firstLeftRef.current.id, 'test');
-        assert.strictEqual(firstRightRef.current, null);
-        assert.strictEqual(secondRightRef.current.id, 'test');
+        expect(firstLeftRef.current.id).to.equal('test');
+        expect(firstRightRef.current).to.equal(null);
+        expect(secondRightRef.current.id).to.equal('test');
       });
     });
   });

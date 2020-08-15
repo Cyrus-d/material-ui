@@ -1,3 +1,5 @@
+import { createUnarySpacing } from '@material-ui/system';
+
 let warnOnce;
 
 export default function createSpacing(spacingInput = 8) {
@@ -6,32 +8,12 @@ export default function createSpacing(spacingInput = 8) {
     return spacingInput;
   }
 
-  // All components align to an 8dp square baseline grid for mobile, tablet, and desktop.
-  // https://material.io/design/layout/understanding-layout.html#pixel-density
-  let transform;
-
-  if (typeof spacingInput === 'function') {
-    transform = spacingInput;
-  } else {
-    if (process.env.NODE_ENV !== 'production') {
-      if (typeof spacingInput !== 'number') {
-        console.error(
-          [
-            `Material-UI: the \`theme.spacing\` value (${spacingInput}) is invalid.`,
-            'It should be a number or a function.',
-          ].join('\n'),
-        );
-      }
-    }
-    transform = factor => {
-      if (process.env.NODE_ENV !== 'production') {
-        if (typeof factor !== 'number') {
-          console.error(`Expected spacing argument to be a number, got ${factor}`);
-        }
-      }
-      return spacingInput * factor;
-    };
-  }
+  // Material Design layouts are visually balanced. Most measurements align to an 8dp grid applied, which aligns both spacing and the overall layout.
+  // Smaller components, such as icons and type, can align to a 4dp grid.
+  // https://material.io/design/layout/understanding-layout.html#usage
+  const transform = createUnarySpacing({
+    spacing: spacingInput,
+  });
 
   const spacing = (...args) => {
     if (process.env.NODE_ENV !== 'production') {
@@ -51,8 +33,11 @@ export default function createSpacing(spacingInput = 8) {
     }
 
     return args
-      .map(factor => {
-        const output = transform(factor);
+      .map((argument) => {
+        if (typeof argument === 'string') {
+          return argument;
+        }
+        const output = transform(argument);
         return typeof output === 'number' ? `${output}px` : output;
       })
       .join(' ');
@@ -69,7 +54,7 @@ export default function createSpacing(spacingInput = 8) {
               'It will be removed in v5.',
               'You can replace `theme.spacing.unit * y` with `theme.spacing(y)`.',
               '',
-              'You can use the `https://github.com/mui-org/material-ui/tree/master/packages/material-ui-codemod/README.md#theme-spacing-api` migration helper to make the process smoother.',
+              'You can use the `https://github.com/mui-org/material-ui/tree/next/packages/material-ui-codemod/README.md#theme-spacing-api` migration helper to make the process smoother.',
             ].join('\n'),
           );
         }

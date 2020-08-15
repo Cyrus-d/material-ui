@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu, { MenuProps } from '@material-ui/core/Menu';
@@ -29,7 +29,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const StyledMenuItem = withStyles(theme => ({
+const StyledMenuItem = withStyles((theme) => ({
   root: {
     '&:focus': {
       backgroundColor: theme.palette.primary.main,
@@ -57,7 +57,6 @@ export default function CustomizedMenus() {
         aria-controls="customized-menu"
         aria-haspopup="true"
         variant="contained"
-        color="primary"
         onClick={handleClick}
       >
         Open Menu

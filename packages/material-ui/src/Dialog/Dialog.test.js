@@ -1,9 +1,14 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import { createClientRender, fireEvent } from 'test/utils/createClientRender';
+import {
+  getClasses,
+  createMount,
+  describeConformance,
+  act,
+  createClientRender,
+  fireEvent,
+} from 'test/utils';
 import Modal from '../Modal';
 import Dialog from './Dialog';
 
@@ -12,8 +17,11 @@ import Dialog from './Dialog';
  * @param {HTMLElement} element
  */
 function userClick(element) {
-  fireEvent.mouseDown(element);
-  element.click();
+  act(() => {
+    fireEvent.mouseDown(element);
+    fireEvent.mouseUp(element);
+    element.click();
+  });
 }
 
 /**
@@ -32,22 +40,20 @@ function clickBackdrop(container) {
 
 describe('<Dialog />', () => {
   let clock;
-  let mount;
-  let classes;
-  const render = createClientRender({ strict: false });
-
-  before(() => {
-    // StrictModeViolation: uses Fade
-    mount = createMount({ strict: false });
-    classes = getClasses(<Dialog>foo</Dialog>);
-  });
-
   beforeEach(() => {
     clock = useFakeTimers();
   });
 
   afterEach(() => {
     clock.restore();
+  });
+
+  const mount = createMount({ strict: true });
+  let classes;
+  const render = createClientRender();
+
+  before(() => {
+    classes = getClasses(<Dialog>foo</Dialog>);
   });
 
   describeConformance(<Dialog open>foo</Dialog>, () => ({
@@ -60,7 +66,6 @@ describe('<Dialog />', () => {
       // react-transition-group issue
       'reactTestRenderer',
     ],
-    after: () => mount.cleanUp(),
   }));
 
   it('should render with a TransitionComponent', () => {
@@ -97,14 +102,19 @@ describe('<Dialog />', () => {
     }
     const { getByRole, queryByRole } = render(<TestCase />);
     const dialog = getByRole('dialog');
-    expect(dialog).to.be.ok;
+    expect(dialog).not.to.equal(null);
 
-    dialog.click();
-    fireEvent.keyDown(document.activeElement, { key: 'Esc' });
+    act(() => {
+      dialog.click();
+    });
+
+    fireEvent.keyDown(document.querySelector('[data-mui-test="FakeBackdrop"]'), { key: 'Esc' });
     expect(onEscapeKeyDown.calledOnce).to.equal(true);
     expect(onClose.calledOnce).to.equal(true);
 
-    clock.tick(100);
+    act(() => {
+      clock.tick(100);
+    });
     expect(queryByRole('dialog')).to.equal(null);
   });
 
@@ -122,10 +132,13 @@ describe('<Dialog />', () => {
       </Dialog>,
     );
     const dialog = getByRole('dialog');
-    expect(dialog).to.be.ok;
+    expect(dialog).not.to.equal(null);
 
-    dialog.click();
-    fireEvent.keyDown(document.activeElement, { key: 'Esc' });
+    act(() => {
+      dialog.click();
+      fireEvent.keyDown(document.querySelector('[data-mui-test="FakeBackdrop"]'), { key: 'Esc' });
+    });
+
     expect(onClose.callCount).to.equal(0);
 
     clickBackdrop(document.body);
@@ -186,7 +199,7 @@ describe('<Dialog />', () => {
 
       fireEvent.mouseDown(getByRole('heading'));
       findBackdrop(document.body).click();
-      expect(getByRole('dialog')).to.be.ok;
+      expect(getByRole('dialog')).not.to.equal(null);
     });
   });
 

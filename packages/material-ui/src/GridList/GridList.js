@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -36,7 +36,7 @@ const GridList = React.forwardRef(function GridList(props, ref) {
       style={{ margin: -spacing / 2, ...style }}
       {...other}
     >
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if (!React.isValidElement(child)) {
           return null;
         }
@@ -45,7 +45,7 @@ const GridList = React.forwardRef(function GridList(props, ref) {
           if (isFragment(child)) {
             console.error(
               [
-                "Material-UI: the GridList component doesn't accept a Fragment as a child.",
+                "Material-UI: The GridList component doesn't accept a Fragment as a child.",
                 'Consider providing an array instead.',
               ].join('\n'),
             );
@@ -56,14 +56,12 @@ const GridList = React.forwardRef(function GridList(props, ref) {
         const childRows = child.props.rows || 1;
 
         return React.cloneElement(child, {
-          style: Object.assign(
-            {
-              width: `${(100 / cols) * childCols}%`,
-              height: cellHeight === 'auto' ? 'auto' : cellHeight * childRows + spacing,
-              padding: spacing / 2,
-            },
-            child.props.style,
-          ),
+          style: {
+            width: `${(100 / cols) * childCols}%`,
+            height: cellHeight === 'auto' ? 'auto' : cellHeight * childRows + spacing,
+            padding: spacing / 2,
+            ...child.props.style,
+          },
         });
       })}
     </Component>
@@ -71,20 +69,24 @@ const GridList = React.forwardRef(function GridList(props, ref) {
 });
 
 GridList.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Number of px for one cell height.
    * You can set `'auto'` if you want to let the children determine the height.
    */
-  cellHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(['auto'])]),
+  cellHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
   /**
    * Grid Tiles that will be in Grid List.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes /* @typescript-to-proptypes-ignore */.node.isRequired,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -95,7 +97,7 @@ GridList.propTypes = {
   cols: PropTypes.number,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**

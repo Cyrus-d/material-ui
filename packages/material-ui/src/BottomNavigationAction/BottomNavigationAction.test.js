@@ -1,19 +1,22 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import { createClientRender, within } from 'test/utils/createClientRender';
+import {
+  getClasses,
+  createMount,
+  describeConformance,
+  createClientRender,
+  within,
+} from 'test/utils';
 import ButtonBase from '../ButtonBase';
 import BottomNavigationAction from './BottomNavigationAction';
 
 describe('<BottomNavigationAction />', () => {
-  let mount;
+  const mount = createMount();
   let classes;
   const render = createClientRender();
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<BottomNavigationAction />);
   });
 
@@ -23,7 +26,6 @@ describe('<BottomNavigationAction />', () => {
     mount,
     refInstanceof: window.HTMLButtonElement,
     skip: ['componentProp'],
-    after: () => mount.cleanUp(),
   }));
 
   it('adds a `selected` class when selected', () => {
@@ -65,7 +67,7 @@ describe('<BottomNavigationAction />', () => {
   it('should render the passed `icon`', () => {
     const { getByRole } = render(<BottomNavigationAction icon={<div data-testid="icon" />} />);
 
-    expect(within(getByRole('button')).getByTestId('icon')).to.be.ok;
+    expect(within(getByRole('button')).getByTestId('icon')).not.to.equal(null);
   });
 
   describe('prop: onClick', () => {

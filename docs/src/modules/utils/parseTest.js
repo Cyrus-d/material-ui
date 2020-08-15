@@ -25,11 +25,11 @@ async function parseWithConfig(filename, configFilePath) {
   return babel.parseAsync(source, partialConfig.options);
 }
 
-function findConformanceDescriptor(program) {
+function findConformanceDescriptor(file) {
   const { types: t } = babel;
 
   let descriptor = {};
-  babel.traverse(program, {
+  babel.traverse(file, {
     CallExpression(babelPath) {
       const { node: callExpression } = babelPath;
       const { callee } = callExpression;
@@ -50,29 +50,37 @@ function findConformanceDescriptor(program) {
 /**
  *
  * @param {import('@babel/core').Node} valueNode
+ * @returns {string | undefined}
  */
 function getRefInstance(valueNode) {
   if (!babel.types.isMemberExpression(valueNode) && valueNode.name !== 'Object') {
     throw new Error('Expected a member expression in refInstanceof');
   }
 
-  if (!valueNode.object && valueNode.name === 'Object') {
-    return valueNode.name;
+  /**
+   * @type {import('@babel/types').MemberExpression}
+   */
+  const memberExpression = valueNode;
+  if (!memberExpression.object && memberExpression.name === 'Object') {
+    return memberExpression.name;
   }
 
-  switch (valueNode.object.name) {
+  switch (memberExpression.object.name) {
     case 'window':
-      return valueNode.property.name;
+      return memberExpression.property.name;
     case 'React':
-      return `React.${valueNode.property.name}`;
+      return `React.${memberExpression.property.name}`;
     default:
-      throw new Error(`Unrecognized member expression starting with '${valueNode.object.name}'`);
+      throw new Error(
+        `Unrecognized member expression starting with '${memberExpression.object.name}'`,
+      );
   }
 }
 
 /**
  *
  * @param {import('@babel/core').Node} valueNode - An Identifier
+ * @returns {string | undefined}
  */
 function getInheritComponentName(valueNode) {
   return valueNode.name;
@@ -82,11 +90,15 @@ function getInheritComponentName(valueNode) {
  *
  * @param {string} componentFilename
  * @returns {ParseResult}
+ *
+ * @typedef {object} ParseResult
+ * @property {string | undefined} forwardsRefTo
+ * @property {string | undefined} inheritComponent
  */
 export default async function parseTest(componentFilename) {
   const testFilename = withExtension(componentFilename, '.test.js');
   const babelParseResult = await parseWithConfig(testFilename, babelConfigPath);
-  const descriptor = findConformanceDescriptor(babelParseResult.program);
+  const descriptor = findConformanceDescriptor(babelParseResult);
 
   const result = {
     forwardsRefTo: undefined,
@@ -94,7 +106,7 @@ export default async function parseTest(componentFilename) {
   };
 
   const { properties = [] } = descriptor;
-  properties.forEach(property => {
+  properties.forEach((property) => {
     const key = property.key.name;
 
     switch (key) {

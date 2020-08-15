@@ -1,9 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import { elementTypeAcceptingRef } from '@material-ui/utils';
+import { getThemeProps } from '@material-ui/styles';
 import Drawer, { getAnchor, isHorizontal } from '../Drawer/Drawer';
 import ownerDocument from '../utils/ownerDocument';
+import ownerWindow from '../utils/ownerWindow';
 import useEventCallback from '../utils/useEventCallback';
 import { duration } from '../styles/transitions';
 import useTheme from '../styles/useTheme';
@@ -25,12 +26,14 @@ export function reset() {
   nodeThatClaimedTheSwipe = null;
 }
 
-function calculateCurrentX(anchor, touches) {
-  return anchor === 'right' ? document.body.offsetWidth - touches[0].pageX : touches[0].pageX;
+function calculateCurrentX(anchor, touches, doc) {
+  return anchor === 'right' ? doc.body.offsetWidth - touches[0].pageX : touches[0].pageX;
 }
 
-function calculateCurrentY(anchor, touches) {
-  return anchor === 'bottom' ? window.innerHeight - touches[0].clientY : touches[0].clientY;
+function calculateCurrentY(anchor, touches, containerWindow) {
+  return anchor === 'bottom'
+    ? containerWindow.innerHeight - touches[0].clientY
+    : touches[0].clientY;
 }
 
 function getMaxTranslate(horizontalSwipe, paperInstance) {
@@ -52,7 +55,7 @@ function getDomTreeShapes(element, rootNode) {
   let domTreeShapes = [];
 
   while (element && element !== rootNode) {
-    const style = window.getComputedStyle(element);
+    const style = ownerWindow(rootNode).getComputedStyle(element);
 
     if (
       // Ignore the scroll children if the element is absolute positioned.
@@ -93,7 +96,7 @@ function findNativeHandler({ domTreeShapes, start, current, anchor }) {
     },
   };
 
-  return domTreeShapes.some(shape => {
+  return domTreeShapes.some((shape) => {
     // Determine if we are going backward or forward.
     let goingForward = current >= start;
     if (anchor === 'top' || anchor === 'left') {
@@ -115,18 +118,19 @@ function findNativeHandler({ domTreeShapes, start, current, anchor }) {
   });
 }
 
-const disableSwipeToOpenDefault =
-  typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
+const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 const transitionDurationDefault = { enter: duration.enteringScreen, exit: duration.leavingScreen };
 
 const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
-const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
+const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(inProps, ref) {
+  const theme = useTheme();
+  const props = getThemeProps({ name: 'MuiSwipeableDrawer', props: { ...inProps }, theme });
   const {
     anchor = 'left',
     disableBackdropTransition = false,
     disableDiscovery = false,
-    disableSwipeToOpen = disableSwipeToOpenDefault,
+    disableSwipeToOpen = iOS,
     hideBackdrop,
     hysteresis = 0.52,
     minFlingVelocity = 450,
@@ -142,11 +146,11 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
     ...other
   } = props;
 
-  const theme = useTheme();
   const [maybeSwiping, setMaybeSwiping] = React.useState(false);
   const swipeInstance = React.useRef({
     isSwiping: null,
   });
+
   const swipeAreaRef = React.useRef();
   const backdropRef = React.useRef();
   const paperRef = React.useRef();
@@ -210,7 +214,7 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
     [anchor, disableBackdropTransition, hideBackdrop, theme, transitionDuration],
   );
 
-  const handleBodyTouchEnd = useEventCallback(event => {
+  const handleBodyTouchEnd = useEventCallback((event) => {
     if (!touchDetected.current) {
       return;
     }
@@ -230,9 +234,17 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
     const horizontal = isHorizontal(anchor);
     let current;
     if (horizontal) {
-      current = calculateCurrentX(anchorRtl, event.changedTouches);
+      current = calculateCurrentX(
+        anchorRtl,
+        event.changedTouches,
+        ownerDocument(event.currentTarget),
+      );
     } else {
-      current = calculateCurrentY(anchorRtl, event.changedTouches);
+      current = calculateCurrentY(
+        anchorRtl,
+        event.changedTouches,
+        ownerWindow(event.currentTarget),
+      );
     }
 
     const startLocation = horizontal ? swipeInstance.current.startX : swipeInstance.current.startY;
@@ -269,7 +281,7 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
     }
   });
 
-  const handleBodyTouchMove = useEventCallback(event => {
+  const handleBodyTouchMove = useEventCallback((event) => {
     // the ref may be null when a parent component updates while swiping
     if (!paperRef.current || !touchDetected.current) {
       return;
@@ -283,8 +295,13 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
     const anchorRtl = getAnchor(theme, anchor);
     const horizontalSwipe = isHorizontal(anchor);
 
-    const currentX = calculateCurrentX(anchorRtl, event.touches);
-    const currentY = calculateCurrentY(anchorRtl, event.touches);
+    const currentX = calculateCurrentX(
+      anchorRtl,
+      event.touches,
+      ownerDocument(event.currentTarget),
+    );
+
+    const currentY = calculateCurrentY(anchorRtl, event.touches, ownerWindow(event.currentTarget));
 
     if (open && paperRef.current.contains(event.target) && nodeThatClaimedTheSwipe == null) {
       const domTreeShapes = getDomTreeShapes(event.target, paperRef.current);
@@ -294,6 +311,7 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
         current: horizontalSwipe ? currentX : currentY,
         anchor,
       });
+
       if (nativeHandler) {
         nodeThatClaimedTheSwipe = nativeHandler;
         return;
@@ -401,7 +419,7 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
     setPosition(translate);
   });
 
-  const handleBodyTouchStart = useEventCallback(event => {
+  const handleBodyTouchStart = useEventCallback((event) => {
     // We are not supposed to handle this touch move.
     // Example of use case: ignore the event if there is a Slider.
     if (event.defaultPrevented) {
@@ -425,8 +443,13 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
     const anchorRtl = getAnchor(theme, anchor);
     const horizontalSwipe = isHorizontal(anchor);
 
-    const currentX = calculateCurrentX(anchorRtl, event.touches);
-    const currentY = calculateCurrentY(anchorRtl, event.touches);
+    const currentX = calculateCurrentX(
+      anchorRtl,
+      event.touches,
+      ownerDocument(event.currentTarget),
+    );
+
+    const currentY = calculateCurrentY(anchorRtl, event.touches, ownerWindow(event.currentTarget));
 
     if (!open) {
       if (disableSwipeToOpen || event.target !== swipeAreaRef.current) {
@@ -499,16 +522,6 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
     }
   }, [open]);
 
-  const handleBackdropRef = React.useCallback(instance => {
-    // #StrictMode ready
-    backdropRef.current = ReactDOM.findDOMNode(instance);
-  }, []);
-
-  const handlePaperRef = React.useCallback(instance => {
-    // #StrictMode ready
-    paperRef.current = ReactDOM.findDOMNode(instance);
-  }, []);
-
   return (
     <React.Fragment>
       <Drawer
@@ -517,7 +530,7 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
         ModalProps={{
           BackdropProps: {
             ...BackdropProps,
-            ref: handleBackdropRef,
+            ref: backdropRef,
           },
           ...ModalPropsProp,
         }}
@@ -527,7 +540,7 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
             pointerEvents: variant === 'temporary' && !open ? 'none' : '',
             ...PaperProps.style,
           },
-          ref: handlePaperRef,
+          ref: paperRef,
         }}
         anchor={anchor}
         transitionDuration={calculatedDurationRef.current || transitionDuration}
@@ -550,12 +563,16 @@ const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
 });
 
 SwipeableDrawer.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * @ignore
    */
-  anchor: PropTypes.oneOf(['left', 'top', 'right', 'bottom']),
+  anchor: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
   /**
-   * The content of the component.
+   * The contents of the drawer.
    */
   children: PropTypes.node,
   /**
@@ -591,7 +608,7 @@ SwipeableDrawer.propTypes = {
   /**
    * @ignore
    */
-  ModalProps: PropTypes.shape({
+  ModalProps: PropTypes /* @typescript-to-proptypes-ignore */.shape({
     BackdropProps: PropTypes.shape({
       component: elementTypeAcceptingRef,
     }),
@@ -615,12 +632,12 @@ SwipeableDrawer.propTypes = {
   /**
    * @ignore
    */
-  PaperProps: PropTypes.shape({
+  PaperProps: PropTypes /* @typescript-to-proptypes-ignore */.shape({
     component: elementTypeAcceptingRef,
     style: PropTypes.object,
   }),
   /**
-   * Props applied to the swipe area element.
+   * The element is used to intercept the touch events on the edge.
    */
   SwipeAreaProps: PropTypes.object,
   /**
@@ -634,7 +651,11 @@ SwipeableDrawer.propTypes = {
    */
   transitionDuration: PropTypes.oneOfType([
     PropTypes.number,
-    PropTypes.shape({ enter: PropTypes.number, exit: PropTypes.number }),
+    PropTypes.shape({
+      appear: PropTypes.number,
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
   ]),
   /**
    * @ignore

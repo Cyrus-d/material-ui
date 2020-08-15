@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,7 +8,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   toolbar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
@@ -50,8 +50,12 @@ export default function Header(props) {
           Sign up
         </Button>
       </Toolbar>
-      <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
-        {sections.map(section => (
+      <Toolbar
+        component="nav"
+        variant="dense"
+        className={classes.toolbarSecondary}
+      >
+        {sections.map((section) => (
           <Link
             color="inherit"
             noWrap

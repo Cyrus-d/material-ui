@@ -1,9 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
+import StepperContext from '../Stepper/StepperContext';
+import StepContext from '../Step/StepContext';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     flex: '1 1 auto',
@@ -47,17 +49,10 @@ export const styles = theme => ({
 });
 
 const StepConnector = React.forwardRef(function StepConnector(props, ref) {
-  const {
-    active,
-    alternativeLabel = false,
-    classes,
-    className,
-    completed,
-    disabled,
-    index,
-    orientation = 'horizontal',
-    ...other
-  } = props;
+  const { classes, className, ...other } = props;
+
+  const { alternativeLabel, orientation } = React.useContext(StepperContext);
+  const { active, disabled, completed } = React.useContext(StepContext);
 
   return (
     <div
@@ -86,40 +81,19 @@ const StepConnector = React.forwardRef(function StepConnector(props, ref) {
 });
 
 StepConnector.propTypes = {
-  /**
-   * @ignore
-   */
-  active: PropTypes.bool,
-  /**
-   * @ignore
-   * Set internally by Step when it's supplied with the alternativeLabel property.
-   */
-  alternativeLabel: PropTypes.bool,
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
-  /**
-   * @ignore
-   */
-  completed: PropTypes.bool,
-  /**
-   * @ignore
-   */
-  disabled: PropTypes.bool,
-  /**
-   * @ignore
-   */
-  index: PropTypes.number,
-  /**
-   * @ignore
-   */
-  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 };
 
 export default withStyles(styles, { name: 'MuiStepConnector' })(StepConnector);

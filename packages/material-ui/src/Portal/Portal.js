@@ -1,14 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { exactProp } from '@material-ui/utils';
+import { exactProp, HTMLElementType } from '@material-ui/utils';
 import setRef from '../utils/setRef';
 import useForkRef from '../utils/useForkRef';
 
 function getContainer(container) {
-  container = typeof container === 'function' ? container() : container;
-  // #StrictMode ready
-  return ReactDOM.findDOMNode(container);
+  return typeof container === 'function' ? container() : container;
 }
 
 const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
@@ -67,19 +65,18 @@ Portal.propTypes = {
    */
   children: PropTypes.node,
   /**
-   * A node, component instance, or function that returns either.
+   * A HTML element or function that returns one.
    * The `container` will have the portal children appended to it.
+   *
    * By default, it uses the body of the top-level document object,
    * so it's simply `document.body` most of the time.
    */
-  container: PropTypes.oneOfType([
+  container: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    HTMLElementType,
     PropTypes.func,
-    PropTypes.instanceOf(React.Component),
-    PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
   ]),
   /**
-   * Disable the portal behavior.
-   * The children stay within it's parent DOM hierarchy.
+   * The `children` will be inside the DOM hierarchy of the parent component.
    */
   disablePortal: PropTypes.bool,
   /**

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +16,10 @@ export default function ContinuousSlider() {
   const classes = useStyles();
   const [value, setValue] = React.useState<number>(30);
 
-  const handleChange = (event: any, newValue: number | number[]) => {
+  const handleChange = (
+    event: React.SyntheticEvent,
+    newValue: number | number[],
+  ) => {
     setValue(newValue as number);
   };
 
@@ -30,13 +33,20 @@ export default function ContinuousSlider() {
           <VolumeDown />
         </Grid>
         <Grid item xs>
-          <Slider value={value} onChange={handleChange} aria-labelledby="continuous-slider" />
+          <Slider
+            value={value}
+            onChange={handleChange}
+            aria-labelledby="continuous-slider"
+          />
         </Grid>
         <Grid item>
           <VolumeUp />
         </Grid>
       </Grid>
-      <Slider disabled defaultValue={30} aria-labelledby="continuous-slider" />
+      <Typography id="disabled-slider" gutterBottom>
+        Disabled slider
+      </Typography>
+      <Slider disabled defaultValue={30} aria-labelledby="disabled-slider" />
     </div>
   );
 }

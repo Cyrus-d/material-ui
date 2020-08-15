@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import mediaQuery from 'css-mediaquery';
 import { ThemeProvider } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -10,7 +10,7 @@ function MyComponent() {
 }
 
 export default function ServerSide() {
-  const ssrMatchMedia = query => ({
+  const ssrMatchMedia = (query) => ({
     matches: mediaQuery.match(query, {
       // The estimated CSS width of the browser.
       width: 800,

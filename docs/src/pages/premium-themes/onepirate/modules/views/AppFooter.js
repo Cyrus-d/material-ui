@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
@@ -18,7 +18,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     backgroundColor: theme.palette.secondary.light,
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   list: {
     margin: 0,
     listStyle: 'none',
-    paddingLeft: 0,
+    padding: 0,
   },
   listItem: {
     paddingTop: theme.spacing(0.5),
@@ -83,16 +83,25 @@ export default function AppFooter() {
             <Grid
               container
               direction="column"
-              justify="flex-end"
+              justifyContent="flex-end"
               className={classes.iconsWrapper}
               spacing={2}
             >
               <Grid item className={classes.icons}>
                 <a href="https://material-ui.com/" className={classes.icon}>
-                  <img src="/static/themes/onepirate/appFooterFacebook.png" alt="Facebook" />
+                  <img
+                    src="/static/themes/onepirate/appFooterFacebook.png"
+                    alt="Facebook"
+                  />
                 </a>
-                <a href="https://twitter.com/MaterialUI" className={classes.icon}>
-                  <img src="/static/themes/onepirate/appFooterTwitter.png" alt="Twitter" />
+                <a
+                  href="https://twitter.com/MaterialUI"
+                  className={classes.icon}
+                >
+                  <img
+                    src="/static/themes/onepirate/appFooterTwitter.png"
+                    alt="Twitter"
+                  />
                 </a>
               </Grid>
               <Grid item>
@@ -124,7 +133,7 @@ export default function AppFooter() {
               }}
               className={classes.language}
             >
-              {LANGUAGES.map(language => (
+              {LANGUAGES.map((language) => (
                 <option value={language.code} key={language.code}>
                   {language.name}
                 </option>
@@ -134,11 +143,19 @@ export default function AppFooter() {
           <Grid item>
             <Typography variant="caption">
               {'Icons made by '}
-              <Link href="https://www.freepik.com" rel="sponsored" title="Freepik">
+              <Link
+                href="https://www.freepik.com"
+                rel="sponsored"
+                title="Freepik"
+              >
                 Freepik
               </Link>
               {' from '}
-              <Link href="https://www.flaticon.com" rel="sponsored" title="Flaticon">
+              <Link
+                href="https://www.flaticon.com"
+                rel="sponsored"
+                title="Flaticon"
+              >
                 www.flaticon.com
               </Link>
               {' is licensed by '}

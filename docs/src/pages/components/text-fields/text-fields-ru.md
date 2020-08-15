@@ -51,7 +51,7 @@ There are multiple ways to display an icon with a text field.
 
 ### Украшения поля ввода (Input)
 
-The main way is with an `InputAdornment`. Их можно использовать для добавления префикса, суффикса или действия к полю ввода. Например, вы можете использовать кнопку-иконку, чтобы скрыть или показать пароль.
+The main way is with an `InputAdornment`. This can be used to add a prefix, a suffix or an action to an input. Например, вы можете использовать кнопку-иконку, чтобы скрыть или показать пароль.
 
 {{"demo": "pages/components/text-fields/InputAdornments.js"}}
 
@@ -63,7 +63,7 @@ Fancy smaller inputs? Use the `size` prop.
 
 ## Расположение
 
-`margin` can be used to alter the vertical spacing of inputs. Using `none` (default) will not apply margins to the `FormControl`, whereas `dense` and `normal` will. `dense` and `normal` alter other styles to meet the specification.
+`margin` prop can be used to alter the vertical spacing of inputs. Using `none` (default) will not apply margins to the `FormControl`, whereas `dense` and `normal` will. `dense` and `normal` alter other styles to meet the specification.
 
 `fullWidth` can be used to make the input take up the full width of its container.
 
@@ -71,7 +71,7 @@ Fancy smaller inputs? Use the `size` prop.
 
 ## Uncontrolled vs Controlled
 
-The component can be controlled or uncontrolled
+The component can be controlled or uncontrolled.
 
 {{"demo": "pages/components/text-fields/StateTextFields.js"}}
 
@@ -102,6 +102,8 @@ The `color` prop changes the highlight color of the text field when focused.
 Настройка не ограничивается CSS, вы можете использовать композицию для создания пользовательских компонентов и придать вашему приложению уникальный стиль. Ниже приведен пример использования компонента [`InputBase`](/api/input-base/), вдохновленный Google Maps.
 
 {{"demo": "pages/components/text-fields/CustomizedInputBase.js", "bg": true}}
+
+🎨 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/styles/text-field).
 
 ## Ограничения
 
@@ -171,7 +173,7 @@ function MyInputComponent(props) {
 
 ## Доступность
 
-In order for the text field to be accessible, **the input should be linked to the label and the helper text**. The underlying DOM nodes should have this structure.
+In order for the text field to be accessible, **the input should be linked to the label and the helper text**. The underlying DOM nodes should have this structure:
 
 ```jsx
 <div class="form-control">
@@ -196,7 +198,6 @@ In order for the text field to be accessible, **the input should be linked to th
 
 Для более сложных вариантов использования вы можете воспользоваться:
 
-- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Привязки для использования Material-UI с formik.
-- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) Набор компонентов-оберток для облегчения работы с Material UI в связке с Redux Form.
-- [final-form-material-ui](https://github.com/Deadly0/final-form-material-ui) Набор компонентов-оберток для облегчения работы с Material UI в связке с Final Form.
-- [mui-rff](https://github.com/lookfirst/mui-rff) A set of wrapper components to facilitate using Material UI with React Final Form.
+- [formik-material-ui](https://github.com/stackworx/formik-material-ui) Bindings for using Material-UI with [formik](https://jaredpalmer.com/formik).
+- [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) Bindings for using Material-UI with [Redux Form](https://redux-form.com/).
+- [mui-rff](https://github.com/lookfirst/mui-rff) Bindings for using Material-UI with [React Final Form](https://final-form.org/react).

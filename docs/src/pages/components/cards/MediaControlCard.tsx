@@ -1,5 +1,10 @@
-import React from 'react';
-import { Theme, createStyles, makeStyles, useTheme } from '@material-ui/core/styles';
+import * as React from 'react';
+import {
+  Theme,
+  createStyles,
+  makeStyles,
+  useTheme,
+} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -11,7 +16,7 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    card: {
+    root: {
       display: 'flex',
     },
     details: {
@@ -42,7 +47,7 @@ export default function MediaControlCard() {
   const theme = useTheme();
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.root}>
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component="h5" variant="h5">
@@ -54,13 +59,21 @@ export default function MediaControlCard() {
         </CardContent>
         <div className={classes.controls}>
           <IconButton aria-label="previous">
-            {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
+            {theme.direction === 'rtl' ? (
+              <SkipNextIcon />
+            ) : (
+              <SkipPreviousIcon />
+            )}
           </IconButton>
           <IconButton aria-label="play/pause">
             <PlayArrowIcon className={classes.playIcon} />
           </IconButton>
           <IconButton aria-label="next">
-            {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
+            {theme.direction === 'rtl' ? (
+              <SkipPreviousIcon />
+            ) : (
+              <SkipNextIcon />
+            )}
           </IconButton>
         </div>
       </div>

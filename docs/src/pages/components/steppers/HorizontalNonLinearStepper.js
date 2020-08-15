@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -6,7 +6,7 @@ import StepButton from '@material-ui/core/StepButton';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
@@ -72,10 +72,10 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStep = step => () => {
+  const handleStep = (step) => () => {
     setActiveStep(step);
   };
 
@@ -95,10 +95,8 @@ export default function HorizontalNonLinearStepper() {
     <div className={classes.root}>
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
-          <Step key={label}>
-            <StepButton onClick={handleStep(index)} completed={completed[index]}>
-              {label}
-            </StepButton>
+          <Step key={label} completed={completed[index]}>
+            <StepButton onClick={handleStep(index)}>{label}</StepButton>
           </Step>
         ))}
       </Stepper>
@@ -112,14 +110,19 @@ export default function HorizontalNonLinearStepper() {
           </div>
         ) : (
           <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <Typography className={classes.instructions}>
+              {getStepContent(activeStep)}
+            </Typography>
             <div>
-              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                className={classes.button}
+              >
                 Back
               </Button>
               <Button
                 variant="contained"
-                color="primary"
                 onClick={handleNext}
                 className={classes.button}
               >
@@ -131,8 +134,10 @@ export default function HorizontalNonLinearStepper() {
                     Step {activeStep + 1} already completed
                   </Typography>
                 ) : (
-                  <Button variant="contained" color="primary" onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
+                  <Button variant="contained" onClick={handleComplete}>
+                    {completedSteps() === totalSteps() - 1
+                      ? 'Finish'
+                      : 'Complete Step'}
                   </Button>
                 ))}
             </div>

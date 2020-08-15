@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import ArrowDownwardIcon from '../internal/svg-icons/ArrowDownward';
@@ -6,7 +6,7 @@ import withStyles from '../styles/withStyles';
 import ButtonBase from '../ButtonBase';
 import capitalize from '../utils/capitalize';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     cursor: 'pointer',
@@ -89,6 +89,10 @@ const TableSortLabel = React.forwardRef(function TableSortLabel(props, ref) {
 });
 
 TableSortLabel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * If `true`, the label will have the active styling (should be true for the sorted column).
    */
@@ -101,7 +105,7 @@ TableSortLabel.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */

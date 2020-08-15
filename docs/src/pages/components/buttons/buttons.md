@@ -1,6 +1,6 @@
 ---
 title: Button React component
-components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
+components: Button, IconButton, ButtonBase, LoadingButton
 ---
 
 # Button
@@ -20,8 +20,6 @@ components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
 [Contained buttons](https://material.io/design/components/buttons.html#contained-button)
 are high-emphasis, distinguished by their use of elevation and fill.
 They contain actions that are primary to your app.
-
-The last example of this demo show how to use an upload button.
 
 {{"demo": "pages/components/buttons/ContainedButtons.js"}}
 
@@ -52,49 +50,21 @@ or a higher emphasis alternative to text buttons.
 
 {{"demo": "pages/components/buttons/OutlinedButtons.js"}}
 
-## Grouped Buttons
+## Handling clicks
 
-The `ButtonGroup` component can be used to group buttons.
+All components accept an `onClick` handler that is applied to the root DOM element.
 
-{{"demo": "pages/components/buttons/GroupedButtons.js"}}
+```jsx
+<Button
+  onClick={() => {
+    alert('clicked');
+  }}
+>
+  Click me
+</Button>
+```
 
-### Group sizes and colors
-
-{{"demo": "pages/components/buttons/GroupSizesColors.js"}}
-
-### Group orientation
-
-{{"demo": "pages/components/buttons/GroupOrientation.js"}}
-
-### Split Button
-
-ButtonGroup can also be used to create a split button. The dropdown can change the button action (as in this example), or be used to immediately trigger a related action.
-
-{{"demo": "pages/components/buttons/SplitButton.js"}}
-
-## Floating Action Buttons
-
-A [floating action button](https://material.io/design/components/buttons-floating-action-button.html)
-(FAB) performs the primary, or most common, action on a screen.
-It appears in front of all screen content, typically as a circular shape with an icon in its center.
-FABs come in two types: regular, and extended.
-
-Only use a FAB if it is the most suitable way to present a screen’s primary action.
-
-Only one floating action button is recommended per screen to represent the most common action.
-
-{{"demo": "pages/components/buttons/FloatingActionButtons.js"}}
-
-The floating action button animates onto the screen as an expanding piece of material, by default.
-
-A floating action button that spans multiple lateral screens (such as tabbed screens) should briefly disappear,
-then reappear if its action changes.
-
-The Zoom transition can be used to achieve this. Note that since both the exiting and entering
-animations are triggered at the same time, we use `enterDelay` to allow the outgoing Floating Action Button's
-animation to finish before the new one enters.
-
-{{"demo": "pages/components/buttons/FloatingActionButtonZoom.js", "bg": true}}
+Note that the documentation [avoids](/guides/api/#native-properties) mentioning native props (there are a lot) in the API section of the components.
 
 ## Upload button
 
@@ -128,14 +98,24 @@ Here are some examples of customizing the component. You can learn more about th
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js", "defaultCodeOpen": false}}
 
-👑 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/components/button).
+🎨 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/styles/button).
+
+## Loading buttons
+
+The loading buttons can show pending state and disable interactions.
+
+{{"demo": "pages/components/buttons/LoadingButtons.js"}}
+
+Toggle the switch to see the transition between the different states.
+
+{{"demo": "pages/components/buttons/LoadingButtonsTransition.js"}}
 
 ## Complex Buttons
 
 The Text Buttons, Contained Buttons, Floating Action Buttons and Icon Buttons are built on top of the same component: the `ButtonBase`.
 You can take advantage of this lower level component to build custom interactions.
 
-{{"demo": "pages/components/buttons/ButtonBases.js"}}
+{{"demo": "pages/components/buttons/ButtonBase.js"}}
 
 ## Third-party routing library
 
@@ -159,26 +139,26 @@ If you wish to use `not-allowed`, you have two options:
 
 1. **CSS only**. You can remove the pointer events style on the disabled state of the `<button>` element:
 
-  ```css
-  .MuiButtonBase-root:disabled {
-    cursor: not-allowed;
-    pointer-events: auto;
-  }
-  ```
+```css
+.MuiButtonBase-root:disabled {
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+```
 
-  However:
+However:
 
-  - You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements)
-  - The cursor won't change if you render something other than a button element, for instance, a link `<a>` element.
+- You should add `pointer-events: none;` back when you need to display [tooltips on disabled elements](/components/tooltips/#disabled-elements).
+- The cursor won't change if you render something other than a button element, for instance, a link `<a>` element.
 
 2. **DOM change**. You can wrap the button:
 
-  ```jsx
-  <span style={{ cursor: 'not-allowed' }}>
-    <Button component={Link} disabled>
-      disabled
-    </Button>
-  </span>
-  ```
+```jsx
+<span style={{ cursor: 'not-allowed' }}>
+  <Button component={Link} disabled>
+    disabled
+  </Button>
+</span>
+```
 
-  This has the advantage of supporting any element, for instance, a link `<a>` element.
+This has the advantage of supporting any element, for instance, a link `<a>` element.

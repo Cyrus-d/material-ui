@@ -1,9 +1,16 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { chainPropTypes } from '@material-ui/utils';
 import { useTheme, withStyles } from '@material-ui/core/styles';
-import { capitalize, useForkRef, useIsFocusVisible } from '@material-ui/core/utils';
+import {
+  capitalize,
+  useForkRef,
+  useIsFocusVisible,
+  useControlled,
+  unstable_useId as useId,
+} from '@material-ui/core/utils';
+import { visuallyHidden } from '@material-ui/system';
 import Star from '../internal/svg-icons/Star';
 
 function clamp(value, min, max) {
@@ -30,7 +37,7 @@ function roundValueToPrecision(value, precision) {
   return Number(nearest.toFixed(getDecimalPrecision(precision)));
 }
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     display: 'inline-flex',
@@ -38,6 +45,7 @@ export const styles = theme => ({
     fontSize: theme.typography.pxToRem(24),
     color: '#ffb400',
     cursor: 'pointer',
+    textAlign: 'left',
     WebkitTapHighlightColor: 'transparent',
     '&$disabled': {
       opacity: 0.5,
@@ -64,21 +72,10 @@ export const styles = theme => ({
   /* Pseudo-class applied to the root element if keyboard focused. */
   focusVisible: {},
   /* Visually hide an element. */
-  visuallyhidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    color: '#000',
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1,
-  },
+  visuallyHidden,
   /* Styles applied to the pristine label. */
   pristine: {
-    'input:focus ~ &': {
+    'input:focus + &': {
       top: 0,
       bottom: 0,
       position: 'absolute',
@@ -96,6 +93,9 @@ export const styles = theme => ({
     transition: theme.transitions.create('transform', {
       duration: theme.transitions.duration.shortest,
     }),
+    // Fix mouseLeave issue.
+    // https://github.com/facebook/react/issues/4492
+    pointerEvents: 'none',
   },
   /* Styles applied to the icon wrapping elements when empty. */
   iconEmpty: {
@@ -136,6 +136,7 @@ const Rating = React.forwardRef(function Rating(props, ref) {
   const {
     classes,
     className,
+    defaultValue = null,
     disabled = false,
     emptyIcon,
     emptyLabelText = 'Empty',
@@ -151,20 +152,19 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     precision = 1,
     readOnly = false,
     size = 'medium',
-    value: valueProp = null,
+    value: valueProp,
     ...other
   } = props;
 
-  const [defaultName, setDefaultName] = React.useState();
-  const name = nameProp || defaultName;
-  React.useEffect(() => {
-    // Fallback to this default id when possible.
-    // Use the random value for client-side rendering only.
-    // We can't use it server-side.
-    setDefaultName(`mui-rating-${Math.round(Math.random() * 1e5)}`);
-  }, []);
+  const name = useId(nameProp);
 
-  const valueRounded = roundValueToPrecision(valueProp, precision);
+  const [valueDerived, setValueState] = useControlled({
+    controlled: valueProp,
+    default: defaultValue,
+    name: 'Rating',
+  });
+
+  const valueRounded = roundValueToPrecision(valueDerived, precision);
   const theme = useTheme();
   const [{ hover, focus }, setState] = React.useState({
     hover: -1,
@@ -179,21 +179,26 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     value = focus;
   }
 
-  const { isFocusVisible, onBlurVisible, ref: focusVisibleRef } = useIsFocusVisible();
+  const {
+    isFocusVisibleRef,
+    onBlur: handleBlurVisible,
+    onFocus: handleFocusVisible,
+    ref: focusVisibleRef,
+  } = useIsFocusVisible();
   const [focusVisible, setFocusVisible] = React.useState(false);
 
   const rootRef = React.useRef();
   const handleFocusRef = useForkRef(focusVisibleRef, rootRef);
   const handleRef = useForkRef(handleFocusRef, ref);
 
-  const handleMouseMove = event => {
+  const handleMouseMove = (event) => {
     if (onMouseMove) {
       onMouseMove(event);
     }
 
     const rootNode = rootRef.current;
     const { right, left } = rootNode.getBoundingClientRect();
-    const { width } = rootNode.querySelector(`.${classes.label}`).getBoundingClientRect();
+    const { width } = rootNode.firstChild.getBoundingClientRect();
     let percent;
 
     if (theme.direction === 'rtl') {
@@ -205,7 +210,7 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     let newHover = roundValueToPrecision(max * percent + precision / 2, precision);
     newHover = clamp(newHover, precision, max);
 
-    setState(prev =>
+    setState((prev) =>
       prev.hover === newHover && prev.focus === newHover
         ? prev
         : {
@@ -221,7 +226,7 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     }
   };
 
-  const handleMouseLeave = event => {
+  const handleMouseLeave = (event) => {
     if (onMouseLeave) {
       onMouseLeave(event);
     }
@@ -237,13 +242,17 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     }
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
+    const newValue = parseFloat(event.target.value);
+
+    setValueState(newValue);
+
     if (onChange) {
-      onChange(event, parseFloat(event.target.value));
+      onChange(event, newValue);
     }
   };
 
-  const handleClear = event => {
+  const handleClear = (event) => {
     // Ignore keyboard events
     // https://github.com/facebook/react/issues/7407
     if (event.clientX === 0 && event.clientY === 0) {
@@ -255,18 +264,21 @@ const Rating = React.forwardRef(function Rating(props, ref) {
       focus: -1,
     });
 
+    setValueState(null);
+
     if (onChange && parseFloat(event.target.value) === valueRounded) {
       onChange(event, null);
     }
   };
 
-  const handleFocus = event => {
-    if (isFocusVisible(event)) {
+  const handleFocus = (event) => {
+    handleFocusVisible(event);
+    if (isFocusVisibleRef.current === true) {
       setFocusVisible(true);
     }
 
     const newFocus = parseFloat(event.target.value);
-    setState(prev => ({
+    setState((prev) => ({
       hover: prev.hover,
       focus: newFocus,
     }));
@@ -276,18 +288,18 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     }
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event) => {
     if (hover !== -1) {
       return;
     }
 
-    if (focusVisible !== false) {
+    handleBlurVisible(event);
+    if (isFocusVisibleRef.current === false) {
       setFocusVisible(false);
-      onBlurVisible();
     }
 
     const newFocus = -1;
-    setState(prev => ({
+    setState((prev) => ({
       hover: prev.hover,
       focus: newFocus,
     }));
@@ -297,11 +309,11 @@ const Rating = React.forwardRef(function Rating(props, ref) {
     }
   };
 
-  const item = (propsItem, state) => {
-    const id = `${name}-${String(propsItem.value).replace('.', '-')}`;
+  const item = (state, labelProps) => {
+    const id = `${name}-${String(state.value).replace('.', '-')}`;
     const container = (
       <IconContainerComponent
-        {...propsItem}
+        value={state.value}
         className={clsx(classes.icon, {
           [classes.iconEmpty]: !state.filled,
           [classes.iconFilled]: state.filled,
@@ -314,27 +326,32 @@ const Rating = React.forwardRef(function Rating(props, ref) {
       </IconContainerComponent>
     );
 
-    if (readOnly || disabled) {
-      return <React.Fragment key={propsItem.value}>{container}</React.Fragment>;
+    if (readOnly) {
+      return (
+        <span key={state.value} {...labelProps}>
+          {container}
+        </span>
+      );
     }
 
     return (
-      <React.Fragment key={propsItem.value}>
-        <label className={classes.label} htmlFor={id}>
+      <React.Fragment key={state.value}>
+        <label className={classes.label} htmlFor={id} {...labelProps}>
           {container}
-          <span className={classes.visuallyhidden}>{getLabelText(propsItem.value)}</span>
+          <span className={classes.visuallyHidden}>{getLabelText(state.value)}</span>
         </label>
         <input
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleChange}
           onClick={handleClear}
-          value={propsItem.value}
+          disabled={disabled}
+          value={state.value}
           id={id}
           type="radio"
           name={name}
           checked={state.checked}
-          className={classes.visuallyhidden}
+          className={classes.visuallyHidden}
         />
       </React.Fragment>
     );
@@ -359,21 +376,6 @@ const Rating = React.forwardRef(function Rating(props, ref) {
       aria-label={readOnly ? getLabelText(value) : null}
       {...other}
     >
-      {!readOnly && !disabled && valueRounded == null && (
-        <React.Fragment>
-          <input
-            value=""
-            id={`${name}-empty`}
-            type="radio"
-            name={name}
-            defaultChecked
-            className={classes.visuallyhidden}
-          />
-          <label className={classes.pristine} htmlFor={`${name}-empty`}>
-            <span className={classes.visuallyhidden}>{emptyLabelText}</span>
-          </label>
-        </React.Fragment>
-      )}
       {Array.from(new Array(max)).map((_, index) => {
         const itemValue = index + 1;
 
@@ -396,6 +398,12 @@ const Rating = React.forwardRef(function Rating(props, ref) {
                 return item(
                   {
                     value: itemDecimalValue,
+                    filled: itemDecimalValue <= value,
+                    hover: itemDecimalValue <= hover,
+                    focus: itemDecimalValue <= focus,
+                    checked: itemDecimalValue === valueRounded,
+                  },
+                  {
                     style:
                       items.length - 1 === indexDecimal
                         ? {}
@@ -409,45 +417,58 @@ const Rating = React.forwardRef(function Rating(props, ref) {
                             position: 'absolute',
                           },
                   },
-                  {
-                    filled: itemDecimalValue <= value,
-                    hover: itemDecimalValue <= hover,
-                    focus: itemDecimalValue <= focus,
-                    checked: itemDecimalValue === valueRounded,
-                  },
                 );
               })}
             </span>
           );
         }
 
-        return item(
-          {
-            value: itemValue,
-          },
-          {
-            active: itemValue === value && (hover !== -1 || focus !== -1),
-            filled: itemValue <= value,
-            hover: itemValue <= hover,
-            focus: itemValue <= focus,
-            checked: itemValue === valueRounded,
-          },
-        );
+        return item({
+          value: itemValue,
+          active: itemValue === value && (hover !== -1 || focus !== -1),
+          filled: itemValue <= value,
+          hover: itemValue <= hover,
+          focus: itemValue <= focus,
+          checked: itemValue === valueRounded,
+        });
       })}
+      {!readOnly && !disabled && valueRounded == null && (
+        <React.Fragment>
+          <input
+            value=""
+            id={`${name}-empty`}
+            type="radio"
+            name={name}
+            defaultChecked
+            className={classes.visuallyHidden}
+          />
+          <label className={classes.pristine} htmlFor={`${name}-empty`}>
+            <span className={classes.visuallyHidden}>{emptyLabelText}</span>
+          </label>
+        </React.Fragment>
+      )}
     </span>
   );
 });
 
 Rating.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
+  /**
+   * The default value. Use when the component is not controlled.
+   */
+  defaultValue: PropTypes.number,
   /**
    * If `true`, the rating will be disabled.
    */
@@ -486,11 +507,11 @@ Rating.propTypes = {
    * If `readOnly` is false, the prop is required,
    * this input name`should be unique within the parent form.
    */
-  name: chainPropTypes(PropTypes.string, props => {
+  name: chainPropTypes(PropTypes.string, (props) => {
     if (!props.readOnly && !props.name) {
       return new Error(
         [
-          'Material-UI: the prop `name` is required (when `readOnly` is false).',
+          'Material-UI: The prop `name` is required (when `readOnly` is false).',
           'Additionally, the input name should be unique within the parent form.',
         ].join('\n'),
       );
@@ -522,7 +543,17 @@ Rating.propTypes = {
   /**
    * The minimum increment value change allowed.
    */
-  precision: PropTypes.number,
+  precision: chainPropTypes(PropTypes.number, (props) => {
+    if (props.precision < 0.1) {
+      return new Error(
+        [
+          'Material-UI: The prop `precision` should be above 0.1.',
+          'A value below this limit has an imperceptible impact.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
   /**
    * Removes all hover effects and pointer events.
    */
@@ -530,7 +561,7 @@ Rating.propTypes = {
   /**
    * The size of the rating.
    */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   /**
    * The rating value.
    */

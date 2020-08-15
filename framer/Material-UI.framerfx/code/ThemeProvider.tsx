@@ -1,32 +1,41 @@
 import * as React from 'react';
 import { addPropertyControls, ControlType } from 'framer';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { parseColor } from './utils';
 
 interface Props {
-  paletteType?: 'dark' | 'light';
-  primary?: string;
-  secondary?: string;
-  error?: string;
+  children?: React.ReactNode;
+  paletteType: 'dark' | 'light';
+  primary: string;
+  secondary: string;
+  error: string;
+  info: string;
+  warning: string;
+  success: string;
 }
 
-const defaultProps: Props = {
-  paletteType: 'light',
-  primary: '#3f51b5',
-  secondary: '#f50057',
-  error: '#f44336',
-};
-
-export const Theme: React.SFC<Props> = (props: Props) => {
-  const { children, error, paletteType, primary, secondary, ...other } = props;
+export function Theme(props: Props): JSX.Element {
+  const {
+    children,
+    error,
+    paletteType,
+    primary,
+    secondary,
+    info,
+    warning,
+    success,
+    ...other
+  } = props;
 
   const theme = createMuiTheme({
     palette: {
       type: paletteType,
-      primary: { main: primary },
-      secondary: { main: secondary },
-      error: { main: error },
+      primary: { main: parseColor(primary) },
+      secondary: { main: parseColor(secondary) },
+      error: { main: parseColor(error) },
+      info: { main: parseColor(info) },
+      warning: { main: parseColor(warning) },
+      success: { main: parseColor(success) },
     },
   });
 
@@ -35,9 +44,17 @@ export const Theme: React.SFC<Props> = (props: Props) => {
       {children}
     </MuiThemeProvider>
   );
-};
+}
 
-Theme.defaultProps = defaultProps;
+Theme.defaultProps = {
+  paletteType: 'light' as const,
+  primary: '#3f51b5',
+  secondary: '#f50057',
+  error: '#f44336',
+  info: '#2196f3',
+  warning: '#ff9800',
+  success: '#4caf4f',
+};
 
 addPropertyControls(Theme, {
   paletteType: {
@@ -56,5 +73,17 @@ addPropertyControls(Theme, {
   error: {
     type: ControlType.Color,
     title: 'Error',
+  },
+  info: {
+    type: ControlType.Color,
+    title: 'Info',
+  },
+  warning: {
+    type: ControlType.Color,
+    title: 'Warning',
+  },
+  success: {
+    type: ControlType.Color,
+    title: 'Success',
   },
 });

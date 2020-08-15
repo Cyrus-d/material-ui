@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -26,7 +26,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -90,7 +90,6 @@ export default function SignIn() {
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
             className={classes.submit}
           >
             Sign In

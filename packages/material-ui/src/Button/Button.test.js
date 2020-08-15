@@ -1,19 +1,23 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import { act, createClientRender, fireEvent } from 'test/utils/createClientRender';
-import createServerRender from 'test/utils/createServerRender';
+import {
+  getClasses,
+  createMount,
+  describeConformance,
+  act,
+  createClientRender,
+  fireEvent,
+  createServerRender,
+} from 'test/utils';
 import Button from './Button';
 import ButtonBase from '../ButtonBase';
 
 describe('<Button />', () => {
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<Button>Hello World</Button>);
   });
 
@@ -23,16 +27,15 @@ describe('<Button />', () => {
     mount,
     refInstanceof: window.HTMLButtonElement,
     skip: ['componentProp'],
-    after: () => mount.cleanUp(),
   }));
 
-  it('should render with the root & text classes but no others', () => {
+  it('should render with the root, text, and textPrimary classes but no others', () => {
     const { getByRole } = render(<Button>Hello World</Button>);
     const button = getByRole('button');
 
     expect(button).to.have.class(classes.root);
     expect(button).to.have.class(classes.text);
-    expect(button).not.to.have.class(classes.textPrimary);
+    expect(button).to.have.class(classes.textPrimary);
     expect(button).not.to.have.class(classes.textSecondary);
     expect(button).not.to.have.class(classes.outlined);
     expect(button).not.to.have.class(classes.outlinedPrimary);
@@ -295,7 +298,7 @@ describe('<Button />', () => {
     );
     const button = getByRole('button');
 
-    expect(button.querySelector('.touch-ripple')).to.be.ok;
+    expect(button.querySelector('.touch-ripple')).not.to.equal(null);
   });
 
   it('can disable the ripple', () => {
@@ -306,7 +309,7 @@ describe('<Button />', () => {
     );
     const button = getByRole('button');
 
-    expect(button.querySelector('.touch-ripple')).to.be.null;
+    expect(button.querySelector('.touch-ripple')).to.equal(null);
   });
 
   it('can disable the elevation', () => {
@@ -329,7 +332,7 @@ describe('<Button />', () => {
       button.focus();
     });
 
-    expect(button.querySelector('.pulsate-focus-visible')).to.be.ok;
+    expect(button.querySelector('.pulsate-focus-visible')).not.to.equal(null);
   });
 
   it('can disable the focusRipple', () => {
@@ -348,7 +351,7 @@ describe('<Button />', () => {
       button.focus();
     });
 
-    expect(button.querySelector('.pulsate-focus-visible')).to.be.null;
+    expect(button.querySelector('.pulsate-focus-visible')).to.equal(null);
   });
 
   describe('server-side', () => {

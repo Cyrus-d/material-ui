@@ -3,18 +3,19 @@ const path = require('path');
 
 const markdownRegex = /\.md$/;
 
-// Returns the markdowns of the documentation in a flat array.
-// {
-//   pathname: String,
-//   filename: String,
-// }
+/**
+ * Returns the markdowns of the documentation in a flat array.
+ * @param {string} [directory]
+ * @param {Array<{ filename: string, pathname: string }>} [pagesMarkdown]
+ * @returns {Array<{ filename: string, pathname: string }>}
+ */
 function findPagesMarkdown(
   directory = path.resolve(__dirname, '../../../src/pages'),
   pagesMarkdown = [],
 ) {
   const items = fs.readdirSync(directory);
 
-  items.forEach(item => {
+  items.forEach((item) => {
     const itemPath = path.resolve(directory, item);
 
     if (fs.statSync(itemPath).isDirectory()) {
@@ -32,10 +33,7 @@ function findPagesMarkdown(
       .replace('.md', '');
 
     // Remove the last pathname segment.
-    pathname = pathname
-      .split('/')
-      .slice(0, 3)
-      .join('/');
+    pathname = pathname.split('/').slice(0, 3).join('/');
 
     pagesMarkdown.push({
       // Relative location in the path (URL) system.
@@ -48,13 +46,17 @@ function findPagesMarkdown(
   return pagesMarkdown;
 }
 
-const componentRegex = /^([A-Z][a-z]+)+\.js/;
+const componentRegex = /^(Unstable_)?([A-Z][a-z]+)+\.js/;
 
-// Returns the component source in a flat array.
+/**
+ * Returns the component source in a flat array.
+ * @param {string} directory
+ * @param {Array<{ filename: string }>} components
+ */
 function findComponents(directory, components = []) {
   const items = fs.readdirSync(directory);
 
-  items.forEach(item => {
+  items.forEach((item) => {
     const itemPath = path.resolve(directory, item);
 
     if (fs.statSync(itemPath).isDirectory()) {
@@ -85,7 +87,7 @@ function findPages(
   directory = path.resolve(__dirname, '../../../pages'),
   pages = [],
 ) {
-  fs.readdirSync(directory).forEach(item => {
+  fs.readdirSync(directory).forEach((item) => {
     const itemPath = path.resolve(directory, item);
     const pathname = itemPath
       .replace(new RegExp(`\\${path.sep}`, 'g'), '/')
@@ -101,7 +103,7 @@ function findPages(
     if (
       options.front &&
       pathname.indexOf('/components') === -1 &&
-      pathname.indexOf('/api') === -1
+      pathname.indexOf('/api-docs') === -1
     ) {
       return;
     }

@@ -1,12 +1,12 @@
 <p align="center">
-  <a href="https://material-ui.com/" rel="noopener" target="_blank"><img width="150" src="https://material-ui.com/static/images/material-ui-logo.svg" alt="Material-UI logo"></a></p>
+  <a href="https://material-ui.com/" rel="noopener" target="_blank"><img width="150" src="https://material-ui.com/static/logo.svg" alt="Material-UI logo"></a></p>
 </p>
 
 <h1 align="center">Material-UI</h1>
 
 <div align="center">
 
-[React](https://reactjs.org/) components for faster and easier web development. Build your own design system, or start with [Material Design](https://material.io/design/introduction/).
+[React](https://reactjs.org/) components for faster and simpler web development. Build your own design system, or start with [Material Design](https://material.io/design/introduction/).
 
 [![npm package](https://img.shields.io/npm/v/@material-ui/core/latest.svg)](https://www.npmjs.com/package/@material-ui/core)
 [![npm downloads](https://img.shields.io/npm/dm/@material-ui/core.svg)](https://www.npmjs.com/package/@material-ui/core)
@@ -20,7 +20,7 @@
 [![PeerDependencies](https://david-dm.org/mui-org/material-ui/master/peer-status.svg?path=packages/material-ui)](https://david-dm.org/mui-org/material-ui/master?type=peer&path=packages/material-ui)
 [![Dependencies](https://david-dm.org/mui-org/material-ui/master/status.svg?path=packages/material-ui)](https://david-dm.org/mui-org/material-ui/master?path=packages/material-ui)
 [![DevDependencies](https://david-dm.org/mui-org/material-ui/master/dev-status.svg?path=packages/material-ui)](https://david-dm.org/mui-org/material-ui/master?type=dev)
-[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui-org/material-ui.svg)](https://isitmaintained.com/project/mui-org/material-ui "Average time to resolve an issue")
+[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui-org/material-ui.svg)](https://isitmaintained.com/project/mui-org/material-ui 'Average time to resolve an issue')
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/material-ui-docs/localized.svg?cache=v1)](https://translate.material-ui.com/project/material-ui-docs)
 
 </div>
@@ -30,12 +30,23 @@
 Material-UI is available as an [npm package](https://www.npmjs.com/package/@material-ui/core).
 
 **[Stable channel v4](https://material-ui.com/)**
+
 ```sh
 // with npm
 npm install @material-ui/core
 
 // with yarn
 yarn add @material-ui/core
+```
+
+**[Alpha channel v5](https://next.material-ui.com/)**
+
+```sh
+// with npm
+npm install @material-ui/core@next
+
+// with yarn
+yarn add @material-ui/core@next
 ```
 
 **[v3.x](https://v3.material-ui.com/)** ([Migration from v3 to v4](https://material-ui.com/guides/migration-v3/))
@@ -48,27 +59,29 @@ Please note that `@next` will only point to pre-releases; to get the latest stab
 
 ### Diamond 💎
 
-*3/3 slots available*
+<p style="display: flex; justify-content: center;">
+  <a data-ga-event-category="sponsor" data-ga-event-action="logo" data-ga-event-label="octopus" href="https://octopus.com/?utm_source=materialui&utm_medium=referral" rel="noopener sponsored" target="_blank" style="margin-right: 16px;"><img height="128" width="128" src="https://avatars3.githubusercontent.com/u/1287123?s=256" alt="octopus" title="Repeatable, reliable deployments" loading="lazy" /></a>
+</p>
 
-Diamond Sponsors are those who have pledged $2,000/month and more to Material-UI.
-Please contact us at diamond@material-ui.com to subscribe to this tier.
+Diamond Sponsors are those who have pledged \$1,500/month or more to Material-UI.
 
 ### Gold 🏆
 
 via [Patreon](https://www.patreon.com/oliviertassinari)
 
 <p style="display: flex; justify-content: center;">
-  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="tidelift" href="https://tidelift.com/subscription/pkg/npm-material-ui?utm_source=material_ui&utm_medium=referral&utm_campaign=homepage" rel="noopener sponsored" target="_blank" style="margin-right: 16px;"><img width="96" src="https://github.com/tidelift.png?size=96" alt="tidelift" title="Enterprise-ready open source software" /></a>
-  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="bitsrc" href="https://bit.dev" rel="noopener sponsored" target="_blank" style="margin-right: 16px;"><img width="96" src="https://github.com/teambit.png?size=96" alt="bitsrc" title="The fastest way to share code" /></a>
+  <a data-ga-event-category="sponsor" data-ga-event-action="logo" data-ga-event-label="tidelift" href="https://tidelift.com/subscription/pkg/npm-material-ui?utm_source=npm-material-ui&utm_medium=referral&utm_campaign=homepage" rel="noopener sponsored" target="_blank" style="margin-right: 16px;"><img height="96" width="96" src="https://github.com/tidelift.png?size=96" srcset="https://github.com/tidelift.png?size=192 2x" alt="tidelift" title="Enterprise-ready open source software" loading="lazy" /></a>
+  <a data-ga-event-category="sponsor" data-ga-event-action="logo" data-ga-event-label="bitsrc" href="https://bit.dev" rel="noopener sponsored" target="_blank" style="margin-right: 16px;"><img height="96" width="96" src="https://github.com/teambit.png?size=96" srcset="https://github.com/teambit.png?size=192 2x" alt="bitsrc" title="The fastest way to share code" loading="lazy" /></a>
 </p>
 
 via [OpenCollective](https://opencollective.com/material-ui)
 
 <p style="display: flex; justify-content: center; flex-wrap: wrap;">
-  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="callemall" href="https://www.call-em-all.com" rel="noopener sponsored" target="_blank" style="margin-right: 16px;"><img src="https://images.opencollective.com/proxy/images?src=https%3A%2F%2Fopencollective-production.s3-us-west-1.amazonaws.com%2Ff4053300-e0ea-11e7-acf0-0fa7c0509f4e.png&height=100" alt="call-em-all" title="The easy way to message your group" width="100" loading="lazy"></a>
+  <a data-ga-event-category="sponsor" data-ga-event-action="logo" data-ga-event-label="textemall" href="https://www.text-em-all.com" rel="noopener sponsored" target="_blank" style="margin-right: 16px;"><img src="https://images.opencollective.com/callemall/a6946da/logo/96.png" srcset="https://images.opencollective.com/callemall/a6946da/logo/192.png 2x" alt="call-em-all" title="Mass Text Messaging & Automated Calling" height="96" width="96" loading="lazy"></a>
+  <a data-ga-event-category="sponsor" data-ga-event-action="logo" data-ga-event-label="canadacasino" href="https://www.canadacasino.ca/" rel="noopener sponsored" target="_blank" style="margin-right: 16px;"><img height="96" width="96" src="https://images.opencollective.com/canadacasino/5b19004/logo/96.png" srcset="https://images.opencollective.com/canadacasino/5b19004/logo/192.png 2x" alt="bitsrc" title="" loading="lazy" /></a>
 </p>
 
-Gold Sponsors are those who have pledged $500/month and more to Material-UI.
+Gold Sponsors are those who have pledged \$500/month or more to Material-UI.
 
 ### There is more!
 
@@ -84,11 +97,7 @@ import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 
 function App() {
-  return (
-    <Button variant="contained" color="primary">
-      Hello World
-    </Button>
-  );
+  return <Button variant="contained">Hello World</Button>;
 }
 
 ReactDOM.render(<App />, document.querySelector('#app'));
@@ -100,7 +109,7 @@ Yes, it's really all you need to get started as you can see in this live and int
 
 ## Questions
 
-For *how-to* questions and other non-issues,
+For _how-to_ questions and other non-issues,
 please use [StackOverflow](https://stackoverflow.com/questions/tagged/material-ui) instead of Github issues.
 There is a StackOverflow tag called "material-ui" that you can use to tag your questions.
 
@@ -115,7 +124,7 @@ Check out our [documentation website](https://material-ui.com/).
 
 ## Premium Themes
 
-You can find complete templates & themes in our [premium themes](https://themes.material-ui.com/) section.
+You can find complete templates & themes in the [Material-UI store](https://material-ui.com/store/?utm_source=docs&utm_medium=referral&utm_campaign=readme-store) .
 
 ## Contributing
 
@@ -137,3 +146,31 @@ The future plans and high priority features and enhancements can be found in the
 
 This project is licensed under the terms of the
 [MIT license](/LICENSE).
+
+## Sponsoring services
+
+These great services sponsor Material-UI's core infrastructure:
+
+[<img loading="lazy" alt="GitHub" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" height="25">](https://github.com/)
+
+GitHub allows us to host the Git repository.
+
+[<img loading="lazy" alt="CircleCI" src="https://assets.brandfolder.com/otz6k5-cj8pew-e4rk9u/element.png?v=1501538594" height="32">](https://circleci.com/)
+
+CircleCI allows us to run the test suite.
+
+[<img loading="lazy" alt="Netlify" src="https://cdn.netlify.com/15ecf59b59c9d04b88097c6b5d2c7e8a7d1302d0/1b6d6/img/press/logos/full-logo-light.svg" height="30">](https://www.netlify.com/)
+
+Netlify allows us to distribute the documentation.
+
+[<img loading="lazy" alt="CrowdIn" src="https://support.crowdin.com/assets/logos/crowdin-logo1-small.png" height="30">](https://crowdin.com/)
+
+CrowdIn allows us to translate the documentation.
+
+[<img loading="lazy" alt="BrowserStack" src="https://www.browserstack.com/images/mail/browserstack-logo-footer.png" height="30">](https://www.browserstack.com/)
+
+BrowserStack allows us to test in real browsers.
+
+[<img loading="lazy" alt="CodeCov" src="https://github.com/codecov.png?size=70" width="35" height="35">](https://codecov.io/)
+
+CodeCov allows us to monitor the test coverage.

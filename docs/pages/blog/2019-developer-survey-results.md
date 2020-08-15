@@ -4,9 +4,7 @@ description: 2019 Material-UI Developer Survey results
 
 # 2019 Material-UI Developer Survey results
 
-**Olivier Tassinari, Matt Brookes**
-
-*March 16, 2019*
+Olivier Tassinari, Matt Brookes. March 16, 2019.
 
 While we are currently working on the upcoming release of Material-UI v4, we need to prioritize our
 roadmap for the coming year. To refine our focus, we launched a developer survey last month,
@@ -60,6 +58,7 @@ The prefix corresponds to the number of times the concern was mentioned.
 It’s sorted descending, with the most important concerns first:
 
 - 135 **More components:**
+
   - 56 Non-specific
   - 21 Date picker
   - 10 Autocomplete
@@ -85,6 +84,7 @@ It’s sorted descending, with the most important concerns first:
   - 1 Transfer
 
 - 50 **Better customization:**
+
   - 23 Non-specific
   - 15 Docs
   - 8 Easier
@@ -92,6 +92,7 @@ It’s sorted descending, with the most important concerns first:
   - 1 Colors
 
 - 36 **Better documentation:**
+
   - 11 Non-specific
   - 7 More examples
   - 5 Beginner tutorials
@@ -105,24 +106,28 @@ It’s sorted descending, with the most important concerns first:
   - 1 Server-side rendering
 
 - 31 **TypeScript:**
+
   - 14 Non-specific
   - 13 Migrate more demos
   - 3 withStyles -> makeStyles
   - 1 Rewrite
 
 - 24 **Performance:**
+
   - 23 Non-specific
   - 1 Table
 
 - 19 **Bundle size**
 - 17 **Material Design Update**
 - 16 **styled-components:**
+
   - 10 Support
   - 6 Migration
 
 - 14 **Fewer breaking changes**
 - 10 **More page layout examples**
 - 9 **Theme:**
+
   - 3 More colors
   - 3 Live editor
   - 1 Non-material font example
@@ -131,6 +136,7 @@ It’s sorted descending, with the most important concerns first:
 - 8 **React.StrictMode support**
 - 8 **React Native support**
 - 6 **Accessibility:**
+
   - 4 Non specific
   - 1 Docs
   - 1 SkipNav
@@ -177,15 +183,15 @@ above 0 is considered “good”, +50 is “Excellent”, and above 70 is consid
 
 Multiple options were allowed.
 
-| Channel(s) | Number |
-|-----|-----|
-| Search | 344 |
-| Word of mouth | 112 |
-| Search, Word of mouth | 47 |
-| Search, Social | 25 |
-| Social | 22 |
-| Blog | 14 |
-| Search, Word of mouth, Blog | 11 |
+| Channel(s)                  | Number |
+| --------------------------- | ------ |
+| Search                      | 344    |
+| Word of mouth               | 112    |
+| Search, Word of mouth       | 47     |
+| Search, Social              | 25     |
+| Social                      | 22     |
+| Blog                        | 14     |
+| Search, Word of mouth, Blog | 11     |
 
 <br /><br />
 <img src="/static/blog/2019-survey/6.png" style="display: block; margin: 0 auto;" alt="Bar chart: 74.3% search, 29.6% word of mouth, 8.2% Social, 4.3% blog." />
@@ -231,7 +237,6 @@ Given its relative popularity, and the move from CSS / HTML / jQuery towards fro
 it should come as no big surprise to see that the majority of respondents were previously using Bootstrap.
 Custom solutions have also been replaced by Material-UI as your go-to UI library, along with a
 long-tail of other frameworks.
-
 
 ### 13. How many Material-UI based projects have you built?
 
@@ -299,7 +304,7 @@ Multiple options were allowed.
 
 Traditional CSS users are still prevalent (24% + 16%).
 The components customization `classes` API was designed for these people.
-It's also why we allow the generation of deterministic class names (*MuiButton-root* instead of *jss113*).
+It's also why we allow the generation of deterministic class names (_MuiButton-root_ instead of _jss113_).
 
 However, styled components is popular. We will work on better supporting it.
 
@@ -322,8 +327,4 @@ We will run a similar survey next year to keep track of our progress.
 If you want to continue to influence our roadmap, please upvote 👍 the issues you are the most interested in on GitHub.
 
 <img src="/static/blog/2019-survey/vote.gif" style="display: block; margin: 0 auto;" alt="How to upvote on GitHub" />
-<div style="font-style: italic; text-align: center; margin: 8px;">Help us prioritize by upvoting.</div>
-
-<hr />
-
-Material-UI is an MIT-licensed open source project. It’s an independent project with ongoing development helped by the support of these awesome [backers](https://material-ui.com/discover-more/backers/). Please join them ✨.
+<p class="blog-description">Help us prioritize by upvoting.</p>

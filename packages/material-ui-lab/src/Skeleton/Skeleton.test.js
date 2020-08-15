@@ -1,34 +1,73 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '@material-ui/core/test-utils/describeConformance';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, describeConformance, createClientRender } from 'test/utils';
 import Skeleton from './Skeleton';
 
 describe('<Skeleton />', () => {
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<Skeleton />);
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<Skeleton />, () => ({
     classes,
-    inheritComponent: 'div',
+    inheritComponent: 'span',
     mount,
-    refInstanceof: window.HTMLDivElement,
+    refInstanceof: window.HTMLSpanElement,
   }));
 
   it('should render', () => {
     const { container } = render(<Skeleton />);
 
     expect(container.firstChild).to.have.class(classes.root);
+  });
+
+  it('should get withChildren class when passed children', () => {
+    const { container } = render(
+      <Skeleton>
+        <span />
+      </Skeleton>,
+    );
+
+    expect(container.firstChild).to.have.class(classes.withChildren);
+  });
+
+  it('should get fitContent class when passed children and no width', () => {
+    const { container: containerWithoutWidth } = render(
+      <Skeleton>
+        <span />
+      </Skeleton>,
+    );
+
+    expect(containerWithoutWidth.firstChild).to.have.class(classes.fitContent);
+
+    const { container: containerWithWidth } = render(
+      <Skeleton width="100">
+        <span />
+      </Skeleton>,
+    );
+
+    expect(containerWithWidth.firstChild).not.to.have.class(classes.fitContent);
+  });
+
+  it('should get heightAuto class when passed children and no height', () => {
+    const { container: containerWithoutHeight } = render(
+      <Skeleton>
+        <span />
+      </Skeleton>,
+    );
+
+    expect(containerWithoutHeight.firstChild).to.have.class(classes.heightAuto);
+
+    const { container: containerWithHeight } = render(
+      <Skeleton height="100">
+        <span />
+      </Skeleton>,
+    );
+
+    expect(containerWithHeight.firstChild).not.to.have.class(classes.heightAuto);
   });
 });

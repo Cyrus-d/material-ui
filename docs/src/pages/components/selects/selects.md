@@ -7,20 +7,45 @@ components: Select, NativeSelect
 
 <p class="description">Select components are used for collecting user provided information from a list of options.</p>
 
-## Simple Select
+## Basic select
 
 Menus are positioned over their emitting elements such that the currently selected menu item appears on top of the emitting element.
 
-{{"demo": "pages/components/selects/SimpleSelect.js"}}
+{{"demo": "pages/components/selects/BasicSelect.js"}}
 
-## Native Select
+## Advanced features
+
+The Select component is meant to be interchangeable with a native `<select>` element.
+
+If you are looking for more advanced features, like combobox, multiselect, autocomplete, async or creatable support, head to the [`Autocomplete` component](/components/autocomplete/).
+It's meant to be an improved version of the "react-select" and "downshift" packages.
+
+## Props
+
+### Filled and outlined variants
+
+{{"demo": "pages/components/selects/SelectVariants.js"}}
+
+### Labels and helper text
+
+{{"demo": "pages/components/selects/SelectLabels.js"}}
+
+### Auto width
+
+{{"demo": "pages/components/selects/SelectAutoWidth.js"}}
+
+### Other props
+
+{{"demo": "pages/components/selects/SelectOtherProps.js"}}
+
+## Native select
 
 As the user experience can be improved on mobile using the native select of the platform,
 we allow such pattern.
 
-{{"demo": "pages/components/selects/NativeSelects.js"}}
+{{"demo": "pages/components/selects/NativeSelect.js"}}
 
-## Text Fields
+## TextField
 
 The `TextField` wrapper component is a complete form control including a label, input and help text.
 You can find an example with the select mode [in this section](/components/text-fields/#select).
@@ -35,20 +60,40 @@ Once it's styled, you can either use it directly as a text field or provide it t
 
 {{"demo": "pages/components/selects/CustomizedSelects.js"}}
 
-## Multiple Select
+🎨 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/styles/select).
+
+## Multiple select
 
 The `Select` component can handle multiple selections.
 It's enabled with the `multiple` property.
 
 Like with the single selection, you can pull out the new value by accessing `event.target.value` in the `onChange` callback. It's always an array.
 
+### Default
+
 {{"demo": "pages/components/selects/MultipleSelect.js"}}
 
-## Controlled Open Select
+### Checkmarks
+
+{{"demo": "pages/components/selects/MultipleSelectCheckmarks.js"}}
+
+### Chip
+
+{{"demo": "pages/components/selects/MultipleSelectChip.js"}}
+
+### Placeholder
+
+{{"demo": "pages/components/selects/MultipleSelectPlaceholder.js"}}
+
+### Native
+
+{{"demo": "pages/components/selects/MultipleSelectNative.js"}}
+
+## Controlled open select
 
 {{"demo": "pages/components/selects/ControlledOpenSelect.js"}}
 
-## With a Dialog
+## With a dialog
 
 While it's discouraged by the Material Design specification, you can use a select inside a dialog.
 
@@ -77,8 +122,18 @@ Alternatively a `TextField` with an `id` and `label` creates the proper markup a
 ids for you:
 
 ```jsx
-<TextField id="select" label="Age" value="20">
+<TextField id="select" label="Age" value="20" select>
   <MenuItem value="10">Ten</MenuItem>
   <MenuItem value="20">Twenty</MenuItem>
 </TextField>
+```
+
+For a [native select](#native-select), you should mention a label by giving the value of the `id` attribute of the select element to the `InputLabel`'s `htmlFor` attribute:
+
+```jsx
+<InputLabel htmlFor="select">Age</InputLabel>
+<NativeSelect id="select">
+  <option value="10">Ten</option>
+  <option value="20">Twenty</option>
+</NativeSelect>
 ```

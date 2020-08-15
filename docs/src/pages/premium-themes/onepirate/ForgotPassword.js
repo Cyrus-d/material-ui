@@ -1,6 +1,7 @@
+/* eslint-disable import/order */
 import withRoot from './modules/withRoot';
 // --- Post bootstrap -----
-import React from 'react';
+import * as React from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from './modules/components/Typography';
@@ -12,7 +13,7 @@ import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: theme.spacing(6),
   },
@@ -29,7 +30,7 @@ function ForgotPassword() {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
-  const validate = values => {
+  const validate = (values) => {
     const errors = required(['email', 'password'], values);
 
     if (!errors.email) {
@@ -59,7 +60,11 @@ function ForgotPassword() {
               'send you a link to reset your password.'}
           </Typography>
         </React.Fragment>
-        <Form onSubmit={handleSubmit} subscription={{ submitting: true }} validate={validate}>
+        <Form
+          onSubmit={handleSubmit}
+          subscription={{ submitting: true }}
+          validate={validate}
+        >
           {({ handleSubmit2, submitting }) => (
             <form onSubmit={handleSubmit2} className={classes.form} noValidate>
               <Field

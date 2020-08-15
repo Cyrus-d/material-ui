@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -32,11 +32,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function not(a: number[], b: number[]) {
-  return a.filter(value => b.indexOf(value) === -1);
+  return a.filter((value) => b.indexOf(value) === -1);
 }
 
 function intersection(a: number[], b: number[]) {
-  return a.filter(value => b.indexOf(value) !== -1);
+  return a.filter((value) => b.indexOf(value) !== -1);
 }
 
 function union(a: number[], b: number[]) {
@@ -65,7 +65,8 @@ export default function TransferList() {
     setChecked(newChecked);
   };
 
-  const numberOfChecked = (items: number[]) => intersection(checked, items).length;
+  const numberOfChecked = (items: number[]) =>
+    intersection(checked, items).length;
 
   const handleToggleAll = (items: number[]) => () => {
     if (numberOfChecked(items) === items.length) {
@@ -94,10 +95,17 @@ export default function TransferList() {
         avatar={
           <Checkbox
             onClick={handleToggleAll(items)}
-            checked={numberOfChecked(items) === items.length && items.length !== 0}
-            indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
+            checked={
+              numberOfChecked(items) === items.length && items.length !== 0
+            }
+            indeterminate={
+              numberOfChecked(items) !== items.length &&
+              numberOfChecked(items) !== 0
+            }
             disabled={items.length === 0}
-            inputProps={{ 'aria-label': 'all items selected' }}
+            inputProps={{
+              'aria-label': 'all items selected',
+            }}
           />
         }
         title={title}
@@ -109,13 +117,20 @@ export default function TransferList() {
           const labelId = `transfer-list-all-item-${value}-label`;
 
           return (
-            <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+            <ListItem
+              key={value}
+              role="listitem"
+              button
+              onClick={handleToggle(value)}
+            >
               <ListItemIcon>
                 <Checkbox
                   checked={checked.indexOf(value) !== -1}
                   tabIndex={-1}
                   disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
+                  inputProps={{
+                    'aria-labelledby': labelId,
+                  }}
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={`List item ${value + 1}`} />
@@ -128,7 +143,13 @@ export default function TransferList() {
   );
 
   return (
-    <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+    <Grid
+      container
+      spacing={2}
+      justifyContent="center"
+      alignItems="center"
+      className={classes.root}
+    >
       <Grid item>{customList('Choices', left)}</Grid>
       <Grid item>
         <Grid container direction="column" alignItems="center">

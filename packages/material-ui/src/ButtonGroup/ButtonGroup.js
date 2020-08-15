@@ -1,17 +1,18 @@
-import React from 'react';
+import * as React from 'react';
 import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { useThemeVariants } from '@material-ui/styles';
 import capitalize from '../utils/capitalize';
 import { fade } from '../styles/colorManipulator';
 import withStyles from '../styles/withStyles';
 import Button from '../Button';
 
 // Force a side effect so we don't have any override priority issue.
-// eslint-disable-next-line no-unused-expressions
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 Button.styles;
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     display: 'inline-flex',
@@ -20,6 +21,14 @@ export const styles = theme => ({
   /* Styles applied to the root element if `variant="contained"`. */
   contained: {
     boxShadow: theme.shadows[2],
+  },
+  /* Styles applied to the root element if `variant="outlined"`. */
+  outlined: {},
+  /* Styles applied to the root element if `variant="text"`. */
+  text: {},
+  /* Styles applied to the root element if `disableElevation={true}`. */
+  disableElevation: {
+    boxShadow: 'none',
   },
   /* Pseudo-class applied to child elements if `disabled={true}`. */
   disabled: {},
@@ -122,6 +131,9 @@ export const styles = theme => ({
   /* Styles applied to the children if `variant="contained"`. */
   groupedContained: {
     boxShadow: 'none',
+    '&:hover': {
+      boxShadow: 'none',
+    },
   },
   /* Styles applied to the children if `variant="contained"` and `orientation="horizontal"`. */
   groupedContainedHorizontal: {
@@ -132,7 +144,6 @@ export const styles = theme => ({
       },
     },
   },
-
   /* Styles applied to the children if `variant="contained"` and `orientation="vertical"`. */
   groupedContainedVertical: {
     '&:not(:last-child)': {
@@ -161,9 +172,10 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
     children,
     classes,
     className,
-    color = 'default',
+    color = 'primary',
     component: Component = 'div',
     disabled = false,
+    disableElevation = false,
     disableFocusRipple = false,
     disableRipple = false,
     fullWidth = false,
@@ -172,6 +184,23 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
     variant = 'outlined',
     ...other
   } = props;
+
+  const themeVariantsClasses = useThemeVariants(
+    {
+      ...props,
+      color,
+      component: Component,
+      disabled,
+      disableElevation,
+      disableFocusRipple,
+      disableRipple,
+      fullWidth,
+      orientation,
+      size,
+      variant,
+    },
+    'MuiButtonGroup',
+  );
 
   const buttonClassName = clsx(
     classes.grouped,
@@ -193,13 +222,15 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
           [classes.contained]: variant === 'contained',
           [classes.vertical]: orientation === 'vertical',
           [classes.fullWidth]: fullWidth,
+          [classes.disableElevation]: disableElevation,
         },
+        themeVariantsClasses,
         className,
       )}
       ref={ref}
       {...other}
     >
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if (!React.isValidElement(child)) {
           return null;
         }
@@ -208,7 +239,7 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
           if (isFragment(child)) {
             console.error(
               [
-                "Material-UI: the ButtonGroup component doesn't accept a Fragment as a child.",
+                "Material-UI: The ButtonGroup component doesn't accept a Fragment as a child.",
                 'Consider providing an array instead.',
               ].join('\n'),
             );
@@ -217,8 +248,9 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
 
         return React.cloneElement(child, {
           className: clsx(buttonClassName, child.props.className),
-          disabled: child.props.disabled || disabled,
           color: child.props.color || color,
+          disabled: child.props.disabled || disabled,
+          disableElevation: child.props.disableElevation || disableElevation,
           disableFocusRipple,
           disableRipple,
           fullWidth,
@@ -231,15 +263,19 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
 });
 
 ButtonGroup.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The content of the button group.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -247,10 +283,10 @@ ButtonGroup.propTypes = {
   /**
    * The color of the component. It supports those theme colors that make sense for this component.
    */
-  color: PropTypes.oneOf(['default', 'inherit', 'primary', 'secondary']),
+  color: PropTypes.oneOf(['inherit', 'primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -258,8 +294,11 @@ ButtonGroup.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true`, no elevation is used.
+   */
+  disableElevation: PropTypes.bool,
+  /**
    * If `true`, the button keyboard focus ripple will be disabled.
-   * `disableRipple` must also be true.
    */
   disableFocusRipple: PropTypes.bool,
   /**
@@ -271,18 +310,21 @@ ButtonGroup.propTypes = {
    */
   fullWidth: PropTypes.bool,
   /**
-   * The group orientation.
+   * The group orientation (layout flow direction).
    */
-  orientation: PropTypes.oneOf(['vertical', 'horizontal']),
+  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * The size of the button.
    * `small` is equivalent to the dense button styling.
    */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   /**
    * The variant to use.
    */
-  variant: PropTypes.oneOf(['text', 'outlined', 'contained']),
+  variant: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.oneOf(['contained', 'outlined', 'text']),
+    PropTypes.string,
+  ]),
 };
 
 export default withStyles(styles, { name: 'MuiButtonGroup' })(ButtonGroup);

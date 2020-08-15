@@ -1,5 +1,10 @@
-import React from 'react';
-import { makeStyles, withStyles, Theme, createStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import {
+  makeStyles,
+  withStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
@@ -50,7 +55,7 @@ const AntTab = withStyles((theme: Theme) =>
 
 interface StyledTabsProps {
   value: number;
-  onChange: (event: React.ChangeEvent<{}>, newValue: number) => void;
+  onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
 const StyledTabs = withStyles({
@@ -58,13 +63,15 @@ const StyledTabs = withStyles({
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    '& > div': {
+    '& > span': {
       maxWidth: 40,
       width: '100%',
       backgroundColor: '#635ee7',
     },
   },
-})((props: StyledTabsProps) => <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />);
+})((props: StyledTabsProps) => (
+  <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />
+));
 
 interface StyledTabProps {
   label: string;
@@ -104,7 +111,7 @@ export default function CustomizedTabs() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -119,7 +126,11 @@ export default function CustomizedTabs() {
         <Typography className={classes.padding} />
       </div>
       <div className={classes.demo2}>
-        <StyledTabs value={value} onChange={handleChange} aria-label="styled tabs example">
+        <StyledTabs
+          value={value}
+          onChange={handleChange}
+          aria-label="styled tabs example"
+        >
           <StyledTab label="Workflows" />
           <StyledTab label="Datasets" />
           <StyledTab label="Connections" />

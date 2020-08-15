@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,7 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     maxWidth: 936,
     margin: 'auto',
@@ -41,7 +41,12 @@ function Content(props) {
 
   return (
     <Paper className={classes.paper}>
-      <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
+      <AppBar
+        className={classes.searchBar}
+        position="static"
+        color="default"
+        elevation={0}
+      >
         <Toolbar>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
@@ -58,7 +63,7 @@ function Content(props) {
               />
             </Grid>
             <Grid item>
-              <Button variant="contained" color="primary" className={classes.addUser}>
+              <Button variant="contained" className={classes.addUser}>
                 Add user
               </Button>
               <Tooltip title="Reload">

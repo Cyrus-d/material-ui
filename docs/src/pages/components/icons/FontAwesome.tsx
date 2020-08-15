@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { loadCSS } from 'fg-loadcss';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
@@ -18,10 +18,14 @@ export default function FontAwesome() {
   const classes = useStyles();
 
   React.useEffect(() => {
-    loadCSS(
-      'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
+    const node = loadCSS(
+      'https://use.fontawesome.com/releases/v5.12.0/css/all.css',
       document.querySelector('#font-awesome-css'),
     );
+
+    return () => {
+      node.parentNode!.removeChild(node);
+    };
   }, []);
 
   return (

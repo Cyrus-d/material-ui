@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -20,9 +20,16 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import { visuallyHidden } from '@material-ui/system';
 
 function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+  return {
+    name,
+    calories,
+    fat,
+    carbs,
+    protein,
+  };
 }
 
 const rows = [
@@ -41,7 +48,7 @@ const rows = [
   createData('Oreo', 437, 18.0, 63, 4.0),
 ];
 
-function desc(a, b, orderBy) {
+function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -51,31 +58,81 @@ function desc(a, b, orderBy) {
   return 0;
 }
 
-function stableSort(array, cmp) {
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
+    const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+  return stabilizedThis.map((el) => el[0]);
 }
 
 const headCells = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+  {
+    id: 'name',
+    numeric: false,
+    disablePadding: true,
+    label: 'Dessert (100g serving)',
+  },
+  {
+    id: 'calories',
+    numeric: true,
+    disablePadding: false,
+    label: 'Calories',
+  },
+  {
+    id: 'fat',
+    numeric: true,
+    disablePadding: false,
+    label: 'Fat (g)',
+  },
+  {
+    id: 'carbs',
+    numeric: true,
+    disablePadding: false,
+    label: 'Carbs (g)',
+  },
+  {
+    id: 'protein',
+    numeric: true,
+    disablePadding: false,
+    label: 'Protein (g)',
+  },
 ];
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+  },
+  paper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
+  table: {
+    minWidth: 750,
+  },
+  // TODO fix #20379.
+  sortSpan: visuallyHidden,
+}));
+
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = property => event => {
+  const {
+    classes,
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
+  const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
@@ -85,12 +142,14 @@ function EnhancedTableHead(props) {
         <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={numSelected === rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
+            inputProps={{
+              'aria-label': 'select all desserts',
+            }}
           />
         </TableCell>
-        {headCells.map(headCell => (
+        {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -104,7 +163,7 @@ function EnhancedTableHead(props) {
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
+                <span className={classes.sortSpan}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>
               ) : null}
@@ -126,7 +185,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles(theme => ({
+const useToolbarStyles = makeStyles((theme) => ({
   root: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
@@ -146,7 +205,7 @@ const useToolbarStyles = makeStyles(theme => ({
   },
 }));
 
-const EnhancedTableToolbar = props => {
+const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
 
@@ -157,11 +216,21 @@ const EnhancedTableToolbar = props => {
       })}
     >
       {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1">
+        <Typography
+          className={classes.title}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
+        >
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle">
+        <Typography
+          className={classes.title}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
           Nutrition
         </Typography>
       )}
@@ -187,30 +256,6 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-  },
-  table: {
-    minWidth: 750,
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1,
-  },
-}));
-
 export default function EnhancedTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
@@ -226,9 +271,9 @@ export default function EnhancedTable() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = event => {
+  const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.name);
+      const newSelecteds = rows.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -259,18 +304,19 @@ export default function EnhancedTable() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = event => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleChangeDense = event => {
+  const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
 
-  const isSelected = name => selected.indexOf(name) !== -1;
+  const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -293,7 +339,7 @@ export default function EnhancedTable() {
               rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
+              {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -302,7 +348,7 @@ export default function EnhancedTable() {
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -312,10 +358,17 @@ export default function EnhancedTable() {
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
+                          inputProps={{
+                            'aria-labelledby': labelId,
+                          }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
                         {row.name}
                       </TableCell>
                       <TableCell align="right">{row.calories}</TableCell>
@@ -326,7 +379,11 @@ export default function EnhancedTable() {
                   );
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
                   <TableCell colSpan={6} />
                 </TableRow>
               )}

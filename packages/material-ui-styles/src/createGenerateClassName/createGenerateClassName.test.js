@@ -1,12 +1,11 @@
-import { assert } from 'chai';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
+import { expect } from 'chai';
 import createGenerateClassName from './createGenerateClassName';
 import nested from '../ThemeProvider/nested';
 
 describe('createGenerateClassName', () => {
   it('should generate a class name', () => {
     const generateClassName = createGenerateClassName();
-    assert.strictEqual(
+    expect(
       generateClassName(
         {
           key: 'key',
@@ -18,13 +17,12 @@ describe('createGenerateClassName', () => {
           },
         },
       ),
-      'classNamePrefix-key-1',
-    );
+    ).to.equal('classNamePrefix-key-1');
   });
 
   it('should increase the counter', () => {
     const generateClassName = createGenerateClassName();
-    assert.strictEqual(
+    expect(
       generateClassName(
         {
           key: 'key',
@@ -35,9 +33,8 @@ describe('createGenerateClassName', () => {
           },
         },
       ),
-      'classNamePrefix-key-1',
-    );
-    assert.strictEqual(
+    ).to.equal('classNamePrefix-key-1');
+    expect(
       generateClassName(
         {
           key: 'key',
@@ -48,26 +45,24 @@ describe('createGenerateClassName', () => {
           },
         },
       ),
-      'classNamePrefix-key-2',
-    );
+    ).to.equal('classNamePrefix-key-2');
   });
 
   it('should work without a classNamePrefix', () => {
     const generateClassName = createGenerateClassName();
-    assert.strictEqual(
+    expect(
       generateClassName(
         { key: 'root' },
         {
           options: {},
         },
       ),
-      'root-1',
-    );
+    ).to.equal('root-1');
   });
 
   it('should generate global class names', () => {
     const generateClassName = createGenerateClassName();
-    assert.strictEqual(
+    expect(
       generateClassName(
         { key: 'root' },
         {
@@ -77,9 +72,8 @@ describe('createGenerateClassName', () => {
           },
         },
       ),
-      'MuiButton-root',
-    );
-    assert.strictEqual(
+    ).to.equal('MuiButton-root');
+    expect(
       generateClassName(
         { key: 'root' },
         {
@@ -91,9 +85,21 @@ describe('createGenerateClassName', () => {
           },
         },
       ),
-      'MuiButton-root-2',
-    );
-    assert.strictEqual(
+    ).to.equal('MuiButton-root-1');
+    expect(
+      generateClassName(
+        { key: 'root' },
+        {
+          options: {
+            name: 'MuiButton',
+            theme: {
+              [nested]: true,
+            },
+          },
+        },
+      ),
+    ).to.equal('MuiButton-root-2');
+    expect(
       generateClassName(
         { key: 'disabled' },
         {
@@ -103,8 +109,7 @@ describe('createGenerateClassName', () => {
           },
         },
       ),
-      'Mui-disabled',
-    );
+    ).to.equal('Mui-disabled');
   });
 
   describe('production', () => {
@@ -119,40 +124,36 @@ describe('createGenerateClassName', () => {
     before(() => {
       nodeEnv = env.NODE_ENV;
       env.NODE_ENV = 'production';
-      consoleErrorMock.spy();
     });
 
     after(() => {
       env.NODE_ENV = nodeEnv;
-      consoleErrorMock.reset();
     });
 
     it('should output a short representation', () => {
       const generateClassName = createGenerateClassName();
-      assert.strictEqual(
+      expect(
         generateClassName(
           { key: 'root' },
           {
             options: {},
           },
         ),
-        'jss1',
-      );
+      ).to.equal('jss1');
     });
 
     it('should use the seed', () => {
       const generateClassName = createGenerateClassName({
         seed: 'dark',
       });
-      assert.strictEqual(
+      expect(
         generateClassName(
           { key: 'root' },
           {
             options: {},
           },
         ),
-        'dark-jss1',
-      );
+      ).to.equal('dark-jss1');
     });
   });
 });

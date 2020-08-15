@@ -1,9 +1,9 @@
 ---
-title: React Chip（纸片）组件
+title: React Chip 纸片组件
 components: Chip
 ---
 
-# Chip（纸片组件）
+# Chip 纸片组件
 
 <p class="description">纸片组件是用来表示输入框、属性或操作的紧凑元素。</p>
 
@@ -11,7 +11,7 @@ components: Chip
 
 在这里，虽然我们将纸片组件归类为一个独立的组件，但更常见的作法是用在表单中作为输入框，因此本篇演示的内容并不会在上下文中显示。
 
-## Chip（纸片组件）
+## 纸片组件
 
 以下是纸片组件的一个例子，它使用了图片，SVG 图标，“字母” 和（带有字符串的）头像。
 
@@ -46,8 +46,8 @@ components: Chip
 
 ## 在线编译纸片组件
 
-{{"demo": "pages/components/chips/ChipsPlayground.js", "hideHeader": true}}
+{{"demo": "pages/components/chips/ChipsPlayground.js", "hideToolbar": true}}
 
 ## 可访问性
 
-If the Chip is deletable or clickable then it is a button in tab order. When the Chip is focused (e.g. when tabbing) releasing (`keyup` event) `Backspace` or `Delete` will call the `onDelete` handler while releasing `Escape` will blur the Chip.
+如果Chip可删除或可点击，它应该作为一个按钮而被 tab 所顺序访问。 当纸片被聚焦时（例如在制表符时），释放（`keyup` 事件） `Backspace` 或 `Delete` 将调用 `onDelete` 处理程序，而释放 `Escape` 将模糊纸片。

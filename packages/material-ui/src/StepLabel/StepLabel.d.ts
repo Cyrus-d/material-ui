@@ -1,22 +1,32 @@
 import * as React from 'react';
 import { StandardProps } from '..';
-import { Orientation } from '../Stepper';
-import { StepButtonIcon } from '../StepButton';
 import { StepIconProps } from '../StepIcon';
 
 export interface StepLabelProps
   extends StandardProps<React.HTMLAttributes<HTMLDivElement>, StepLabelClasskey> {
-  active?: boolean;
-  alternativeLabel?: boolean;
-  children: React.ReactNode;
-  completed?: boolean;
-  disabled?: boolean;
+  /**
+   * In most cases will simply be a string containing a title for the label.
+   */
+  children?: React.ReactNode;
+  /**
+   * Mark the step as failed.
+   */
   error?: boolean;
-  icon?: StepButtonIcon;
-  last?: boolean;
+  /**
+   * Override the default label of the step icon.
+   */
+  icon?: React.ReactNode;
+  /**
+   * The optional node to display.
+   */
   optional?: React.ReactNode;
-  orientation?: Orientation;
+  /**
+   * The component to render in place of the [`StepIcon`](/api/step-icon/).
+   */
   StepIconComponent?: React.ElementType;
+  /**
+   * Props applied to the [`StepIcon`](/api/step-icon/) element.
+   */
   StepIconProps?: Partial<StepIconProps>;
 }
 
@@ -33,6 +43,14 @@ export type StepLabelClasskey =
   | 'iconContainer'
   | 'labelContainer';
 
-declare const StepLabel: React.ComponentType<StepLabelProps>;
-
-export default StepLabel;
+/**
+ *
+ * Demos:
+ *
+ * - [Steppers](https://material-ui.com/components/steppers/)
+ *
+ * API:
+ *
+ * - [StepLabel API](https://material-ui.com/api/step-label/)
+ */
+export default function StepLabel(props: StepLabelProps): JSX.Element;

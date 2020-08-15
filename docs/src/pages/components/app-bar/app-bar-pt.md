@@ -1,17 +1,17 @@
 ---
-title: Componente App Bar (Barra de Aplicativos) para React
+title: Componente Barra de Aplicativos para React
 components: AppBar, Toolbar, Menu
 ---
 
 # Barra de Aplicativos
 
-<p class="description">A Barra de aplicativos exibe informações e ações relacionadas à tela atual.</p>
+<p class="description">A barra de aplicativos exibe informações e ações relacionadas à tela atual.</p>
 
 A [barra de aplicativos superior](https://material.io/design/components/app-bars-top.html) provê conteúdo e ações relacionados à tela atual. Ela é utilizada para a identidade visual, títulos de tela, navegação, e ações.
 
-It can transform into a contextual action bar or be used as a navbar.
+Ela pode se transformar em uma barra de ações contextual ou ser utilizada como uma barra de navegação.
 
-## App Bar simples
+## Barra de Aplicativos Simples
 
 {{"demo": "pages/components/app-bar/ButtonAppBar.js", "bg": true}}
 
@@ -21,11 +21,11 @@ Um campo de busca principal.
 
 {{"demo": "pages/components/app-bar/PrimarySearchAppBar.js", "bg": true}}
 
-## App Bar com menu
+## Barra de Aplicativos com menu
 
 {{"demo": "pages/components/app-bar/MenuAppBar.js", "bg": true}}
 
-## App Bar com campo de busca
+## Barra de Aplicativos com campo de busca
 
 Uma barra de pesquisa na lateral.
 
@@ -43,7 +43,7 @@ Uma barra de aplicativos proeminente.
 
 ## Barra de Aplicativos inferior
 
-{{"demo": "pages/components/app-bar/BottomAppBar.js", "iframe": true, "maxWidth": 500}}
+{{"demo": "pages/components/app-bar/BottomAppBar.js", "iframe": true, "maxWidth": 400}}
 
 ## Local de filtros
 
@@ -89,23 +89,23 @@ function App() {
 
 Você pode usar o hook `useScrollTrigger()` para responder às ações de rolagem do usuário.
 
-### Barra de Aplicativos oculta
+### Barra de aplicativos oculta
 
 A barra de aplicativos sumirá ao descer a página para deixar mais espaço de leitura.
 
-{{"demo": "pages/components/app-bar/HideAppBar.js", "iframe": true, "maxWidth": 500}}
+{{"demo": "pages/components/app-bar/HideAppBar.js", "iframe": true}}
 
 ### Barra de aplicativos elevada
 
 A barra de aplicativos eleva-se na rolagem para comunicar que o usuário não está na parte superior da página.
 
-{{"demo": "pages/components/app-bar/ElevateAppBar.js", "iframe": true, "maxWidth": 500}}
+{{"demo": "pages/components/app-bar/ElevateAppBar.js", "iframe": true}}
 
 ### Voltar ao topo
 
 Um botão de ação flutuante aparece na rolagem para facilitar o retorno ao topo da página.
 
-{{"demo": "pages/components/app-bar/BackToTop.js", "iframe": true, "maxWidth": 500}}
+{{"demo": "pages/components/app-bar/BackToTop.js", "iframe": true}}
 
 ### `useScrollTrigger([options]) => trigger`
 

@@ -1,11 +1,13 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import Typography from '../Typography';
 import StepIcon from '../StepIcon';
+import StepperContext from '../Stepper/StepperContext';
+import StepContext from '../Step/StepContext';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     display: 'flex',
@@ -17,13 +19,14 @@ export const styles = theme => ({
       cursor: 'default',
     },
   },
-  /* Styles applied to the root element if `orientation="horizontal". */
+  /* Styles applied to the root element if `orientation="horizontal"`. */
   horizontal: {},
-  /* Styles applied to the root element if `orientation="vertical". */
-  vertical: {},
+  /* Styles applied to the root element if `orientation="vertical"`. */
+  vertical: {
+    textAlign: 'left',
+  },
   /* Styles applied to the `Typography` component which wraps `children`. */
   label: {
-    color: theme.palette.text.secondary,
     '&$active': {
       color: theme.palette.text.primary,
       fontWeight: 500,
@@ -62,27 +65,24 @@ export const styles = theme => ({
   /* Styles applied to the container element which wraps `Typography` and `optional`. */
   labelContainer: {
     width: '100%',
+    color: theme.palette.text.secondary,
   },
 });
 
 const StepLabel = React.forwardRef(function StepLabel(props, ref) {
   const {
-    active = false,
-    alternativeLabel = false,
     children,
     classes,
     className,
-    completed = false,
-    disabled = false,
     error = false,
-    icon,
-    last,
     optional,
-    orientation = 'horizontal',
     StepIconComponent: StepIconComponentProp,
     StepIconProps,
     ...other
   } = props;
+
+  const { alternativeLabel, orientation } = React.useContext(StepperContext);
+  const { active, disabled, completed, icon } = React.useContext(StepContext);
 
   let StepIconComponent = StepIconComponentProp;
 
@@ -121,19 +121,21 @@ const StepLabel = React.forwardRef(function StepLabel(props, ref) {
         </span>
       ) : null}
       <span className={classes.labelContainer}>
-        <Typography
-          variant="body2"
-          component="span"
-          className={clsx(classes.label, {
-            [classes.alternativeLabel]: alternativeLabel,
-            [classes.completed]: completed,
-            [classes.active]: active,
-            [classes.error]: error,
-          })}
-          display="block"
-        >
-          {children}
-        </Typography>
+        {children ? (
+          <Typography
+            variant="body2"
+            component="span"
+            display="block"
+            className={clsx(classes.label, {
+              [classes.alternativeLabel]: alternativeLabel,
+              [classes.completed]: completed,
+              [classes.active]: active,
+              [classes.error]: error,
+            })}
+          >
+            {children}
+          </Typography>
+        ) : null}
         {optional}
       </span>
     </span>
@@ -141,16 +143,10 @@ const StepLabel = React.forwardRef(function StepLabel(props, ref) {
 });
 
 StepLabel.propTypes = {
-  /**
-   * @ignore
-   * Sets the step as active. Is passed to child components.
-   */
-  active: PropTypes.bool,
-  /**
-   * @ignore
-   * Set internally by Stepper when it's supplied with the alternativeLabel prop.
-   */
-  alternativeLabel: PropTypes.bool,
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * In most cases will simply be a string containing a title for the label.
    */
@@ -159,21 +155,11 @@ StepLabel.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
-  /**
-   * @ignore
-   * Mark the step as completed. Is passed to child components.
-   */
-  completed: PropTypes.bool,
-  /**
-   * Mark the step as disabled, will also disable the button if
-   * `StepLabelButton` is a child of `StepLabel`. Is passed to child components.
-   */
-  disabled: PropTypes.bool,
   /**
    * Mark the step as failed.
    */
@@ -183,17 +169,9 @@ StepLabel.propTypes = {
    */
   icon: PropTypes.node,
   /**
-   * @ignore
-   */
-  last: PropTypes.bool,
-  /**
    * The optional node to display.
    */
   optional: PropTypes.node,
-  /**
-   * @ignore
-   */
-  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * The component to render in place of the [`StepIcon`](/api/step-icon/).
    */

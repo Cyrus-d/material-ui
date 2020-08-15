@@ -1,10 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { useThemeVariants } from '@material-ui/styles';
 import withStyles from '../styles/withStyles';
 import Person from '../internal/svg-icons/Person';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     position: 'relative',
@@ -27,8 +28,8 @@ export const styles = theme => ({
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[400] : theme.palette.grey[600],
   },
-  /* Styles applied to the root element if `variant="circle"`. */
-  circle: {},
+  /* Styles applied to the root element if `variant="circular"`. */
+  circular: {},
   /* Styles applied to the root element if `variant="rounded"`. */
   rounded: {
     borderRadius: theme.shape.borderRadius,
@@ -102,9 +103,18 @@ const Avatar = React.forwardRef(function Avatar(props, ref) {
     sizes,
     src,
     srcSet,
-    variant = 'circle',
+    variant = 'circular',
     ...other
   } = props;
+
+  const themeVariantsClasses = useThemeVariants(
+    {
+      ...props,
+      component: Component,
+      variant,
+    },
+    'MuiAvatar',
+  );
 
   let children = null;
 
@@ -141,6 +151,7 @@ const Avatar = React.forwardRef(function Avatar(props, ref) {
         {
           [classes.colorDefault]: !hasImgNotFailing,
         },
+        themeVariantsClasses,
         className,
       )}
       ref={ref}
@@ -152,6 +163,10 @@ const Avatar = React.forwardRef(function Avatar(props, ref) {
 });
 
 Avatar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Used in combination with `src` or `srcSet` to
    * provide an alt attribute for the rendered `img` element.
@@ -166,14 +181,14 @@ Avatar.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -197,7 +212,10 @@ Avatar.propTypes = {
   /**
    * The shape of the avatar.
    */
-  variant: PropTypes.oneOf(['circle', 'rounded', 'square']),
+  variant: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.oneOf(['circular', 'rounded', 'square']),
+    PropTypes.string,
+  ]),
 };
 
 export default withStyles(styles, { name: 'MuiAvatar' })(Avatar);

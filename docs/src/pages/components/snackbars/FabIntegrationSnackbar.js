@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,7 +11,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Snackbar from '@material-ui/core/Snackbar';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
       backgroundColor: theme.palette.background.paper,
@@ -59,11 +59,8 @@ export default function FabIntegrationSnackbar() {
         </Fab>
         <Snackbar
           open
-          autoHideDuration={4000}
-          ContentProps={{
-            'aria-describedby': 'snackbar-fab-message-id',
-          }}
-          message={<span id="snackbar-fab-message-id">Archived</span>}
+          autoHideDuration={6000}
+          message="Archived"
           action={
             <Button color="inherit" size="small">
               Undo

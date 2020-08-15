@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import withWidth from '@material-ui/core/withWidth';
 import Typography from '@material-ui/core/Typography';
@@ -14,7 +14,7 @@ function WithWidth(props) {
   const Component = components[width] || 'span';
 
   return (
-    <Typography variant="subtitle1">
+    <Typography>
       <Component>{`Current width: ${width}`}</Component>
     </Typography>
   );

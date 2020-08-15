@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { assert } from 'chai';
+import { expect } from 'chai';
 import { create, SheetsRegistry } from 'jss';
-import { createMount } from '@material-ui/core/test-utils';
+import { createMount } from 'test/utils';
 import StylesProvider, { StylesContext } from './StylesProvider';
 import makeStyles from '../makeStyles';
 import createGenerateClassName from '../createGenerateClassName';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
 
 function Test() {
   const options = React.useContext(StylesContext);
@@ -18,19 +17,11 @@ function getOptions(wrapper) {
 }
 
 describe('StylesProvider', () => {
-  let mount;
+  const mount = createMount();
   let generateClassName;
-
-  before(() => {
-    mount = createMount({ strict: true });
-  });
 
   beforeEach(() => {
     generateClassName = createGenerateClassName();
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   it('should provide the options', () => {
@@ -39,7 +30,7 @@ describe('StylesProvider', () => {
         <Test />
       </StylesProvider>,
     );
-    assert.strictEqual(getOptions(wrapper).disableGeneration, true);
+    expect(getOptions(wrapper).disableGeneration).to.equal(true);
   });
 
   it('should merge the themes', () => {
@@ -50,7 +41,7 @@ describe('StylesProvider', () => {
         </StylesProvider>
       </StylesProvider>,
     );
-    assert.strictEqual(getOptions(wrapper).disableGeneration, true);
+    expect(getOptions(wrapper).disableGeneration).to.equal(true);
   });
 
   it('should handle injectFirst', () => {
@@ -59,7 +50,7 @@ describe('StylesProvider', () => {
         <Test />
       </StylesProvider>,
     );
-    assert.strictEqual(getOptions(wrapper).jss.options.insertionPoint.nodeType, 8);
+    expect(getOptions(wrapper).jss.options.insertionPoint.nodeType).to.equal(8);
   });
 
   describe('server-side', () => {
@@ -69,16 +60,16 @@ describe('StylesProvider', () => {
     }
 
     const useStyles = makeStyles({ root: { display: 'flex' } });
-    const Button = props => {
+    const Button = (props) => {
       const classes = useStyles();
       return <button type="button" className={classes.root} {...props} />;
     };
 
     function assertRendering(markup, sheetsRegistry) {
-      assert.notStrictEqual(markup.match('Hello World'), null);
-      assert.strictEqual(sheetsRegistry.registry.length, 1);
-      assert.strictEqual(sheetsRegistry.toString().length > 10, true);
-      assert.deepEqual(sheetsRegistry.registry[0].classes, {
+      expect(markup.match('Hello World')).to.not.equal(null);
+      expect(sheetsRegistry.registry.length).to.equal(1);
+      expect(sheetsRegistry.toString().length > 10).to.equal(true);
+      expect(sheetsRegistry.registry[0].classes).to.deep.equal({
         root: 'makeStyles-root-1',
       });
     }
@@ -129,7 +120,7 @@ describe('StylesProvider', () => {
       assertRendering(markup2, sheetsRegistry2);
 
       // The most important check:
-      assert.strictEqual(sheetsRegistry1.registry[0], sheetsRegistry2.registry[0]);
+      expect(sheetsRegistry1.registry[0]).to.equal(sheetsRegistry2.registry[0]);
     });
   });
 
@@ -140,30 +131,20 @@ describe('StylesProvider', () => {
         <Test />
       </StylesProvider>,
     );
-    assert.strictEqual(getOptions(wrapper).jss, jss);
+    expect(getOptions(wrapper).jss).to.equal(jss);
   });
 
   describe('warnings', () => {
-    beforeEach(() => {
-      consoleErrorMock.spy();
-    });
-
-    afterEach(() => {
-      consoleErrorMock.reset();
-    });
-
     it('should support invalid input', () => {
       const jss = create();
-      mount(
-        <StylesProvider injectFirst jss={jss}>
-          <Test />
-        </StylesProvider>,
-      );
-      assert.strictEqual(consoleErrorMock.callCount(), 1);
-      assert.include(
-        consoleErrorMock.args()[0][0],
-        'you cannot use the jss and injectFirst props at the same time',
-      );
+
+      expect(() => {
+        mount(
+          <StylesProvider injectFirst jss={jss}>
+            <Test />
+          </StylesProvider>,
+        );
+      }).toErrorDev('Material-UI: You cannot use the jss and injectFirst props at the same time');
     });
   });
 });

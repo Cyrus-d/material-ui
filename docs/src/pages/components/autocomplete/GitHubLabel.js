@@ -1,5 +1,5 @@
-/* eslint-disable no-use-before-define */
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import * as React from 'react';
 import { useTheme, fade, makeStyles } from '@material-ui/core/styles';
 import Popper from '@material-ui/core/Popper';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -9,7 +9,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import InputBase from '@material-ui/core/InputBase';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: 221,
     fontSize: 13,
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0 3px 12px rgba(27,31,35,.15)',
     borderRadius: 3,
     width: 300,
-    zIndex: 1,
+    zIndex: theme.zIndex.modal,
     fontSize: 13,
     color: '#586069',
     backgroundColor: '#f6f8fa',
@@ -120,15 +120,19 @@ export default function GitHubLabel() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState([labels[1], labels[11]]);
+
   const [pendingValue, setPendingValue] = React.useState([]);
   const theme = useTheme();
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setPendingValue(value);
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (reason === 'toggleInput') {
+      return;
+    }
     setValue(pendingValue);
     if (anchorEl) {
       anchorEl.focus();
@@ -151,7 +155,7 @@ export default function GitHubLabel() {
           <span>Labels</span>
           <SettingsIcon />
         </ButtonBase>
-        {value.map(label => (
+        {value.map((label) => (
           <div
             key={label.name}
             className={classes.tag}
@@ -182,7 +186,14 @@ export default function GitHubLabel() {
             popperDisablePortal: classes.popperDisablePortal,
           }}
           value={pendingValue}
-          onChange={(event, newValue) => {
+          onChange={(event, newValue, reason) => {
+            if (
+              event.type === 'keydown' &&
+              event.key === 'Backspace' &&
+              reason === 'remove-option'
+            ) {
+              return;
+            }
             setPendingValue(newValue);
           }}
           disableCloseOnSelect
@@ -193,9 +204,14 @@ export default function GitHubLabel() {
             <React.Fragment>
               <DoneIcon
                 className={classes.iconSelected}
-                style={{ visibility: selected ? 'visible' : 'hidden' }}
+                style={{
+                  visibility: selected ? 'visible' : 'hidden',
+                }}
               />
-              <span className={classes.color} style={{ backgroundColor: option.color }} />
+              <span
+                className={classes.color}
+                style={{ backgroundColor: option.color }}
+              />
               <div className={classes.text}>
                 {option.name}
                 <br />
@@ -203,7 +219,9 @@ export default function GitHubLabel() {
               </div>
               <CloseIcon
                 className={classes.close}
-                style={{ visibility: selected ? 'visible' : 'hidden' }}
+                style={{
+                  visibility: selected ? 'visible' : 'hidden',
+                }}
               />
             </React.Fragment>
           )}
@@ -215,8 +233,8 @@ export default function GitHubLabel() {
             bi = bi === -1 ? value.length + labels.indexOf(b) : bi;
             return ai - bi;
           })}
-          getOptionLabel={option => option.name}
-          renderInput={params => (
+          getOptionLabel={(option) => option.name}
+          renderInput={(params) => (
             <InputBase
               ref={params.InputProps.ref}
               inputProps={params.inputProps}

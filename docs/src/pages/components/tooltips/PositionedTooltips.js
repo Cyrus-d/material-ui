@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -15,7 +15,7 @@ export default function PositionedTooltips() {
 
   return (
     <div className={classes.root}>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Tooltip title="Add" placement="top-start">
             <Button>top-start</Button>
@@ -28,7 +28,7 @@ export default function PositionedTooltips() {
           </Tooltip>
         </Grid>
       </Grid>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={6}>
           <Tooltip title="Add" placement="left-start">
             <Button>left-start</Button>
@@ -60,7 +60,7 @@ export default function PositionedTooltips() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Tooltip title="Add" placement="bottom-start">
             <Button>bottom-start</Button>

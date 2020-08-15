@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -55,7 +55,7 @@ function ConfirmationDialogRaw(props) {
     onClose(value);
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setValue(event.target.value);
   };
 
@@ -78,18 +78,21 @@ function ConfirmationDialogRaw(props) {
           value={value}
           onChange={handleChange}
         >
-          {options.map(option => (
-            <FormControlLabel value={option} key={option} control={<Radio />} label={option} />
+          {options.map((option) => (
+            <FormControlLabel
+              value={option}
+              key={option}
+              control={<Radio />}
+              label={option}
+            />
           ))}
         </RadioGroup>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={handleCancel} color="primary">
+        <Button autoFocus onClick={handleCancel}>
           Cancel
         </Button>
-        <Button onClick={handleOk} color="primary">
-          Ok
-        </Button>
+        <Button onClick={handleOk}>Ok</Button>
       </DialogActions>
     </Dialog>
   );
@@ -101,7 +104,7 @@ ConfirmationDialogRaw.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     maxWidth: 360,
@@ -122,7 +125,7 @@ export default function ConfirmationDialog() {
     setOpen(true);
   };
 
-  const handleClose = newValue => {
+  const handleClose = (newValue) => {
     setOpen(false);
 
     if (newValue) {
@@ -132,8 +135,8 @@ export default function ConfirmationDialog() {
 
   return (
     <div className={classes.root}>
-      <List component="div" role="list">
-        <ListItem button divider disabled role="listitem">
+      <List component="div" role="group">
+        <ListItem button divider disabled>
           <ListItemText primary="Interruptions" />
         </ListItem>
         <ListItem
@@ -143,12 +146,14 @@ export default function ConfirmationDialog() {
           aria-controls="ringtone-menu"
           aria-label="phone ringtone"
           onClick={handleClickListItem}
-          role="listitem"
         >
           <ListItemText primary="Phone ringtone" secondary={value} />
         </ListItem>
-        <ListItem button divider disabled role="listitem">
-          <ListItemText primary="Default notification ringtone" secondary="Tethys" />
+        <ListItem button divider disabled>
+          <ListItemText
+            primary="Default notification ringtone"
+            secondary="Tethys"
+          />
         </ListItem>
         <ConfirmationDialogRaw
           classes={{

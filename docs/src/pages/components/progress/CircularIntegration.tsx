@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -80,19 +80,22 @@ export default function CircularIntegration() {
         >
           {success ? <CheckIcon /> : <SaveIcon />}
         </Fab>
-        {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+        {loading && (
+          <CircularProgress size={68} className={classes.fabProgress} />
+        )}
       </div>
       <div className={classes.wrapper}>
         <Button
           variant="contained"
-          color="primary"
           className={buttonClassname}
           disabled={loading}
           onClick={handleButtonClick}
         >
           Accept terms
         </Button>
-        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+        {loading && (
+          <CircularProgress size={24} className={classes.buttonProgress} />
+        )}
       </div>
     </div>
   );

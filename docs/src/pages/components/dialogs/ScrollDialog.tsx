@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -58,12 +58,8 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Subscribe
-          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>Subscribe</Button>
         </DialogActions>
       </Dialog>
     </div>

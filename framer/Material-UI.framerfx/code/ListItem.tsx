@@ -1,75 +1,41 @@
 import * as React from 'react';
 import { addPropertyControls, ControlType } from 'framer';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
 import MuiListItem from '@material-ui/core/ListItem';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
 import MuiListItemIcon from '@material-ui/core/ListItemIcon';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
 import MuiListItemAvatar from '@material-ui/core/ListItemAvatar';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
-import MuiListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
+// import MuiListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import MuiListItemText from '@material-ui/core/ListItemText';
-import { Avatar } from './Avatar';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
 import MuiCheckbox from '@material-ui/core/Checkbox';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
 import MuiSwitch from '@material-ui/core/Switch';
+import { Avatar } from './Avatar';
 import { Icon } from './Icon';
 import { IconButton } from './IconButton';
 
 interface Props {
-  alignItems?: 'flex-start' | 'center';
-  autoFocus?: boolean;
-  button?: boolean;
-  dense?: boolean;
-  disabled?: boolean;
-  disableGutters?: boolean;
-  divider?: boolean;
-  selected?: boolean;
-  width?: number;
-  height?: number;
-  inset?: boolean;
-  label?: string;
-  secondaryLabel?: string;
-  primaryAction?: 'none' | 'icon' | 'avatar' | 'checkbox';
-  primaryIcon?: string;
-  imageFile?: string;
-  imageUrl?: string;
+  alignItems: 'center' | 'flex-start';
+  autoFocus: boolean;
+  button: boolean;
+  dense: boolean;
+  disabled: boolean;
+  disableGutters: boolean;
+  divider: boolean;
+  selected: boolean;
+  width: number | string;
+  height: number;
+  inset: boolean;
+  label: string;
+  secondaryLabel: string;
+  primaryAction: 'none' | 'icon' | 'avatar' | 'checkbox';
+  primaryIcon: string;
+  imageFile: string;
+  imageUrl: string;
   secondaryAction?: 'none' | 'iconButton' | 'checkbox' | 'switch';
-  secondaryIcon?: string;
+  secondaryIcon: string;
 }
 
-const defaultProps: Props = {
-  alignItems: 'center',
-  autoFocus: false,
-  button: false,
-  dense: false,
-  disabled: false,
-  disableGutters: false,
-  divider: false,
-  selected: false,
-  width: 568,
-  height: 48,
-  inset: false,
-  label: 'Primary label',
-  secondaryLabel: '',
-  primaryAction: 'icon',
-  primaryIcon: 'star',
-  imageFile: '',
-  imageUrl: '',
-  secondaryIcon: '',
-};
-
-export const ListItem: React.SFC<Props> = (props: Props) => {
+export function ListItem(props: Props): JSX.Element {
   const {
+    button,
     height,
     imageFile,
     imageUrl,
@@ -98,7 +64,7 @@ export const ListItem: React.SFC<Props> = (props: Props) => {
     case 'avatar':
       primary = (
         <MuiListItemAvatar>
-          <Avatar icon={primaryIcon} imageFile={imageFile} imageUrl={imageUrl} />
+          <Avatar icon={primaryIcon} avatarImageFile={imageFile} avatarImageUrl={imageUrl} />
         </MuiListItemAvatar>
       );
       break;
@@ -108,6 +74,9 @@ export const ListItem: React.SFC<Props> = (props: Props) => {
           <MuiCheckbox edge="start" />
         </MuiListItemIcon>
       );
+      break;
+    default:
+      primary = null;
       break;
   }
 
@@ -121,15 +90,18 @@ export const ListItem: React.SFC<Props> = (props: Props) => {
     case 'switch':
       secondary = <MuiSwitch edge="end" />;
       break;
+    default:
+      secondary = null;
+      break;
   }
 
   return (
-    <MuiListItem {...other}>
+    <MuiListItem button={button as any} {...other}>
       {primary}
       <MuiListItemText
         inset={inset}
         primary={label}
-        secondary={secondaryLabel ? secondaryLabel : undefined}
+        secondary={secondaryLabel.length > 0 ? secondaryLabel : undefined}
       />
       {/* MuiListItemSecondaryAction causes the text to have a bullet. No idea why! */}
       {/* <MuiListItemSecondaryAction> */}
@@ -137,15 +109,34 @@ export const ListItem: React.SFC<Props> = (props: Props) => {
       {/* </MuiListItemSecondaryAction> */}
     </MuiListItem>
   );
-};
+}
 
-ListItem.defaultProps = defaultProps;
+ListItem.defaultProps = {
+  alignItems: 'center' as 'center',
+  autoFocus: false,
+  button: false,
+  dense: false,
+  disabled: false,
+  disableGutters: false,
+  divider: false,
+  selected: false,
+  width: 568,
+  height: 48,
+  inset: false,
+  label: 'Primary label',
+  secondaryLabel: '',
+  primaryAction: 'icon' as 'icon',
+  primaryIcon: 'star',
+  imageFile: '',
+  imageUrl: '',
+  secondaryIcon: '',
+};
 
 addPropertyControls(ListItem, {
   alignItems: {
     type: ControlType.Enum,
     title: 'Align items',
-    options: ['flex-start', 'center'],
+    options: ['center', 'flex-start'],
   },
   autoFocus: {
     type: ControlType.Boolean,
@@ -207,14 +198,17 @@ addPropertyControls(ListItem, {
     type: ControlType.Image,
     title: 'Image File',
     hidden: function hidden(props) {
-      return props.primaryAction && props.primaryAction !== 'avatar';
+      return props.primaryAction !== undefined && props.primaryAction !== 'avatar';
     },
   },
   imageUrl: {
     type: ControlType.String,
     title: 'Image URL',
     hidden: function hidden(props) {
-      return props.imageFile !== '' || (props.primaryAction && props.primaryAction !== 'avatar');
+      return (
+        props.imageFile !== '' ||
+        (props.primaryAction !== undefined && props.primaryAction !== 'avatar')
+      );
     },
   },
   secondaryAction: {
@@ -226,7 +220,7 @@ addPropertyControls(ListItem, {
     type: ControlType.String,
     title: 'Secondary icon',
     hidden: function hidden(props) {
-      return props.secondaryAction !== 'icon' && props.secondaryAction !== 'iconButton';
+      return props.secondaryAction !== 'iconButton';
     },
   },
 });

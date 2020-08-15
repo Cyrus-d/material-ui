@@ -1,5 +1,5 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import { fade, withStyles } from '@material-ui/core/styles';
 import { purple } from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -7,11 +7,14 @@ import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-const PurpleSwitch = withStyles({
+const PurpleSwitch = withStyles((theme) => ({
   switchBase: {
     color: purple[300],
     '&$checked': {
       color: purple[500],
+      '&:hover': {
+        backgroundColor: fade(purple[500], theme.palette.action.hoverOpacity),
+      },
     },
     '&$checked + $track': {
       backgroundColor: purple[500],
@@ -19,9 +22,9 @@ const PurpleSwitch = withStyles({
   },
   checked: {},
   track: {},
-})(Switch);
+}))(Switch);
 
-const IOSSwitch = withStyles(theme => ({
+const IOSSwitch = withStyles((theme) => ({
   root: {
     width: 42,
     height: 26,
@@ -74,7 +77,7 @@ const IOSSwitch = withStyles(theme => ({
   );
 });
 
-const AntSwitch = withStyles(theme => ({
+const AntSwitch = withStyles((theme) => ({
   root: {
     width: 28,
     height: 16,
@@ -115,8 +118,11 @@ export default function CustomizedSwitches() {
     checkedC: true,
   });
 
-  const handleChange = name => event => {
-    setState({ ...state, [name]: event.target.checked });
+  const handleChange = (event) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   return (
@@ -125,8 +131,8 @@ export default function CustomizedSwitches() {
         control={
           <PurpleSwitch
             checked={state.checkedA}
-            onChange={handleChange('checkedA')}
-            value="checkedA"
+            onChange={handleChange}
+            name="checkedA"
           />
         }
         label="Custom color"
@@ -135,8 +141,8 @@ export default function CustomizedSwitches() {
         control={
           <IOSSwitch
             checked={state.checkedB}
-            onChange={handleChange('checkedB')}
-            value="checkedB"
+            onChange={handleChange}
+            name="checkedB"
           />
         }
         label="iOS style"
@@ -147,8 +153,8 @@ export default function CustomizedSwitches() {
           <Grid item>
             <AntSwitch
               checked={state.checkedC}
-              onChange={handleChange('checkedC')}
-              value="checkedC"
+              onChange={handleChange}
+              name="checkedC"
             />
           </Grid>
           <Grid item>On</Grid>

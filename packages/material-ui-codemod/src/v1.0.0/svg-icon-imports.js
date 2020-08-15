@@ -12,17 +12,14 @@ function capitalize(string) {
  * @param {string} iconName
  */
 function pascalize(iconName) {
-  return iconName
-    .split('-')
-    .map(capitalize)
-    .join('');
+  return iconName.split('-').map(capitalize).join('');
 }
 
 /**
  * Update all `svg-icons` import references to use `@material-ui/icons` package.
  * Find and replace string literal AST nodes to ensure all svg-icon paths get updated, regardless
  * of being in an import declaration, or a require() call, etc.
- * https://github.com/mui-org/material-ui/tree/master/packages/@material-ui/icons
+ * https://github.com/mui-org/material-ui/tree/next/packages/@material-ui/icons
  * @param {jscodeshift_api_object} j
  * @param {jscodeshift_ast_object} root
  */
@@ -30,8 +27,8 @@ function transformSVGIconImports(j, root) {
   const pathMatchRegex = /^material-ui\/svg-icons\/.+\/(.+)$/;
   root
     .find(j.Literal)
-    .filter(path => pathMatchRegex.test(path.node.value))
-    .forEach(path => {
+    .filter((path) => pathMatchRegex.test(path.node.value))
+    .forEach((path) => {
       const [, iconName] = path.node.value.match(pathMatchRegex);
 
       // update to new path

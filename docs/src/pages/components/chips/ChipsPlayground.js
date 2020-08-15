@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -13,7 +13,7 @@ import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from '@material-ui/icons/Done';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -24,7 +24,7 @@ const styles = theme => ({
 
 function ChipsPlayground(props) {
   const { classes } = props;
-  const [{ color, onDelete, avatar, icon, variant, size }, setState] = React.useState({
+  const [state, setState] = React.useState({
     color: 'default',
     onDelete: 'none',
     avatar: 'none',
@@ -32,13 +32,13 @@ function ChipsPlayground(props) {
     variant: 'default',
     size: 'medium',
   });
+  const { color, onDelete, avatar, icon, variant, size } = state;
 
-  const handleChange = key => event => {
-    const value = event.target.value;
-    setState(state => ({
+  const handleChange = (event) => {
+    setState({
       ...state,
-      [key]: value,
-    }));
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleDeleteExample = () => {
@@ -85,7 +85,7 @@ function ChipsPlayground(props) {
       avatarToPlayground = <Avatar src="/static/images/avatar/1.jpg" />;
       break;
     case 'letter':
-      avatarToCode = 'avatar={<Avatar>FH</Avatar>} ';
+      avatarToCode = 'avatar={<Avatar>F</Avatar>} ';
       avatarToPlayground = <Avatar>F</Avatar>;
       break;
     default:
@@ -97,16 +97,14 @@ function ChipsPlayground(props) {
     iconToPlayground = null;
   }
 
-  const code = `
-\`\`\`jsx
+  const jsx = `
 <Chip ${variantToCode}${colorToCode}${sizeToCode}${onDeleteToCode}${avatarToCode}${iconToCode}/>
-\`\`\`
 `;
 
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12}>
-        <Grid container justify="center" alignItems="center">
+        <Grid container justifyContent="center" alignItems="center">
           <Grid item className={classes.chipWrapper}>
             <Chip
               label="Chip Component"
@@ -131,10 +129,18 @@ function ChipsPlayground(props) {
                 name="variant"
                 aria-label="variant"
                 value={variant}
-                onChange={handleChange('variant')}
+                onChange={handleChange}
               >
-                <FormControlLabel value="default" control={<Radio />} label="default" />
-                <FormControlLabel value="outlined" control={<Radio />} label="outlined" />
+                <FormControlLabel
+                  value="default"
+                  control={<Radio />}
+                  label="default"
+                />
+                <FormControlLabel
+                  value="outlined"
+                  control={<Radio />}
+                  label="outlined"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -146,11 +152,23 @@ function ChipsPlayground(props) {
                 name="color"
                 aria-label="color"
                 value={color}
-                onChange={handleChange('color')}
+                onChange={handleChange}
               >
-                <FormControlLabel value="default" control={<Radio />} label="default" />
-                <FormControlLabel value="primary" control={<Radio />} label="primary" />
-                <FormControlLabel value="secondary" control={<Radio />} label="secondary" />
+                <FormControlLabel
+                  value="default"
+                  control={<Radio />}
+                  label="default"
+                />
+                <FormControlLabel
+                  value="primary"
+                  control={<Radio />}
+                  label="primary"
+                />
+                <FormControlLabel
+                  value="secondary"
+                  control={<Radio />}
+                  label="secondary"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -159,13 +177,21 @@ function ChipsPlayground(props) {
               <FormLabel>size</FormLabel>
               <RadioGroup
                 row
-                name="sizet"
+                name="size"
                 aria-label="size"
                 value={size}
-                onChange={handleChange('size')}
+                onChange={handleChange}
               >
-                <FormControlLabel value="medium" control={<Radio />} label="medium" />
-                <FormControlLabel value="small" control={<Radio />} label="small" />
+                <FormControlLabel
+                  value="medium"
+                  control={<Radio />}
+                  label="medium"
+                />
+                <FormControlLabel
+                  value="small"
+                  control={<Radio />}
+                  label="small"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -177,10 +203,18 @@ function ChipsPlayground(props) {
                 name="icon"
                 aria-label="icon"
                 value={icon}
-                onChange={handleChange('icon')}
+                onChange={handleChange}
               >
-                <FormControlLabel value="none" control={<Radio />} label="none" />
-                <FormControlLabel value="icon" control={<Radio />} label="icon" />
+                <FormControlLabel
+                  value="none"
+                  control={<Radio />}
+                  label="none"
+                />
+                <FormControlLabel
+                  value="icon"
+                  control={<Radio />}
+                  label="icon"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -192,10 +226,18 @@ function ChipsPlayground(props) {
                 name="avatar"
                 aria-label="avatar"
                 value={avatar}
-                onChange={handleChange('avatar')}
+                onChange={handleChange}
               >
-                <FormControlLabel value="none" control={<Radio />} label="none" />
-                <FormControlLabel value="letter" control={<Radio />} label="letter" />
+                <FormControlLabel
+                  value="none"
+                  control={<Radio />}
+                  label="none"
+                />
+                <FormControlLabel
+                  value="letter"
+                  control={<Radio />}
+                  label="letter"
+                />
                 <FormControlLabel value="img" control={<Radio />} label="img" />
               </RadioGroup>
             </FormControl>
@@ -208,18 +250,30 @@ function ChipsPlayground(props) {
                 name="onDelete"
                 aria-label="on delete"
                 value={onDelete}
-                onChange={handleChange('onDelete')}
+                onChange={handleChange}
               >
-                <FormControlLabel value="none" control={<Radio />} label="none" />
-                <FormControlLabel value="default" control={<Radio />} label="default" />
-                <FormControlLabel value="custom" control={<Radio />} label="custom" />
+                <FormControlLabel
+                  value="none"
+                  control={<Radio />}
+                  label="none"
+                />
+                <FormControlLabel
+                  value="default"
+                  control={<Radio />}
+                  label="default"
+                />
+                <FormControlLabel
+                  value="custom"
+                  control={<Radio />}
+                  label="custom"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <MarkdownElement text={code} />
+        <HighlightedCode code={jsx} language="jsx" />
       </Grid>
     </Grid>
   );

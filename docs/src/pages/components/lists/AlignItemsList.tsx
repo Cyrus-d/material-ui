@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      maxWidth: 360,
+      maxWidth: '36ch',
       backgroundColor: theme.palette.background.paper,
     },
     inline: {

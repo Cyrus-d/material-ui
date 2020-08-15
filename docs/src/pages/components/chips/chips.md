@@ -10,7 +10,7 @@ components: Chip
 [Chips](https://material.io/design/components/chips.html) allow users to enter information, make selections, filter content, or trigger actions.
 
 While included here as a standalone component, the most common use will
-be in some form of input, so some of the behaviour demonstrated here is
+be in some form of input, so some of the behavior demonstrated here is
 not shown in context.
 
 ## Chip
@@ -54,7 +54,7 @@ You can use the `size` prop to define a small Chip.
 
 ## Chip Playground
 
-{{"demo": "pages/components/chips/ChipsPlayground.js", "hideHeader": true}}
+{{"demo": "pages/components/chips/ChipsPlayground.js", "hideToolbar": true}}
 
 ## Accessibility
 

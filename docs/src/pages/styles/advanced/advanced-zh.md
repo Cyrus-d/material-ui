@@ -6,7 +6,7 @@
 
 添加` ThemeProvider `到应用程序的顶层，将主题传递到React组件树。 然后，您可以在样式函数中访问主题对象。
 
-> 此示例创建一个新主题。 有关如何自定义默认 Material-UI 主题的信息，参见[主题部分](/customization/theming/)。
+> This example creates a theme object for custom-built components. If you intend to use some of the Material-UI's components you need to provide a richer theme structure using the `createMuiTheme()` method. Head to the the [theming section](/customization/theming/) to learn how to build your custom Material-UI theme.
 
 ```jsx
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -77,7 +77,7 @@ const DeepChild = withTheme(DeepChildRaw);
 
 {{"demo": "pages/styles/advanced/ThemeNesting.js"}}
 
-内部主题将 **覆盖** 外部主题。 You can extend the outer theme by providing a function:
+内部主题将 **覆盖** 外部主题。 你可以提供一个函数来扩展外部主题：
 
 ```jsx
 <ThemeProvider theme={…} >
@@ -387,13 +387,13 @@ You can [follow the server side guide](/guides/server-rendering/) for a more det
 
 There is [an official Gatsby plugin](https://github.com/hupe1980/gatsby-plugin-material-ui) that enables server-side rendering for `@material-ui/styles`. Refer to the plugin's page for setup and usage instructions.
 
-Refer to [this example Gatsby project](https://github.com/mui-org/material-ui/blob/master/examples/gatsby) for an up-to-date usage example.
+Refer to [this example Gatsby project](https://github.com/mui-org/material-ui/blob/next/examples/gatsby) for an up-to-date usage example.
 
 ### Next.js
 
-You need to have a custom `pages/_document.js`, then copy [this logic](https://github.com/mui-org/material-ui/blob/master/examples/nextjs/pages/_document.js) to inject the server-side rendered styles into the `<head>` element.
+You need to have a custom `pages/_document.js`, then copy [this logic](https://github.com/mui-org/material-ui/blob/next/examples/nextjs/pages/_document.js) to inject the server-side rendered styles into the `<head>` element.
 
-Refer to [this example project](https://github.com/mui-org/material-ui/blob/master/examples/nextjs) for an up-to-date usage example.
+Refer to [this example project](https://github.com/mui-org/material-ui/blob/next/examples/nextjs) for an up-to-date usage example.
 
 ## Class names
 

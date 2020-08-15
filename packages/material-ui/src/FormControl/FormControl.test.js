@@ -1,32 +1,27 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, describeConformance, act, createClientRender } from 'test/utils';
 import Input from '../Input';
 import Select from '../Select';
 import FormControl from './FormControl';
 import useFormControl from './useFormControl';
 
 describe('<FormControl />', () => {
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
   let classes;
 
   function TestComponent(props) {
     const context = useFormControl();
-    props.contextCallback(context);
+    React.useEffect(() => {
+      props.contextCallback(context);
+    });
     return null;
   }
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<FormControl />);
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<FormControl />, () => ({
@@ -101,11 +96,29 @@ describe('<FormControl />', () => {
       );
       expect(readContext.args[0][0]).to.have.property('focused', false);
 
-      container.querySelector('input').focus();
+      act(() => {
+        container.querySelector('input').focus();
+      });
       expect(readContext.args[1][0]).to.have.property('focused', true);
 
       setProps({ disabled: true });
       expect(readContext.args[2][0]).to.have.property('focused', false);
+    });
+  });
+
+  describe('prop: focused', () => {
+    it('should display input in focused state', () => {
+      const readContext = spy();
+      const { container } = render(
+        <FormControl focused>
+          <Input />
+          <TestComponent contextCallback={readContext} />
+        </FormControl>,
+      );
+
+      expect(readContext.args[0][0]).to.have.property('focused', true);
+      container.querySelector('input').blur();
+      expect(readContext.args[0][0]).to.have.property('focused', true);
     });
   });
 
@@ -224,6 +237,16 @@ describe('<FormControl />', () => {
         setProps({ margin: 'dense' });
         expect(formControlRef.current).to.have.property('margin', 'dense');
       });
+
+      it('should have the fullWidth prop from the instance', () => {
+        const formControlRef = React.createRef();
+        const { setProps } = render(<FormControlled ref={formControlRef} />);
+
+        expect(formControlRef.current).to.have.property('fullWidth', false);
+
+        setProps({ fullWidth: true });
+        expect(formControlRef.current).to.have.property('fullWidth', true);
+      });
     });
 
     describe('callbacks', () => {
@@ -234,10 +257,16 @@ describe('<FormControl />', () => {
 
           expect(formControlRef.current).to.have.property('filled', false);
 
-          formControlRef.current.onFilled();
+          act(() => {
+            formControlRef.current.onFilled();
+          });
+
           expect(formControlRef.current).to.have.property('filled', true);
 
-          formControlRef.current.onFilled();
+          act(() => {
+            formControlRef.current.onFilled();
+          });
+
           expect(formControlRef.current).to.have.property('filled', true);
         });
       });
@@ -247,13 +276,22 @@ describe('<FormControl />', () => {
           const formControlRef = React.createRef();
           render(<FormControlled ref={formControlRef} />);
 
-          formControlRef.current.onFilled();
+          act(() => {
+            formControlRef.current.onFilled();
+          });
+
           expect(formControlRef.current).to.have.property('filled', true);
 
-          formControlRef.current.onEmpty();
+          act(() => {
+            formControlRef.current.onEmpty();
+          });
+
           expect(formControlRef.current).to.have.property('filled', false);
 
-          formControlRef.current.onEmpty();
+          act(() => {
+            formControlRef.current.onEmpty();
+          });
+
           expect(formControlRef.current).to.have.property('filled', false);
         });
       });
@@ -264,10 +302,16 @@ describe('<FormControl />', () => {
           render(<FormControlled ref={formControlRef} />);
           expect(formControlRef.current).to.have.property('focused', false);
 
-          formControlRef.current.onFocus();
+          act(() => {
+            formControlRef.current.onFocus();
+          });
+
           expect(formControlRef.current).to.have.property('focused', true);
 
-          formControlRef.current.onFocus();
+          act(() => {
+            formControlRef.current.onFocus();
+          });
+
           expect(formControlRef.current).to.have.property('focused', true);
         });
       });
@@ -278,13 +322,22 @@ describe('<FormControl />', () => {
           render(<FormControlled ref={formControlRef} />);
           expect(formControlRef.current).to.have.property('focused', false);
 
-          formControlRef.current.onFocus();
+          act(() => {
+            formControlRef.current.onFocus();
+          });
+
           expect(formControlRef.current).to.have.property('focused', true);
 
-          formControlRef.current.onBlur();
+          act(() => {
+            formControlRef.current.onBlur();
+          });
+
           expect(formControlRef.current).to.have.property('focused', false);
 
-          formControlRef.current.onBlur();
+          act(() => {
+            formControlRef.current.onBlur();
+          });
+
           expect(formControlRef.current).to.have.property('focused', false);
         });
       });

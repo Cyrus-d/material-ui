@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Popper, { PopperPlacementType } from '@material-ui/core/Popper';
 import Typography from '@material-ui/core/Typography';
@@ -19,7 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function PositionedPopper() {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null,
+  );
   const [open, setOpen] = React.useState(false);
   const [placement, setPlacement] = React.useState<PopperPlacementType>();
   const classes = useStyles();
@@ -28,7 +30,7 @@ export default function PositionedPopper() {
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     setAnchorEl(event.currentTarget);
-    setOpen(prev => placement !== newPlacement || !prev);
+    setOpen((prev) => placement !== newPlacement || !prev);
     setPlacement(newPlacement);
   };
 
@@ -38,19 +40,21 @@ export default function PositionedPopper() {
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
             <Paper>
-              <Typography className={classes.typography}>The content of the Popper.</Typography>
+              <Typography className={classes.typography}>
+                The content of the Popper.
+              </Typography>
             </Paper>
           </Fade>
         )}
       </Popper>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Button onClick={handleClick('top-start')}>top-start</Button>
           <Button onClick={handleClick('top')}>top</Button>
           <Button onClick={handleClick('top-end')}>top-end</Button>
         </Grid>
       </Grid>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={6}>
           <Button onClick={handleClick('left-start')}>left-start</Button>
           <br />
@@ -70,7 +74,7 @@ export default function PositionedPopper() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Button onClick={handleClick('bottom-start')}>bottom-start</Button>
           <Button onClick={handleClick('bottom')}>bottom</Button>

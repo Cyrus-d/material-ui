@@ -1,9 +1,9 @@
 ---
 title: Componente React para Botão
-components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
+components: Button, IconButton, ButtonBase
 ---
 
-# Button (botão)
+# Botão
 
 <p class="description">Botões permitem que os usuários tomem ações e decisões com um simples toque.</p>
 
@@ -19,17 +19,15 @@ components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
 
 [Botões Contidos](https://material.io/design/components/buttons.html#contained-button) tem alta ênfase, distinguem-se pelo uso de elevação e preenchimento. Eles contém as principais ações da sua aplicação.
 
-O último exemplo desta demonstração mostra como usar um botão de upload.
-
 {{"demo": "pages/components/buttons/ContainedButtons.js"}}
 
-You can remove the elevation with the `disableElevation` prop.
+Você pode remover a sombra com a propriedade `disableElevation`.
 
 {{"demo": "pages/components/buttons/DisableElevation.js"}}
 
 ## Botões de Texto
 
-[Botões de texto](https://material.io/design/components/buttons.html#text-button) são utilizados tipicamente para ações menos-pronunciadas, incluindo aquelas localizadas em:
+[Botões de texto](https://material.io/design/components/buttons.html#text-button) são utilizados tipicamente para ações menos significativas, incluindo aquelas localizadas em:
 
 - Caixas de diálogo
 - Cartões
@@ -46,45 +44,17 @@ Botões delineados são uma alternativa de menor ênfase comparado com botões c
 
 {{"demo": "pages/components/buttons/OutlinedButtons.js"}}
 
-## Botões Agrupados
+## Manipulando cliques
 
-The `ButtonGroup` component can be used to group buttons.
+Todos os componentes aceitam um método manipulador `onClick` que é aplicado ao elemento DOM raiz.
 
-{{"demo": "pages/components/buttons/GroupedButtons.js"}}
+```jsx
+<Button onClick={() => { alert('clicado') }}>Clique aqui</Button>
+```
 
-### Group sizes and colors
+Note que a documentação [evita](/guides/api/#native-properties) mencionar as propriedades nativas (existem várias) na seção de API dos componentes.
 
-{{"demo": "pages/components/buttons/GroupSizesColors.js"}}
-
-### Group orientation
-
-{{"demo": "pages/components/buttons/GroupOrientation.js"}}
-
-### Botão Dividido
-
-O ButtonGroup também pode ser usado para criar um botão dividido. A lista suspensa pode alterar a ação do botão (como neste exemplo), ou ser usada para acionar imediatamente uma ação relacionada.
-
-{{"demo": "pages/components/buttons/SplitButton.js"}}
-
-## Botões de Ação Flutuante
-
-Um [Botão de Ação Flutuante](https://material.io/design/components/buttons-floating-action-button.html) (BAF) executa a ação principal, ou mais comum, em uma tela. Ele aparece na frente de todos os conteúdos da tela, normalmente como uma forma circular com um ícone em seu centro. BAFs vêm em dois tipos: regular e estendido.
-
-Use apenas um BAF se é a maneira mais adequada para apresentar a ação principal de uma tela.
-
-É recomendado utilizar apenas um botão de ação flutuante por tela, esse botão deve representar a ação mais comum.
-
-{{"demo": "pages/components/buttons/FloatingActionButtons.js"}}
-
-O botão de ação flutuante anima na tela como uma parte expansiva do material, por padrão.
-
-Um botão de ação flutuante que abranja várias telas laterais (como telas com guias) deve desaparecer brevemente, então reapareça se sua ação mudar.
-
-A transição de zoom pode ser usada para conseguir isso. Observe que, como as animações de entrada e saída são acionadas ao mesmo tempo, usamos `enterDelay` para permitir que a animação do botão de ação flutuante de saída termine antes que a nova seja inserida.
-
-{{"demo": "pages/components/buttons/FloatingActionButtonZoom.js", "bg": true}}
-
-## Upload button
+## Botão de Upload
 
 {{"demo": "pages/components/buttons/UploadButtons.js"}}
 
@@ -114,13 +84,13 @@ Aqui estão alguns exemplos de customização do componente. Você pode aprender
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js", "defaultCodeOpen": false}}
 
-👑 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://mui-treasury.com/components/button).
+🎨 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://mui-treasury.com/styles/button).
 
 ## Botões complexos
 
 O botões de texto, botões contidos, botões de ação flutuante e ícone botões são construídos em cima do mesmo componente: O componente `ButtonBase `. Você pode tirar vantagem deste componente de nível mais abastrato para construir interações personalizadas.
 
-{{"demo": "pages/components/buttons/ButtonBases.js"}}
+{{"demo": "pages/components/buttons/ButtonBase.js"}}
 
 ## Biblioteca de roteamento de terceiros
 
@@ -130,13 +100,13 @@ Aqui está um [exemplo de integração com react-router](/guides/composition/#bu
 
 ## Limitações
 
-### Cursor não permitido
+### Propriedade CSS Cursor not-allowed
 
 O componente ButtonBase define `pointer-events: none;` ao desabilitar os botões, o que previne que o cursor desabilitado seja exibido.
 
 Se você deseja usar `not-allowed`, você tem duas opções:
 
-1. ** apenas CSS**. Você pode remover o estilo dos eventos do ponteiro no estado "desabilitado" do elemento `<button>` :
+1. **Apenas com CSS**. Você pode modificar os estilos aplicados no seletor de estado disabled do elemento `<button>`:
 
   ```css
   .MuiButtonBase-root:disabled {
@@ -147,18 +117,17 @@ Se você deseja usar `not-allowed`, você tem duas opções:
 
 Então:
 
-- Você deve adicionar `eventos-ponteiro: nenhum;` novamente quando você precisa exibir dicas [ ferramentas em elementos desabilitados](/components/tooltips/#disabled-elements)</li> 
-    
-    - O cursor não muda se você renderizar algum outro elemento de botão, por exemplo, um elemento link `<a>`.</ul> 
-    
-    2. ** Alteração no DOM** Você pode encapsular o botão:
-    
-      ```jsx
-      <span style={{ cursor: 'not-allowed' }}>
-        <Button component={Link} disabled>
-          disabled
-        </Button>
-      </span>
-      ```
-    
-    Isso tem a vantagem de suportar qualquer elemento, por exemplo, um elemento de link `<a>`.
+- Você deve adicionar `pointer-events: none;` de volta quando você precisar exibir [dicas em elementos desabilitados](/components/tooltips/#disabled-elements).
+- O cursor não irá mudar se você renderizar algum outro elemento que não seja um botão, por exemplo, um elemento link `<a>`.
+
+2. **Alteração no DOM**. Você pode encapsular o botão:
+
+  ```jsx
+  <span style={{ cursor: 'not-allowed' }}>
+    <Button component={Link} disabled>
+      disabled
+    </Button>
+  </span>
+  ```
+
+Isso tem a vantagem de suportar qualquer elemento, por exemplo, um elemento de link `<a>`.

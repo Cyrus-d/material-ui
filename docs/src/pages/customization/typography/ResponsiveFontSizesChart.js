@@ -1,6 +1,13 @@
-import React from 'react';
-import convertLength from 'convert-css-length';
-import { makeStyles, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import * as React from 'react';
+// import of a small, pure module in a private demo
+// bundle size and module duplication is negligible
+/* eslint-disable-next-line no-restricted-imports */
+import { convertLength } from '@material-ui/core/styles/cssUtils';
+import {
+  makeStyles,
+  createMuiTheme,
+  responsiveFontSizes,
+} from '@material-ui/core/styles';
 import {
   Legend,
   Tooltip,
@@ -15,7 +22,15 @@ import {
 let theme = createMuiTheme();
 theme = responsiveFontSizes(theme);
 
-const colors = ['#443dc2', '#2060df', '#277e91', '#378153', '#4d811d', '#63780d', '#996600'];
+const colors = [
+  '#443dc2',
+  '#2060df',
+  '#277e91',
+  '#378153',
+  '#4d811d',
+  '#63780d',
+  '#996600',
+];
 const variants = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'subtitle1'];
 
 const useStyles = makeStyles({
@@ -29,9 +44,9 @@ const useStyles = makeStyles({
 export default function ResponsiveFontSizes() {
   const classes = useStyles();
   const convert = convertLength(theme.typography.htmlFontSize);
-  const toPx = rem => parseFloat(convert(rem, 'px'));
+  const toPx = (rem) => parseFloat(convert(rem, 'px'));
 
-  const series = variants.map(variantName => {
+  const series = variants.map((variantName) => {
     const variant = theme.typography[variantName];
     const data = [];
 
@@ -40,7 +55,7 @@ export default function ResponsiveFontSizes() {
       fontSize: toPx(variant.fontSize),
     });
 
-    theme.breakpoints.keys.forEach(key => {
+    theme.breakpoints.keys.forEach((key) => {
       const viewport = theme.breakpoints.values[key];
       const value = theme.breakpoints.up(key);
 
@@ -85,7 +100,7 @@ export default function ResponsiveFontSizes() {
           </XAxis>
           <YAxis dataKey="fontSize" type="number">
             <Label position="top" offset={20}>
-              font-size (px)
+              font-size (rem)
             </Label>
           </YAxis>
           <Tooltip />

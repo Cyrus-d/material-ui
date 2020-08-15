@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
     },
     chip: {
-      marginRight: theme.spacing(1),
+      margin: theme.spacing(0.5),
     },
     section1: {
       margin: theme.spacing(3, 2),
@@ -47,8 +47,8 @@ export default function MiddleDividers() {
           </Grid>
         </Grid>
         <Typography color="textSecondary" variant="body2">
-          Pinstriped cornflower blue cotton blouse takes you on a walk to the park or just down the
-          hall.
+          Pinstriped cornflower blue cotton blouse takes you on a walk to the
+          park or just down the hall.
         </Typography>
       </div>
       <Divider variant="middle" />
@@ -64,7 +64,7 @@ export default function MiddleDividers() {
         </div>
       </div>
       <div className={classes.section3}>
-        <Button color="primary">Add to cart</Button>
+        <Button>Add to cart</Button>
       </div>
     </div>
   );

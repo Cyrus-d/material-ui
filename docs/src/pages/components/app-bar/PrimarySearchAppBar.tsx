@@ -1,5 +1,10 @@
-import React from 'react';
-import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import {
+  fade,
+  makeStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -45,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     searchIcon: {
-      width: theme.spacing(7),
+      padding: theme.spacing(0, 2),
       height: '100%',
       position: 'absolute',
       pointerEvents: 'none',
@@ -57,11 +62,13 @@ const useStyles = makeStyles((theme: Theme) =>
       color: 'inherit',
     },
     inputInput: {
-      padding: theme.spacing(1, 1, 1, 7),
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
       transition: theme.transitions.create('width'),
       width: '100%',
       [theme.breakpoints.up('md')]: {
-        width: 200,
+        width: '20ch',
       },
     },
     sectionDesktop: {
@@ -82,7 +89,10 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [
+    mobileMoreAnchorEl,
+    setMobileMoreAnchorEl,
+  ] = React.useState<null | HTMLElement>(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -108,10 +118,16 @@ export default function PrimarySearchAppBar() {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
       id={menuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -124,10 +140,16 @@ export default function PrimarySearchAppBar() {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >

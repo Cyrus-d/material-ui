@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,8 +9,6 @@ import Menu from '@material-ui/core/Menu';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
-      maxWidth: 360,
       backgroundColor: theme.palette.background.paper,
     },
   }),
@@ -32,7 +30,10 @@ export default function SimpleListMenu() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
+  const handleMenuItemClick = (
+    event: React.MouseEvent<HTMLElement>,
+    index: number,
+  ) => {
     setSelectedIndex(index);
     setAnchorEl(null);
   };
@@ -51,7 +52,10 @@ export default function SimpleListMenu() {
           aria-label="when device is locked"
           onClick={handleClickListItem}
         >
-          <ListItemText primary="When device is locked" secondary={options[selectedIndex]} />
+          <ListItemText
+            primary="When device is locked"
+            secondary={options[selectedIndex]}
+          />
         </ListItem>
       </List>
       <Menu
@@ -66,7 +70,7 @@ export default function SimpleListMenu() {
             key={option}
             disabled={index === 0}
             selected={index === selectedIndex}
-            onClick={event => handleMenuItemClick(event, index)}
+            onClick={(event) => handleMenuItemClick(event, index)}
           >
             {option}
           </MenuItem>

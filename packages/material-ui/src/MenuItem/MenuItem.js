@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ListItem from '../ListItem';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     ...theme.typography.body1,
@@ -13,13 +13,12 @@ export const styles = theme => ({
     paddingBottom: 6,
     boxSizing: 'border-box',
     width: 'auto',
-    overflow: 'hidden',
     whiteSpace: 'nowrap',
     [theme.breakpoints.up('sm')]: {
       minHeight: 'auto',
     },
   },
-  // TODO To remove in v5?
+  // TODO v5: remove
   /* Styles applied to the root element if `disableGutters={false}`. */
   gutters: {},
   /* Styles applied to the root element if `selected={true}`. */
@@ -37,6 +36,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     className,
     component = 'li',
     disableGutters = false,
+    ListItemClasses,
     role = 'menuitem',
     selected,
     tabIndex: tabIndexProp,
@@ -47,6 +47,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
+
   return (
     <ListItem
       button
@@ -55,7 +56,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       component={component}
       selected={selected}
       disableGutters={disableGutters}
-      classes={{ dense: classes.dense }}
+      classes={{ dense: classes.dense, ...ListItemClasses }}
       className={clsx(
         classes.root,
         {
@@ -71,6 +72,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
 });
 
 MenuItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
+  /**
+   * @ignore
+   */
+  button: PropTypes.bool,
   /**
    * Menu item contents.
    */
@@ -79,14 +88,14 @@ MenuItem.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
   className: PropTypes.string,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -102,6 +111,10 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
+   * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
+   */
+  ListItemClasses: PropTypes.object,
+  /**
    * @ignore
    */
   role: PropTypes.string,
@@ -112,7 +125,7 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
-  tabIndex: PropTypes.number,
+  tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 export default withStyles(styles, { name: 'MuiMenuItem' })(MenuItem);

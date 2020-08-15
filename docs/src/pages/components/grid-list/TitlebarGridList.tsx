@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -53,14 +53,17 @@ export default function TitlebarGridList() {
         <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
           <ListSubheader component="div">December</ListSubheader>
         </GridListTile>
-        {tileData.map(tile => (
+        {tileData.map((tile) => (
           <GridListTile key={tile.img}>
             <img src={tile.img} alt={tile.title} />
             <GridListTileBar
               title={tile.title}
               subtitle={<span>by: {tile.author}</span>}
               actionIcon={
-                <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
+                <IconButton
+                  aria-label={`info about ${tile.title}`}
+                  className={classes.icon}
+                >
                   <InfoIcon />
                 </IconButton>
               }

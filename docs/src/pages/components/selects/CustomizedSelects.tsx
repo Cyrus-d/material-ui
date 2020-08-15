@@ -1,5 +1,10 @@
-import React from 'react';
-import { createStyles, makeStyles, withStyles, Theme } from '@material-ui/core/styles';
+import * as React from 'react';
+import {
+  createStyles,
+  makeStyles,
+  Theme,
+  withStyles,
+} from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -89,7 +94,7 @@ export default function CustomizedSelects() {
           onChange={handleChange}
           input={<BootstrapInput />}
         >
-          <option value="" />
+          <option aria-label="None" value="" />
           <option value={10}>Ten</option>
           <option value={20}>Twenty</option>
           <option value={30}>Thirty</option>

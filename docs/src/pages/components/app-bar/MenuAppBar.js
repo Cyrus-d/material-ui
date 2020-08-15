@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,7 +12,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -30,11 +30,11 @@ export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setAuth(event.target.checked);
   };
 
-  const handleMenu = event => {
+  const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -46,13 +46,24 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <FormGroup>
         <FormControlLabel
-          control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
+          control={
+            <Switch
+              checked={auth}
+              onChange={handleChange}
+              aria-label="login switch"
+            />
+          }
           label={auth ? 'Logout' : 'Login'}
         />
       </FormGroup>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>

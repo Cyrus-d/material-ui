@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
@@ -23,7 +23,7 @@ export default function DirectionSnackbar() {
   const [open, setOpen] = React.useState(false);
   const [transition, setTransition] = React.useState(undefined);
 
-  const handleClick = Transition => () => {
+  const handleClick = (Transition) => () => {
     setTransition(() => Transition);
     setOpen(true);
   };
@@ -42,10 +42,8 @@ export default function DirectionSnackbar() {
         open={open}
         onClose={handleClose}
         TransitionComponent={transition}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        message={<span id="message-id">I love snacks</span>}
+        message="I love snacks"
+        key={transition ? transition.name : ''}
       />
     </div>
   );

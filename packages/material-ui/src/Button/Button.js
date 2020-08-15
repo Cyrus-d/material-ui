@@ -1,12 +1,13 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { useThemeVariants } from '@material-ui/styles';
 import withStyles from '../styles/withStyles';
 import { fade } from '../styles/colorManipulator';
 import ButtonBase from '../ButtonBase';
 import capitalize from '../utils/capitalize';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     ...theme.typography.button,
@@ -14,7 +15,6 @@ export const styles = theme => ({
     minWidth: 64,
     padding: '6px 16px',
     borderRadius: theme.shape.borderRadius,
-    color: theme.palette.text.primary,
     transition: theme.transitions.create(['background-color', 'box-shadow', 'border'], {
       duration: theme.transitions.duration.short,
     }),
@@ -73,7 +73,7 @@ export const styles = theme => ({
       theme.palette.type === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)'
     }`,
     '&$disabled': {
-      border: `1px solid ${theme.palette.action.disabled}`,
+      border: `1px solid ${theme.palette.action.disabledBackground}`,
     },
   },
   /* Styles applied to the root element if `variant="outlined"` and `color="primary"`. */
@@ -264,7 +264,7 @@ const Button = React.forwardRef(function Button(props, ref) {
     children,
     classes,
     className,
-    color = 'default',
+    color = 'primary',
     component = 'button',
     disabled = false,
     disableElevation = false,
@@ -279,11 +279,28 @@ const Button = React.forwardRef(function Button(props, ref) {
     ...other
   } = props;
 
+  const themeVariantsClasses = useThemeVariants(
+    {
+      ...props,
+      color,
+      component,
+      disabled,
+      disableElevation,
+      disableFocusRipple,
+      fullWidth,
+      size,
+      type,
+      variant,
+    },
+    'MuiButton',
+  );
+
   const startIcon = startIconProp && (
     <span className={clsx(classes.startIcon, classes[`iconSize${capitalize(size)}`])}>
       {startIconProp}
     </span>
   );
+
   const endIcon = endIconProp && (
     <span className={clsx(classes.endIcon, classes[`iconSize${capitalize(size)}`])}>
       {endIconProp}
@@ -296,7 +313,7 @@ const Button = React.forwardRef(function Button(props, ref) {
         classes.root,
         classes[variant],
         {
-          [classes[`${variant}${capitalize(color)}`]]: color !== 'default' && color !== 'inherit',
+          [classes[`${variant}${capitalize(color)}`]]: color !== 'inherit',
           [classes[`${variant}Size${capitalize(size)}`]]: size !== 'medium',
           [classes[`size${capitalize(size)}`]]: size !== 'medium',
           [classes.disableElevation]: disableElevation,
@@ -304,6 +321,7 @@ const Button = React.forwardRef(function Button(props, ref) {
           [classes.fullWidth]: fullWidth,
           [classes.colorInherit]: color === 'inherit',
         },
+        themeVariantsClasses,
         className,
       )}
       component={component}
@@ -314,6 +332,12 @@ const Button = React.forwardRef(function Button(props, ref) {
       type={type}
       {...other}
     >
+      {/*
+       * The inner <span> is required to vertically align the children.
+       * Browsers don't support `display: flex` on a <button> element.
+       * https://github.com/philipwalton/flexbugs/blob/master/README.md#flexbug-9
+       * TODO v5: evaluate if still required for the supported browsers.
+       */}
       <span className={classes.label}>
         {startIcon}
         {children}
@@ -324,15 +348,19 @@ const Button = React.forwardRef(function Button(props, ref) {
 });
 
 Button.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The content of the button.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -340,10 +368,10 @@ Button.propTypes = {
   /**
    * The color of the component. It supports those theme colors that make sense for this component.
    */
-  color: PropTypes.oneOf(['default', 'inherit', 'primary', 'secondary']),
+  color: PropTypes.oneOf(['inherit', 'primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -356,7 +384,6 @@ Button.propTypes = {
   disableElevation: PropTypes.bool,
   /**
    * If `true`, the  keyboard focus ripple will be disabled.
-   * `disableRipple` must also be true.
    */
   disableFocusRipple: PropTypes.bool,
   /**
@@ -387,7 +414,7 @@ Button.propTypes = {
    * The size of the button.
    * `small` is equivalent to the dense button styling.
    */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   /**
    * Element placed before the children.
    */
@@ -395,11 +422,14 @@ Button.propTypes = {
   /**
    * @ignore
    */
-  type: PropTypes.string,
+  type: PropTypes.oneOfType([PropTypes.oneOf(['button', 'reset', 'submit']), PropTypes.string]),
   /**
    * The variant to use.
    */
-  variant: PropTypes.oneOf(['text', 'outlined', 'contained']),
+  variant: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.oneOf(['contained', 'outlined', 'text']),
+    PropTypes.string,
+  ]),
 };
 
 export default withStyles(styles, { name: 'MuiButton' })(Button);

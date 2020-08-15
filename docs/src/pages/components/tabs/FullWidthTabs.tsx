@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -10,28 +10,31 @@ import Box from '@material-ui/core/Box';
 interface TabPanelProps {
   children?: React.ReactNode;
   dir?: string;
-  index: any;
-  value: any;
+  index: number;
+  value: number;
 }
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
-    <Typography
-      component="div"
+    <div
       role="tabpanel"
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
-function a11yProps(index: any) {
+function a11yProps(index: number) {
   return {
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`,
@@ -50,7 +53,7 @@ export default function FullWidthTabs() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

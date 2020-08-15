@@ -1,5 +1,9 @@
-import React from 'react';
-import Grid, { GridItemsAlignment, GridJustification, GridDirection } from '@material-ui/core/Grid';
+import * as React from 'react';
+import Grid, {
+  GridItemsAlignment,
+  GridJustification,
+  GridDirection,
+} from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -7,10 +11,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-// We don't have a typescript version of MarkdownElement
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
-import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,18 +35,20 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function InteractiveGrid() {
   const classes = useStyles();
   const [direction, setDirection] = React.useState<GridDirection>('row');
-  const [justify, setJustify] = React.useState<GridJustification>('center');
-  const [alignItems, setAlignItems] = React.useState<GridItemsAlignment>('center');
+  const [justifyContent, setJustifyContent] = React.useState<GridJustification>(
+    'center',
+  );
+  const [alignItems, setAlignItems] = React.useState<GridItemsAlignment>(
+    'center',
+  );
 
-  const code = `
-\`\`\`jsx
+  const jsx = `
 <Grid
   container
   direction="${direction}"
-  justify="${justify}"
+  justifyContent="${justifyContent}"
   alignItems="${alignItems}"
 >
-\`\`\`
 `;
 
   return (
@@ -57,13 +60,16 @@ export default function InteractiveGrid() {
           className={classes.demo}
           alignItems={alignItems}
           direction={direction}
-          justify={justify}
+          justifyContent={justifyContent}
         >
-          {[0, 1, 2].map(value => (
+          {[0, 1, 2].map((value) => (
             <Grid key={value} item>
               <Paper
                 className={classes.paper}
-                style={{ paddingTop: (value + 1) * 10, paddingBottom: (value + 1) * 10 }}
+                style={{
+                  paddingTop: (value + 1) * 10,
+                  paddingBottom: (value + 1) * 10,
+                }}
               >
                 {`Cell ${value + 1}`}
               </Paper>
@@ -82,13 +88,27 @@ export default function InteractiveGrid() {
                   name="direction"
                   aria-label="direction"
                   value={direction}
-                  onChange={event => {
-                    setDirection((event.target as HTMLInputElement).value as GridDirection);
+                  onChange={(event) => {
+                    setDirection(
+                      (event.target as HTMLInputElement).value as GridDirection,
+                    );
                   }}
                 >
-                  <FormControlLabel value="row" control={<Radio />} label="row" />
-                  <FormControlLabel value="row-reverse" control={<Radio />} label="row-reverse" />
-                  <FormControlLabel value="column" control={<Radio />} label="column" />
+                  <FormControlLabel
+                    value="row"
+                    control={<Radio />}
+                    label="row"
+                  />
+                  <FormControlLabel
+                    value="row-reverse"
+                    control={<Radio />}
+                    label="row-reverse"
+                  />
+                  <FormControlLabel
+                    value="column"
+                    control={<Radio />}
+                    label="column"
+                  />
                   <FormControlLabel
                     value="column-reverse"
                     control={<Radio />}
@@ -99,26 +119,49 @@ export default function InteractiveGrid() {
             </Grid>
             <Grid item xs={12}>
               <FormControl component="fieldset">
-                <FormLabel>justify</FormLabel>
+                <FormLabel>justifyContent</FormLabel>
                 <RadioGroup
                   row
-                  name="justify"
-                  aria-label="justify"
-                  value={justify}
-                  onChange={event => {
-                    setJustify((event.target as HTMLInputElement).value as GridJustification);
+                  name="justifyContent"
+                  aria-label="justifyContent"
+                  value={justifyContent}
+                  onChange={(event) => {
+                    setJustifyContent(
+                      (event.target as HTMLInputElement)
+                        .value as GridJustification,
+                    );
                   }}
                 >
-                  <FormControlLabel value="flex-start" control={<Radio />} label="flex-start" />
-                  <FormControlLabel value="center" control={<Radio />} label="center" />
-                  <FormControlLabel value="flex-end" control={<Radio />} label="flex-end" />
+                  <FormControlLabel
+                    value="flex-start"
+                    control={<Radio />}
+                    label="flex-start"
+                  />
+                  <FormControlLabel
+                    value="center"
+                    control={<Radio />}
+                    label="center"
+                  />
+                  <FormControlLabel
+                    value="flex-end"
+                    control={<Radio />}
+                    label="flex-end"
+                  />
                   <FormControlLabel
                     value="space-between"
                     control={<Radio />}
                     label="space-between"
                   />
-                  <FormControlLabel value="space-around" control={<Radio />} label="space-around" />
-                  <FormControlLabel value="space-evenly" control={<Radio />} label="space-evenly" />
+                  <FormControlLabel
+                    value="space-around"
+                    control={<Radio />}
+                    label="space-around"
+                  />
+                  <FormControlLabel
+                    value="space-evenly"
+                    control={<Radio />}
+                    label="space-evenly"
+                  />
                 </RadioGroup>
               </FormControl>
             </Grid>
@@ -130,15 +173,38 @@ export default function InteractiveGrid() {
                   name="alignItems"
                   aria-label="align items"
                   value={alignItems}
-                  onChange={event => {
-                    setAlignItems((event.target as HTMLInputElement).value as GridItemsAlignment);
+                  onChange={(event) => {
+                    setAlignItems(
+                      (event.target as HTMLInputElement)
+                        .value as GridItemsAlignment,
+                    );
                   }}
                 >
-                  <FormControlLabel value="flex-start" control={<Radio />} label="flex-start" />
-                  <FormControlLabel value="center" control={<Radio />} label="center" />
-                  <FormControlLabel value="flex-end" control={<Radio />} label="flex-end" />
-                  <FormControlLabel value="stretch" control={<Radio />} label="stretch" />
-                  <FormControlLabel value="baseline" control={<Radio />} label="baseline" />
+                  <FormControlLabel
+                    value="flex-start"
+                    control={<Radio />}
+                    label="flex-start"
+                  />
+                  <FormControlLabel
+                    value="center"
+                    control={<Radio />}
+                    label="center"
+                  />
+                  <FormControlLabel
+                    value="flex-end"
+                    control={<Radio />}
+                    label="flex-end"
+                  />
+                  <FormControlLabel
+                    value="stretch"
+                    control={<Radio />}
+                    label="stretch"
+                  />
+                  <FormControlLabel
+                    value="baseline"
+                    control={<Radio />}
+                    label="baseline"
+                  />
                 </RadioGroup>
               </FormControl>
             </Grid>
@@ -146,7 +212,7 @@ export default function InteractiveGrid() {
         </Paper>
       </Grid>
       <Grid item xs={12}>
-        <MarkdownElement text={code} />
+        <HighlightedCode code={jsx} language="jsx" />
       </Grid>
     </Grid>
   );

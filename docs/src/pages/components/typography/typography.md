@@ -11,7 +11,7 @@ A [typographic scale](https://material.io/design/typography/#type-scale) has a l
 
 ## General
 
-The *Roboto* font will **not** be automatically loaded by Material-UI.
+The _Roboto_ font will **not** be automatically loaded by Material-UI.
 The developer is responsible for loading all fonts used in their application.
 Roboto Font has a few easy ways to get started. For more advanced configuration, check out
 [the theme customization section](/customization/typography/).
@@ -21,25 +21,28 @@ Roboto Font has a few easy ways to get started. For more advanced configuration,
 Shown below is a sample link markup used to load the Roboto font from a CDN:
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+/>
 ```
 
 ## Install with npm
 
-You can [install it](https://www.npmjs.com/package/typeface-roboto) by typing the below command in your terminal:
+You can [install it](https://www.npmjs.com/package/fontsource-roboto) by typing the below command in your terminal:
 
-`npm install typeface-roboto --save`
+`npm install fontsource-roboto`
 
 Then, you can import it in your entry-point.
 
 ```js
-import 'typeface-roboto';
+import 'fontsource-roboto';
 ```
 
-For more info check out the [typeface](https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto) project.
+For more info check out [Fontsource](https://github.com/DecliningLotus/fontsource/blob/master/packages/roboto/README.md).
 
 ⚠️ Be careful when using this approach.
-Make sure your bundler doesn't eager load all the font variations (100/300/400/500/700/900, italic/regular, SVG/woff).
+Make sure your bundler doesn't eager load all the font variations (100/300/400/500/700/900, italic/regular, SVG/woff). Fontsource can be configured to load specific subsets, weights and styles.
 Inlining all the font files can significantly increase the size of your bundle.
 Material-UI default typography configuration only relies on 300, 400, 500, and 700 font weights.
 
@@ -62,10 +65,12 @@ It’s important to realize that the style of a typography is independent from t
 - You can change the underlying element for a one time occasion with the `component` property:
 
 ```jsx
-{/* There is already an h1 in the page, let's not duplicate it. */}
+{
+  /* There is already an h1 in the page, let's not duplicate it. */
+}
 <Typography variant="h1" component="h2">
   h1. Heading
-</Typography>
+</Typography>;
 ```
 
 - You can change the mapping [globally using the theme](/customization/globals/#default-props):

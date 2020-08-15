@@ -11,7 +11,7 @@ title: React中的媒体查询用于响应式设计
 - ⚛️它有一个惯用的React API。
 - 🚀它具有高性能，它会观察文档以检测其媒体查询何时发生更改，而不是定期轮询值。
 - 📦 [1kB 已压缩的包](/size-snapshot)。
-- 🤖 It supports server-side rendering.
+- 🤖它支持服务器端渲染。
 
 ## 简单的媒体查询
 
@@ -168,7 +168,7 @@ Note: You can change the default options using the [`default props`](/customizat
 #### 例子
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 export default function SimpleMediaQuery() {

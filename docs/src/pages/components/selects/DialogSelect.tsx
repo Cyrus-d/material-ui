@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -44,7 +44,12 @@ export default function DialogSelect() {
   return (
     <div>
       <Button onClick={handleClickOpen}>Open select dialog</Button>
-      <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+      <Dialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        open={open}
+        onClose={handleClose}
+      >
         <DialogTitle>Fill the form</DialogTitle>
         <DialogContent>
           <form className={classes.container}>
@@ -56,7 +61,7 @@ export default function DialogSelect() {
                 onChange={handleChange}
                 input={<Input id="demo-dialog-native" />}
               >
-                <option value="" />
+                <option aria-label="None" value="" />
                 <option value={10}>Ten</option>
                 <option value={20}>Twenty</option>
                 <option value={30}>Thirty</option>
@@ -82,12 +87,8 @@ export default function DialogSelect() {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Ok
-          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>Ok</Button>
         </DialogActions>
       </Dialog>
     </div>

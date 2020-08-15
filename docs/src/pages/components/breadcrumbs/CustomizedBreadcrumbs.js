@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import { emphasize, withStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Chip from '@material-ui/core/Chip';
 import HomeIcon from '@material-ui/icons/Home';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-const StyledBreadcrumb = withStyles(theme => ({
+const StyledBreadcrumb = withStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.grey[100],
     height: theme.spacing(3),
@@ -36,7 +36,12 @@ export default function CustomizedBreadcrumbs() {
         icon={<HomeIcon fontSize="small" />}
         onClick={handleClick}
       />
-      <StyledBreadcrumb component="a" href="#" label="Catalog" onClick={handleClick} />
+      <StyledBreadcrumb
+        component="a"
+        href="#"
+        label="Catalog"
+        onClick={handleClick}
+      />
       <StyledBreadcrumb
         label="Accessories"
         deleteIcon={<ExpandMoreIcon />}

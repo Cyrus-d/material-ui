@@ -66,3 +66,13 @@ Expandir para fora partindo do centro do elemento filho.
 Este exemplo também demonstra como atrasar a transição de entrada.
 
 {{"demo": "pages/components/transitions/SimpleZoom.js", "bg": true}}
+
+## Propriedade TransitionComponent
+
+Os componentes aceitam uma propriedade `TransitionComponent` para customizar as transições padrão. Você pode usar qualquer um dos componentes acima ou seu próprio componente. Ele deve respeitar as seguintes condições:
+
+- Aceita uma propriedade `in`. Isso corresponde ao estado de aberto/fechado.
+- Chamar a propriedade de callback `onEnter` quando a transição de entrada iniciar.
+- Chamar a propriedade de callback `onExited` quando a transição de saída for concluída. Esses dois callbacks permitem desmontar os elementos filhos quando em estado fechado e totalmente transitados.
+
+Para obter maiores informações sobre como criar transações customizadas, visite a [documentação de transições do React Transition Group](http://reactcommunity.org/react-transition-group/transition).

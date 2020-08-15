@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -7,7 +7,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import GrainIcon from '@material-ui/icons/Grain';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   link: {
     display: 'flex',
   },
@@ -28,7 +28,12 @@ export default function IconBreadcrumbs() {
 
   return (
     <Breadcrumbs aria-label="breadcrumb">
-      <Link color="inherit" href="/" onClick={handleClick} className={classes.link}>
+      <Link
+        color="inherit"
+        href="/"
+        onClick={handleClick}
+        className={classes.link}
+      >
         <HomeIcon className={classes.icon} />
         Material-UI
       </Link>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -11,7 +11,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import EditIcon from '@material-ui/icons/Edit';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: 380,
     transform: 'translateZ(0px)',
@@ -38,7 +38,7 @@ export default function OpenIconSpeedDial() {
   const [hidden, setHidden] = React.useState(false);
 
   const handleVisibility = () => {
-    setHidden(prevHidden => !prevHidden);
+    setHidden((prevHidden) => !prevHidden);
   };
 
   const handleOpen = () => {
@@ -61,7 +61,7 @@ export default function OpenIconSpeedDial() {
         onOpen={handleOpen}
         open={open}
       >
-        {actions.map(action => (
+        {actions.map((action) => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}

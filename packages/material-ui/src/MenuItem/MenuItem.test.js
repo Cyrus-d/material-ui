@@ -1,25 +1,29 @@
-import React from 'react';
-import { assert } from 'chai';
+// @ts-check
+import * as React from 'react';
+import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createShallow, getClasses, createMount } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import {
+  getClasses,
+  createMount,
+  describeConformance,
+  createClientRender,
+  fireEvent,
+  screen,
+} from 'test/utils';
 import ListItem from '../ListItem';
 import ListItemSecondaryAction from '../ListItemSecondaryAction';
 import MenuItem from './MenuItem';
 
 describe('<MenuItem />', () => {
-  let shallow;
+  /**
+   * @type {Record<string, string>}
+   */
   let classes;
-  let mount;
+  const mount = createMount();
+  const render = createClientRender();
 
   before(() => {
-    shallow = createShallow({ dive: true });
     classes = getClasses(<MenuItem />);
-    mount = createMount({ strict: true });
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<MenuItem />, () => ({
@@ -30,81 +34,142 @@ describe('<MenuItem />', () => {
     testComponentPropWith: 'a',
   }));
 
-  it('should render a button ListItem with with ripple', () => {
-    const wrapper = shallow(<MenuItem />);
-    assert.strictEqual(wrapper.type(), ListItem);
-    assert.strictEqual(wrapper.find(ListItem).props().button, true);
-    assert.strictEqual(wrapper.find(ListItem).props().disableRipple, undefined);
+  it('should render a focusable menuitem', () => {
+    render(<MenuItem />);
+    const menuitem = screen.getByRole('menuitem');
+
+    expect(menuitem).to.have.property('tabIndex', -1);
   });
 
-  it('should render with the selected class', () => {
-    const wrapper = shallow(<MenuItem selected />);
-    assert.strictEqual(wrapper.hasClass(classes.selected), true);
+  it('has a ripple when clicked', () => {
+    render(<MenuItem TouchRippleProps={{ classes: { rippleVisible: 'ripple-visible' } }} />);
+    const menuitem = screen.getByRole('menuitem');
+
+    // ripple starts on mousedown
+    fireEvent.mouseDown(menuitem);
+
+    expect(menuitem.querySelectorAll('.ripple-visible')).to.have.length(1);
   });
 
-  it('should have a default role of menuitem', () => {
-    const wrapper = shallow(<MenuItem />);
-    assert.strictEqual(wrapper.props().role, 'menuitem');
+  it('should render with the selected class but not aria-selected when `selected`', () => {
+    render(<MenuItem selected />);
+    const menuitem = screen.getByRole('menuitem');
+
+    expect(menuitem).to.have.class(classes.selected);
+    expect(menuitem).not.to.have.attribute('aria-selected');
   });
 
-  it('should have a role of option', () => {
-    const wrapper = shallow(<MenuItem role="option" aria-selected={false} />);
-    assert.strictEqual(wrapper.props().role, 'option');
-  });
+  it('can have a role of option', () => {
+    render(<MenuItem role="option" aria-selected={false} />);
 
-  it('should have a tabIndex of -1 by default', () => {
-    const wrapper = shallow(<MenuItem />);
-    assert.strictEqual(wrapper.props().tabIndex, -1);
+    expect(screen.queryByRole('option')).not.to.equal(null);
   });
 
   describe('event callbacks', () => {
-    it('should fire event callbacks', () => {
-      const events = [
-        'onClick',
-        'onFocus',
-        'onBlur',
-        'onKeyUp',
-        'onKeyDown',
-        'onMouseDown',
-        'onMouseLeave',
-        'onMouseUp',
-        'onTouchEnd',
-        'onTouchStart',
-      ];
+    /**
+     * @type {Array<keyof typeof fireEvent>}
+     */
+    const events = ['click', 'mouseDown', 'mouseEnter', 'mouseLeave', 'mouseUp', 'touchEnd'];
 
-      const handlers = events.reduce((result, n) => {
-        result[n] = spy();
-        return result;
-      }, {});
+    events.forEach((eventName) => {
+      it(`should fire ${eventName}`, () => {
+        const handlerName = `on${eventName[0].toUpperCase()}${eventName.slice(1)}`;
+        const handler = spy();
+        render(<MenuItem {...{ [handlerName]: handler }} />);
 
-      const wrapper = shallow(<MenuItem {...handlers} />);
+        fireEvent[eventName](screen.getByRole('menuitem'));
 
-      events.forEach(n => {
-        const event = n.charAt(2).toLowerCase() + n.slice(3);
-        wrapper.simulate(event, { persist: () => {} });
-        assert.strictEqual(handlers[n].callCount, 1, `should have called the ${n} handler`);
+        expect(handler.callCount).to.equal(1);
       });
+    });
+
+    it(`should fire focus, keydown, keyup and blur`, () => {
+      const handleFocus = spy();
+      const handleKeyDown = spy();
+      const handleKeyUp = spy();
+      const handleBlur = spy();
+      render(
+        <MenuItem
+          onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
+          onKeyUp={handleKeyUp}
+          onBlur={handleBlur}
+        />,
+      );
+      const menuitem = screen.getByRole('menuitem');
+
+      menuitem.focus();
+
+      expect(handleFocus.callCount).to.equal(1);
+
+      fireEvent.keyDown(menuitem);
+
+      expect(handleKeyDown.callCount).to.equal(1);
+
+      fireEvent.keyUp(menuitem);
+
+      expect(handleKeyUp.callCount).to.equal(1);
+
+      menuitem.blur();
+
+      expect(handleKeyDown.callCount).to.equal(1);
+    });
+
+    it('should fire onTouchStart', function touchStartTest() {
+      // only run in supported browsers
+      if (typeof Touch === 'undefined') {
+        this.skip();
+      }
+
+      const handleTouchStart = spy();
+      render(<MenuItem onTouchStart={handleTouchStart} />);
+      const menuitem = screen.getByRole('menuitem');
+
+      const touch = new Touch({ identifier: 0, target: menuitem, clientX: 0, clientY: 0 });
+      fireEvent.touchStart(menuitem, { touches: [touch] });
+
+      expect(handleTouchStart.callCount).to.equal(1);
     });
   });
 
-  describe('mount', () => {
-    it('should not fail with a li > li error message', () => {
-      const wrapper1 = mount(
-        <MenuItem>
-          <ListItemSecondaryAction>
-            <div />
-          </ListItemSecondaryAction>
-        </MenuItem>,
-      );
-      assert.strictEqual(wrapper1.find('li').length, 1);
-      const wrapper2 = mount(
-        <MenuItem button={false}>
-          <ListItemSecondaryAction>
-            <div />
-          </ListItemSecondaryAction>
-        </MenuItem>,
-      );
-      assert.strictEqual(wrapper2.find('li').length, 1);
+  // Regression test for #10452.
+  // Kept for backwards compatibility.
+  // In the future we should have a better pattern for this UI.
+  it('should not fail with a li > li error message', () => {
+    const { rerender } = render(
+      <MenuItem>
+        <ListItemSecondaryAction>
+          <div />
+        </ListItemSecondaryAction>
+      </MenuItem>,
+    );
+
+    expect(document.querySelectorAll('li')).to.have.length(1);
+
+    rerender(
+      <MenuItem button={false}>
+        <ListItemSecondaryAction>
+          <div />
+        </ListItemSecondaryAction>
+      </MenuItem>,
+    );
+
+    expect(document.querySelectorAll('li')).to.have.length(1);
+  });
+
+  it('can be disabled', () => {
+    render(<MenuItem disabled />);
+    const menuitem = screen.getByRole('menuitem');
+
+    expect(menuitem).to.have.attribute('aria-disabled', 'true');
+  });
+
+  describe('prop: ListItemClasses', () => {
+    it('should be able to change the style of ListItem', () => {
+      render(<MenuItem ListItemClasses={{ disabled: 'bar' }} disabled />);
+      const menuitem = screen.getByRole('menuitem');
+
+      expect(menuitem).to.have.class('bar');
     });
   });
 });

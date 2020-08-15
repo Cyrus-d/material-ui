@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@material-ui/core/styles';
 import Button, { ButtonProps } from '@material-ui/core/Button';
 import { Omit } from '@material-ui/types';
@@ -8,7 +8,10 @@ interface MyButtonProps {
 }
 
 const MyButton = styled(
-  ({ color, ...other }: MyButtonProps & Omit<ButtonProps, keyof MyButtonProps>) => (
+  ({
+    color,
+    ...other
+  }: MyButtonProps & Omit<ButtonProps, keyof MyButtonProps>) => (
     <Button {...other} />
   ),
 )({

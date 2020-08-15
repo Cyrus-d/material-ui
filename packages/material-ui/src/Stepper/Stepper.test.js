@@ -1,8 +1,6 @@
-import React from 'react';
-import { assert } from 'chai';
-import CheckCircle from '../internal/svg-icons/CheckCircle';
-import { createShallow, createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { expect } from 'chai';
+import { getClasses, createMount, createClientRender, describeConformance } from 'test/utils';
 import Paper from '../Paper';
 import Step from '../Step';
 import StepLabel from '../StepLabel';
@@ -12,18 +10,15 @@ import Stepper from './Stepper';
 
 describe('<Stepper />', () => {
   let classes;
-  let shallow;
-  let mount;
+  let stepClasses;
+  let stepConnectorClasses;
+  const mount = createMount({ strict: true });
+  const render = createClientRender();
 
   before(() => {
     classes = getClasses(<Stepper />);
-    shallow = createShallow({ dive: true });
-    // StrictModeViolation: test uses StepContent
-    mount = createMount({ strict: false });
-  });
-
-  after(() => {
-    mount.cleanUp();
+    stepClasses = getClasses(<Step />);
+    stepConnectorClasses = getClasses(<StepConnector />);
   });
 
   describeConformance(
@@ -40,189 +35,245 @@ describe('<Stepper />', () => {
   );
 
   it('has no elevation by default', () => {
-    const wrapper = mount(
+    const { container } = render(
       <Stepper>
         <Step />
       </Stepper>,
     );
-    assert.strictEqual(wrapper.find(Paper).props().elevation, 0, 'should have no elevation');
+
+    const paperClasses = getClasses(<Paper />);
+
+    const paper = container.querySelector(`.${paperClasses.elevation0}`);
+
+    expect(paper).not.equal(null);
   });
 
   describe('rendering children', () => {
-    it('renders 3 children with connectors as separators', () => {
-      const wrapper = shallow(
+    it('renders 3 Step and 2 StepConnector components', () => {
+      const { container } = render(
         <Stepper>
-          <div />
-          <div />
-          <div />
+          <Step />
+          <Step />
+          <Step />
         </Stepper>,
       );
 
-      const children = wrapper.children();
+      const connectors = container.querySelectorAll(`.${stepConnectorClasses.root}`);
+      const steps = container.querySelectorAll(`.${stepClasses.root}`);
 
-      assert.strictEqual(children.length, 5);
-      assert.strictEqual(wrapper.childAt(1).find(StepConnector).length, 1);
-      assert.strictEqual(wrapper.childAt(3).find(StepConnector).length, 1);
+      expect(connectors).to.have.length(2);
+      expect(steps).to.have.length(3);
     });
   });
 
   describe('controlling child props', () => {
     it('controls children linearly based on the activeStep prop', () => {
-      const wrapper = shallow(
+      const { container, setProps } = render(
         <Stepper activeStep={0}>
-          <div className="child-0" />
-          <div className="child-1" />
-          <div className="child-2" />
+          <Step />
+          <Step />
+          <Step />
         </Stepper>,
       );
-      assert.strictEqual(wrapper.find('.child-0').props().active, true);
-      assert.strictEqual(wrapper.find('.child-1').props().active, false);
-      assert.strictEqual(wrapper.find('.child-2').props().active, false);
-      assert.strictEqual(wrapper.find('.child-1').props().disabled, true);
-      assert.strictEqual(wrapper.find('.child-2').props().disabled, true);
-      wrapper.setProps({ activeStep: 1 });
-      assert.strictEqual(wrapper.find('.child-0').props().completed, true);
-      assert.strictEqual(wrapper.find('.child-0').props().active, false);
-      assert.strictEqual(wrapper.find('.child-1').props().active, true);
-      assert.strictEqual(wrapper.find('.child-2').props().active, false);
-      assert.strictEqual(wrapper.find('.child-2').props().disabled, true);
+
+      const steps = container.querySelectorAll(`.${stepClasses.root}`);
+      const connectors = container.querySelectorAll(`.${stepConnectorClasses.root}`);
+
+      expect(steps[0]).to.not.have.class(stepClasses.completed);
+      expect(steps[1]).to.not.have.class(stepClasses.completed);
+      expect(steps[2]).to.not.have.class(stepClasses.completed);
+      expect(connectors[0]).to.have.class(stepConnectorClasses.disabled);
+      expect(connectors[1]).to.have.class(stepConnectorClasses.disabled);
+
+      setProps({ activeStep: 1 });
+
+      expect(steps[0]).to.have.class(stepClasses.completed);
+      expect(steps[1]).to.not.have.class(stepClasses.completed);
+      expect(steps[2]).to.not.have.class(stepClasses.completed);
+      expect(connectors[0]).to.not.have.class(stepConnectorClasses.disabled);
+      expect(connectors[0]).to.have.class(stepConnectorClasses.active);
+      expect(connectors[1]).to.have.class(stepConnectorClasses.disabled);
     });
 
     it('controls children non-linearly based on the activeStep prop', () => {
-      const wrapper = shallow(
-        <Stepper linear={false} activeStep={0}>
-          <div className="child-0" />
-          <div className="child-1" />
-          <div className="child-2" />
+      const { container, setProps } = render(
+        <Stepper nonLinear activeStep={0}>
+          <Step />
+          <Step />
+          <Step />
         </Stepper>,
       );
-      assert.strictEqual(wrapper.find('.child-0').props().active, true);
-      assert.strictEqual(wrapper.find('.child-1').props().active, false);
-      assert.strictEqual(wrapper.find('.child-2').props().active, false);
-      wrapper.setProps({ activeStep: 1 });
-      assert.strictEqual(wrapper.find('.child-0').props().active, false);
-      assert.strictEqual(wrapper.find('.child-1').props().active, true);
-      assert.strictEqual(wrapper.find('.child-2').props().active, false);
-      wrapper.setProps({ activeStep: 2 });
-      assert.strictEqual(wrapper.find('.child-0').props().active, false);
-      assert.strictEqual(wrapper.find('.child-1').props().active, false);
-      assert.strictEqual(wrapper.find('.child-2').props().active, true);
+
+      const steps = container.querySelectorAll(`.${stepClasses.root}`);
+      const connectors = container.querySelectorAll(`.${stepConnectorClasses.root}`);
+
+      expect(steps[0]).to.not.have.class(stepClasses.completed);
+      expect(steps[1]).to.not.have.class(stepClasses.completed);
+      expect(steps[2]).to.not.have.class(stepClasses.completed);
+      expect(connectors[0]).not.to.have.class(stepConnectorClasses.disabled);
+      expect(connectors[1]).not.to.have.class(stepConnectorClasses.disabled);
+
+      setProps({ activeStep: 1 });
+
+      expect(steps[0]).to.not.have.class(stepClasses.completed);
+      expect(steps[1]).to.not.have.class(stepClasses.completed);
+      expect(steps[2]).to.not.have.class(stepClasses.completed);
+      expect(connectors[0]).to.not.have.class(stepConnectorClasses.disabled);
+      expect(connectors[0]).to.have.class(stepConnectorClasses.active);
+      expect(connectors[1]).not.to.have.class(stepConnectorClasses.disabled);
+
+      setProps({ activeStep: 2 });
+
+      expect(steps[0]).to.not.have.class(stepClasses.completed);
+      expect(steps[1]).to.not.have.class(stepClasses.completed);
+      expect(steps[2]).to.not.have.class(stepClasses.completed);
+      expect(connectors[0]).to.not.have.class(stepConnectorClasses.disabled);
+      expect(connectors[1]).to.not.have.class(stepConnectorClasses.disabled);
+      expect(connectors[1]).to.have.class(stepConnectorClasses.active);
     });
 
     it('passes index down correctly when rendering children containing arrays', () => {
-      const wrapper = shallow(
-        <Stepper linear={false}>
-          <div />
-          {[<div key={1} />, <div key={2} />]}
+      const CustomStep = ({ index }) => <div data-index={index} data-testid="step" />;
+
+      const { getAllByTestId } = render(
+        <Stepper nonLinear>
+          <CustomStep />
+          {[<CustomStep key={1} />, <CustomStep key={2} />]}
         </Stepper>,
       );
 
-      const steps = wrapper.children().find('div');
-      assert.strictEqual(steps.at(0).props().index, 0);
-      assert.strictEqual(steps.at(1).props().index, 1);
-      assert.strictEqual(steps.at(2).props().index, 2);
+      const steps = getAllByTestId('step');
+
+      expect(steps[0]).to.have.attribute('data-index', '0');
+      expect(steps[1]).to.have.attribute('data-index', '1');
+      expect(steps[2]).to.have.attribute('data-index', '2');
     });
   });
 
   describe('step connector', () => {
     it('should have a default step connector', () => {
-      const wrapper = shallow(
+      const { container } = render(
         <Stepper>
           <Step />
           <Step />
         </Stepper>,
       );
 
-      assert.strictEqual(
-        wrapper.find(StepConnector).length,
-        1,
-        'should contain a <StepConnector /> child',
-      );
+      const connectors = container.querySelectorAll(`.${stepConnectorClasses.root}`);
+
+      expect(connectors).to.have.length(1);
     });
 
     it('should allow the developer to specify a custom step connector', () => {
-      const wrapper = shallow(
-        <Stepper connector={<CheckCircle />}>
+      const CustomConnector = () => <div className="CustomConnector" />;
+      const { container } = render(
+        <Stepper connector={<CustomConnector />}>
           <Step />
           <Step />
         </Stepper>,
       );
 
-      assert.strictEqual(
-        wrapper.find(CheckCircle).length,
-        1,
-        'should contain a <CheckCircle /> child',
-      );
-      assert.strictEqual(
-        wrapper.find(StepConnector).length,
-        0,
-        'should not contain a <StepConnector /> child',
-      );
+      const defaultConnectors = container.querySelectorAll(`.${stepConnectorClasses.root}`);
+      const customConnectors = container.querySelectorAll('.CustomConnector');
+
+      expect(defaultConnectors).to.have.length(0);
+      expect(customConnectors).to.have.length(1);
     });
 
     it('should allow the step connector to be removed', () => {
-      const wrapper = shallow(
+      const { container } = render(
         <Stepper connector={null}>
           <Step />
           <Step />
         </Stepper>,
       );
 
-      assert.strictEqual(
-        wrapper.find(StepConnector).length,
-        0,
-        'should not contain a <StepConnector /> child',
-      );
+      const connectors = container.querySelectorAll(`.${stepConnectorClasses.root}`);
+
+      expect(connectors).to.have.length(0);
     });
 
     it('should pass active prop to connector when second step is active', () => {
-      const wrapper = shallow(
+      const { container } = render(
         <Stepper activeStep={1}>
           <Step />
           <Step />
         </Stepper>,
       );
-      const connectors = wrapper.find(StepConnector);
-      assert.strictEqual(connectors.first().props().active, true);
+
+      const connector = container.querySelector(`.${stepConnectorClasses.root}`);
+
+      expect(connector).to.have.class(stepConnectorClasses.active);
     });
 
     it('should pass completed prop to connector when second step is completed', () => {
-      const wrapper = shallow(
+      const { container } = render(
         <Stepper activeStep={2}>
           <Step />
           <Step />
         </Stepper>,
       );
-      const connectors = wrapper.find(StepConnector);
-      assert.strictEqual(connectors.first().props().completed, true);
+
+      const connector = container.querySelector(`.${stepConnectorClasses.root}`);
+
+      expect(connector).to.have.class(stepConnectorClasses.completed);
+    });
+
+    it('should pass correct active and completed props to the StepConnector with nonLinear prop', () => {
+      const steps = ['Step1', 'Step2', 'Step3'];
+
+      const { container } = render(
+        <Stepper orientation="horizontal" nonLinear connector={<StepConnector />}>
+          {steps.map((label, index) => (
+            <Step key={label} active completed={index === 2}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>,
+      );
+
+      const connectors = container.querySelectorAll(`.${stepConnectorClasses.root}`);
+
+      expect(connectors).to.have.length(2);
+      expect(connectors[0]).to.have.class(stepConnectorClasses.active);
+      expect(connectors[0]).to.not.have.class(stepConnectorClasses.completed);
+
+      expect(connectors[1]).to.have.class(stepConnectorClasses.active);
+      expect(connectors[1]).to.have.class(stepConnectorClasses.completed);
     });
   });
 
   it('renders with a null child', () => {
-    const wrapper = shallow(
+    const { container } = render(
       <Stepper>
         <Step />
         {null}
       </Stepper>,
     );
-    assert.strictEqual(wrapper.find(Step).length, 1);
+
+    const steps = container.querySelectorAll(`.${stepClasses.root}`);
+
+    expect(steps).to.have.length(1);
   });
 
   it('should be able to force a state', () => {
-    const wrapper = shallow(
+    const { container } = render(
       <Stepper>
-        <Step className="child-0" />
-        <Step className="child-1" active />
-        <Step className="child-2" />
+        <Step />
+        <Step active />
+        <Step />
       </Stepper>,
     );
-    assert.strictEqual(wrapper.find('.child-0').props().active, true);
-    assert.strictEqual(wrapper.find('.child-1').props().active, true);
-    assert.strictEqual(wrapper.find('.child-2').props().active, false);
+
+    const steps = container.querySelectorAll(`.${stepClasses.root}`);
+
+    expect(steps[0]).to.not.have.class(stepClasses.active);
+    expect(steps[1]).to.not.have.class(stepClasses.active);
+    expect(steps[2]).to.not.have.class(stepClasses.active);
   });
 
   it('should hide the last connector', () => {
-    const wrapper = mount(
+    const { container } = render(
       <Stepper orientation="vertical">
         <Step>
           <StepLabel>one</StepLabel>
@@ -234,19 +285,12 @@ describe('<Stepper />', () => {
         </Step>
       </Stepper>,
     );
-    assert.strictEqual(
-      wrapper
-        .find(StepContent)
-        .at(0)
-        .props().last,
-      false,
-    );
-    assert.strictEqual(
-      wrapper
-        .find(StepContent)
-        .at(1)
-        .props().last,
-      true,
-    );
+
+    const stepContentClasses = getClasses(<StepContent />);
+
+    const stepContent = container.querySelectorAll(`.${stepContentClasses.root}`);
+
+    expect(stepContent[0]).to.not.have.class(stepContentClasses.last);
+    expect(stepContent[1]).to.have.class(stepContentClasses.last);
   });
 });

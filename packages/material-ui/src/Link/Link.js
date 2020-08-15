@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { elementTypeAcceptingRef } from '@material-ui/utils';
 import capitalize from '../utils/capitalize';
 import withStyles from '../styles/withStyles';
-import { elementTypeAcceptingRef } from '@material-ui/utils';
-import { useIsFocusVisible } from '../utils/focusVisible';
+import useIsFocusVisible from '../utils/useIsFocusVisible';
 import useForkRef from '../utils/useForkRef';
 import Typography from '../Typography';
 
@@ -68,20 +68,26 @@ const Link = React.forwardRef(function Link(props, ref) {
     ...other
   } = props;
 
-  const { isFocusVisible, onBlurVisible, ref: focusVisibleRef } = useIsFocusVisible();
+  const {
+    isFocusVisibleRef,
+    onBlur: handleBlurVisible,
+    onFocus: handleFocusVisible,
+    ref: focusVisibleRef,
+  } = useIsFocusVisible();
   const [focusVisible, setFocusVisible] = React.useState(false);
   const handlerRef = useForkRef(ref, focusVisibleRef);
-  const handleBlur = event => {
-    if (focusVisible) {
-      onBlurVisible();
+  const handleBlur = (event) => {
+    handleBlurVisible(event);
+    if (isFocusVisibleRef.current === false) {
       setFocusVisible(false);
     }
     if (onBlur) {
       onBlur(event);
     }
   };
-  const handleFocus = event => {
-    if (isFocusVisible(event)) {
+  const handleFocus = (event) => {
+    handleFocusVisible(event);
+    if (isFocusVisibleRef.current === true) {
       setFocusVisible(true);
     }
     if (onFocus) {
@@ -113,15 +119,19 @@ const Link = React.forwardRef(function Link(props, ref) {
 });
 
 Link.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The content of the link.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -130,9 +140,9 @@ Link.propTypes = {
    * The color of the link.
    */
   color: PropTypes.oneOf([
-    'default',
     'error',
     'inherit',
+    'initial',
     'primary',
     'secondary',
     'textPrimary',
@@ -140,7 +150,7 @@ Link.propTypes = {
   ]),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: elementTypeAcceptingRef,
   /**
@@ -158,11 +168,26 @@ Link.propTypes = {
   /**
    * Controls when the link should have an underline.
    */
-  underline: PropTypes.oneOf(['none', 'hover', 'always']),
+  underline: PropTypes.oneOf(['always', 'hover', 'none']),
   /**
    * Applies the theme typography styles.
    */
-  variant: PropTypes.string,
+  variant: PropTypes.oneOf([
+    'body1',
+    'body2',
+    'button',
+    'caption',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'inherit',
+    'overline',
+    'subtitle1',
+    'subtitle2',
+  ]),
 };
 
 export default withStyles(styles, { name: 'MuiLink' })(Link);

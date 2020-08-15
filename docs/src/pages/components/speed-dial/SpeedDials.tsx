@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -52,12 +52,18 @@ const actions = [
 
 export default function SpeedDials() {
   const classes = useStyles();
-  const [direction, setDirection] = React.useState<SpeedDialProps['direction']>('up');
+  const [direction, setDirection] = React.useState<SpeedDialProps['direction']>(
+    'up',
+  );
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
 
-  const handleDirectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDirection((event.target as HTMLInputElement).value as SpeedDialProps['direction']);
+  const handleDirectionChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setDirection(
+      (event.target as HTMLInputElement).value as SpeedDialProps['direction'],
+    );
   };
 
   const handleHiddenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +82,11 @@ export default function SpeedDials() {
     <div className={classes.root}>
       <FormControlLabel
         control={
-          <Switch checked={hidden} onChange={handleHiddenChange} value="hidden" color="primary" />
+          <Switch
+            checked={hidden}
+            onChange={handleHiddenChange}
+            color="primary"
+          />
         }
         label="Hidden"
       />
@@ -106,7 +116,7 @@ export default function SpeedDials() {
           open={open}
           direction={direction}
         >
-          {actions.map(action => (
+          {actions.map((action) => (
             <SpeedDialAction
               key={action.name}
               icon={action.icon}

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 
@@ -48,11 +48,6 @@ export default function BackgroundColor() {
       <Grid item xs={12} sm={4}>
         <Box bgcolor="text.disabled" color="background.paper" p={2}>
           text.disabled
-        </Box>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Box bgcolor="text.hint" color="background.paper" p={2}>
-          text.hint
         </Box>
       </Grid>
     </Grid>

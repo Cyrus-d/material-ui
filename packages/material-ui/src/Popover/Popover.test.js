@@ -1,10 +1,8 @@
-import React from 'react';
-import { assert, expect } from 'chai';
+import * as React from 'react';
+import { expect } from 'chai';
 import { spy, stub, useFakeTimers } from 'sinon';
-import PropTypes from 'prop-types';
-import { createMount, findOutermostIntrinsic, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
+import { findOutermostIntrinsic, getClasses, createMount, describeConformance } from 'test/utils';
+import * as PropTypes from 'prop-types';
 import Grow from '../Grow';
 import Modal from '../Modal';
 import Paper from '../Paper';
@@ -26,7 +24,7 @@ const mockedAnchorEl = () => {
 };
 
 const FakePaper = React.forwardRef(function FakeWidthPaper(props, ref) {
-  const handleMocks = React.useCallback(paperInstance => {
+  const handleMocks = React.useCallback((paperInstance) => {
     if (paperInstance) {
       // For jsdom
       Object.defineProperty(paperInstance, 'offsetWidth', { value: 0 });
@@ -49,7 +47,8 @@ const FakePaper = React.forwardRef(function FakeWidthPaper(props, ref) {
 });
 
 describe('<Popover />', () => {
-  let mount;
+  // StrictModeViolation: Not using act(), prefer using createClientRender from test/utils
+  const mount = createMount({ strict: false });
   let classes;
   const defaultProps = {
     open: false,
@@ -57,17 +56,11 @@ describe('<Popover />', () => {
   };
 
   before(() => {
-    // StrictModeViolation: uses Grow
-    mount = createMount({ strict: false });
     classes = getClasses(
       <Popover {...defaultProps}>
         <div />
       </Popover>,
     );
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<Popover {...defaultProps} open />, () => ({
@@ -90,8 +83,8 @@ describe('<Popover />', () => {
         </Popover>,
       );
       const root = wrapper.find('ForwardRef(Popover) > [data-root-node]').first();
-      assert.strictEqual(root.type(), Modal);
-      assert.strictEqual(root.props().BackdropProps.invisible, true);
+      expect(root.type()).to.equal(Modal);
+      expect(root.props().BackdropProps.invisible).to.equal(true);
     });
 
     it('should pass open prop to Modal as `open`', () => {
@@ -100,11 +93,11 @@ describe('<Popover />', () => {
           <div />
         </Popover>,
       );
-      assert.strictEqual(wrapper.find(Modal).props().open, false);
+      expect(wrapper.find(Modal).props().open).to.equal(false);
       wrapper.setProps({ open: true });
-      assert.strictEqual(wrapper.find(Modal).props().open, true);
+      expect(wrapper.find(Modal).props().open).to.equal(true);
       wrapper.setProps({ open: false });
-      assert.strictEqual(wrapper.find(Modal).props().open, false);
+      expect(wrapper.find(Modal).props().open).to.equal(false);
     });
 
     describe('getOffsetTop', () => {
@@ -117,25 +110,25 @@ describe('<Popover />', () => {
       it('should return vertical when vertical is a number', () => {
         const vertical = 1;
         const offsetTop = getOffsetTop('', vertical);
-        assert.strictEqual(offsetTop, vertical);
+        expect(offsetTop).to.equal(vertical);
       });
 
       it("should return half of rect.height if vertical is 'center'", () => {
         const vertical = 'center';
         const offsetTop = getOffsetTop(rect, vertical);
-        assert.strictEqual(offsetTop, rect.height / 2);
+        expect(offsetTop).to.equal(rect.height / 2);
       });
 
       it("should return rect.height if vertical is 'bottom'", () => {
         const vertical = 'bottom';
         const offsetTop = getOffsetTop(rect, vertical);
-        assert.strictEqual(offsetTop, rect.height);
+        expect(offsetTop).to.equal(rect.height);
       });
 
       it('should return zero if vertical is something else', () => {
         const vertical = undefined;
         const offsetTop = getOffsetTop(rect, vertical);
-        assert.strictEqual(offsetTop, 0);
+        expect(offsetTop).to.equal(0);
       });
     });
 
@@ -149,25 +142,25 @@ describe('<Popover />', () => {
       it('should return horizontal when horizontal is a number', () => {
         const horizontal = 1;
         const offsetLeft = getOffsetLeft('', horizontal);
-        assert.strictEqual(offsetLeft, horizontal);
+        expect(offsetLeft).to.equal(horizontal);
       });
 
       it("should return half of rect.width if horizontal is 'center'", () => {
         const horizontal = 'center';
         const offsetLeft = getOffsetLeft(rect, horizontal);
-        assert.strictEqual(offsetLeft, rect.width / 2);
+        expect(offsetLeft).to.equal(rect.width / 2);
       });
 
       it("should return rect.width if horizontal is 'right'", () => {
         const horizontal = 'right';
         const offsetLeft = getOffsetLeft(rect, horizontal);
-        assert.strictEqual(offsetLeft, rect.width);
+        expect(offsetLeft).to.equal(rect.width);
       });
 
       it('should return zero if horizontal is something else', () => {
         const horizontal = undefined;
         const offsetLeft = getOffsetLeft(rect, horizontal);
-        assert.strictEqual(offsetLeft, 0);
+        expect(offsetLeft).to.equal(0);
       });
     });
   });
@@ -192,8 +185,8 @@ describe('<Popover />', () => {
       const modal = wrapper.find('[data-mui-test="Modal"]');
       const transition = modal.find(Grow);
 
-      assert.strictEqual(transition.exists(), true);
-      assert.strictEqual(transition.props().appear, true, 'should transition on first appearance');
+      expect(transition.exists()).to.equal(true);
+      expect(transition.props().appear).to.equal(true);
     });
 
     it('should set the transition in/out based on the open prop', () => {
@@ -202,11 +195,11 @@ describe('<Popover />', () => {
           <div />
         </Popover>,
       );
-      assert.strictEqual(wrapper.find(Grow).props().in, false);
+      expect(wrapper.find(Grow).props().in).to.equal(false);
       wrapper.setProps({ open: true });
-      assert.strictEqual(wrapper.find(Grow).props().in, true);
+      expect(wrapper.find(Grow).props().in).to.equal(true);
       wrapper.setProps({ open: false });
-      assert.strictEqual(wrapper.find(Grow).props().in, false);
+      expect(wrapper.find(Grow).props().in).to.equal(false);
     });
 
     it('should fire Popover transition event callbacks', () => {
@@ -219,7 +212,7 @@ describe('<Popover />', () => {
 
       // transitions towards entered
       const wrapper = mount(
-        <Popover {...defaultProps} open transitionDuration={0} {...handlers}>
+        <Popover {...defaultProps} open transitionDuration={0} TransitionProps={{ ...handlers }}>
           <div />
         </Popover>,
       );
@@ -228,12 +221,8 @@ describe('<Popover />', () => {
       wrapper.setProps({ open: false });
       clock.tick(0);
 
-      events.forEach(eventHook => {
-        assert.strictEqual(
-          handlers[eventHook].callCount,
-          1,
-          `should have called the ${eventHook} handler`,
-        );
+      events.forEach((eventHook) => {
+        expect(handlers[eventHook].callCount).to.equal(1);
       });
     });
   });
@@ -246,13 +235,7 @@ describe('<Popover />', () => {
         </Popover>,
       );
 
-      assert.strictEqual(
-        wrapper
-          .find(Grow)
-          .find(Paper)
-          .exists(),
-        true,
-      );
+      expect(wrapper.find(Grow).find(Paper).exists()).to.equal(true);
     });
 
     it('should have the paper class and user classes', () => {
@@ -261,9 +244,9 @@ describe('<Popover />', () => {
           <div />
         </Popover>,
       );
-      assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass('test-class'), true);
+      expect(findOutermostIntrinsic(wrapper).hasClass('test-class')).to.equal(true);
       const paper = wrapper.find(Paper);
-      assert.strictEqual(paper.hasClass(classes.paper), true);
+      expect(paper.hasClass(classes.paper)).to.equal(true);
     });
 
     it('should have a elevation prop passed down', () => {
@@ -273,14 +256,10 @@ describe('<Popover />', () => {
         </Popover>,
       );
 
-      assert.strictEqual(
-        wrapper.find(Paper).props().elevation,
-        8,
-        'should be 8 elevation by default',
-      );
+      expect(wrapper.find(Paper).props().elevation).to.equal(8);
 
       wrapper.setProps({ elevation: 16 });
-      assert.strictEqual(wrapper.find(Paper).props().elevation, 16, 'should be 16 elevation');
+      expect(wrapper.find(Paper).props().elevation).to.equal(16);
     });
   });
 
@@ -289,7 +268,7 @@ describe('<Popover />', () => {
       it('should set the inline styles for the enter phase', () => {
         const handleEntering = spy();
         const wrapper = mount(
-          <Popover {...defaultProps} onEntering={handleEntering}>
+          <Popover {...defaultProps} TransitionProps={{ onEntering: handleEntering }}>
             <div />
           </Popover>,
         );
@@ -300,16 +279,8 @@ describe('<Popover />', () => {
 
         const element = handleEntering.args[0][0];
 
-        assert.strictEqual(
-          element.style.top === '16px' && element.style.left === '16px',
-          true,
-          'should offset the element from the top left of the screen by 16px',
-        );
-        assert.match(
-          element.style.transformOrigin,
-          /-16px -16px( 0px)?/,
-          'should have a transformOrigin',
-        );
+        expect(element.style.top === '16px' && element.style.left === '16px').to.equal(true);
+        expect(element.style.transformOrigin).to.match(/-16px -16px( 0px)?/);
       });
     });
   });
@@ -322,7 +293,7 @@ describe('<Popover />', () => {
           <div />
         </Popover>,
       );
-      assert.strictEqual(anchorElSpy.callCount, 1);
+      expect(anchorElSpy.callCount).to.equal(1);
     });
   });
 
@@ -334,13 +305,13 @@ describe('<Popover />', () => {
     let expectPopover;
 
     before(() => {
-      openPopover = anchorOrigin => {
+      openPopover = (anchorOrigin) => {
         if (!anchorEl) {
           anchorEl = document.createElement('div');
         }
 
         const css = (element, styles) => {
-          Object.keys(styles).forEach(key => {
+          Object.keys(styles).forEach((key) => {
             element.style[key] = styles[key];
           });
         };
@@ -354,16 +325,18 @@ describe('<Popover />', () => {
         });
         document.body.appendChild(anchorEl);
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           const component = (
             <Popover
               {...defaultProps}
               anchorEl={anchorEl}
               anchorOrigin={anchorOrigin}
               transitionDuration={0}
-              onEntered={() => {
-                popoverEl = document.querySelector('[data-mui-test="Popover"]');
-                resolve();
+              TransitionProps={{
+                onEntered: () => {
+                  popoverEl = document.querySelector('[data-mui-test="Popover"]');
+                  resolve();
+                },
               }}
             >
               <div />
@@ -375,17 +348,9 @@ describe('<Popover />', () => {
       };
 
       expectPopover = (top, left) => {
-        assert.strictEqual(
-          popoverEl.style.top,
-          `${top}px`,
-          'should position at the correct top offset',
-        );
+        expect(popoverEl.style.top).to.equal(`${top}px`);
 
-        assert.strictEqual(
-          popoverEl.style.left,
-          `${left}px`,
-          'should position at the correct left offset',
-        );
+        expect(popoverEl.style.left).to.equal(`${left}px`);
         wrapper.unmount();
       };
     });
@@ -451,50 +416,43 @@ describe('<Popover />', () => {
       const container = document.createElement('div');
       const wrapper2 = mount(<Popover anchorEl={anchorEl} container={container} open={false} />);
 
-      assert.strictEqual(wrapper2.find(Modal).props().container, container);
+      expect(wrapper2.find(Modal).props().container).to.equal(container);
     });
 
     it("should use anchorEl's parent body as container if container not provided", async () => {
       await openPopover(undefined);
-      assert.strictEqual(
-        wrapper.find(Modal).props().container,
-        document.body,
-        "should use anchorEl's parent body as Modal container",
-      );
+      expect(wrapper.find(Modal).props().container).to.equal(document.body);
     });
   });
 
   describe('warnings', () => {
     beforeEach(() => {
-      consoleErrorMock.spy();
       PropTypes.resetWarningCache();
     });
 
-    afterEach(() => {
-      consoleErrorMock.reset();
-    });
-
     it('should warn if anchorEl is not valid', () => {
-      const otherWrapper = mount(<Popover open />);
-      assert.strictEqual(otherWrapper.find(Modal).props().container, undefined);
-      assert.strictEqual(consoleErrorMock.callCount(), 1);
-      assert.include(consoleErrorMock.args()[0][0], 'It should be an Element instance');
+      expect(() => {
+        PropTypes.checkPropTypes(
+          Popover.Naked.propTypes,
+          { classes: {}, open: true },
+          'prop',
+          'MockedPopover',
+        );
+      }).toErrorDev('It should be an Element instance');
     });
 
     it('warns if a component for the Paper is used that cant hold a ref', () => {
-      mount(<Popover {...defaultProps} PaperProps={{ component: () => <div />, elevation: 4 }} />);
-      assert.strictEqual(consoleErrorMock.callCount(), 1);
-      assert.include(
-        consoleErrorMock.args()[0][0],
-        'Warning: Failed prop type: Invalid prop `PaperProps.component` supplied to `ForwardRef(Popover)`. Expected an element type that can hold a ref.',
+      expect(() => {
+        PropTypes.checkPropTypes(
+          Popover.Naked.propTypes,
+          { ...defaultProps, classes: {}, PaperProps: { component: () => <div />, elevation: 4 } },
+          'prop',
+          'MockedPopover',
+        );
+      }).toErrorDev(
+        'Warning: Failed prop type: Invalid prop `PaperProps.component` supplied to `MockedPopover`. Expected an element type that can hold a ref.',
       );
     });
-
-    // it('should warn if anchorEl is not visible', () => {
-    //   mount(<Popover open anchorEl={document.createElement('div')} />);
-    //   assert.strictEqual(consoleErrorMock.callCount(), 1);
-    //   assert.include(consoleErrorMock.args()[0][0], 'The node element should be visible');
-    // });
   });
 
   describe('prop anchorReference="anchorPosition"', () => {
@@ -506,8 +464,8 @@ describe('<Popover />', () => {
     let expectPopover;
 
     before(() => {
-      openPopover = anchorOrigin =>
-        new Promise(resolve => {
+      openPopover = (anchorOrigin) =>
+        new Promise((resolve) => {
           wrapper = mount(
             <Popover
               {...defaultProps}
@@ -515,9 +473,11 @@ describe('<Popover />', () => {
               anchorPosition={anchorPosition}
               anchorOrigin={anchorOrigin}
               transitionDuration={0}
-              onEntered={() => {
-                popoverEl = document.querySelector('[data-mui-test="Popover"]');
-                resolve();
+              TransitionProps={{
+                onEntered: () => {
+                  popoverEl = document.querySelector('[data-mui-test="Popover"]');
+                  resolve();
+                },
               }}
             >
               <div />
@@ -527,17 +487,9 @@ describe('<Popover />', () => {
         });
 
       expectPopover = (top, left) => {
-        assert.strictEqual(
-          popoverEl.style.top,
-          `${top}px`,
-          'should position at the correct top offset',
-        );
+        expect(popoverEl.style.top).to.equal(`${top}px`);
 
-        assert.strictEqual(
-          popoverEl.style.left,
-          `${left}px`,
-          'should position at the correct left offset',
-        );
+        expect(popoverEl.style.left).to.equal(`${left}px`);
         wrapper.unmount();
       };
     });
@@ -561,15 +513,17 @@ describe('<Popover />', () => {
 
     before(() => {
       openPopover = () =>
-        new Promise(resolve => {
+        new Promise((resolve) => {
           wrapper = mount(
             <Popover
               {...defaultProps}
               anchorReference="none"
               transitionDuration={0}
-              onEntered={() => {
-                popoverEl = document.querySelector('[data-mui-test="Popover"]');
-                resolve();
+              TransitionProps={{
+                onEntered: () => {
+                  popoverEl = document.querySelector('[data-mui-test="Popover"]');
+                  resolve();
+                },
               }}
               PaperProps={{
                 style: {
@@ -585,17 +539,9 @@ describe('<Popover />', () => {
         });
 
       expectPopover = (top, left) => {
-        assert.strictEqual(
-          popoverEl.style.top,
-          `${top}px`,
-          'should position at the correct top offset',
-        );
+        expect(popoverEl.style.top).to.equal(`${top}px`);
 
-        assert.strictEqual(
-          popoverEl.style.left,
-          `${left}px`,
-          'should position at the correct left offset',
-        );
+        expect(popoverEl.style.left).to.equal(`${left}px`);
         wrapper.unmount();
       };
     });
@@ -628,7 +574,7 @@ describe('<Popover />', () => {
         <Popover
           anchorEl={mockedAnchor}
           open
-          onEntering={handleEntering}
+          TransitionProps={{ onEntering: handleEntering }}
           transitionDuration={0}
           marginThreshold={8}
         >
@@ -683,7 +629,7 @@ describe('<Popover />', () => {
       let popoverActions;
       wrapper.setProps({
         open: true,
-        action: actions => {
+        action: (actions) => {
           popoverActions = actions;
         },
       });
@@ -693,11 +639,7 @@ describe('<Popover />', () => {
         transformOrigin: element.style.transformOrigin,
       };
       window.innerHeight = windowInnerHeight * 2;
-      assert.strictEqual(
-        typeof popoverActions.updatePosition === 'function',
-        true,
-        'Should be a function.',
-      );
+      expect(typeof popoverActions.updatePosition === 'function').to.equal(true);
       popoverActions.updatePosition();
       clock.tick(166);
       const afterStyle = {
@@ -709,7 +651,7 @@ describe('<Popover />', () => {
     });
   });
 
-  [0, 18, 16].forEach(marginThreshold => {
+  [0, 18, 16].forEach((marginThreshold) => {
     describe(`positioning when \`marginThreshold=${marginThreshold}\``, () => {
       function generateElementStyle(anchorEl = document.createElement('svg')) {
         const handleEntering = spy();
@@ -717,7 +659,7 @@ describe('<Popover />', () => {
           <Popover
             anchorEl={anchorEl}
             open
-            onEntering={handleEntering}
+            TransitionProps={{ onEntering: handleEntering }}
             marginThreshold={marginThreshold}
             PaperProps={{ component: FakePaper }}
           >
@@ -727,145 +669,97 @@ describe('<Popover />', () => {
         return handleEntering.args[0][0].style;
       }
 
-      describe('when no movement is needed', () => {
-        let positioningStyle;
+      specify('when no movement is needed', () => {
         const negative = marginThreshold === 0 ? '' : '-';
-        const expectedTransformOrigin = new RegExp(
-          `${negative}${marginThreshold}px ${negative}${marginThreshold}px( 0px)?`,
+        const positioningStyle = generateElementStyle();
+
+        expect(positioningStyle.top).to.equal(`${marginThreshold}px`);
+        expect(positioningStyle.left).to.equal(`${marginThreshold}px`);
+        expect(positioningStyle.transformOrigin).to.match(
+          new RegExp(`${negative}${marginThreshold}px ${negative}${marginThreshold}px( 0px)?`),
         );
-
-        before(() => {
-          positioningStyle = generateElementStyle();
-        });
-
-        it('should set top to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.top, `${marginThreshold}px`);
-        });
-
-        it('should set left to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.left, `${marginThreshold}px`);
-        });
-
-        it('should transformOrigin according to marginThreshold', () => {
-          assert.match(positioningStyle.transformOrigin, expectedTransformOrigin);
-        });
       });
 
-      describe('top < marginThreshold', () => {
-        let positioningStyle;
+      specify('top < marginThreshold', () => {
+        const mockedAnchor = document.createElement('div');
+        stub(mockedAnchor, 'getBoundingClientRect').callsFake(() => ({
+          left: marginThreshold,
+          top: marginThreshold - 1,
+        }));
+        const positioningStyle = generateElementStyle(mockedAnchor);
 
-        before(() => {
-          const mockedAnchor = document.createElement('div');
-          stub(mockedAnchor, 'getBoundingClientRect').callsFake(() => ({
-            left: marginThreshold,
-            top: marginThreshold - 1,
-          }));
-
-          positioningStyle = generateElementStyle(mockedAnchor);
-        });
-
-        it('should set top to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.top, `${marginThreshold}px`);
-        });
-
-        it('should set left to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.left, `${marginThreshold}px`);
-        });
-
-        it('should transformOrigin according to marginThreshold', () => {
-          assert.match(positioningStyle.transformOrigin, /0px -1px( 0ms)?/);
-        });
+        expect(positioningStyle.top).to.equal(`${marginThreshold}px`);
+        expect(positioningStyle.left).to.equal(`${marginThreshold}px`);
+        expect(positioningStyle.transformOrigin).to.match(/0px -1px( 0ms)?/);
       });
 
       describe('bottom > heightThreshold', () => {
-        let positioningStyle;
         let windowInnerHeight;
 
         before(() => {
           windowInnerHeight = window.innerHeight;
           window.innerHeight = marginThreshold * 2;
-          const mockedAnchor = document.createElement('div');
-          stub(mockedAnchor, 'getBoundingClientRect').callsFake(() => ({
-            left: marginThreshold,
-            top: marginThreshold + 1,
-          }));
-
-          positioningStyle = generateElementStyle(mockedAnchor);
         });
 
         after(() => {
           window.innerHeight = windowInnerHeight;
         });
 
-        it('should set top to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.top, `${marginThreshold}px`);
-        });
+        specify('test', () => {
+          const mockedAnchor = document.createElement('div');
+          stub(mockedAnchor, 'getBoundingClientRect').callsFake(() => ({
+            left: marginThreshold,
+            top: marginThreshold + 1,
+          }));
 
-        it('should set left to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.left, `${marginThreshold}px`);
-        });
+          const positioningStyle = generateElementStyle(mockedAnchor);
 
-        it('should transformOrigin according to marginThreshold', () => {
-          assert.match(positioningStyle.transformOrigin, /0px 1px( 0px)?/);
+          expect(positioningStyle.top).to.equal(`${marginThreshold}px`);
+          expect(positioningStyle.left).to.equal(`${marginThreshold}px`);
+          expect(positioningStyle.transformOrigin).to.match(/0px 1px( 0px)?/);
         });
       });
 
-      describe('left < marginThreshold', () => {
-        let positioningStyle;
+      specify('left < marginThreshold', () => {
+        const mockedAnchor = document.createElement('div');
+        stub(mockedAnchor, 'getBoundingClientRect').callsFake(() => ({
+          left: marginThreshold - 1,
+          top: marginThreshold,
+        }));
 
-        before(() => {
-          const mockedAnchor = document.createElement('div');
-          stub(mockedAnchor, 'getBoundingClientRect').callsFake(() => ({
-            left: marginThreshold - 1,
-            top: marginThreshold,
-          }));
+        const positioningStyle = generateElementStyle(mockedAnchor);
 
-          positioningStyle = generateElementStyle(mockedAnchor);
-        });
+        expect(positioningStyle.top).to.equal(`${marginThreshold}px`);
 
-        it('should set top to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.top, `${marginThreshold}px`);
-        });
+        expect(positioningStyle.left).to.equal(`${marginThreshold}px`);
 
-        it('should set left to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.left, `${marginThreshold}px`);
-        });
-
-        it('should transformOrigin according to marginThreshold', () => {
-          assert.match(positioningStyle.transformOrigin, /-1px 0px( 0px)?/);
-        });
+        expect(positioningStyle.transformOrigin).to.match(/-1px 0px( 0px)?/);
       });
 
       describe('right > widthThreshold', () => {
-        let positioningStyle;
         let innerWidthContainer;
 
         before(() => {
           innerWidthContainer = window.innerWidth;
           window.innerWidth = marginThreshold * 2;
-          const mockedAnchor = document.createElement('div');
-          stub(mockedAnchor, 'getBoundingClientRect').callsFake(() => ({
-            left: marginThreshold + 1,
-            top: marginThreshold,
-          }));
-
-          positioningStyle = generateElementStyle(mockedAnchor);
         });
 
         after(() => {
           window.innerWidth = innerWidthContainer;
         });
 
-        it('should set top to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.top, `${marginThreshold}px`);
-        });
+        specify('test', () => {
+          const mockedAnchor = document.createElement('div');
+          stub(mockedAnchor, 'getBoundingClientRect').callsFake(() => ({
+            left: marginThreshold + 1,
+            top: marginThreshold,
+          }));
 
-        it('should set left to marginThreshold', () => {
-          assert.strictEqual(positioningStyle.left, `${marginThreshold}px`);
-        });
+          const positioningStyle = generateElementStyle(mockedAnchor);
 
-        it('should transformOrigin according to marginThreshold', () => {
-          assert.match(positioningStyle.transformOrigin, /1px 0px( 0px)?/);
+          expect(positioningStyle.top).to.equal(`${marginThreshold}px`);
+          expect(positioningStyle.left).to.equal(`${marginThreshold}px`);
+          expect(positioningStyle.transformOrigin).to.match(/1px 0px( 0px)?/);
         });
       });
     });
@@ -887,7 +781,7 @@ describe('<Popover />', () => {
       mount(
         <Popover
           anchorEl={mockedAnchorEl}
-          onEntering={handleEntering}
+          TransitionProps={{ onEntering: handleEntering }}
           getContentAnchorEl={getContentAnchorEl}
           open
         >
@@ -896,9 +790,9 @@ describe('<Popover />', () => {
       );
 
       const elementStyle = handleEntering.args[0][0].style;
-      assert.match(elementStyle.transformOrigin, /0px 32px( 0px)?/);
-      assert.strictEqual(elementStyle.top, '157px');
-      assert.strictEqual(elementStyle.left, '160px');
+      expect(elementStyle.transformOrigin).to.match(/0px 32px( 0px)?/);
+      expect(elementStyle.top).to.equal('157px');
+      expect(elementStyle.left).to.equal('160px');
     });
   });
 
@@ -909,7 +803,7 @@ describe('<Popover />', () => {
           <div />
         </Popover>,
       );
-      assert.strictEqual(wrapper.find(Grow).props().timeout, 'auto');
+      expect(wrapper.find(Grow).props().timeout).to.equal('auto');
     });
 
     it('should not apply the auto prop if not supported', () => {
@@ -919,48 +813,7 @@ describe('<Popover />', () => {
           <div />
         </Popover>,
       );
-      assert.strictEqual(wrapper.find(TransitionComponent).props().timeout, undefined);
-    });
-  });
-
-  describe('prop: TransitionProp', () => {
-    it('chains onEntering with the apparent onEntering prop', () => {
-      const apparentHandler = spy();
-      const transitionHandler = spy();
-
-      mount(
-        <Popover
-          {...defaultProps}
-          open
-          TransitionProps={{ onEntering: transitionHandler }}
-          onEntering={apparentHandler}
-        >
-          <div />
-        </Popover>,
-      );
-
-      assert.strictEqual(apparentHandler.callCount, 1);
-      assert.strictEqual(transitionHandler.callCount, 1);
-    });
-
-    it('does not chain other transition callbacks with the apparent ones', () => {
-      const apparentHandler = spy();
-      const transitionHandler = spy();
-      const wrapper = mount(
-        <Popover
-          {...defaultProps}
-          open
-          TransitionProps={{ onExiting: transitionHandler }}
-          onExiting={apparentHandler}
-        >
-          <div />
-        </Popover>,
-      );
-
-      wrapper.setProps({ open: false });
-
-      assert.strictEqual(apparentHandler.callCount, 0);
-      assert.strictEqual(transitionHandler.callCount, 1);
+      expect(wrapper.find(TransitionComponent).props().timeout).to.equal(undefined);
     });
   });
 });

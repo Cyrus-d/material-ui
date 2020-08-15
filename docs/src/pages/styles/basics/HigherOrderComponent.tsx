@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -14,9 +14,9 @@ const styles = createStyles({
   },
 });
 
-function HigherOrderComponent(props: WithStyles<typeof styles>) {
+function UnstyledComponent(props: WithStyles<typeof styles>) {
   const { classes } = props;
   return <Button className={classes.root}>Styled with HOC API</Button>;
 }
 
-export default withStyles(styles)(HigherOrderComponent);
+export default withStyles(styles)(UnstyledComponent);

@@ -1,12 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: 200,
+      width: '25ch',
     },
   },
 }));
@@ -14,15 +14,24 @@ const useStyles = makeStyles(theme => ({
 export default function StateTextFields() {
   const classes = useStyles();
   const [name, setName] = React.useState('Cat in the Hat');
-  const handleChange = event => {
+  const handleChange = (event) => {
     setName(event.target.value);
   };
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <div>
-        <TextField id="standard-name" label="Name" value={name} onChange={handleChange} />
-        <TextField id="standard-uncontrolled" label="Uncontrolled" defaultValue="foo" />
+        <TextField
+          id="standard-name"
+          label="Name"
+          value={name}
+          onChange={handleChange}
+        />
+        <TextField
+          id="standard-uncontrolled"
+          label="Uncontrolled"
+          defaultValue="foo"
+        />
       </div>
       <div>
         <TextField

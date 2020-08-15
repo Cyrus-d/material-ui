@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 // The default value is never and should never be used.
 // It's here to improve DX by enabling autocompletion for editors supporting TypeScript.
@@ -7,6 +7,7 @@ const PageContext = React.createContext({
     pathname: '',
   },
   pages: [],
+  versions: [],
 });
 
 if (process.env.NODE_ENV !== 'production') {

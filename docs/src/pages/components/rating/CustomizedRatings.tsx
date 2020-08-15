@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Rating, { IconContainerProps } from '@material-ui/lab/Rating';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -20,7 +20,12 @@ const StyledRating = withStyles({
   },
 })(Rating);
 
-const customIcons: { [index: string]: { icon: React.ReactElement; label: string } } = {
+const customIcons: {
+  [index: string]: {
+    icon: React.ReactElement;
+    label: string;
+  };
+} = {
   1: {
     icon: <SentimentVeryDissatisfiedIcon />,
     label: 'Very Dissatisfied',
@@ -55,7 +60,7 @@ export default function CustomizedRatings() {
         <Typography component="legend">Custom empty icon</Typography>
         <Rating
           name="customized-empty"
-          value={2}
+          defaultValue={2}
           precision={0.5}
           emptyIcon={<StarBorderIcon fontSize="inherit" />}
         />
@@ -64,21 +69,23 @@ export default function CustomizedRatings() {
         <Typography component="legend">Custom icon and color</Typography>
         <StyledRating
           name="customized-color"
-          value={2}
-          getLabelText={(value: number) => `${value} Heart${value !== 1 ? 's' : ''}`}
+          defaultValue={2}
+          getLabelText={(value: number) =>
+            `${value} Heart${value !== 1 ? 's' : ''}`
+          }
           precision={0.5}
           icon={<FavoriteIcon fontSize="inherit" />}
         />
       </Box>
       <Box component="fieldset" mb={3} borderColor="transparent">
         <Typography component="legend">10 stars</Typography>
-        <Rating name="customized-10" value={2} max={10} />
+        <Rating name="customized-10" defaultValue={2} max={10} />
       </Box>
       <Box component="fieldset" mb={3} borderColor="transparent">
         <Typography component="legend">Custom icon set</Typography>
         <Rating
           name="customized-icons"
-          value={2}
+          defaultValue={2}
           getLabelText={(value: number) => customIcons[value].label}
           IconContainerComponent={IconContainer}
         />

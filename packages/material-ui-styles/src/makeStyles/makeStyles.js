@@ -182,7 +182,7 @@ function useSynchronousEffect(func, values) {
   );
 }
 
-function makeStyles(stylesOrCreator, options = {}) {
+export default function makeStyles(stylesOrCreator, options = {}) {
   const {
     // alias for classNamePrefix, if provided will listen to theme (required for theme.overrides)
     name,
@@ -201,7 +201,7 @@ function makeStyles(stylesOrCreator, options = {}) {
     classNamePrefix,
   };
 
-  return (props = {}) => {
+  const useStyles = (props = {}) => {
     const theme = useTheme() || defaultTheme;
     const stylesOptions = {
       ...React.useContext(StylesContext),
@@ -236,8 +236,41 @@ function makeStyles(stylesOrCreator, options = {}) {
       shouldUpdate.current = true;
     });
 
-    return getClasses(instance.current, props.classes, Component);
-  };
-}
+    const classes = getClasses(instance.current, props.classes, Component);
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      React.useDebugValue(classes);
+    }
+    if (process.env.NODE_ENV !== 'production') {
+      const supportedComponents = [
+        'MuiAvatar',
+        'MuiBadge',
+        'MuiButton',
+        'MuiButtonGroup',
+        'MuiChip',
+        'MuiDivider',
+        'MuiFab',
+        'MuiTypography',
+      ];
 
-export default makeStyles;
+      if (
+        name &&
+        supportedComponents.indexOf(name) >= 0 &&
+        props.variant &&
+        !classes[props.variant]
+      ) {
+        console.error(
+          [
+            `Material-UI: You are using a variant value \`${props.variant}\` for which you didn't define styles.`,
+            // TODO: switch to material-ui.com when v5 is released
+            `Please create a new variant matcher in your theme for this variant. To learn more about matchers visit https://next.material-ui.com/r/custom-component-variants.`,
+          ].join('\n'),
+        );
+      }
+    }
+
+    return classes;
+  };
+
+  return useStyles;
+}

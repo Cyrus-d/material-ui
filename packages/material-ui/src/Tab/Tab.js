@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -6,7 +6,7 @@ import ButtonBase from '../ButtonBase';
 import capitalize from '../utils/capitalize';
 import unsupportedProp from '../utils/unsupportedProp';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     ...theme.typography.button,
@@ -24,7 +24,6 @@ export const styles = theme => ({
     whiteSpace: 'normal',
     textAlign: 'center',
     [theme.breakpoints.up('sm')]: {
-      fontSize: theme.typography.pxToRem(13),
       minWidth: 160,
     },
   },
@@ -99,26 +98,43 @@ const Tab = React.forwardRef(function Tab(props, ref) {
     className,
     disabled = false,
     disableFocusRipple = false,
+    // eslint-disable-next-line react/prop-types
     fullWidth,
     icon,
+    // eslint-disable-next-line react/prop-types
     indicator,
     label,
     onChange,
     onClick,
+    onFocus,
+    // eslint-disable-next-line react/prop-types
     selected,
+    // eslint-disable-next-line react/prop-types
+    selectionFollowsFocus,
+    // eslint-disable-next-line react/prop-types
     textColor = 'inherit',
     value,
     wrapped = false,
     ...other
   } = props;
 
-  const handleChange = event => {
+  const handleClick = (event) => {
     if (onChange) {
       onChange(event, value);
     }
 
     if (onClick) {
       onClick(event);
+    }
+  };
+
+  const handleFocus = (event) => {
+    if (selectionFollowsFocus && !selected && onChange) {
+      onChange(event, value);
+    }
+
+    if (onFocus) {
+      onFocus(event);
     }
   };
 
@@ -141,7 +157,9 @@ const Tab = React.forwardRef(function Tab(props, ref) {
       role="tab"
       aria-selected={selected}
       disabled={disabled}
-      onClick={handleChange}
+      onClick={handleClick}
+      onFocus={handleFocus}
+      tabIndex={selected ? 0 : -1}
       {...other}
     >
       <span className={classes.wrapper}>
@@ -154,6 +172,10 @@ const Tab = React.forwardRef(function Tab(props, ref) {
 });
 
 Tab.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * This prop isn't supported.
    * Use the `component` prop if you need to change the children structure.
@@ -163,7 +185,7 @@ Tab.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -174,27 +196,19 @@ Tab.propTypes = {
   disabled: PropTypes.bool,
   /**
    * If `true`, the  keyboard focus ripple will be disabled.
-   * `disableRipple` must also be true.
    */
   disableFocusRipple: PropTypes.bool,
   /**
    * If `true`, the ripple effect will be disabled.
+   *
+   * ⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure
+   * to highlight the element by applying separate styles with the `focusVisibleClassName`.
    */
   disableRipple: PropTypes.bool,
   /**
-   * @ignore
-   */
-  fullWidth: PropTypes.bool,
-  /**
    * The icon element.
    */
-  icon: PropTypes.node,
-  /**
-   * @ignore
-   * For server-side rendering consideration, we let the selected tab
-   * render the indicator.
-   */
-  indicator: PropTypes.node,
+  icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   /**
    * The label element.
    */
@@ -210,11 +224,7 @@ Tab.propTypes = {
   /**
    * @ignore
    */
-  selected: PropTypes.bool,
-  /**
-   * @ignore
-   */
-  textColor: PropTypes.oneOf(['secondary', 'primary', 'inherit']),
+  onFocus: PropTypes.func,
   /**
    * You can provide your own value. Otherwise, we fallback to the child position index.
    */

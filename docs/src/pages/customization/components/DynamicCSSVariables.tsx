@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -6,7 +6,8 @@ import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles({
   button: {
-    background: 'linear-gradient(45deg, var(--background-start) 30%, var(--background-end) 90%)',
+    background:
+      'linear-gradient(45deg, var(--background-start) 30%, var(--background-end) 90%)',
     borderRadius: 3,
     border: 0,
     color: 'white',
@@ -50,7 +51,7 @@ export default function DynamicCSSVariables() {
         label="Blue"
       />
       <Button className={classes.button} style={color}>
-        {'CSS variables'}
+        CSS variables
       </Button>
     </React.Fragment>
   );

@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import MuiPaper from '@material-ui/core/Paper';
 import { capitalize } from '@material-ui/core/utils';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
+const styles = (theme) => ({
   backgroundLight: {
     backgroundColor: theme.palette.secondary.light,
   },
@@ -21,7 +21,13 @@ const styles = theme => ({
 });
 
 function Paper(props) {
-  const { background = 'light', classes, className, padding = false, ...other } = props;
+  const {
+    background = 'light',
+    classes,
+    className,
+    padding = false,
+    ...other
+  } = props;
   return (
     <MuiPaper
       elevation={0}

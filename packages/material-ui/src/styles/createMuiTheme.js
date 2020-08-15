@@ -36,6 +36,7 @@ function createMuiTheme(options = {}, ...args) {
       spacing,
       shape,
       transitions,
+      variants: {},
       zIndex,
     },
     other,
@@ -68,7 +69,7 @@ function createMuiTheme(options = {}, ...args) {
           if (process.env.NODE_ENV !== 'production') {
             console.error(
               [
-                `Material-UI: the \`${parentKey}\` component increases ` +
+                `Material-UI: The \`${parentKey}\` component increases ` +
                   `the CSS specificity of the \`${key}\` internal state.`,
                 'You can not override it like this: ',
                 JSON.stringify(node, null, 2),

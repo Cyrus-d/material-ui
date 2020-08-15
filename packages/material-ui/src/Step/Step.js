@@ -1,8 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
+import StepperContext from '../Stepper/StepperContext';
+import StepContext from './StepContext';
 
 export const styles = {
   /* Styles applied to the root element. */
@@ -25,21 +27,42 @@ export const styles = {
 
 const Step = React.forwardRef(function Step(props, ref) {
   const {
-    active = false,
-    alternativeLabel,
+    active: activeProp,
     children,
     classes,
     className,
-    completed = false,
-    connector,
-    disabled = false,
+    completed: completedProp,
+    disabled: disabledProp,
+    expanded = false,
     index,
     last,
-    orientation,
     ...other
   } = props;
 
-  return (
+  const { activeStep, connector, alternativeLabel, orientation, nonLinear } = React.useContext(
+    StepperContext,
+  );
+
+  let [active = false, completed = false, disabled = false] = [
+    activeProp,
+    completedProp,
+    disabledProp,
+  ];
+
+  if (activeStep === index) {
+    active = activeProp !== undefined ? activeProp : true;
+  } else if (!nonLinear && activeStep > index) {
+    completed = completedProp !== undefined ? completedProp : true;
+  } else if (!nonLinear && activeStep < index) {
+    disabled = disabledProp !== undefined ? disabledProp : true;
+  }
+
+  const contextValue = React.useMemo(
+    () => ({ index, last, expanded, icon: index + 1, active, completed, disabled }),
+    [index, last, expanded, active, completed, disabled],
+  );
+
+  const newChildren = (
     <div
       className={clsx(
         classes.root,
@@ -53,18 +76,9 @@ const Step = React.forwardRef(function Step(props, ref) {
       ref={ref}
       {...other}
     >
-      {connector &&
-        alternativeLabel &&
-        index !== 0 &&
-        React.cloneElement(connector, {
-          orientation,
-          alternativeLabel,
-          index,
-          active,
-          completed,
-          disabled,
-        })}
-      {React.Children.map(children, child => {
+      {connector && alternativeLabel && index !== 0 ? connector : null}
+
+      {React.Children.map(children, (child) => {
         if (!React.isValidElement(child)) {
           return null;
         }
@@ -73,7 +87,7 @@ const Step = React.forwardRef(function Step(props, ref) {
           if (isFragment(child)) {
             console.error(
               [
-                "Material-UI: the Step component doesn't accept a Fragment as a child.",
+                "Material-UI: The Step component doesn't accept a Fragment as a child.",
                 'Consider providing an array instead.',
               ].join('\n'),
             );
@@ -81,30 +95,35 @@ const Step = React.forwardRef(function Step(props, ref) {
         }
 
         return React.cloneElement(child, {
-          active,
-          alternativeLabel,
-          completed,
-          disabled,
-          last,
-          icon: index + 1,
-          orientation,
           ...child.props,
         });
       })}
     </div>
   );
+
+  return (
+    <StepContext.Provider value={contextValue}>
+      {connector && !alternativeLabel && index !== 0 ? (
+        <React.Fragment>
+          {connector}
+          {newChildren}
+        </React.Fragment>
+      ) : (
+        newChildren
+      )}
+    </StepContext.Provider>
+  );
 });
 
 Step.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * Sets the step as active. Is passed to child components.
    */
   active: PropTypes.bool,
-  /**
-   * @ignore
-   * Set internally by Stepper when it's supplied with the alternativeLabel property.
-   */
-  alternativeLabel: PropTypes.bool,
   /**
    * Should be `Step` sub-components such as `StepLabel`, `StepContent`.
    */
@@ -113,7 +132,7 @@ Step.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -123,28 +142,22 @@ Step.propTypes = {
    */
   completed: PropTypes.bool,
   /**
-   * @ignore
-   * Passed down from Stepper if alternativeLabel is also set.
-   */
-  connector: PropTypes.element,
-  /**
    * Mark the step as disabled, will also disable the button if
    * `StepButton` is a child of `Step`. Is passed to child components.
    */
   disabled: PropTypes.bool,
   /**
-   * @ignore
-   * Used internally for numbering.
+   * Expand the step.
+   */
+  expanded: PropTypes.bool,
+  /**
+   * The position of the step.
    */
   index: PropTypes.number,
   /**
-   * @ignore
+   * If `true`, the Step will be displayed as rendered last.
    */
   last: PropTypes.bool,
-  /**
-   * @ignore
-   */
-  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 };
 
 export default withStyles(styles, { name: 'MuiStep' })(Step);

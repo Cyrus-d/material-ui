@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
@@ -22,7 +22,7 @@ function loadScript(src: string, position: HTMLElement | null, id: string) {
 
 const autocompleteService = { current: null };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   icon: {
     color: theme.palette.text.secondary,
     marginRight: theme.spacing(2),
@@ -30,19 +30,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface PlaceType {
+  description: string;
   structured_formatting: {
+    main_text: string;
     secondary_text: string;
     main_text_matched_substrings: [
       {
         offset: number;
         length: number;
-      }
+      },
     ];
   };
 }
 
 export default function GoogleMaps() {
   const classes = useStyles();
+  const [value, setValue] = React.useState<PlaceType | null>(null);
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState<PlaceType[]>([]);
   const loaded = React.useRef(false);
@@ -59,15 +62,20 @@ export default function GoogleMaps() {
     loaded.current = true;
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
   const fetch = React.useMemo(
     () =>
-      throttle((input, callback) => {
-        (autocompleteService.current as any).getPlacePredictions(input, callback);
-      }, 200),
+      throttle(
+        (
+          request: { input: string },
+          callback: (results?: PlaceType[]) => void,
+        ) => {
+          (autocompleteService.current as any).getPlacePredictions(
+            request,
+            callback,
+          );
+        },
+        200,
+      ),
     [],
   );
 
@@ -82,46 +90,68 @@ export default function GoogleMaps() {
     }
 
     if (inputValue === '') {
-      setOptions([]);
+      setOptions(value ? [value] : []);
       return undefined;
     }
 
     fetch({ input: inputValue }, (results?: PlaceType[]) => {
       if (active) {
-        setOptions(results || []);
+        let newOptions = [] as PlaceType[];
+
+        if (value) {
+          newOptions = [value];
+        }
+
+        if (results) {
+          newOptions = [...newOptions, ...results];
+        }
+
+        setOptions(newOptions);
       }
     });
 
     return () => {
       active = false;
     };
-  }, [inputValue, fetch]);
+  }, [value, inputValue, fetch]);
 
   return (
     <Autocomplete
       id="google-map-demo"
       style={{ width: 300 }}
-      getOptionLabel={option => (typeof option === 'string' ? option : option.description)}
-      filterOptions={x => x}
+      getOptionLabel={(option) =>
+        typeof option === 'string' ? option : option.description
+      }
+      filterOptions={(x) => x}
       options={options}
       autoComplete
       includeInputInList
-      freeSolo
-      disableOpenOnFocus
-      renderInput={params => (
+      filterSelectedOptions
+      value={value}
+      onChange={(event: any, newValue: PlaceType | null) => {
+        setOptions(newValue ? [newValue, ...options] : options);
+        setValue(newValue);
+      }}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
+      renderInput={(params) => (
         <TextField
           {...params}
           label="Add a location"
           variant="outlined"
           fullWidth
-          onChange={handleChange}
         />
       )}
-      renderOption={option => {
-        const matches = option.structured_formatting.main_text_matched_substrings;
+      renderOption={(option) => {
+        const matches =
+          option.structured_formatting.main_text_matched_substrings;
         const parts = parse(
           option.structured_formatting.main_text,
-          matches.map((match: any) => [match.offset, match.offset + match.length]),
+          matches.map((match: any) => [
+            match.offset,
+            match.offset + match.length,
+          ]),
         );
 
         return (
@@ -131,7 +161,12 @@ export default function GoogleMaps() {
             </Grid>
             <Grid item xs>
               {parts.map((part, index) => (
-                <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                <span
+                  key={index}
+                  style={{
+                    fontWeight: part.highlight ? 700 : 400,
+                  }}
+                >
                   {part.text}
                 </span>
               ))}

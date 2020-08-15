@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -27,16 +27,32 @@ const OuterElementType = React.forwardRef((props, ref) => {
   return <div ref={ref} {...props} {...outerProps} />;
 });
 
+function useResetCache(data) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (ref.current != null) {
+      ref.current.resetAfterIndex(0, true);
+    }
+  }, [data]);
+  return ref;
+}
+
 // Adapter for react-window
-const ListboxComponent = React.forwardRef(function ListboxComponent(props, ref) {
+const ListboxComponent = React.forwardRef(function ListboxComponent(
+  props,
+  ref,
+) {
   const { children, ...other } = props;
   const itemData = React.Children.toArray(children);
   const theme = useTheme();
-  const smUp = useMediaQuery(theme.breakpoints.up('sm'), { noSsr: true });
+  const smUp = useMediaQuery(theme.breakpoints.up('sm'), {
+    noSsr: true,
+  });
+
   const itemCount = itemData.length;
   const itemSize = smUp ? 36 : 48;
 
-  const getChildSize = child => {
+  const getChildSize = (child) => {
     if (React.isValidElement(child) && child.type === ListSubheader) {
       return 48;
     }
@@ -51,6 +67,8 @@ const ListboxComponent = React.forwardRef(function ListboxComponent(props, ref) 
     return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
   };
 
+  const gridRef = useResetCache(itemCount);
+
   return (
     <div ref={ref}>
       <OuterElementContext.Provider value={other}>
@@ -58,10 +76,10 @@ const ListboxComponent = React.forwardRef(function ListboxComponent(props, ref) 
           itemData={itemData}
           height={getHeight() + 2 * LISTBOX_PADDING}
           width="100%"
-          key={itemCount}
+          ref={gridRef}
           outerElementType={OuterElementType}
           innerElementType="ul"
-          itemSize={index => getChildSize(itemData[index])}
+          itemSize={(index) => getChildSize(itemData[index])}
           overscanCount={5}
           itemCount={itemCount}
         >
@@ -77,7 +95,8 @@ ListboxComponent.propTypes = {
 };
 
 function random(length) {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
 
   for (let i = 0; i < length; i += 1) {
@@ -89,6 +108,7 @@ function random(length) {
 
 const useStyles = makeStyles({
   listbox: {
+    boxSizing: 'border-box',
     '& ul': {
       padding: 0,
       margin: 0,
@@ -100,9 +120,9 @@ const OPTIONS = Array.from(new Array(10000))
   .map(() => random(10 + Math.ceil(Math.random() * 20)))
   .sort((a, b) => a.toUpperCase().localeCompare(b.toUpperCase()));
 
-const renderGroup = params => [
+const renderGroup = (params) => [
   <ListSubheader key={params.key} component="div">
-    {params.key}
+    {params.group}
   </ListSubheader>,
   params.children,
 ];
@@ -119,11 +139,11 @@ export default function Virtualize() {
       ListboxComponent={ListboxComponent}
       renderGroup={renderGroup}
       options={OPTIONS}
-      groupBy={option => option[0].toUpperCase()}
-      renderInput={params => (
-        <TextField {...params} variant="outlined" label="10,000 options" fullWidth />
+      groupBy={(option) => option[0].toUpperCase()}
+      renderInput={(params) => (
+        <TextField {...params} variant="outlined" label="10,000 options" />
       )}
-      renderOption={option => <Typography noWrap>{option}</Typography>}
+      renderOption={(option) => <Typography noWrap>{option}</Typography>}
     />
   );
 }

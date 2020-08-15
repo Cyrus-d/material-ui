@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { rgbToHex, withStyles, useTheme } from '@material-ui/core/styles';
 import * as colors from '@material-ui/core/colors';
@@ -11,14 +11,32 @@ import Button from '@material-ui/core/Button';
 import CheckIcon from '@material-ui/icons/Check';
 import Slider from '@material-ui/core/Slider';
 import { capitalize } from '@material-ui/core/utils';
-import ColorDemo from './ColorDemo';
 import { DispatchContext } from 'docs/src/modules/components/ThemeContext';
+import ColorDemo from './ColorDemo';
 
-const defaults = { primary: '#2196f3', secondary: '#f50057' };
+const defaults = {
+  primary: '#2196f3',
+  secondary: '#f50057',
+};
 const hues = Object.keys(colors).slice(1, 17);
-const shades = [900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 'A700', 'A400', 'A200', 'A100'];
+const shades = [
+  900,
+  800,
+  700,
+  600,
+  500,
+  400,
+  300,
+  200,
+  100,
+  50,
+  'A700',
+  'A400',
+  'A200',
+  'A100',
+];
 
-const styles = theme => ({
+const styles = (theme) => ({
   radio: {
     padding: 0,
   },
@@ -79,16 +97,18 @@ function ColorTool(props) {
     secondaryShade: 11,
   });
 
-  const handleChangeColor = name => event => {
-    const isRgb = string => /rgb\([0-9]{1,3}\s*,\s*[0-9]{1,3}\s*,\s*[0-9]{1,3}\)/i.test(string);
+  const handleChangeColor = (name) => (event) => {
+    const isRgb = (string) =>
+      /rgb\([0-9]{1,3}\s*,\s*[0-9]{1,3}\s*,\s*[0-9]{1,3}\)/i.test(string);
 
-    const isHex = string => /^#?([0-9a-f]{3})$|^#?([0-9a-f]){6}$/i.test(string);
+    const isHex = (string) =>
+      /^#?([0-9a-f]{3})$|^#?([0-9a-f]){6}$/i.test(string);
 
     let {
       target: { value: color },
     } = event;
 
-    setState(prevState => ({
+    setState((prevState) => ({
       ...prevState,
       [`${name}Input`]: color,
     }));
@@ -105,17 +125,15 @@ function ColorTool(props) {
     }
 
     if (isValidColor) {
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
         [name]: color,
       }));
     }
   };
 
-  const handleChangeHue = name => event => {
-    const {
-      target: { value: hue },
-    } = event;
+  const handleChangeHue = (name) => (event) => {
+    const hue = event.target.value;
     const color = colors[hue][shades[state[`${name}Shade`]]];
 
     setState({
@@ -126,7 +144,7 @@ function ColorTool(props) {
     });
   };
 
-  const handleChangeShade = name => (event, shade) => {
+  const handleChangeShade = (name) => (event, shade) => {
     const color = colors[state[`${name}Hue`]][shades[shade]];
     setState({
       ...state,
@@ -147,7 +165,9 @@ function ColorTool(props) {
       payload: { paletteColors },
     });
 
-    document.cookie = `paletteColors=${JSON.stringify(paletteColors)};path=/;max-age=31536000`;
+    document.cookie = `paletteColors=${JSON.stringify(
+      paletteColors,
+    )};path=/;max-age=31536000`;
   };
 
   const handleResetDocsColors = () => {
@@ -156,12 +176,14 @@ function ColorTool(props) {
     document.cookie = 'paletteColors=;path=/;max-age=0';
   };
 
-  const colorBar = color => {
-    const background = theme.palette.augmentColor({ main: color });
+  const colorBar = (color) => {
+    const background = theme.palette.augmentColor({
+      main: color,
+    });
 
     return (
       <Grid container className={classes.colorBar}>
-        {['dark', 'main', 'light'].map(key => (
+        {['dark', 'main', 'light'].map((key) => (
           <div
             className={classes.colorSquare}
             style={{ backgroundColor: background[key] }}
@@ -169,7 +191,9 @@ function ColorTool(props) {
           >
             <Typography
               variant="caption"
-              style={{ color: theme.palette.getContrastText(background[key]) }}
+              style={{
+                color: theme.palette.getContrastText(background[key]),
+              }}
             >
               {rgbToHex(background[key])}
             </Typography>
@@ -179,23 +203,25 @@ function ColorTool(props) {
     );
   };
 
-  const colorPicker = intent => {
+  const colorPicker = (intent) => {
     const intentInput = state[`${intent}Input`];
     const intentShade = state[`${intent}Shade`];
     const color = state[`${intent}`];
 
     return (
       <Grid item xs={12} sm={6} md={4}>
-        <Typography gutterBottom variant="h6">
+        <Typography
+          component="label"
+          gutterBottom
+          htmlFor={intent}
+          variant="h6"
+        >
           {capitalize(intent)}
         </Typography>
         <Input
           id={intent}
           value={intentInput}
           onChange={handleChangeColor(intent)}
-          inputProps={{
-            'aria-label': `${capitalize(intent)} color`,
-          }}
           fullWidth
         />
         <div className={classes.sliderContainer}>
@@ -212,9 +238,11 @@ function ColorTool(props) {
           <Typography>{shades[intentShade]}</Typography>
         </div>
         <div className={classes.swatch}>
-          {hues.map(hue => {
+          {hues.map((hue) => {
             const shade =
-              intent === 'primary' ? shades[state.primaryShade] : shades[state.secondaryShade];
+              intent === 'primary'
+                ? shades[state.primaryShade]
+                : shades[state.secondaryShade];
             const backgroundColor = colors[hue][shade];
 
             return (
@@ -227,9 +255,17 @@ function ColorTool(props) {
                   value={hue}
                   name={intent}
                   aria-labelledby={`tooltip-${intent}-${hue}`}
-                  icon={<div className={classes.radioIcon} style={{ backgroundColor }} />}
+                  icon={
+                    <div
+                      className={classes.radioIcon}
+                      style={{ backgroundColor }}
+                    />
+                  }
                   checkedIcon={
-                    <div className={classes.radioIconSelected} style={{ backgroundColor }}>
+                    <div
+                      className={classes.radioIconSelected}
+                      style={{ backgroundColor }}
+                    >
                       <CheckIcon style={{ fontSize: 30 }} />
                     </div>
                   }
@@ -251,12 +287,11 @@ function ColorTool(props) {
         <ColorDemo data={state} />
       </Grid>
       <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={handleChangeDocsColors}>
+        <Button variant="contained" onClick={handleChangeDocsColors}>
           Set Docs Colors
         </Button>
         <Button
           variant="outlined"
-          color="primary"
           onClick={handleResetDocsColors}
           className={classes.button}
         >

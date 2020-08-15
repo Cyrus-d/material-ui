@@ -1,8 +1,8 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     '& > *': {
@@ -24,9 +24,17 @@ export default function ImageAvatars() {
 
   return (
     <div className={classes.root}>
-      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.small} />
+      <Avatar
+        alt="Remy Sharp"
+        src="/static/images/avatar/1.jpg"
+        className={classes.small}
+      />
       <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.large} />
+      <Avatar
+        alt="Remy Sharp"
+        src="/static/images/avatar/1.jpg"
+        className={classes.large}
+      />
     </div>
   );
 }

@@ -1,9 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, createClientRender, describeConformance } from 'test/utils';
 import Typography from '../Typography';
 import InputAdornment from './InputAdornment';
 import TextField from '../TextField';
@@ -11,12 +8,11 @@ import FormControl from '../FormControl';
 import Input from '../Input';
 
 describe('<InputAdornment />', () => {
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<InputAdornment position="start">foo</InputAdornment>);
   });
 
@@ -26,7 +22,6 @@ describe('<InputAdornment />', () => {
     mount,
     refInstanceof: window.HTMLDivElement,
     testComponentPropWith: 'span',
-    after: () => mount.cleanUp(),
   }));
 
   it('should wrap text children in a Typography', () => {
@@ -34,7 +29,7 @@ describe('<InputAdornment />', () => {
     const typographyClasses = getClasses(<Typography />);
     const typography = container.querySelector(`.${typographyClasses.root}`);
 
-    expect(typography).to.be.ok;
+    expect(typography).not.to.equal(null);
     expect(typography).to.have.text('foo');
   });
 
@@ -129,16 +124,8 @@ describe('<InputAdornment />', () => {
       expect(adornment).to.have.class(classes.filled);
     });
 
-    describe('warnings', () => {
-      before(() => {
-        consoleErrorMock.spy();
-      });
-
-      after(() => {
-        consoleErrorMock.reset();
-      });
-
-      it('should warn if the variant supplied is equal to the variant inferred', () => {
+    it('should warn if the variant supplied is equal to the variant inferred', () => {
+      expect(() => {
         render(
           <FormControl variant="filled">
             <Input
@@ -150,12 +137,10 @@ describe('<InputAdornment />', () => {
             />
           </FormControl>,
         );
-        expect(consoleErrorMock.callCount()).to.equal(1);
-        expect(consoleErrorMock.args()[0][0]).to.equal(
-          'Material-UI: The `InputAdornment` variant infers the variant ' +
-            'prop you do not have to provide one.',
-        );
-      });
+      }).toErrorDev(
+        'Material-UI: The `InputAdornment` variant infers the variant ' +
+          'prop you do not have to provide one.',
+      );
     });
   });
 
@@ -178,7 +163,7 @@ describe('<InputAdornment />', () => {
     );
     const typographyClasses = getClasses(<Typography />);
 
-    expect(container.querySelector(`.${typographyClasses.root}`)).to.be.null;
+    expect(container.querySelector(`.${typographyClasses.root}`)).to.equal(null);
   });
 
   it('should render children', () => {

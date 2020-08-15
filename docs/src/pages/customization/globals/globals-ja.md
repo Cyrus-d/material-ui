@@ -23,7 +23,33 @@
 
 {{"demo": "pages/customization/globals/GlobalCss.js"}}
 
-各コンポーネントのカスタマイズポイントの一覧は、 **Component API**のセクションに記載されています。 たとえば、 [Button](/api/button/#css)はこちらです。 あるいは、いつでも[実装を調べることができます](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/Button/Button.js)。
+各コンポーネントのカスタマイズポイントの一覧は、 **Component API**のセクションに記載されています。 たとえば、 [Button](/api/button/#css)はこちらです。 あるいは、いつでも[実装を調べることができます](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/Button/Button.js)。
+
+## Global CSS
+
+If you are using the [CssBaseline](/components/css-baseline/) component to apply global resets, it can also be used to apply global styles. 例えば：
+
+```jsx
+const theme = createMuiTheme({
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        html: {
+          WebkitFontSmoothing: 'auto',
+        },
+      },
+    },
+  },
+});
+
+// ...
+return (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    {children}
+  </ThemeProvider>
+);
+```
 
 ## Default props
 

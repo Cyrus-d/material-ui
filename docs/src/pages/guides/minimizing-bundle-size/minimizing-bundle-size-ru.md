@@ -6,15 +6,19 @@
 
 Размер пакета Material-UI достаточно внушителен. Size snapshots are taken on every commit for every package and critical parts of those packages ([view the latest snapshot](/size-snapshot)). Combined with [dangerJS](https://danger.systems/js/) we can inspect [detailed bundle size changes](https://github.com/mui-org/material-ui/pull/14638#issuecomment-466658459) on every Pull Request.
 
-## How to reduce the bundle size?
+## When and how to use tree-shaking?
 
-For convenience, Material-UI exposes its full API on the top-level `material-ui` import. If you're using ES6 modules and a bundler that supports tree-shaking ([`webpack` >= 2.x](https://webpack.js.org/guides/tree-shaking/), [`parcel` with a flag](https://en.parceljs.org/cli.html#enable-experimental-scope-hoisting/tree-shaking-support)) you can safely use named imports and expect only a minimal set of Material-UI components in your bundle:
+Tree-shaking of Material-UI works out of the box in modern frameworks. Material-UI exposes its full API on the top-level `material-ui` import. If you're using ES6 modules and a bundler that supports tree-shaking ([`webpack` >= 2.x](https://webpack.js.org/guides/tree-shaking/), [`parcel` with a flag](https://en.parceljs.org/cli.html#enable-experimental-scope-hoisting/tree-shaking-support)) you can safely use named imports and still get an optimised bundle size automatically:
 
 ```js
 import { Button, TextField } from '@material-ui/core';
 ```
 
-⚠️ Be aware that tree-shaking is an optimization that is usually only applied to production bundles. Development bundles will contain the full library which can lead to **slower startup times**. This is especially noticeable if you import from `@material-ui/icons`. Startup times can be approximately 6x slower than without named imports from the top-level API.
+⚠️ The following instructions are only needed if you want to optimize your development startup times or if you are using an older bundler that doesn't support tree-shaking.
+
+## Development environment
+
+Development bundles can contain the full library which can lead to **slower startup times**. This is especially noticeable if you import from `@material-ui/icons`. Startup times can be approximately 6x slower than without named imports from the top-level API.
 
 If this is an issue for you, you have various options:
 
@@ -36,7 +40,7 @@ import { Button, TextField } from '@material-ui/core';
 
 This is the option we document in all the demos, since it requires no configuration. It is encouraged for library authors extending the components. Head to [Option 2](#option-2) for the approach that yields the best DX and UX.
 
-While importing directly in this manner doesn't use the exports in [`@material-ui/core/index.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/index.js), this file can serve as a handy reference as to which modules are public.
+While importing directly in this manner doesn't use the exports in [`@material-ui/core/index.js`](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/index.js), this file can serve as a handy reference as to which modules are public.
 
 Be aware that we only support first and second level imports. Anything deeper is considered private and can cause issues, such as module duplication in your bundle.
 
@@ -54,6 +58,21 @@ import Tabs from '@material-ui/core/Tabs';
 // ❌ NOT OK
 import TabIndicator from '@material-ui/core/Tabs/TabIndicator';
 //                                               ^^^^^^^^^^^^ 3rd level
+```
+
+If you're using `eslint` you can catch problematic imports with the [`no-restricted-imports` rule](https://eslint.org/docs/rules/no-restricted-imports). The following `.eslintrc` configuration will highlight problematic imports from `@material-ui` packages:
+
+```json
+{
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@material-ui/*/*/*", "!@material-ui/core/test-utils/*"]
+      }
+    ]
+  }
+}
 ```
 
 ### Option 2
@@ -182,7 +201,7 @@ If you are using Create React App, you will need to use a couple of projects tha
 
 #### 2. Convert all your imports
 
-Finally, you can convert your existing codebase to this option with this [top-level-imports](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-codemod/README.md#top-level-imports) codemod. It will perform the following diffs:
+Finally, you can convert your existing codebase to this option with this [top-level-imports](https://github.com/mui-org/material-ui/blob/next/packages/material-ui-codemod/README.md#top-level-imports) codemod. It will perform the following diffs:
 
 ```diff
 -import Button from '@material-ui/core/Button';

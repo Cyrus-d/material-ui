@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   createMuiTheme,
   createStyles,
@@ -18,8 +18,8 @@ const BootstrapButton = withStyles({
     padding: '6px 12px',
     border: '1px solid',
     lineHeight: 1.5,
-    backgroundColor: '#007bff',
-    borderColor: '#007bff',
+    backgroundColor: '#0063cc',
+    borderColor: '#0063cc',
     fontFamily: [
       '-apple-system',
       'BlinkMacSystemFont',
@@ -77,15 +77,19 @@ export default function CustomizedButtons() {
 
   return (
     <div>
-      <ColorButton variant="contained" color="primary" className={classes.margin}>
+      <ColorButton variant="contained" className={classes.margin}>
         Custom CSS
       </ColorButton>
       <ThemeProvider theme={theme}>
-        <Button variant="contained" color="primary" className={classes.margin}>
+        <Button variant="contained" className={classes.margin}>
           Theme Provider
         </Button>
       </ThemeProvider>
-      <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin}>
+      <BootstrapButton
+        variant="contained"
+        disableRipple
+        className={classes.margin}
+      >
         Bootstrap
       </BootstrapButton>
     </div>

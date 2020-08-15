@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,7 +18,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -32,7 +32,9 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3, 2),
     marginTop: 'auto',
     backgroundColor:
-      theme.palette.type === 'dark' ? theme.palette.grey[800] : theme.palette.grey[200],
+      theme.palette.type === 'light'
+        ? theme.palette.grey[200]
+        : theme.palette.grey[800],
   },
 }));
 
@@ -54,7 +56,9 @@ export default function StickyFooter() {
       </Container>
       <footer className={classes.footer}>
         <Container maxWidth="sm">
-          <Typography variant="body1">My sticky footer can be found here.</Typography>
+          <Typography variant="body1">
+            My sticky footer can be found here.
+          </Typography>
           <Copyright />
         </Container>
       </footer>

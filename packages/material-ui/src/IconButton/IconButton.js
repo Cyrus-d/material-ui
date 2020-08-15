@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { chainPropTypes } from '@material-ui/utils';
@@ -7,7 +7,7 @@ import { fade } from '../styles/colorManipulator';
 import ButtonBase from '../ButtonBase';
 import capitalize from '../utils/capitalize';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     textAlign: 'center',
@@ -130,18 +130,22 @@ const IconButton = React.forwardRef(function IconButton(props, ref) {
 });
 
 IconButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The icon element.
    */
-  children: chainPropTypes(PropTypes.node, props => {
+  children: chainPropTypes(PropTypes.node, (props) => {
     const found = React.Children.toArray(props.children).some(
-      child => React.isValidElement(child) && child.props.onClick,
+      (child) => React.isValidElement(child) && child.props.onClick,
     );
 
     if (found) {
       return new Error(
         [
-          'Material-UI: you are providing an onClick event listener ' +
+          'Material-UI: You are providing an onClick event listener ' +
             'to a child of a button element.',
           'Firefox will never trigger the event.',
           'You should move the onClick listener to the parent button element.',
@@ -156,7 +160,7 @@ IconButton.propTypes = {
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -171,11 +175,13 @@ IconButton.propTypes = {
   disabled: PropTypes.bool,
   /**
    * If `true`, the  keyboard focus ripple will be disabled.
-   * `disableRipple` must also be true.
    */
   disableFocusRipple: PropTypes.bool,
   /**
    * If `true`, the ripple effect will be disabled.
+   *
+   * ⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure
+   * to highlight the element by applying separate styles with the `focusVisibleClassName`.
    */
   disableRipple: PropTypes.bool,
   /**
@@ -184,12 +190,12 @@ IconButton.propTypes = {
    * side of the icon with content above or below, without ruining the border
    * size and shape).
    */
-  edge: PropTypes.oneOf(['start', 'end', false]),
+  edge: PropTypes.oneOf(['end', 'start', false]),
   /**
    * The size of the button.
    * `small` is equivalent to the dense button styling.
    */
-  size: PropTypes.oneOf(['small', 'medium']),
+  size: PropTypes.oneOf(['medium', 'small']),
 };
 
 export default withStyles(styles, { name: 'MuiIconButton' })(IconButton);

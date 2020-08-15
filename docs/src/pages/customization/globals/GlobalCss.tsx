@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -7,7 +7,7 @@ const theme = createMuiTheme({
     // Style sheet name ⚛️
     MuiButton: {
       // Name of the rule
-      text: {
+      textPrimary: {
         // Some CSS
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
         borderRadius: 3,

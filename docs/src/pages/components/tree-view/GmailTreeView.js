@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
@@ -14,13 +14,9 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-const useTreeItemStyles = makeStyles(theme => ({
+const useTreeItemStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.text.secondary,
-    '&:focus > $content': {
-      backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey[400]})`,
-      color: 'var(--tree-view-color)',
-    },
   },
   content: {
     color: theme.palette.text.secondary,
@@ -28,8 +24,15 @@ const useTreeItemStyles = makeStyles(theme => ({
     borderBottomRightRadius: theme.spacing(2),
     paddingRight: theme.spacing(1),
     fontWeight: theme.typography.fontWeightMedium,
-    '$expanded > &': {
+    '&$expanded': {
       fontWeight: theme.typography.fontWeightRegular,
+    },
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    '&$focused, &$selected, &$selected$focused': {
+      backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.selected})`,
+      color: 'var(--tree-view-color)',
     },
   },
   group: {
@@ -39,6 +42,8 @@ const useTreeItemStyles = makeStyles(theme => ({
     },
   },
   expanded: {},
+  selected: {},
+  focused: {},
   label: {
     fontWeight: 'inherit',
     color: 'inherit',
@@ -46,7 +51,7 @@ const useTreeItemStyles = makeStyles(theme => ({
   labelRoot: {
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(0.5, 0),
+    padding: theme.spacing(0.5, 0, 0.5, 0.5),
   },
   labelIcon: {
     marginRight: theme.spacing(1),
@@ -59,7 +64,14 @@ const useTreeItemStyles = makeStyles(theme => ({
 
 function StyledTreeItem(props) {
   const classes = useTreeItemStyles();
-  const { labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other } = props;
+  const {
+    bgColor,
+    color,
+    labelIcon: LabelIcon,
+    labelInfo,
+    labelText,
+    ...other
+  } = props;
 
   return (
     <TreeItem
@@ -82,6 +94,8 @@ function StyledTreeItem(props) {
         root: classes.root,
         content: classes.content,
         expanded: classes.expanded,
+        selected: classes.selected,
+        focused: classes.focused,
         group: classes.group,
         label: classes.label,
       }}
@@ -111,6 +125,7 @@ export default function GmailTreeView() {
 
   return (
     <TreeView
+      aria-label="gmail"
       className={classes.root}
       defaultExpanded={['3']}
       defaultCollapseIcon={<ArrowDropDownIcon />}

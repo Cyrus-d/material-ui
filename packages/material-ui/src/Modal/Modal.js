@@ -1,8 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { getThemeProps, useTheme } from '@material-ui/styles';
-import { elementAcceptingRef } from '@material-ui/utils';
+import { elementAcceptingRef, HTMLElementType } from '@material-ui/utils';
 import ownerDocument from '../utils/ownerDocument';
 import Portal from '../Portal';
 import createChainedFunction from '../utils/createChainedFunction';
@@ -10,12 +9,11 @@ import useForkRef from '../utils/useForkRef';
 import useEventCallback from '../utils/useEventCallback';
 import zIndex from '../styles/zIndex';
 import ModalManager, { ariaHidden } from './ModalManager';
-import TrapFocus from './TrapFocus';
+import TrapFocus from '../Unstable_TrapFocus';
 import SimpleBackdrop from './SimpleBackdrop';
 
 function getContainer(container) {
-  container = typeof container === 'function' ? container() : container;
-  return ReactDOM.findDOMNode(container);
+  return typeof container === 'function' ? container() : container;
 }
 
 function getHasTransition(props) {
@@ -26,7 +24,7 @@ function getHasTransition(props) {
 // Modals don't open on the server so this won't conflict with concurrent requests.
 const defaultManager = new ModalManager();
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     position: 'fixed',
@@ -73,6 +71,8 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
     disableScrollLock = false,
     hideBackdrop = false,
     keepMounted = false,
+    // private
+    // eslint-disable-next-line react/prop-types
     manager = defaultManager,
     onBackdropClick,
     onClose,
@@ -116,7 +116,7 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
 
   const isTopModal = React.useCallback(() => manager.isTopModal(getModal()), [manager]);
 
-  const handlePortalRef = useEventCallback(node => {
+  const handlePortalRef = useEventCallback((node) => {
     mountNodeRef.current = node;
 
     if (!node) {
@@ -168,7 +168,7 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
     }
   };
 
-  const handleBackdropClick = event => {
+  const handleBackdropClick = (event) => {
     if (event.target !== event.currentTarget) {
       return;
     }
@@ -182,10 +182,10 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
     }
   };
 
-  const handleKeyDown = event => {
+  const handleKeyDown = (event) => {
     // The handler doesn't take event.defaultPrevented into account:
     //
-    // event.preventDefault() is meant to stop default behaviours like
+    // event.preventDefault() is meant to stop default behaviors like
     // clicking a checkbox to check it, hitting a button to submit a form,
     // and hitting left arrow to move the cursor in a text input etc.
     // Only special HTML elements have these default behaviors.
@@ -193,15 +193,17 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
       return;
     }
 
-    // Swallow the event, in case someone is listening for the escape key on the body.
-    event.stopPropagation();
-
     if (onEscapeKeyDown) {
       onEscapeKeyDown(event);
     }
 
-    if (!disableEscapeKeyDown && onClose) {
-      onClose(event, 'escapeKeyDown');
+    if (!disableEscapeKeyDown) {
+      // Swallow the event, in case someone is listening for the escape key on the body.
+      event.stopPropagation();
+
+      if (onClose) {
+        onClose(event, 'escapeKeyDown');
+      }
     }
   };
 
@@ -220,11 +222,11 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
   return (
     <Portal ref={handlePortalRef} container={container} disablePortal={disablePortal}>
       {/*
-          Marking an element with the role presentation indicates to assistive technology
-          that this element should be ignored; it exists to support the web application and
-          is not meant for humans to interact with directly.
-          https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/no-static-element-interactions.md
-        */}
+       * Marking an element with the role presentation indicates to assistive technology
+       * that this element should be ignored; it exists to support the web application and
+       * is not meant for humans to interact with directly.
+       * https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/no-static-element-interactions.md
+       */}
       <div
         data-mui-test="Modal"
         ref={handleRef}
@@ -240,6 +242,7 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
         {hideBackdrop ? null : (
           <BackdropComponent open={open} onClick={handleBackdropClick} {...BackdropProps} />
         )}
+
         <TrapFocus
           disableEnforceFocus={disableEnforceFocus}
           disableAutoFocus={disableAutoFocus}
@@ -256,6 +259,10 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
 });
 
 Modal.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * A backdrop component. This prop enables custom backdrop rendering.
    */
@@ -273,10 +280,16 @@ Modal.propTypes = {
    */
   closeAfterTransition: PropTypes.bool,
   /**
-   * A node, component instance, or function that returns either.
+   * A HTML element or function that returns one.
    * The `container` will have the portal children appended to it.
+   *
+   * By default, it uses the body of the top-level document object,
+   * so it's simply `document.body` most of the time.
    */
-  container: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  container: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    HTMLElementType,
+    PropTypes.func,
+  ]),
   /**
    * If `true`, the modal will not automatically shift focus to itself when it opens, and
    * replace it to the last focused element when it closes.
@@ -287,7 +300,7 @@ Modal.propTypes = {
    */
   disableAutoFocus: PropTypes.bool,
   /**
-   * If `true`, clicking the backdrop will not fire any callback.
+   * If `true`, clicking the backdrop will not fire `onClose`.
    */
   disableBackdropClick: PropTypes.bool,
   /**
@@ -298,12 +311,11 @@ Modal.propTypes = {
    */
   disableEnforceFocus: PropTypes.bool,
   /**
-   * If `true`, hitting escape will not fire any callback.
+   * If `true`, hitting escape will not fire `onClose`.
    */
   disableEscapeKeyDown: PropTypes.bool,
   /**
-   * Disable the portal behavior.
-   * The children stay within it's parent DOM hierarchy.
+   * The `children` will be inside the DOM hierarchy of the parent component.
    */
   disablePortal: PropTypes.bool,
   /**
@@ -325,10 +337,6 @@ Modal.propTypes = {
    * when you want to maximize the responsiveness of the Modal.
    */
   keepMounted: PropTypes.bool,
-  /**
-   * @ignore
-   */
-  manager: PropTypes.object,
   /**
    * Callback fired when the backdrop is clicked.
    */

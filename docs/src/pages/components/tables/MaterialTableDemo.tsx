@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import MaterialTable, { Column } from 'material-table';
 
 interface Row {
@@ -18,7 +18,11 @@ export default function MaterialTableDemo() {
     columns: [
       { title: 'Name', field: 'name' },
       { title: 'Surname', field: 'surname' },
-      { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
+      {
+        title: 'Birth Year',
+        field: 'birthYear',
+        type: 'numeric',
+      },
       {
         title: 'Birth Place',
         field: 'birthCity',
@@ -26,7 +30,12 @@ export default function MaterialTableDemo() {
       },
     ],
     data: [
-      { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
+      {
+        name: 'Mehmet',
+        surname: 'Baran',
+        birthYear: 1987,
+        birthCity: 63,
+      },
       {
         name: 'Zerya Betül',
         surname: 'Baran',
@@ -42,11 +51,11 @@ export default function MaterialTableDemo() {
       columns={state.columns}
       data={state.data}
       editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
+        onRowAdd: (newData) =>
+          new Promise((resolve) => {
             setTimeout(() => {
               resolve();
-              setState(prevState => {
+              setState((prevState) => {
                 const data = [...prevState.data];
                 data.push(newData);
                 return { ...prevState, data };
@@ -54,11 +63,11 @@ export default function MaterialTableDemo() {
             }, 600);
           }),
         onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
+          new Promise((resolve) => {
             setTimeout(() => {
               resolve();
               if (oldData) {
-                setState(prevState => {
+                setState((prevState) => {
                   const data = [...prevState.data];
                   data[data.indexOf(oldData)] = newData;
                   return { ...prevState, data };
@@ -66,11 +75,11 @@ export default function MaterialTableDemo() {
               }
             }, 600);
           }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
+        onRowDelete: (oldData) =>
+          new Promise((resolve) => {
             setTimeout(() => {
               resolve();
-              setState(prevState => {
+              setState((prevState) => {
                 const data = [...prevState.data];
                 data.splice(data.indexOf(oldData), 1);
                 return { ...prevState, data };

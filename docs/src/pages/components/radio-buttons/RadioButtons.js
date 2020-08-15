@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import Radio from '@material-ui/core/Radio';
@@ -11,12 +11,12 @@ const GreenRadio = withStyles({
     },
   },
   checked: {},
-})(props => <Radio color="default" {...props} />);
+})((props) => <Radio color="default" {...props} />);
 
 export default function RadioButtons() {
   const [selectedValue, setSelectedValue] = React.useState('a');
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
 

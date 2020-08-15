@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,6 +13,9 @@ const TAX_RATE = 0.07;
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
+  },
+  hideBorder: {
+    border: 0,
   },
 });
 
@@ -64,7 +67,7 @@ export default function SpanningTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {rows.map((row) => (
             <TableRow key={row.desc}>
               <TableCell>{row.desc}</TableCell>
               <TableCell align="right">{row.qty}</TableCell>
@@ -80,7 +83,9 @@ export default function SpanningTable() {
           </TableRow>
           <TableRow>
             <TableCell>Tax</TableCell>
-            <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
+            <TableCell align="right">{`${(TAX_RATE * 100).toFixed(
+              0,
+            )} %`}</TableCell>
             <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
           </TableRow>
           <TableRow>

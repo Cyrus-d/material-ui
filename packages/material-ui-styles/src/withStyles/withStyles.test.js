@@ -1,48 +1,34 @@
-import { assert } from 'chai';
+import { expect } from 'chai';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { stub } from 'sinon';
 import { SheetsRegistry } from 'jss';
 import { Input } from '@material-ui/core';
-import { createMount } from '@material-ui/core/test-utils';
+import { createClientRender, screen } from 'test/utils';
 import { isMuiElement } from '@material-ui/core/utils';
 import { createMuiTheme } from '@material-ui/core/styles';
-// import consoleErrorMock from 'test/utils/consoleErrorMock';
 import StylesProvider from '../StylesProvider';
 import createGenerateClassName from '../createGenerateClassName';
 import ThemeProvider from '../ThemeProvider';
 import withStyles from './withStyles';
 
 describe('withStyles', () => {
-  let mount;
-  let generateClassName;
-
-  before(() => {
-    // StrictModeViolation: uses makeStyles
-    mount = createMount({ strict: false });
-  });
-
-  beforeEach(() => {
-    generateClassName = createGenerateClassName();
-  });
-
-  after(() => {
-    mount.cleanUp();
-  });
+  // StrictModeViolation: uses makeStyles
+  const render = createClientRender({ strict: false });
 
   it('hoist statics', () => {
     const Test = () => null;
     Test.someStatic = 'will not get hoisted';
     const TestWithStyles = withStyles({})(Test);
-    assert.strictEqual(TestWithStyles.someStatic, Test.someStatic);
+    expect(TestWithStyles.someStatic).to.equal(Test.someStatic);
   });
 
   it('hoists mui internals', () => {
-    assert.strictEqual(isMuiElement(<Input />, ['Input']), true);
+    expect(isMuiElement(<Input />, ['Input'])).to.equal(true);
     // the imported Input is decorated with @material-ui/core/styles
     const StyledInput = withStyles({})(Input);
 
-    assert.strictEqual(isMuiElement(<StyledInput />, ['Input']), true);
+    expect(isMuiElement(<StyledInput />, ['Input'])).to.equal(true);
   });
 
   describe('refs', () => {
@@ -54,99 +40,82 @@ describe('withStyles', () => {
         }
       }
       const StyledTarget = withStyles({})(TargetComponent);
-
       const ref = React.createRef();
-      mount(<StyledTarget ref={ref} />);
-      assert.instanceOf(ref.current, TargetComponent);
+
+      render(<StyledTarget ref={ref} />);
+
+      expect(ref.current).to.be.instanceof(TargetComponent);
     });
 
     it('forwards refs to React.forwardRef types', () => {
       const StyledTarget = withStyles({})(
         React.forwardRef((props, ref) => <div {...props} ref={ref} />),
       );
-
       const ref = React.createRef();
-      mount(<StyledTarget ref={ref} />);
-      assert.strictEqual(ref.current.nodeName, 'DIV');
+
+      render(<StyledTarget ref={ref} />);
+
+      expect(ref.current.nodeName).to.equal('DIV');
     });
-
-    // describe('innerRef', () => {
-    //   beforeEach(() => {
-    //     consoleErrorMock.spy();
-    //   });
-
-    //   afterEach(() => {
-    //     consoleErrorMock.reset();
-    //     PropTypes.resetWarningCache();
-    //   });
-
-    //   it('is deprecated', () => {
-    //     const ThemedDiv = withStyles({})('div');
-
-    //     mount(
-    //       <React.Fragment>
-    //         <ThemedDiv innerRef={React.createRef()} />
-    //       </React.Fragment>,
-    //     );
-
-    //     assert.strictEqual(consoleErrorMock.callCount(), 1);
-    //     assert.include(
-    //       consoleErrorMock.args()[0][0],
-    //       'Warning: Failed prop type: Material-UI: the `innerRef` prop is deprecated',
-    //     );
-    //   });
-    // });
   });
 
   it('should forward the props', () => {
-    const Test = props => <div>{props.foo}</div>;
+    const Test = (props) => <div>{props.foo}</div>;
     Test.propTypes = {
       foo: PropTypes.any,
     };
     const StyledComponent = withStyles({})(Test);
-    const wrapper = mount(<StyledComponent foo="bar" />);
-    assert.strictEqual(wrapper.text(), 'bar');
+
+    const { container } = render(<StyledComponent foo="bar" />);
+
+    expect(container).to.have.text('bar');
   });
 
   it('should work with no theme', () => {
-    const Test = props => <div>{props.foo}</div>;
+    const Test = (props) => <div>{props.foo}</div>;
     Test.propTypes = {
       foo: PropTypes.any,
     };
     const StyledComponent = withStyles({}, { name: 'Foo' })(Test);
-    const wrapper = mount(<StyledComponent foo="bar" />);
-    assert.strictEqual(wrapper.text(), 'bar');
+
+    const { container } = render(<StyledComponent foo="bar" />);
+
+    expect(container).to.have.text('bar');
   });
 
   describe('integration', () => {
-    let sheetsRegistry;
-    const Empty = () => <div />;
-
-    beforeEach(() => {
-      sheetsRegistry = new SheetsRegistry();
-    });
-
     it('should run lifecycles with no theme', () => {
       const styles = { root: { display: 'flex' } };
-      const StyledComponent = withStyles(styles)(Empty);
-      const wrapper = mount(
+      const StyledComponent = withStyles(styles)(function Empty() {
+        return <div />;
+      });
+      const generateClassName = createGenerateClassName();
+      const sheetsRegistry = new SheetsRegistry();
+
+      const { setProps, unmount } = render(
         <ThemeProvider theme={createMuiTheme()}>
           <StylesProvider sheetsRegistry={sheetsRegistry} generateClassName={generateClassName}>
             <StyledComponent />
           </StylesProvider>
         </ThemeProvider>,
       );
-      assert.strictEqual(sheetsRegistry.registry.length, 1);
-      assert.deepEqual(sheetsRegistry.registry[0].classes, { root: 'Empty-root-1' });
-      wrapper.update();
-      assert.strictEqual(sheetsRegistry.registry.length, 1);
-      assert.deepEqual(sheetsRegistry.registry[0].classes, { root: 'Empty-root-1' });
-      wrapper.setProps({ theme: createMuiTheme() });
-      assert.strictEqual(sheetsRegistry.registry.length, 1);
-      assert.deepEqual(sheetsRegistry.registry[0].classes, { root: 'Empty-root-2' });
 
-      wrapper.unmount();
-      assert.strictEqual(sheetsRegistry.registry.length, 0);
+      expect(sheetsRegistry.registry.length).to.equal(1);
+      expect(sheetsRegistry.registry[0].classes).to.deep.equal({ root: 'Empty-root-1' });
+
+      setProps({});
+
+      expect(sheetsRegistry.registry.length).to.equal(1);
+      expect(sheetsRegistry.registry[0].classes).to.deep.equal({ root: 'Empty-root-1' });
+
+      setProps({ theme: createMuiTheme() });
+
+      expect(sheetsRegistry.registry.length).to.equal(1);
+      expect(sheetsRegistry.registry[0].classes).to.deep.equal({ root: 'Empty-root-2' });
+
+      unmount();
+
+      expect(sheetsRegistry.registry.length).to.equal(0);
     });
 
     it('should supply correct props to jss callbacks', () => {
@@ -158,22 +127,21 @@ describe('withStyles', () => {
       const jssCallbackStub = stub().returns({});
       const styles = { root: jssCallbackStub };
       const StyledComponent = withStyles(styles)(MyComp);
-      mount(<StyledComponent mySuppliedProp={222} />);
+      render(<StyledComponent mySuppliedProp={222} />);
 
-      assert.strictEqual(
+      expect(
         jssCallbackStub.calledWith({
           myDefaultProp: 111,
           mySuppliedProp: 222,
         }),
-        true,
-      );
+      ).to.equal(true);
     });
 
     it('should support theme.props', () => {
       const styles = { root: { display: 'flex' } };
-      const StyledComponent = withStyles(styles, { name: 'MuiFoo' })(Empty);
+      const StyledComponent = withStyles(styles, { name: 'MuiFoo' })(({ foo }) => foo);
 
-      const wrapper = mount(
+      const { container } = render(
         <ThemeProvider
           theme={createMuiTheme({
             props: {
@@ -187,33 +155,65 @@ describe('withStyles', () => {
         </ThemeProvider>,
       );
 
-      assert.strictEqual(wrapper.find(Empty).props().foo, 'bar');
-      wrapper.unmount();
+      expect(container).to.have.text('bar');
+    });
+
+    it('should use theme.props instead of defaultProps', () => {
+      const MuiFoo = ({ foo }) => foo;
+      MuiFoo.defaultProps = {
+        foo: 'foo',
+      };
+
+      const styles = { root: { display: 'flex' } };
+      const StyledComponent = withStyles(styles, { name: 'MuiFoo' })(MuiFoo);
+
+      const { container } = render(
+        <ThemeProvider
+          theme={createMuiTheme({
+            props: {
+              MuiFoo: {
+                foo: 'bar',
+              },
+            },
+          })}
+        >
+          <StyledComponent foo={undefined} />
+        </ThemeProvider>,
+      );
+
+      expect(container).to.have.text('bar');
     });
 
     it('should work when depending on a theme', () => {
-      const styles = theme => ({ root: { padding: theme.spacing(1) } });
-      const StyledComponent = withStyles(styles, { name: 'MuiTextField' })(Empty);
+      const styles = (theme) => ({ root: { padding: theme.spacing(1) } });
+      const StyledComponent = withStyles(styles, { name: 'MuiTextField' })(() => <div />);
+      const generateClassName = createGenerateClassName();
+      const sheetsRegistry = new SheetsRegistry();
 
-      const wrapper = mount(
+      const { setProps } = render(
         <ThemeProvider theme={createMuiTheme()}>
           <StylesProvider sheetsRegistry={sheetsRegistry} generateClassName={generateClassName}>
             <StyledComponent />
           </StylesProvider>
         </ThemeProvider>,
       );
-      assert.strictEqual(sheetsRegistry.registry.length, 1);
-      assert.deepEqual(sheetsRegistry.registry[0].classes, { root: 'MuiTextField-root' });
-      wrapper.setProps({ theme: createMuiTheme({ foo: 'bar' }) });
-      assert.strictEqual(sheetsRegistry.registry.length, 1);
-      assert.deepEqual(sheetsRegistry.registry[0].classes, { root: 'MuiTextField-root' });
+
+      expect(sheetsRegistry.registry.length).to.equal(1);
+      expect(sheetsRegistry.registry[0].classes).to.deep.equal({ root: 'MuiTextField-root' });
+
+      setProps({ theme: createMuiTheme({ foo: 'bar' }) });
+
+      expect(sheetsRegistry.registry.length).to.equal(1);
+      expect(sheetsRegistry.registry[0].classes).to.deep.equal({ root: 'MuiTextField-root' });
     });
 
     it('should support the overrides key', () => {
       const styles = { root: { padding: 8 } };
-      const StyledComponent = withStyles(styles, { name: 'MuiTextField' })(Empty);
+      const StyledComponent = withStyles(styles, { name: 'MuiTextField' })(() => <div />);
+      const generateClassName = createGenerateClassName();
+      const sheetsRegistry = new SheetsRegistry();
 
-      mount(
+      render(
         <ThemeProvider
           theme={createMuiTheme({
             overrides: {
@@ -231,24 +231,71 @@ describe('withStyles', () => {
         </ThemeProvider>,
       );
 
-      assert.strictEqual(sheetsRegistry.registry.length, 1);
-      assert.deepEqual(sheetsRegistry.registry[0].rules.raw, { root: { padding: 9 } });
+      expect(sheetsRegistry.registry.length).to.equal(1);
+      expect(sheetsRegistry.registry[0].rules.raw).to.deep.equal({ root: { padding: 9 } });
+    });
+
+    it('should support the variants key', () => {
+      const styles = {};
+      const StyledComponent = withStyles(styles, { name: 'MuiButton' })(() => <div />);
+      const generateClassName = createGenerateClassName();
+      const sheetsRegistry = new SheetsRegistry();
+
+      render(
+        <ThemeProvider
+          theme={createMuiTheme({
+            variants: {
+              MuiButton: [
+                {
+                  props: { variant: 'test' },
+                  styles: { padding: 9 },
+                },
+                {
+                  props: { variant: 'test', size: 'large' },
+                  styles: { fontSize: 20 },
+                },
+                {
+                  props: { size: 'largest' },
+                  styles: { fontSize: 22 },
+                },
+              ],
+            },
+          })}
+        >
+          <StylesProvider sheetsRegistry={sheetsRegistry} generateClassName={generateClassName}>
+            <StyledComponent />
+          </StylesProvider>
+        </ThemeProvider>,
+      );
+
+      expect(sheetsRegistry.registry.length).to.equal(1);
+      expect(sheetsRegistry.registry[0].rules.raw).to.deep.equal({
+        test: { padding: 9 },
+        testSizeLarge: { fontSize: 20 },
+        sizeLargest: { fontSize: 22 },
+      });
     });
 
     describe('options: disableGeneration', () => {
       it('should not generate the styles', () => {
         const styles = { root: { display: 'flex' } };
-        const StyledComponent = withStyles(styles)(Empty);
+        const StyledComponent = withStyles(styles)(({ classes }) => (
+          <div className={classes.root} data-testid="component" />
+        ));
+        const sheetsRegistry = new SheetsRegistry();
 
-        const wrapper = mount(
+        const { unmount } = render(
           <StylesProvider sheetsRegistry={sheetsRegistry} disableGeneration>
             <StyledComponent />
           </StylesProvider>,
         );
-        assert.strictEqual(sheetsRegistry.registry.length, 0);
-        assert.deepEqual(wrapper.find(Empty).props().classes, {});
-        wrapper.unmount();
-        assert.strictEqual(sheetsRegistry.registry.length, 0);
+
+        expect(sheetsRegistry.registry.length).to.equal(0);
+        expect(screen.getByTestId('component')).not.to.have.attribute('className');
+
+        unmount();
+
+        expect(sheetsRegistry.registry.length).to.equal(0);
       });
     });
   });
@@ -257,33 +304,34 @@ describe('withStyles', () => {
     it('should use the displayName', () => {
       const sheetsRegistry = new SheetsRegistry();
       // Uglified
-      const a = () => <div />;
+      const a = ({ classes }) => <div className={classes.root} data-testid="a" />;
       const StyledComponent1 = withStyles({ root: { padding: 1 } })(a);
-      const fooo = () => <div />;
+      const fooo = ({ classes }) => <div className={classes.root} data-testid="fooo" />;
       const StyledComponent2 = withStyles({ root: { padding: 1 } })(fooo);
-      const AppFrame = () => <div />;
+      const AppFrame = ({ classes }) => <div className={classes.root} data-testid="AppFrame" />;
       AppFrame.displayName = 'AppLayout';
       const StyledComponent3 = withStyles({ root: { padding: 1 } })(AppFrame);
 
-      mount(
+      function generateClassName(rule, sheet) {
+        return `name:${sheet.options.name},prefix:${sheet.options.classNamePrefix}`;
+      }
+
+      render(
         <StylesProvider sheetsRegistry={sheetsRegistry} generateClassName={generateClassName}>
           <StyledComponent1 />
           <StyledComponent2 />
           <StyledComponent3 />
         </StylesProvider>,
       );
-      assert.strictEqual(sheetsRegistry.registry[0].options.classNamePrefix, 'a');
-      assert.strictEqual(sheetsRegistry.registry[0].options.name, undefined);
-      assert.strictEqual(sheetsRegistry.registry[1].options.classNamePrefix, 'fooo');
-      assert.strictEqual(sheetsRegistry.registry[1].options.name, undefined);
-      assert.strictEqual(sheetsRegistry.registry[2].options.classNamePrefix, 'AppLayout');
-      assert.strictEqual(sheetsRegistry.registry[2].options.name, 'AppLayout');
+
+      expect(screen.getByTestId('a')).to.have.class('name:undefined,prefix:a');
+      expect(screen.getByTestId('fooo')).to.have.class('name:undefined,prefix:fooo');
+      expect(screen.getByTestId('AppFrame')).to.have.class('name:AppLayout,prefix:AppLayout');
     });
   });
 
   it('should throw is the import is invalid', () => {
-    assert.throw(
-      () => withStyles({})(undefined),
+    expect(() => withStyles({})(undefined)).to.throw(
       'You are calling withStyles(styles)(Component) with an undefined component',
     );
   });
@@ -291,16 +339,18 @@ describe('withStyles', () => {
   describe('option: withTheme', () => {
     it('should inject the theme', () => {
       const styles = { root: { padding: 1 } };
-      const StyledComponent = withStyles(styles, { withTheme: true })(props => (
-        <option theme={props.theme} />
-      ));
+      let propsTheme;
+      const StyledComponent = withStyles(styles, { withTheme: true })((props) => {
+        propsTheme = props.theme;
+        return null;
+      });
       const theme = {};
-      const wrapper = mount(
+      render(
         <ThemeProvider theme={theme}>
           <StyledComponent />
         </ThemeProvider>,
       );
-      assert.strictEqual(wrapper.find('option').props().theme, theme);
+      expect(propsTheme).to.equal(theme);
     });
   });
 });

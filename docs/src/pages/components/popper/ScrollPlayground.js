@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -14,7 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -113,10 +113,10 @@ export default function ScrollPlayground() {
   const [preventOverflow, setPreventOverflow] = React.useState('scrollParent');
 
   const handleClickButton = () => {
-    setOpen(prevOpen => !prevOpen);
+    setOpen((prevOpen) => !prevOpen);
   };
 
-  const centerScroll = element => {
+  const centerScroll = (element) => {
     if (!element) {
       return;
     }
@@ -128,8 +128,7 @@ export default function ScrollPlayground() {
 
   const classes = useStyles();
 
-  const code = `
-  \`\`\`jsx
+  const jsx = `
   <Popper
     placement="${placement}"
     disablePortal={${disablePortal}}
@@ -139,7 +138,9 @@ export default function ScrollPlayground() {
       },
       preventOverflow: {
         enabled: ${preventOverflow !== 'disabled'},
-        boundariesElement: '${preventOverflow === 'disabled' ? 'scrollParent' : preventOverflow}',
+        boundariesElement: '${
+          preventOverflow === 'disabled' ? 'scrollParent' : preventOverflow
+        }',
       },
       arrow: {
         enabled: ${arrow},
@@ -147,7 +148,6 @@ export default function ScrollPlayground() {
       },
     }}
   >
-  \`\`\`
   `;
   const id = open ? 'scroll-playground' : null;
 
@@ -158,7 +158,7 @@ export default function ScrollPlayground() {
           className={classes.scroll}
           container
           alignItems="center"
-          justify="center"
+          justifyContent="center"
           ref={centerScroll}
         >
           <div>
@@ -171,7 +171,8 @@ export default function ScrollPlayground() {
               Toggle Popper
             </Button>
             <Typography className={classes.legend}>
-              Scroll around this container to experiment with flip and preventOverflow modifiers.
+              Scroll around this container to experiment with flip and
+              preventOverflow modifiers.
             </Typography>
             <Popper
               id={id}
@@ -191,23 +192,25 @@ export default function ScrollPlayground() {
                 preventOverflow: {
                   enabled: preventOverflow !== 'disabled',
                   boundariesElement:
-                    preventOverflow === 'disabled' ? 'scrollParent' : preventOverflow,
+                    preventOverflow === 'disabled'
+                      ? 'scrollParent'
+                      : preventOverflow,
                 },
               }}
             >
-              {arrow ? <span className={classes.arrow} ref={setArrowRef} /> : null}
+              {arrow ? (
+                <span className={classes.arrow} ref={setArrowRef} />
+              ) : null}
               <Paper className={classes.paper}>
                 <DialogTitle>{"Use Google's location service?"}</DialogTitle>
                 <DialogContent>
-                  <DialogContentText>Let Google help apps determine location.</DialogContentText>
+                  <DialogContentText>
+                    Let Google help apps determine location.
+                  </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleClickButton} color="primary">
-                    Disagree
-                  </Button>
-                  <Button onClick={handleClickButton} color="primary">
-                    Agree
-                  </Button>
+                  <Button onClick={handleClickButton}>Disagree</Button>
+                  <Button onClick={handleClickButton}>Agree</Button>
                 </DialogActions>
               </Paper>
             </Popper>
@@ -225,13 +228,17 @@ export default function ScrollPlayground() {
               className={classes.select}
               label="Placement"
               select
-              InputLabelProps={{ id: 'scroll-playground-placement-label' }}
+              InputLabelProps={{
+                id: 'scroll-playground-placement-label',
+              }}
               SelectProps={{
                 native: true,
-                inputProps: { 'aria-labelledby': 'scroll-playground-placement-label' },
+                inputProps: {
+                  'aria-labelledby': 'scroll-playground-placement-label',
+                },
               }}
               value={placement}
-              onChange={event => {
+              onChange={(event) => {
                 setPlacement(event.target.value);
               }}
             >
@@ -253,7 +260,7 @@ export default function ScrollPlayground() {
             control={
               <Switch
                 checked={disablePortal}
-                onChange={event => {
+                onChange={(event) => {
                   setDisablePortal(event.target.checked);
                 }}
                 value="disablePortal"
@@ -272,13 +279,17 @@ export default function ScrollPlayground() {
               className={classes.select}
               label="Prevent overflow"
               select
-              InputLabelProps={{ id: 'scroll-playground-overflow-label' }}
+              InputLabelProps={{
+                id: 'scroll-playground-overflow-label',
+              }}
               SelectProps={{
                 native: true,
-                inputProps: { 'aria-labelledby': 'scroll-playground-overflow-label' },
+                inputProps: {
+                  'aria-labelledby': 'scroll-playground-overflow-label',
+                },
               }}
               value={preventOverflow}
-              onChange={event => {
+              onChange={(event) => {
                 setPreventOverflow(event.target.value);
               }}
             >
@@ -292,7 +303,7 @@ export default function ScrollPlayground() {
             control={
               <Switch
                 checked={flip}
-                onChange={event => {
+                onChange={(event) => {
                   setFlip(event.target.checked);
                 }}
                 value="flip"
@@ -307,7 +318,7 @@ export default function ScrollPlayground() {
             control={
               <Switch
                 checked={arrow}
-                onChange={event => {
+                onChange={(event) => {
                   setArrow(event.target.checked);
                 }}
                 value="arrow"
@@ -317,7 +328,7 @@ export default function ScrollPlayground() {
           />
         </Grid>
       </Grid>
-      <MarkdownElement text={code} />
+      <HighlightedCode code={jsx} language="jsx" />
     </div>
   );
 }

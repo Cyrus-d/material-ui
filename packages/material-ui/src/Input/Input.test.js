@@ -1,20 +1,14 @@
-import React from 'react';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { getClasses, createMount, describeConformance } from 'test/utils';
 import Input from './Input';
 import InputBase from '../InputBase';
 
 describe('<Input />', () => {
   let classes;
-  let mount;
+  const mount = createMount();
 
   before(() => {
     classes = getClasses(<Input />);
-    mount = createMount({ strict: true });
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<Input />, () => ({

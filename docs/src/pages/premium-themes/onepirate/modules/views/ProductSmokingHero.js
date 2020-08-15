@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '../components/Typography';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -41,7 +41,11 @@ function ProductSmokingHero(props) {
       <Typography variant="subtitle1" className={classes.link}>
         We are here to help. Get in touch!
       </Typography>
-      <img src="/static/themes/onepirate/producBuoy.svg" className={classes.buoy} alt="buoy" />
+      <img
+        src="/static/themes/onepirate/producBuoy.svg"
+        className={classes.buoy}
+        alt="buoy"
+      />
     </Container>
   );
 }

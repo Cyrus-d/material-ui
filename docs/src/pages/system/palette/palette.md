@@ -16,7 +16,6 @@
 <Box color="text.primary">…
 <Box color="text.secondary">…
 <Box color="text.disabled">…
-<Box color="text.hint">…
 ```
 
 ## Background color
@@ -33,7 +32,6 @@
 <Box bgcolor="text.primary">…
 <Box bgcolor="text.secondary">…
 <Box bgcolor="text.disabled">…
-<Box bgcolor="text.hint">…
 ```
 
 ## API
@@ -42,7 +40,7 @@
 import { palette } from '@material-ui/system';
 ```
 
-| Import name | Prop | CSS property | Theme key |
-|:------------|:-----|:-------------|:----------|
-| `color` | `color` | `color` | [`palette`](/customization/default-theme/?expand-path=$.palette) |
-| `bgcolor` | `bgcolor` | `backgroundColor` | [`palette`](/customization/default-theme/?expand-path=$.palette) |
+| Import name | Prop      | CSS property      | Theme key                                                        |
+| :---------- | :-------- | :---------------- | :--------------------------------------------------------------- |
+| `color`     | `color`   | `color`           | [`palette`](/customization/default-theme/?expand-path=$.palette) |
+| `bgcolor`   | `bgcolor` | `backgroundColor` | [`palette`](/customization/default-theme/?expand-path=$.palette) |

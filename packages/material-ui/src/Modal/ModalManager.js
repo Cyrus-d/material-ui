@@ -7,7 +7,7 @@ function isOverflowing(container) {
   const doc = ownerDocument(container);
 
   if (doc.body === container) {
-    return ownerWindow(doc).innerWidth > doc.documentElement.clientWidth;
+    return ownerWindow(container).innerWidth > doc.documentElement.clientWidth;
   }
 
   return container.scrollHeight > container.clientHeight;
@@ -22,14 +22,14 @@ export function ariaHidden(node, show) {
 }
 
 function getPaddingRight(node) {
-  return parseInt(window.getComputedStyle(node)['padding-right'], 10) || 0;
+  return parseInt(ownerWindow(node).getComputedStyle(node)['padding-right'], 10) || 0;
 }
 
 function ariaHiddenSiblings(container, mountNode, currentNode, nodesToExclude = [], show) {
   const blacklist = [mountNode, currentNode, ...nodesToExclude];
   const blacklistTagNames = ['TEMPLATE', 'SCRIPT', 'STYLE'];
 
-  [].forEach.call(container.children, node => {
+  [].forEach.call(container.children, (node) => {
     if (
       node.nodeType === 1 &&
       blacklist.indexOf(node) === -1 &&
@@ -61,7 +61,7 @@ function handleContainer(containerInfo, props) {
   if (!props.disableScrollLock) {
     if (isOverflowing(container)) {
       // Compute the size before applying overflow hidden to avoid any scroll jumps.
-      const scrollbarSize = getScrollbarSize();
+      const scrollbarSize = getScrollbarSize(ownerDocument(container));
 
       restoreStyle.push({
         value: container.style.paddingRight,
@@ -73,7 +73,7 @@ function handleContainer(containerInfo, props) {
 
       // .mui-fixed is a global helper.
       fixedNodes = ownerDocument(container).querySelectorAll('.mui-fixed');
-      [].forEach.call(fixedNodes, node => {
+      [].forEach.call(fixedNodes, (node) => {
         restorePaddings.push(node.style.paddingRight);
         node.style.paddingRight = `${getPaddingRight(node) + scrollbarSize}px`;
       });
@@ -82,8 +82,10 @@ function handleContainer(containerInfo, props) {
     // Improve Gatsby support
     // https://css-tricks.com/snippets/css/force-vertical-scrollbar/
     const parent = container.parentElement;
+    const containerWindow = ownerWindow(container);
     const scrollContainer =
-      parent.nodeName === 'HTML' && window.getComputedStyle(parent)['overflow-y'] === 'scroll'
+      parent.nodeName === 'HTML' &&
+      containerWindow.getComputedStyle(parent)['overflow-y'] === 'scroll'
         ? parent
         : container;
 
@@ -122,7 +124,7 @@ function handleContainer(containerInfo, props) {
 
 function getHiddenSiblings(container) {
   const hiddenSiblings = [];
-  [].forEach.call(container.children, node => {
+  [].forEach.call(container.children, (node) => {
     if (node.getAttribute && node.getAttribute('aria-hidden') === 'true') {
       hiddenSiblings.push(node);
     }
@@ -166,7 +168,7 @@ export default class ModalManager {
     const hiddenSiblingNodes = getHiddenSiblings(container);
     ariaHiddenSiblings(container, modal.mountNode, modal.modalRef, hiddenSiblingNodes, true);
 
-    const containerIndex = findIndexOf(this.containers, item => item.container === container);
+    const containerIndex = findIndexOf(this.containers, (item) => item.container === container);
     if (containerIndex !== -1) {
       this.containers[containerIndex].modals.push(modal);
       return modalIndex;
@@ -183,7 +185,10 @@ export default class ModalManager {
   }
 
   mount(modal, props) {
-    const containerIndex = findIndexOf(this.containers, item => item.modals.indexOf(modal) !== -1);
+    const containerIndex = findIndexOf(
+      this.containers,
+      (item) => item.modals.indexOf(modal) !== -1,
+    );
     const containerInfo = this.containers[containerIndex];
 
     if (!containerInfo.restore) {
@@ -198,7 +203,10 @@ export default class ModalManager {
       return modalIndex;
     }
 
-    const containerIndex = findIndexOf(this.containers, item => item.modals.indexOf(modal) !== -1);
+    const containerIndex = findIndexOf(
+      this.containers,
+      (item) => item.modals.indexOf(modal) !== -1,
+    );
     const containerInfo = this.containers[containerIndex];
 
     containerInfo.modals.splice(containerInfo.modals.indexOf(modal), 1);

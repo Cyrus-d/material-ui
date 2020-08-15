@@ -1,9 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
 import { stub } from 'sinon';
-import { createMount } from '@material-ui/core/test-utils';
-import describeConformance from '@material-ui/core/test-utils/describeConformance';
-import { createClientRender } from 'test/utils/createClientRender';
+import { createMount, describeConformance, createClientRender } from 'test/utils';
 import MenuList from './MenuList';
 import getScrollbarSize from '../utils/getScrollbarSize';
 import List from '../List';
@@ -19,12 +17,8 @@ function setStyleWidthForJsdomOrBrowser(style, width) {
 }
 
 describe('<MenuList />', () => {
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
-
-  before(() => {
-    mount = createMount({ strict: true });
-  });
 
   describeConformance(<MenuList />, () => ({
     classes: {},
@@ -32,15 +26,14 @@ describe('<MenuList />', () => {
     mount,
     refInstanceof: window.HTMLUListElement,
     skip: ['componentProp'],
-    after: () => mount.cleanUp(),
   }));
 
   describe('prop: children', () => {
     it('should support null children', () => {
       const { getAllByRole } = render(
         <MenuList>
-          <div role="menuitem" />
-          <div role="menuitem" />
+          <div role="menuitem">one</div>
+          <div role="menuitem">two</div>
           {null}
         </MenuList>,
       );
@@ -50,7 +43,7 @@ describe('<MenuList />', () => {
   });
 
   describe('actions: adjustStyleForScrollbar', () => {
-    const expectedPadding = `${getScrollbarSize(true)}px`;
+    const expectedPadding = `${getScrollbarSize(document)}px`;
 
     it('should not adjust style when container element height is greater', () => {
       const menuListActionsRef = React.createRef();

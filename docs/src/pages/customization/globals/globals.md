@@ -8,13 +8,15 @@ When the configuration variables aren't powerful enough, you can take advantage 
 `overrides` key of the `theme` to potentially change **every single style** injected by Material-UI into the DOM.
 That's a really powerful feature.
 
+To override lab components styles with TypeScript, check [this documentation](/components/about-the-lab/#typescript).
+
 ```js
 const theme = createMuiTheme({
   overrides: {
     // Style sheet name ⚛️
     MuiButton: {
       // Name of the rule
-      text: {
+      textPrimary: {
         // Some CSS
         color: 'white',
       },
@@ -27,12 +29,40 @@ const theme = createMuiTheme({
 
 The list of these customization points for each component is documented under the **Component API** section.
 For instance, you can have a look at the [Button](/api/button/#css).
-Alternatively, you can always have a look at the [implementation](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/Button/Button.js).
+Alternatively, you can always have a look at the [implementation](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/Button/Button.js).
+
+## Global CSS
+
+If you are using the [CssBaseline](/components/css-baseline/) component to apply global resets, it can also be used to apply global styles. For instance:
+
+```jsx
+const theme = createMuiTheme({
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        html: {
+          WebkitFontSmoothing: 'auto',
+        },
+      },
+    },
+  },
+});
+
+// ...
+return (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    {children}
+  </ThemeProvider>
+);
+```
 
 ## Default props
 
 You can change the default props of all the Material-UI components.
 A `props` key is exposed in the `theme` for this use case.
+
+To override lab components styles with TypeScript, check [this documentation](/components/about-the-lab/#typescript).
 
 ```js
 const theme = createMuiTheme({

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
@@ -14,7 +14,11 @@ export default function SimpleBreadcrumbs() {
       <Link color="inherit" href="/" onClick={handleClick}>
         Material-UI
       </Link>
-      <Link color="inherit" href="/getting-started/installation/" onClick={handleClick}>
+      <Link
+        color="inherit"
+        href="/getting-started/installation/"
+        onClick={handleClick}
+      >
         Core
       </Link>
       <Typography color="textPrimary">Breadcrumb</Typography>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   fade,
   ThemeProvider,
@@ -34,7 +34,7 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const BootstrapInput = withStyles(theme => ({
+const BootstrapInput = withStyles((theme) => ({
   root: {
     'label + &': {
       marginTop: theme.spacing(3),
@@ -69,7 +69,7 @@ const BootstrapInput = withStyles(theme => ({
   },
 }))(InputBase);
 
-const useStylesReddit = makeStyles(theme => ({
+const useStylesReddit = makeStyles((theme) => ({
   root: {
     border: '1px solid #e2e2e1',
     overflow: 'hidden',
@@ -91,10 +91,12 @@ const useStylesReddit = makeStyles(theme => ({
 function RedditTextField(props) {
   const classes = useStylesReddit();
 
-  return <TextField InputProps={{ classes, disableUnderline: true }} {...props} />;
+  return (
+    <TextField InputProps={{ classes, disableUnderline: true }} {...props} />
+  );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -132,7 +134,11 @@ export default function CustomizedInputs() {
 
   return (
     <form className={classes.root} noValidate>
-      <CssTextField className={classes.margin} id="custom-css-standard-input" label="Custom CSS" />
+      <CssTextField
+        className={classes.margin}
+        id="custom-css-standard-input"
+        label="Custom CSS"
+      />
       <CssTextField
         className={classes.margin}
         label="Custom CSS"

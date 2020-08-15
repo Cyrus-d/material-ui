@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -8,28 +8,31 @@ import Box from '@material-ui/core/Box';
 
 interface TabPanelProps {
   children?: React.ReactNode;
-  index: any;
-  value: any;
+  index: number;
+  value: number;
 }
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
-    <Typography
-      component="div"
+    <div
       role="tabpanel"
       hidden={value !== index}
       id={`scrollable-auto-tabpanel-${index}`}
       aria-labelledby={`scrollable-auto-tab-${index}`}
       {...other}
     >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
-function a11yProps(index: any) {
+function a11yProps(index: number) {
   return {
     id: `scrollable-auto-tab-${index}`,
     'aria-controls': `scrollable-auto-tabpanel-${index}`,
@@ -48,7 +51,7 @@ export default function ScrollableTabsButtonAuto() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

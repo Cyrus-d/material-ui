@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -38,11 +38,17 @@ export default function CheckboxList() {
 
   return (
     <List className={classes.root}>
-      {[0, 1, 2, 3].map(value => {
+      {[0, 1, 2, 3].map((value) => {
         const labelId = `checkbox-list-label-${value}`;
 
         return (
-          <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
+          <ListItem
+            key={value}
+            role={undefined}
+            dense
+            button
+            onClick={handleToggle(value)}
+          >
             <ListItemIcon>
               <Checkbox
                 edge="start"

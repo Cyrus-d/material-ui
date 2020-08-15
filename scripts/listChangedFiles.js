@@ -20,14 +20,11 @@ async function exec(command, args) {
 
 async function execGitCmd(args) {
   const gitResults = await exec('git', args);
-  return gitResults
-    .trim()
-    .toString()
-    .split('\n');
+  return gitResults.trim().toString().split('\n');
 }
 
-async function listChangedFiles() {
-  const comparedBranch = process.env.CIRCLECI ? 'origin/master' : 'master';
+async function listChangedFiles({ branch }) {
+  const comparedBranch = process.env.CIRCLECI ? `origin/${branch}` : branch;
   const mergeBase = await execGitCmd(['rev-parse', comparedBranch]);
   const gitDiff = await execGitCmd(['diff', '--name-only', mergeBase]);
   const gitLs = await execGitCmd(['ls-files', '--others', '--exclude-standard']);

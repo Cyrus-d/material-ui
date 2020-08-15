@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -23,7 +23,7 @@ export default function InputSlider() {
     setValue(newValue);
   };
 
-  const handleInputChange = event => {
+  const handleInputChange = (event) => {
     setValue(event.target.value === '' ? '' : Number(event.target.value));
   };
 

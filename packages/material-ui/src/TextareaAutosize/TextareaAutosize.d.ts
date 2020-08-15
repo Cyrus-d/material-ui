@@ -1,14 +1,27 @@
 import * as React from 'react';
+import { Omit } from '..';
 
-export interface TextareaAutosizeProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  rowsMax?: string | number;
-  rowsMin?: string | number;
+export interface TextareaAutosizeProps
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'children' | 'rows'> {
+  ref?: React.Ref<HTMLTextAreaElement>;
+  /**
+   * Maximum number of rows to display.
+   */
+  maxRows?: string | number;
+  /**
+   * Minimum number of rows to display.
+   */
+  minRows?: string | number;
 }
 
-declare const TextareaAutosize: React.ComponentType<
-  TextareaAutosizeProps & {
-    ref?: React.Ref<HTMLTextAreaElement>;
-  }
->;
-
-export default TextareaAutosize;
+/**
+ *
+ * Demos:
+ *
+ * - [Textarea Autosize](https://material-ui.com/components/textarea-autosize/)
+ *
+ * API:
+ *
+ * - [TextareaAutosize API](https://material-ui.com/api/textarea-autosize/)
+ */
+export default function TextareaAutosize(props: TextareaAutosizeProps): JSX.Element;

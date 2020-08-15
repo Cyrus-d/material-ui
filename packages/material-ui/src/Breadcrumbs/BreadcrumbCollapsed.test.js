@@ -1,32 +1,49 @@
-import React from 'react';
-import { assert } from 'chai';
-import { createShallow, createMount, getClasses } from '@material-ui/core/test-utils';
+import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
+import { getClasses, act, fireEvent, createClientRender } from 'test/utils';
 import BreadcrumbCollapsed from './BreadcrumbCollapsed';
-import MoreHorizIcon from '../internal/svg-icons/MoreHoriz';
 
 describe('<BreadcrumbCollapsed />', () => {
-  let mount;
-  let shallow;
   let classes;
+  const render = createClientRender();
 
   before(() => {
-    shallow = createShallow({ dive: true });
-    mount = createMount({ strict: true });
     classes = getClasses(<BreadcrumbCollapsed />);
   });
 
-  after(() => {
-    mount.cleanUp();
+  it('should render an icon', () => {
+    const { container } = render(<BreadcrumbCollapsed />);
+
+    expect(container.querySelectorAll('svg').length).to.equal(1);
+    expect(container.firstChild).to.have.class(classes.root);
   });
 
-  it('should render an <SvgIcon>', () => {
-    const wrapper = shallow(<BreadcrumbCollapsed />);
+  describe('prop: onKeyDown', () => {
+    it(`should be called on key down - Enter`, () => {
+      const handleClick = spy();
+      const { container } = render(<BreadcrumbCollapsed onClick={handleClick} />);
+      const expand = container.firstChild;
 
-    assert.strictEqual(wrapper.find(MoreHorizIcon).length, 1);
-    assert.strictEqual(wrapper.hasClass(classes.root), true);
-  });
+      act(() => {
+        expand.focus();
+        fireEvent.keyDown(expand, { key: 'Enter' });
+      });
 
-  it('should mount', () => {
-    mount(<BreadcrumbCollapsed />);
+      expect(handleClick.callCount).to.equal(1);
+    });
+
+    it(`should be called on key up - Space`, () => {
+      const handleClick = spy();
+      const { container } = render(<BreadcrumbCollapsed onClick={handleClick} />);
+      const expand = container.firstChild;
+
+      act(() => {
+        expand.focus();
+        fireEvent.keyUp(expand, { key: ' ' });
+      });
+
+      expect(handleClick.callCount).to.equal(1);
+    });
   });
 });

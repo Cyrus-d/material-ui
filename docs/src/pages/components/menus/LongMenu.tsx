@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -54,12 +54,16 @@ export default function LongMenu() {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: 200,
+            width: '20ch',
           },
         }}
       >
-        {options.map(option => (
-          <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
+        {options.map((option) => (
+          <MenuItem
+            key={option}
+            selected={option === 'Pyxis'}
+            onClick={handleClose}
+          >
             {option}
           </MenuItem>
         ))}

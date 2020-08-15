@@ -1,22 +1,23 @@
-import React from 'react';
-import { assert } from 'chai';
-import { createShallow, createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { expect } from 'chai';
+import { getClasses, createMount, createClientRender, describeConformance } from 'test/utils';
 import Step from './Step';
+import Stepper from '../Stepper';
+import StepLabel from '../StepLabel';
+import StepButton from '../StepButton';
 
 describe('<Step />', () => {
   let classes;
-  let shallow;
-  let mount;
+  let stepButtonClasses;
+  let stepLabelClasses;
+  const mount = createMount();
+
+  const render = createClientRender();
 
   before(() => {
     classes = getClasses(<Step />);
-    shallow = createShallow({ dive: true });
-    mount = createMount({ strict: true });
-  });
-
-  after(() => {
-    mount.cleanUp();
+    stepButtonClasses = getClasses(<StepButton />);
+    stepLabelClasses = getClasses(<StepLabel />);
   });
 
   describeConformance(<Step />, () => ({
@@ -28,80 +29,105 @@ describe('<Step />', () => {
   }));
 
   it('merges styles and other props into the root node', () => {
-    const wrapper = shallow(
+    const { getByTestId } = render(
       <Step
         index={1}
         style={{ paddingRight: 200, color: 'purple', border: '1px solid tomato' }}
-        data-role="Menuitem"
+        data-testid="root"
         orientation="horizontal"
       />,
     );
-    const props = wrapper.props();
-    assert.strictEqual(props.style.paddingRight, 200);
-    assert.strictEqual(props.style.color, 'purple');
-    assert.strictEqual(props.style.border, '1px solid tomato');
-    assert.strictEqual(props['data-role'], 'Menuitem');
+
+    const rootNode = getByTestId('root');
+    expect(rootNode.style).to.have.property('paddingRight', '200px');
+    expect(rootNode.style).to.have.property('color', 'purple');
+    expect(rootNode.style).to.have.property('border', '1px solid tomato');
   });
 
   describe('rendering children', () => {
     it('renders children', () => {
-      const children = <h1 className="hello-world">Hello World</h1>;
-      const wrapper = shallow(
-        <Step label="Step One" index={1} orientation="horizontal">
-          {children}
+      const { container } = render(
+        <Step>
+          <StepButton />
+          <StepLabel />
         </Step>,
       );
-      assert.strictEqual(wrapper.find('.hello-world').length, 1);
+
+      const stepLabel = container.querySelector(`.${stepLabelClasses.root}`);
+      const stepButton = container.querySelector(`.${stepButtonClasses.root}`);
+      expect(stepLabel).not.to.equal(null);
+      expect(stepButton).not.to.equal(null);
     });
 
-    it('renders children with all props passed through', () => {
-      const children = [
-        <h1 key={1} className="hello-world">
-          Hello World
-        </h1>,
-        <p key={2} className="hay">
-          How are you?
-        </p>,
-      ];
-      const wrapper = shallow(
-        <Step active={false} completed disabled index={0} orientation="horizontal">
-          {children}
-        </Step>,
-      );
-      const child1 = wrapper.find('.hello-world');
-      const child2 = wrapper.find('.hay');
-      [child1, child2].forEach(child => {
-        assert.strictEqual(child.length, 1);
-        assert.strictEqual(child.props().active, false);
-        assert.strictEqual(child.props().completed, true);
-        assert.strictEqual(child.props().disabled, true);
-        assert.strictEqual(child.props().icon, 1);
-      });
-    });
-
-    it('honours children overriding props passed through', () => {
-      const children = (
-        <h1 active={false} className="hello-world">
-          Hello World
-        </h1>
-      );
-      const wrapper = shallow(
-        <Step active label="Step One" orientation="horizontal" index={0}>
-          {children}
-        </Step>,
-      );
-      const childWrapper = wrapper.find('.hello-world');
-      assert.strictEqual(childWrapper.props().active, false);
-    });
-
-    it('should handle invalid children', () => {
-      const wrapper = shallow(
-        <Step label="Step One" index={1} orientation="horizontal">
-          <h1 className="hello-world">Hello World</h1>
+    it('should handle null children', () => {
+      const { container } = render(
+        <Step>
+          <StepButton />
           {null}
         </Step>,
       );
-      assert.strictEqual(wrapper.find('.hello-world').length, 1);
+
+      const stepButton = container.querySelector(`.${stepButtonClasses.root}`);
+      expect(stepButton).not.to.equal(null);
+    });
+  });
+
+  describe('overriding context props', () => {
+    it('overrides "active" context value', () => {
+      const { getByText } = render(
+        <Stepper activeStep={1}>
+          <Step>
+            <StepLabel>Step 1</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>Step 2</StepLabel>
+          </Step>
+          <Step active>
+            <StepLabel>Step 3</StepLabel>
+          </Step>
+        </Stepper>,
+      );
+
+      const stepLabel = getByText('Step 3');
+      expect(stepLabel).to.have.class(stepLabelClasses.active);
+    });
+
+    it('overrides "completed" context value', () => {
+      const { getByText } = render(
+        <Stepper activeStep={1}>
+          <Step>
+            <StepLabel>Step 1</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>Step 2</StepLabel>
+          </Step>
+          <Step completed>
+            <StepLabel>Step 3</StepLabel>
+          </Step>
+        </Stepper>,
+      );
+
+      const stepLabel = getByText('Step 3');
+      expect(stepLabel).to.have.class(stepLabelClasses.completed);
+    });
+
+    it('overrides "disabled" context value', () => {
+      const { container } = render(
+        <Stepper activeStep={1}>
+          <Step>
+            <StepLabel>Step 1</StepLabel>
+          </Step>
+          <Step disabled>
+            <StepLabel>Step 2</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>Step 3</StepLabel>
+          </Step>
+        </Stepper>,
+      );
+
+      const stepLabels = container.querySelectorAll(`.${stepLabelClasses.root}`);
+      expect(stepLabels[1]).to.have.class(stepLabelClasses.disabled);
     });
   });
 });

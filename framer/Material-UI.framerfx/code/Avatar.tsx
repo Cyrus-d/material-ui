@@ -1,39 +1,26 @@
 import * as React from 'react';
 import { addPropertyControls, ControlType } from 'framer';
-// tslint:disable-next-line: ban-ts-ignore
-// @ts-ignore
 import MuiAvatar from '@material-ui/core/Avatar';
 import { Icon } from './Icon';
 
 interface Props {
-  backgroundColor?: string;
-  textColor?: string;
-  icon?: string;
-  imageFile?: string;
-  imageUrl?: string;
-  label?: string;
-  width?: number;
-  height?: number;
+  backgroundColor: string;
+  textColor: string;
+  icon: string;
+  avatarImageFile: string;
+  avatarImageUrl: string;
+  label: string;
+  width: number | string;
+  height: number;
 }
 
-const defaultProps: Props = {
-  backgroundColor: '#4154af',
-  textColor: undefined,
-  icon: 'face',
-  imageFile: '',
-  imageUrl: 'https://i.pravatar.cc/300',
-  label: 'MB',
-  width: 40,
-  height: 40,
-};
-
-export const Avatar: React.SFC<Props> = (props: Props) => {
+export function Avatar(props: Props): JSX.Element {
   const {
     backgroundColor,
     height,
     icon,
-    imageFile,
-    imageUrl,
+    avatarImageFile: imageFile,
+    avatarImageUrl: imageUrl,
     label,
     textColor,
     width,
@@ -47,9 +34,18 @@ export const Avatar: React.SFC<Props> = (props: Props) => {
       {icon === '' ? label : <Icon icon={icon} />}
     </MuiAvatar>
   );
-};
+}
 
-Avatar.defaultProps = defaultProps;
+Avatar.defaultProps = {
+  backgroundColor: '#4154af',
+  textColor: undefined,
+  icon: 'face',
+  avatarImageFile: '',
+  avatarImageUrl: 'https://i.pravatar.cc/300',
+  label: 'MB',
+  width: 40,
+  height: 40,
+};
 
 addPropertyControls(Avatar, {
   backgroundColor: {
@@ -64,18 +60,15 @@ addPropertyControls(Avatar, {
     type: ControlType.String,
     title: 'Icon',
   },
-  imageFile: {
+  avatarImageFile: {
     type: ControlType.Image,
-    title: 'Image File',
-    hidden: function hidden(props) {
-      return props.primaryAction && props.primaryAction !== 'avatar';
-    },
+    title: 'Avatar Image File',
   },
-  imageUrl: {
+  avatarImageUrl: {
     type: ControlType.String,
-    title: 'Image URL',
+    title: 'Avatar Image URL',
     hidden: function hidden(props) {
-      return props.imageFile !== '' || (props.primaryAction && props.primaryAction !== 'avatar');
+      return props.avatarImageFile !== '';
     },
   },
   label: {

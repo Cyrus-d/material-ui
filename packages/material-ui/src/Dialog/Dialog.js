@@ -1,5 +1,4 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -10,7 +9,7 @@ import Fade from '../Fade';
 import { duration } from '../styles/transitions';
 import Paper from '../Paper';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
     '@media print': {
@@ -153,13 +152,7 @@ const Dialog = React.forwardRef(function Dialog(props, ref) {
     maxWidth = 'sm',
     onBackdropClick,
     onClose,
-    onEnter,
-    onEntered,
-    onEntering,
     onEscapeKeyDown,
-    onExit,
-    onExited,
-    onExiting,
     open,
     PaperComponent = Paper,
     PaperProps = {},
@@ -173,16 +166,10 @@ const Dialog = React.forwardRef(function Dialog(props, ref) {
   } = props;
 
   const mouseDownTarget = React.useRef();
-  const handleMouseDown = event => {
-    mouseDownTarget.current = event.target;
+  const handleMouseDown = (event) => {
+    mouseDownTarget.current = event.currentTarget;
   };
-  const handleBackdropClick = event => {
-    // Ignore the events not coming from the "backdrop"
-    // We don't want to close the dialog when clicking the dialog content.
-    if (event.target !== event.currentTarget) {
-      return;
-    }
-
+  const handleBackdropClick = (event) => {
     // Make sure the event starts and ends on the same DOM element.
     if (event.target !== mouseDownTarget.current) {
       return;
@@ -214,18 +201,13 @@ const Dialog = React.forwardRef(function Dialog(props, ref) {
       onClose={onClose}
       open={open}
       ref={ref}
+      onClick={handleBackdropClick}
       {...other}
     >
       <TransitionComponent
         appear
         in={open}
         timeout={transitionDuration}
-        onEnter={onEnter}
-        onEntering={onEntering}
-        onEntered={onEntered}
-        onExit={onExit}
-        onExiting={onExiting}
-        onExited={onExited}
         role="none presentation"
 		tabIndex={children.props.tabIndex}
         {...TransitionProps}
@@ -235,7 +217,6 @@ const Dialog = React.forwardRef(function Dialog(props, ref) {
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
           className={clsx(classes.container, classes[`scroll${capitalize(scroll)}`])}
-          onClick={handleBackdropClick}
           onMouseDown={handleMouseDown}
           data-mui-test="FakeBackdrop"
         >
@@ -265,6 +246,10 @@ const Dialog = React.forwardRef(function Dialog(props, ref) {
 });
 
 Dialog.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * The id(s) of the element(s) that describe the dialog.
    */
@@ -280,12 +265,12 @@ Dialog.propTypes = {
   /**
    * Dialog children, usually the included sub-components.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    * See [CSS API](#css) below for more details.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -313,7 +298,7 @@ Dialog.propTypes = {
    * The dialog width grows with the size of the screen.
    * Set to `false` to disable `maxWidth`.
    */
-  maxWidth: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl', false]),
+  maxWidth: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs', false]),
   /**
    * Callback fired when the backdrop is clicked.
    */
@@ -326,34 +311,10 @@ Dialog.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired before the dialog enters.
-   */
-  onEnter: PropTypes.func,
-  /**
-   * Callback fired when the dialog has entered.
-   */
-  onEntered: PropTypes.func,
-  /**
-   * Callback fired when the dialog is entering.
-   */
-  onEntering: PropTypes.func,
-  /**
    * Callback fired when the escape key is pressed,
    * `disableKeyboard` is false and the modal is in focus.
    */
   onEscapeKeyDown: PropTypes.func,
-  /**
-   * Callback fired before the dialog exits.
-   */
-  onExit: PropTypes.func,
-  /**
-   * Callback fired when the dialog has exited.
-   */
-  onExited: PropTypes.func,
-  /**
-   * Callback fired when the dialog is exiting.
-   */
-  onExiting: PropTypes.func,
   /**
    * If `true`, the Dialog is open.
    */
@@ -372,6 +333,7 @@ Dialog.propTypes = {
   scroll: PropTypes.oneOf(['body', 'paper']),
   /**
    * The component used for the transition.
+   * [Follow this guide](/components/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.
    */
   TransitionComponent: PropTypes.elementType,
   /**
@@ -380,10 +342,15 @@ Dialog.propTypes = {
    */
   transitionDuration: PropTypes.oneOfType([
     PropTypes.number,
-    PropTypes.shape({ enter: PropTypes.number, exit: PropTypes.number }),
+    PropTypes.shape({
+      appear: PropTypes.number,
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
   ]),
   /**
-   * Props applied to the `Transition` element.
+   * Props applied to the transition element.
+   * By default, the element is based on this [`Transition`](http://reactcommunity.org/react-transition-group/transition) component.
    */
   TransitionProps: PropTypes.object,
 };

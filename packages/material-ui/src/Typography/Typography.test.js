@@ -1,19 +1,14 @@
 // @ts-check
-import React from 'react';
-import { assert } from 'chai';
-import { createShallow, createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
+import * as React from 'react';
+import { expect } from 'chai';
+import { getClasses, createClientRender, createMount, describeConformance } from 'test/utils';
 import Typography from './Typography';
 
 describe('<Typography />', () => {
   /**
    * @type {ReturnType<typeof createMount>}
    */
-  let mount;
-  /**
-   * @type {ReturnType<typeof createShallow>}
-   */
-  let shallow;
+  const mount = createMount();
   /**
    * // we test at runtime that this is equal to
    * Record<import('./Typography').TypographyClassKey, string>
@@ -21,14 +16,10 @@ describe('<Typography />', () => {
    */
   let classes;
 
-  before(() => {
-    mount = createMount({ strict: true });
-    shallow = createShallow({ dive: true });
-    classes = getClasses(<Typography />);
-  });
+  const render = createClientRender();
 
-  after(() => {
-    mount.cleanUp();
+  before(() => {
+    classes = getClasses(<Typography />);
   });
 
   describeConformance(<Typography />, () => ({
@@ -39,31 +30,34 @@ describe('<Typography />', () => {
   }));
 
   it('should render the text', () => {
-    const wrapper = shallow(<Typography>Hello</Typography>);
-    assert.strictEqual(wrapper.text(), 'Hello');
+    const { container } = render(<Typography>Hello</Typography>);
+    expect(container.firstChild).to.have.text('Hello');
   });
 
   it('should render body1 root by default', () => {
-    const wrapper = shallow(<Typography>Hello</Typography>);
-    assert.strictEqual(wrapper.hasClass(classes.body1), true);
-    assert.strictEqual(wrapper.hasClass(classes.root), true);
+    const { container } = render(<Typography>Hello</Typography>);
+
+    expect(container.firstChild).to.have.class(classes.body1);
+    expect(container.firstChild).to.have.class(classes.root);
   });
 
   it('should center text', () => {
-    const wrapper = shallow(
+    const { container } = render(
       <Typography align="center" className="woofTypography">
         Hello
       </Typography>,
     );
-    assert.strictEqual(wrapper.hasClass(classes.alignCenter), true);
+
+    expect(container.firstChild).to.have.class(classes.alignCenter);
   });
   ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'subtitle1', 'body2', 'body1', 'caption', 'button'].forEach(
-    variant => {
+    (variant) => {
       it(`should render ${variant} text`, () => {
         // @ts-ignore literal/tuple type widening
-        const wrapper = shallow(<Typography variant={variant}>Hello</Typography>);
-        assert.strictEqual(classes[variant] != null, true);
-        assert.strictEqual(wrapper.hasClass(classes[variant]), true, `should be ${variant} text`);
+        const { container } = render(<Typography variant={variant}>Hello</Typography>);
+
+        expect(classes[variant] != null).to.equal(true);
+        expect(container.firstChild).to.have.class(classes[variant]);
       });
     },
   );
@@ -77,81 +71,92 @@ describe('<Typography />', () => {
   ].forEach(([color, className]) => {
     it(`should render ${color} color`, () => {
       // @ts-ignore literal/tuple type widening
-      const wrapper = shallow(<Typography color={color}>Hello</Typography>);
-      assert.strictEqual(classes[className] != null, true);
-      assert.strictEqual(wrapper.hasClass(classes[className]), true, `should be ${color} text`);
+      const { container } = render(<Typography color={color}>Hello</Typography>);
+
+      expect(classes[className] != null).to.equal(true);
+      expect(container.firstChild).to.have.class(classes[className]);
     });
   });
 
   describe('prop: color', () => {
     it('should inherit the color', () => {
-      const wrapper = shallow(<Typography color="inherit">Hello</Typography>);
-      assert.strictEqual(wrapper.hasClass(classes.colorInherit), true);
+      const { container } = render(<Typography color="inherit">Hello</Typography>);
+
+      expect(container.firstChild).to.have.class(classes.colorInherit);
     });
   });
 
   describe('headline', () => {
     it('should render a span by default', () => {
-      const wrapper = shallow(<Typography variant="button">Hello</Typography>);
-      assert.strictEqual(wrapper.name(), 'span');
+      const { getByText } = render(<Typography variant="button">Hello</Typography>);
+
+      expect(getByText(/hello/i).tagName).to.equal('SPAN');
     });
 
     it('should render a p with a paragraph', () => {
-      const wrapper = shallow(<Typography paragraph>Hello</Typography>);
-      assert.strictEqual(wrapper.name(), 'p');
+      const { getByText } = render(<Typography paragraph>Hello</Typography>);
+
+      expect(getByText(/hello/i).tagName).to.equal('P');
     });
 
     it('should render the mapped headline', () => {
-      const wrapper = shallow(<Typography variant="h6">Hello</Typography>);
-      assert.strictEqual(wrapper.name(), 'h6');
+      const { getByText } = render(<Typography variant="h6">Hello</Typography>);
+
+      expect(getByText(/hello/i).tagName).to.equal('H6');
     });
 
     it('should render a h1', () => {
-      const wrapper = shallow(<Typography component="h1">Hello</Typography>);
-      assert.strictEqual(wrapper.name(), 'h1');
+      const { getByText } = render(<Typography component="h1">Hello</Typography>);
+
+      expect(getByText(/hello/i).tagName).to.equal('H1');
     });
   });
 
   describe('prop: variantMapping', () => {
     it('should work with a single value', () => {
-      const wrapper = shallow(
+      const { getByText } = render(
         <Typography variant="h6" variantMapping={{ h6: 'aside' }}>
           Hello
         </Typography>,
       );
-      assert.strictEqual(wrapper.type(), 'aside');
+
+      expect(getByText(/hello/i).tagName).to.equal('ASIDE');
     });
 
     it('should work event without the full mapping', () => {
-      const wrapper = shallow(
+      const { getByText } = render(
         <Typography variant="h6" variantMapping={{}}>
           Hello
         </Typography>,
       );
-      assert.strictEqual(wrapper.type(), 'h6');
+
+      expect(getByText(/hello/i).tagName).to.equal('H6');
     });
   });
 
   describe('prop: display', () => {
     it('should render with displayInline class in display="inline"', () => {
-      const wrapper = shallow(<Typography display="inline">Hello</Typography>);
-      assert.strictEqual(wrapper.hasClass(classes.root), true);
-      assert.strictEqual(wrapper.hasClass(classes.displayInline), true);
-      assert.strictEqual(wrapper.hasClass(classes.displayBlock), false);
+      const { container } = render(<Typography display="inline">Hello</Typography>);
+
+      expect(container.firstChild).to.have.class(classes.root);
+      expect(container.firstChild).to.have.class(classes.displayInline);
+      expect(container.firstChild).not.to.have.class(classes.displayBlock);
     });
 
     it('should render with displayInline class in display="block"', () => {
-      const wrapper = shallow(<Typography display="block">Hello</Typography>);
-      assert.strictEqual(wrapper.hasClass(classes.root), true);
-      assert.strictEqual(wrapper.hasClass(classes.displayBlock), true);
-      assert.strictEqual(wrapper.hasClass(classes.displayInline), false);
+      const { container } = render(<Typography display="block">Hello</Typography>);
+
+      expect(container.firstChild).to.have.class(classes.root);
+      expect(container.firstChild).to.have.class(classes.displayBlock);
+      expect(container.firstChild).not.to.have.class(classes.displayInline);
     });
 
     it('should render with no display classes if display="initial"', () => {
-      const wrapper = shallow(<Typography display="initial">Hello</Typography>);
-      assert.strictEqual(wrapper.hasClass(classes.root), true);
-      assert.strictEqual(wrapper.hasClass(classes.displayBlock), false);
-      assert.strictEqual(wrapper.hasClass(classes.displayInline), false);
+      const { container } = render(<Typography display="initial">Hello</Typography>);
+
+      expect(container.firstChild).to.have.class(classes.root);
+      expect(container.firstChild).not.to.have.class(classes.displayBlock);
+      expect(container.firstChild).not.to.have.class(classes.displayInline);
     });
   });
 });

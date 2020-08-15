@@ -1,6 +1,7 @@
+/* eslint-disable import/order */
 import withRoot from './modules/withRoot';
 // --- Post bootstrap -----
-import React from 'react';
+import * as React from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
@@ -13,7 +14,7 @@ import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: theme.spacing(6),
   },
@@ -30,7 +31,7 @@ function SignIn() {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
-  const validate = values => {
+  const validate = (values) => {
     const errors = required(['email', 'password'], values);
 
     if (!errors.email) {
@@ -57,12 +58,20 @@ function SignIn() {
           </Typography>
           <Typography variant="body2" align="center">
             {'Not a member yet? '}
-            <Link href="/premium-themes/onepirate/sign-up/" align="center" underline="always">
+            <Link
+              href="/premium-themes/onepirate/sign-up/"
+              align="center"
+              underline="always"
+            >
               Sign Up here
             </Link>
           </Typography>
         </React.Fragment>
-        <Form onSubmit={handleSubmit} subscription={{ submitting: true }} validate={validate}>
+        <Form
+          onSubmit={handleSubmit}
+          subscription={{ submitting: true }}
+          validate={validate}
+        >
           {({ handleSubmit2, submitting }) => (
             <form onSubmit={handleSubmit2} className={classes.form} noValidate>
               <Field
@@ -111,7 +120,10 @@ function SignIn() {
           )}
         </Form>
         <Typography align="center">
-          <Link underline="always" href="/premium-themes/onepirate/forgot-password/">
+          <Link
+            underline="always"
+            href="/premium-themes/onepirate/forgot-password/"
+          >
             Forgot password?
           </Link>
         </Typography>

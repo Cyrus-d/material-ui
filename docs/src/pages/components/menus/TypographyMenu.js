@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
@@ -31,7 +31,9 @@ export default function TypographyMenu() {
           <ListItemIcon>
             <PriorityHighIcon fontSize="small" />
           </ListItemIcon>
-          <Typography variant="inherit">A very long text that overflows</Typography>
+          <Typography variant="inherit">
+            A very long text that overflows
+          </Typography>
         </MenuItem>
         <MenuItem>
           <ListItemIcon>

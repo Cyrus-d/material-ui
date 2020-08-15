@@ -11,7 +11,7 @@ function titleize(string) {
 
   return string
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
 
@@ -58,10 +58,10 @@ const packagesWithBundledTypes = ['@material-ui/core', '@material-ui/lab'];
  */
 function addTypeDeps(deps) {
   const packagesWithDTPackage = Object.keys(deps).filter(
-    name => packagesWithBundledTypes.indexOf(name) === -1,
+    (name) => packagesWithBundledTypes.indexOf(name) === -1,
   );
 
-  packagesWithDTPackage.forEach(name => {
+  packagesWithDTPackage.forEach((name) => {
     let resolvedName = name;
     // scoped package?
     if (name.startsWith('@')) {
@@ -82,6 +82,9 @@ function includePeerDependencies(deps, versions) {
   if (deps['@material-ui/lab'] && !deps['@material-ui/core']) {
     deps['@material-ui/core'] = versions['@material-ui/core'];
   }
+  if (deps['@material-ui/pickers'] && !deps['date-fns']) {
+    deps['date-fns'] = 'latest';
+  }
 }
 
 /**
@@ -98,15 +101,15 @@ function getDependencies(raw, options = {}) {
   const versions = {
     'react-dom': reactVersion,
     react: reactVersion,
-    '@material-ui/core': 'latest',
-    '@material-ui/icons': 'latest',
-    '@material-ui/lab': 'latest',
-    '@material-ui/styles': 'latest',
-    '@material-ui/system': 'latest',
-    '@material-ui/utils': 'latest',
-    'date-fns': 'next',
-    jss: 'next',
-    'jss-plugin-template': 'next',
+    // TODO: change 'next' to 'latest' once next is merged into master.
+    '@material-ui/core': 'next',
+    '@material-ui/icons': 'next',
+    '@material-ui/lab': 'next',
+    '@material-ui/styles': 'next',
+    '@material-ui/system': 'next',
+    '@material-ui/utils': 'next',
+    // TODO: Remove once v4 is stable
+    '@material-ui/pickers': 'next',
   };
 
   const re = /^import\s'([^']+)'|import\s[\s\S]*?\sfrom\s+'([^']+)/gm;

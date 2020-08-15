@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -8,7 +8,7 @@ import Fab from '@material-ui/core/Fab';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -78,19 +78,22 @@ export default function CircularIntegration() {
         >
           {success ? <CheckIcon /> : <SaveIcon />}
         </Fab>
-        {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+        {loading && (
+          <CircularProgress size={68} className={classes.fabProgress} />
+        )}
       </div>
       <div className={classes.wrapper}>
         <Button
           variant="contained"
-          color="primary"
           className={buttonClassname}
           disabled={loading}
           onClick={handleButtonClick}
         >
           Accept terms
         </Button>
-        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+        {loading && (
+          <CircularProgress size={24} className={classes.buttonProgress} />
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,10 @@
-import React from 'react';
-import { makeStyles, withStyles, Theme, createStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import {
+  makeStyles,
+  withStyles,
+  Theme,
+  createStyles,
+} from '@material-ui/core/styles';
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
 import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
@@ -22,18 +27,15 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'wrap',
     },
     divider: {
-      alignSelf: 'stretch',
-      height: 'auto',
       margin: theme.spacing(1, 0.5),
     },
   }),
 );
 
-const StyledToggleButtonGroup = withStyles(theme => ({
+const StyledToggleButtonGroup = withStyles((theme) => ({
   grouped: {
     margin: theme.spacing(0.5),
     border: 'none',
-    padding: theme.spacing(0, 1),
     '&:not(:first-child)': {
       borderRadius: theme.shape.borderRadius,
     },
@@ -47,11 +49,17 @@ export default function CustomizedDividers() {
   const [alignment, setAlignment] = React.useState('left');
   const [formats, setFormats] = React.useState(() => ['italic']);
 
-  const handleFormat = (event: React.MouseEvent<HTMLElement>, newFormats: string[]) => {
+  const handleFormat = (
+    event: React.MouseEvent<HTMLElement>,
+    newFormats: string[],
+  ) => {
     setFormats(newFormats);
   };
 
-  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
+  const handleAlignment = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string,
+  ) => {
     setAlignment(newAlignment);
   };
 
@@ -80,7 +88,7 @@ export default function CustomizedDividers() {
             <FormatAlignJustifyIcon />
           </ToggleButton>
         </StyledToggleButtonGroup>
-        <Divider orientation="vertical" className={classes.divider} />
+        <Divider flexItem orientation="vertical" className={classes.divider} />
         <StyledToggleButtonGroup
           size="small"
           value={formats}

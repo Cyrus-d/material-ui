@@ -13,13 +13,37 @@ Material-UI provides icons support in three ways:
 1. With the [SvgIcon](#svgicon) component, a React wrapper for custom SVG icons.
 1. With the [Icon](#icon-font-icons) component, a React wrapper for custom font icons.
 
-## Material Icons
+## Material icons
 
-Material Design has standardized over 1,000 official icons, each in five different "themes" (see below). For each SVG icon, we export the respective React component from the @material-ui/icons package. You can [search the full list of these icons](/components/material-icons/).
+Google has created over 1,300 official Material icons, each in five different "themes" (see below). For each SVG icon, we export the respective React component from the `@material-ui/icons` package. You can [search the full list of these icons](/components/material-icons/).
+
+### Installation
+
+Install the package in your project directory with:
+
+```sh
+// with npm
+npm install @material-ui/icons@next
+
+// with yarn
+yarn add @material-ui/icons@next
+```
+
+These components use the Material-UI SvgIcon component to render the SVG path for each icon, and so they have a peer-dependency on the next release of Material-UI.
+
+If you are not already using Material-UI in your project, you can add it with:
+
+```sh
+// with npm
+npm install @material-ui/core@next
+
+// with yarn
+yarn add @material-ui/core@next
+```
 
 ### Usage
 
-Install `@material-ui/icons`. Import icons using one of these two options:
+Import icons using one of these two options:
 
 - Option 1:
 
@@ -58,7 +82,7 @@ This component extends the native `<svg>` element:
 - It comes with built-in accessibility.
 - SVG elements should be scaled for a 24x24px viewport, so the resulting icon can be used as is, or included as a child for other Material-UI components that use icons. (This can be customized with the `viewBox` attribute).
 - By default, the component inherits the current color.
-Optionally, you can apply one of the theme colors using the `color` prop.
+  Optionally, you can apply one of the theme colors using the `color` prop.
 
 ```jsx
 function HomeIcon(props) {
@@ -80,19 +104,34 @@ function HomeIcon(props) {
 
 ### Component prop
 
-You can use the `SvgIcon` wrapper even if your icons are saved the `.svg` format.
-[svgr](https://github.com/smooth-code/svgr) has loaders to import svg files and use them as React components. For instance, with webpack:
+You can use the `SvgIcon` wrapper even if your icons are saved in the `.svg` format.
+[svgr](https://github.com/smooth-code/svgr) has loaders to import SVG files and use them as React components. For example, with webpack:
 
-**webpack.config.js**
-```js
+```jsx
+// webpack.config.js
 {
   test: /\.svg$/,
   use: ['@svgr/webpack'],
 }
+
+// ---
+import StarIcon from './star.svg';
+
+<SvgIcon component={StarIcon} viewBox="0 0 600 476.6" />
 ```
 
+It's also possible to use it with "url-loader" or "file-loader".
+It's the approach used by Create React App.
+
 ```jsx
-import StarIcon from './star.svg';
+// webpack.config.js
+{
+  test: /\.svg$/,
+  use: ['@svgr/webpack', 'url-loader'],
+}
+
+// ---
+import { ReactComponent as StarIcon } from './star.svg';
 
 <SvgIcon component={StarIcon} viewBox="0 0 600 476.6" />
 ```
@@ -101,7 +140,7 @@ import StarIcon from './star.svg';
 
 #### Material Design (recommended)
 
-Material Design has standardized over [1,000 official icons](#material-icons).
+Material Design has standardized over [1,100 official icons](#material-icons).
 
 #### MDI
 
@@ -117,7 +156,10 @@ As a prerequisite, you must include one, such as the
 [Material icon font](https://google.github.io/material-design-icons/#icon-font-for-the-web) in your project, for instance, via Google Web Fonts:
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+/>
 ```
 
 `Icon` will set the correct class name for the Material icon font. For other fonts, you must supply the
@@ -129,7 +171,7 @@ for example:
 ```jsx
 import Icon from '@material-ui/core/Icon';
 
-<Icon>star</Icon>
+<Icon>star</Icon>;
 ```
 
 By default, an Icon will inherit the current text color.
@@ -156,10 +198,11 @@ For more details, you can check out [why GitHub migrated from font icons to SVG 
 
 Icons can convey all sorts of meaningful information, so it’s important that they reach the largest amount of people possible.
 There are two use cases you’ll want to consider:
+
 - **Decorative Icons** are only being used for visual or branding reinforcement.
-If they were removed from the page, users would still understand and be able to use your page.
+  If they were removed from the page, users would still understand and be able to use your page.
 - **Semantic Icons** are ones that you’re using to convey meaning, rather than just pure decoration.
-This includes icons without text next to them used as interactive controls — buttons, form elements, toggles, etc.
+  This includes icons without text next to them used as interactive controls — buttons, form elements, toggles, etc.
 
 ### Decorative SVG Icons
 
@@ -183,7 +226,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
   <SvgIcon>
     <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z" />
   </SvgIcon>
-</IconButton>
+</IconButton>;
 ```
 
 ### Decorative Font Icons
@@ -197,12 +240,15 @@ If your icons have semantic meaning, you need to provide a text alternative only
 
 ```jsx
 import Icon from '@material-ui/core/Icon';
-import Typography from '@material-ui/core/Typography';
+import { visuallyHidden } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
+
+const classes = makeStyles({ visuallyHidden })();
 
 // ...
 
 <Icon>add_circle</Icon>
-<Typography variant="srOnly">Create a user</Typography>
+<span className={classes.visuallyHidden}>Create a user</span>
 ```
 
 ### Reference

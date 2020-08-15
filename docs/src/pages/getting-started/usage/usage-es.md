@@ -11,7 +11,7 @@ Puedes utilizar cualquiera de los componentes como son demostrados en la documen
 Aquí está un ejemplo rápido para empezar. **Es, literalmente, todo lo que necesitas**:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 
@@ -28,7 +28,7 @@ ReactDOM.render(<App />, document.querySelector('#app'));
 
 Así es! Esto es todo lo que necesitas para empezar, como podrás comprobar con la siguiente demostración interactiva en vivo:
 
-{{"demo": "pages/getting-started/usage/Usage.js", "hideHeader": true, "bg": true}}
+{{"demo": "pages/getting-started/usage/Usage.js", "hideToolbar": true, "bg": true}}
 
 ## Globales
 
@@ -36,22 +36,22 @@ La experiencia de uso de Material-UI puede mejorar con algunas globales importan
 
 ### Meta tag responsivo
 
-Material-UI is developed mobile-first, a strategy in which we first write code for mobile devices, and then scale up components as necessary using CSS media queries. Para asegurar un renderizado adecuado y zoom táctil en todos los dispositivos, añade la meta-etiqueta para vista responsiva en el elemento `<head>`.
+Material-UI es desarrollado bajo el esquema "móviles primero", una estrategia en la que primero escribimos código para dispositivos móviles, y después escalamos los componentes según sea necesario utilizando CSS Media Queries. Para asegurar un renderizado adecuado y zoom táctil en todos los dispositivos, añade la meta-etiqueta para vista responsiva en el elemento `<head>`.
 
 ```html
 <meta
   name="viewport"
-  content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+  content="minimum-scale=1, initial-scale=1, width=device-width"
 />
 ```
 
 ### CssBaseline
 
-Material-UI proporciona un componente opcional llamado [CssBaseline](/components/css-baseline/). It fixes some inconsistencies across browsers and devices while providing slightly more opinionated resets to common HTML elements.
+Material-UI proporciona un componente opcional llamado [CssBaseline](/components/css-baseline/). Regulariza algunas inconsistencias entre navegadores y dispositivos, aunque provee reseteos ligeramente más dogmáticos respecto a elementos HTML comunes.
 
 ## Documentación versionada
 
-Ésta documentación siempre refleja la última versión estable de Material-UI. Podrás encontrar versiones antiguas en una [página apartada](https://material-ui.com/versions/).
+Esta documentación siempre refleja la última versión estable de Material-UI. Podrás encontrar versiones antiguas en una [página apartada](https://material-ui.com/versions/).
 
 ## Siguientes pasos
 

@@ -1,5 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
+import { elementAcceptingRef } from '@material-ui/utils';
 import { Transition } from 'react-transition-group';
 import useTheme from '../styles/useTheme';
 import { reflow, getTransitionProps } from '../transitions/utils';
@@ -26,13 +27,45 @@ const styles = {
  * It uses [react-transition-group](https://github.com/reactjs/react-transition-group) internally.
  */
 const Grow = React.forwardRef(function Grow(props, ref) {
-  const { children, in: inProp, onEnter, onExit, style, timeout = 'auto', ...other } = props;
+  const {
+    children,
+    in: inProp,
+    onEnter,
+    onEntered,
+    onEntering,
+    onExit,
+    onExited,
+    onExiting,
+    style,
+    timeout = 'auto',
+    // eslint-disable-next-line react/prop-types
+    TransitionComponent = Transition,
+    ...other
+  } = props;
   const timer = React.useRef();
   const autoTimeout = React.useRef();
-  const handleRef = useForkRef(children.ref, ref);
   const theme = useTheme();
 
-  const handleEnter = (node, isAppearing) => {
+  const nodeRef = React.useRef(null);
+  const foreignRef = useForkRef(children.ref, ref);
+  const handleRef = useForkRef(nodeRef, foreignRef);
+
+  const normalizedTransitionCallback = (callback) => (maybeIsAppearing) => {
+    if (callback) {
+      const node = nodeRef.current;
+
+      // onEnterXxx and onExitXxx callbacks have a different arguments.length value.
+      if (maybeIsAppearing === undefined) {
+        callback(node);
+      } else {
+        callback(node, maybeIsAppearing);
+      }
+    }
+  };
+
+  const handleEntering = normalizedTransitionCallback(onEntering);
+
+  const handleEnter = normalizedTransitionCallback((node, isAppearing) => {
     reflow(node); // So the animation always start from the start.
 
     const { duration: transitionDuration, delay } = getTransitionProps(
@@ -64,9 +97,13 @@ const Grow = React.forwardRef(function Grow(props, ref) {
     if (onEnter) {
       onEnter(node, isAppearing);
     }
-  };
+  });
 
-  const handleExit = node => {
+  const handleEntered = normalizedTransitionCallback(onEntered);
+
+  const handleExiting = normalizedTransitionCallback(onExiting);
+
+  const handleExit = normalizedTransitionCallback((node) => {
     const { duration: transitionDuration, delay } = getTransitionProps(
       { style, timeout },
       {
@@ -99,9 +136,11 @@ const Grow = React.forwardRef(function Grow(props, ref) {
     if (onExit) {
       onExit(node);
     }
-  };
+  });
 
-  const addEndListener = (_, next) => {
+  const handleExited = normalizedTransitionCallback(onExited);
+
+  const addEndListener = (next) => {
     if (timeout === 'auto') {
       timer.current = setTimeout(next, autoTimeout.current || 0);
     }
@@ -114,11 +153,16 @@ const Grow = React.forwardRef(function Grow(props, ref) {
   }, []);
 
   return (
-    <Transition
+    <TransitionComponent
       appear
       in={inProp}
+      nodeRef={nodeRef}
       onEnter={handleEnter}
+      onEntered={handleEntered}
+      onEntering={handleEntering}
       onExit={handleExit}
+      onExited={handleExited}
+      onExiting={handleExiting}
       addEndListener={addEndListener}
       timeout={timeout === 'auto' ? null : timeout}
       {...other}
@@ -137,15 +181,19 @@ const Grow = React.forwardRef(function Grow(props, ref) {
           ...childProps,
         });
       }}
-    </Transition>
+    </TransitionComponent>
   );
 });
 
 Grow.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * A single child content element.
    */
-  children: PropTypes.element,
+  children: elementAcceptingRef,
   /**
    * If `true`, show the component; triggers the enter or exit animation.
    */
@@ -157,7 +205,23 @@ Grow.propTypes = {
   /**
    * @ignore
    */
+  onEntered: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onEntering: PropTypes.func,
+  /**
+   * @ignore
+   */
   onExit: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onExited: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onExiting: PropTypes.func,
   /**
    * @ignore
    */
@@ -169,9 +233,13 @@ Grow.propTypes = {
    * Set to 'auto' to automatically calculate transition time based on height.
    */
   timeout: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({ enter: PropTypes.number, exit: PropTypes.number }),
     PropTypes.oneOf(['auto']),
+    PropTypes.number,
+    PropTypes.shape({
+      appear: PropTypes.number,
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
   ]),
 };
 

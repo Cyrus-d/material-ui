@@ -1,18 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 import { expect } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
-import describeConformance from '../test-utils/describeConformance';
-import { createClientRender } from 'test/utils/createClientRender';
+import { getClasses, createMount, createClientRender, describeConformance } from 'test/utils';
 import Table from './Table';
 import TableContext from './TableContext';
 
 describe('<Table />', () => {
-  let mount;
+  const mount = createMount();
   const render = createClientRender();
   let classes;
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<Table>foo</Table>);
   });
 
@@ -27,7 +24,6 @@ describe('<Table />', () => {
       refInstanceof: window.HTMLTableElement,
       // can't test another component with tbody as a child
       testComponentPropWith: 'table',
-      after: () => mount.cleanUp(),
     }),
   );
 
@@ -35,6 +31,11 @@ describe('<Table />', () => {
     it('can render a different component', () => {
       const { container } = render(<Table component="div">foo</Table>);
       expect(container.firstChild).to.have.property('nodeName', 'DIV');
+    });
+
+    it('sets role="table"', () => {
+      const { container } = render(<Table component="div">foo</Table>);
+      expect(container.firstChild).to.have.attribute('role', 'table');
     });
   });
 
@@ -45,7 +46,7 @@ describe('<Table />', () => {
       </Table>,
     );
 
-    expect(getByTestId('children')).to.be.ok;
+    expect(getByTestId('children')).not.to.equal(null);
   });
 
   it('should define table in the child context', () => {
@@ -55,7 +56,7 @@ describe('<Table />', () => {
     render(
       <Table>
         <TableContext.Consumer>
-          {value => {
+          {(value) => {
             context = value;
             return <tbody />;
           }}

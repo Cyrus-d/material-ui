@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -61,11 +61,8 @@ export default function FabIntegrationSnackbar() {
         </Fab>
         <Snackbar
           open
-          autoHideDuration={4000}
-          ContentProps={{
-            'aria-describedby': 'snackbar-fab-message-id',
-          }}
-          message={<span id="snackbar-fab-message-id">Archived</span>}
+          autoHideDuration={6000}
+          message="Archived"
           action={
             <Button color="inherit" size="small">
               Undo

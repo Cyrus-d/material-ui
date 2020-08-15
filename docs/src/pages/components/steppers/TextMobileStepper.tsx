@@ -1,5 +1,10 @@
-import React from 'react';
-import { makeStyles, Theme, useTheme, createStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import {
+  makeStyles,
+  Theme,
+  useTheme,
+  createStyles,
+} from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -65,11 +70,11 @@ export default function TextMobileStepper() {
   const maxSteps = tutorialSteps.length;
 
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   return (
@@ -88,14 +93,26 @@ export default function TextMobileStepper() {
         variant="text"
         activeStep={activeStep}
         nextButton={
-          <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+          <Button
+            size="small"
+            onClick={handleNext}
+            disabled={activeStep === maxSteps - 1}
+          >
             Next
-            {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            {theme.direction === 'rtl' ? (
+              <KeyboardArrowLeft />
+            ) : (
+              <KeyboardArrowRight />
+            )}
           </Button>
         }
         backButton={
           <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-            {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+            {theme.direction === 'rtl' ? (
+              <KeyboardArrowRight />
+            ) : (
+              <KeyboardArrowLeft />
+            )}
             Back
           </Button>
         }

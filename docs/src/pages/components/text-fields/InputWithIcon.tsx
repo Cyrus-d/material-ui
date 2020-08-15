@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -22,7 +22,9 @@ export default function InputWithIcon() {
   return (
     <div>
       <FormControl className={classes.margin}>
-        <InputLabel htmlFor="input-with-icon-adornment">With a start adornment</InputLabel>
+        <InputLabel htmlFor="input-with-icon-adornment">
+          With a start adornment
+        </InputLabel>
         <Input
           id="input-with-icon-adornment"
           startAdornment={
