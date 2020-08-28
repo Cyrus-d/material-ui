@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { StandardProps } from '@material-ui/core';
+import { OverridableStringUnion } from '@material-ui/types';
+import { InternalStandardProps as StandardProps } from '@material-ui/core';
 import { UsePaginationItem, UsePaginationProps } from './usePagination';
 
 export interface PaginationRenderItemParams extends UsePaginationItem {
@@ -9,9 +10,25 @@ export interface PaginationRenderItemParams extends UsePaginationItem {
   variant: PaginationProps['variant'];
 }
 
+export interface PaginationPropsVariantOverrides {}
+export type PaginationVariantDefaults = Record<'text' | 'outlined', true>;
+
 export interface PaginationProps
   extends UsePaginationProps,
-    StandardProps<React.HTMLAttributes<HTMLElement>, PaginationClassKey, 'children' | 'onChange'> {
+    StandardProps<React.HTMLAttributes<HTMLElement>, 'children' | 'onChange'> {
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: {
+    /** Styles applied to the root element. */
+    root?: string;
+    /** Styles applied to the ul element. */
+    ul?: string;
+    /** Styles applied to the root element if `variant="outlined"`. */
+    outlined?: string;
+    /** Styles applied to the root element if `variant="text"`. */
+    text?: string;
+  };
   /**
    * The active color.
    */
@@ -49,10 +66,10 @@ export interface PaginationProps
   /**
    * The variant to use.
    */
-  variant?: 'text' | 'outlined';
+  variant?: OverridableStringUnion<PaginationVariantDefaults, PaginationPropsVariantOverrides>;
 }
 
-export type PaginationClassKey = 'root' | 'ul';
+export type PaginationClassKey = keyof NonNullable<PaginationProps['classes']>;
 
 /**
  *

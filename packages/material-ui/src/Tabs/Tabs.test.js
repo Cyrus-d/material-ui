@@ -689,6 +689,18 @@ describe('<Tabs />', () => {
       expect(style.top).to.equal('60px');
       expect(style.height).to.equal('50px');
     });
+
+    it('does not add aria-orientation by default', () => {
+      render(<Tabs value={0} />);
+
+      expect(screen.getByRole('tablist')).not.to.have.attribute('aria-orientation');
+    });
+
+    it('adds the proper aria-orientation when vertical', () => {
+      render(<Tabs value={0} orientation="vertical" />);
+
+      expect(screen.getByRole('tablist')).to.have.attribute('aria-orientation', 'vertical');
+    });
   });
 
   describe('server-side render', () => {
@@ -1053,6 +1065,20 @@ describe('<Tabs />', () => {
           expect(handleKeyDown.firstCall.returnValue).to.equal(true);
         });
       });
+    });
+
+    it('should allow to focus first tab when there are no active tabs', () => {
+      const { getAllByRole } = render(
+        <Tabs value={false}>
+          <Tab />
+          <Tab />
+        </Tabs>,
+      );
+
+      expect(getAllByRole('tab').map((tab) => tab.getAttribute('tabIndex'))).to.deep.equal([
+        '0',
+        '-1',
+      ]);
     });
   });
 });

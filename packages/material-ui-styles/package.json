@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/styles",
-  "version": "5.0.0-alpha.6",
+  "version": "5.0.0-alpha.7",
   "private": false,
   "author": "Material-UI Team",
   "description": "Material-UI Styles - The styling solution of Material-UI.",
@@ -34,8 +34,8 @@
     "build:copy-files": "node ../../scripts/copy-files.js",
     "prebuild": "rimraf build",
     "release": "yarn build && npm publish build --tag next",
-    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/material-ui-styles/**/*.test.js' --exclude '**/node_modules/**'",
-    "typescript": "tslint -p tsconfig.json \"{src,test}/**/*.{ts,tsx}\""
+    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/material-ui-styles/**/*.test.{js,ts,tsx}' --exclude '**/node_modules/**'",
+    "typescript": "tslint -p tsconfig.json \"{src,test}/**/*.{spec,d}.{ts,tsx}\" && tsc -p tsconfig.json"
   },
   "peerDependencies": {
     "@types/react": "^16.8.6",

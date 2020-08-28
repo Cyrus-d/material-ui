@@ -184,7 +184,7 @@ function useSynchronousEffect(func, values) {
 
 export default function makeStyles(stylesOrCreator, options = {}) {
   const {
-    // alias for classNamePrefix, if provided will listen to theme (required for theme.overrides)
+    // alias for classNamePrefix, if provided will listen to theme (required for theme.components[name].styleOverrides)
     name,
     // Help with debuggability.
     classNamePrefix: classNamePrefixOption,
@@ -250,7 +250,14 @@ export default function makeStyles(stylesOrCreator, options = {}) {
         'MuiChip',
         'MuiDivider',
         'MuiFab',
+        'MuiPaper',
+        'MuiToolbar',
         'MuiTypography',
+        'MuiAlert',
+        'MuiPagination',
+        'MuiPaginationItem',
+        'MuiSkeleton',
+        'MuiTimelineDot',
       ];
 
       if (

@@ -1,17 +1,22 @@
 ---
 title: Checkbox React component
 components: Checkbox, FormControl, FormGroup, FormLabel, FormControlLabel
+materialDesign: https://material.io/components/selection-controls#checkboxes
+githubLabel: component: Checkbox
+waiAria: https://www.w3.org/TR/wai-aria-practices/#checkbox
 ---
 
 # Checkbox
 
 <p class="description">Checkboxes allow the user to select one or more items from a set.</p>
 
-[Checkboxes](https://material.io/design/components/selection-controls.html#checkboxes) can be used to turn an option on or off.
+Checkboxes can be used to turn an option on or off.
 
 If you have multiple options appearing in a list,
 you can preserve space by using checkboxes instead of on/off switches.
 If you have a single option, avoid using a checkbox and use an on/off switch instead.
+
+{{"component": "modules/components/ComponentLinkHeader.js"}}
 
 ## Basic checkboxes
 
@@ -55,7 +60,7 @@ Here is an example of customizing the component. You can learn more about this i
 
 - All form controls should have labels, and this includes radio buttons, checkboxes, and switches. In most cases, this is done by using the `<label>` element ([FormControlLabel](/api/form-control-label/)).
 - When a label can't be used, it's necessary to add an attribute directly to the input component.
-  In this case, you can apply the additional attribute (e.g. `aria-label`, `aria-labelledby`, `title`) via the `inputProps` property.
+  In this case, you can apply the additional attribute (e.g. `aria-label`, `aria-labelledby`, `title`) via the `inputProps` prop.
 
 ```jsx
 <Checkbox

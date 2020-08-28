@@ -419,6 +419,7 @@ const Tabs = React.forwardRef(function Tabs(props, ref) {
       onChange,
       textColor,
       value: childValue,
+      ...(childIndex === 1 && value === false && !child.props.tabIndex ? { tabIndex: 0 } : {}),
     });
   });
 
@@ -494,6 +495,7 @@ const Tabs = React.forwardRef(function Tabs(props, ref) {
         <div
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledBy}
+          aria-orientation={orientation === 'vertical' ? 'vertical' : null}
           className={clsx(classes.flexContainer, {
             [classes.flexContainerVertical]: vertical,
             [classes.centered]: centered && !scrollable,
@@ -535,7 +537,7 @@ Tabs.propTypes = {
   'aria-labelledby': PropTypes.string,
   /**
    * If `true`, the tabs will be centered.
-   * This property is intended for large views.
+   * This prop is intended for large views.
    */
   centered: PropTypes.bool,
   /**
@@ -544,7 +546,6 @@ Tabs.propTypes = {
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
-   * See [CSS API](#css) below for more details.
    */
   classes: PropTypes.object,
   /**
@@ -603,7 +604,7 @@ Tabs.propTypes = {
   textColor: PropTypes.oneOf(['inherit', 'primary', 'secondary']),
   /**
    * The value of the currently selected `Tab`.
-   * If you don't want any selected `Tab`, you can set this property to `false`.
+   * If you don't want any selected `Tab`, you can set this prop to `false`.
    */
   value: PropTypes.any,
   /**

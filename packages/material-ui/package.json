@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/core",
-  "version": "5.0.0-alpha.6",
+  "version": "5.0.0-alpha.7",
   "private": false,
   "author": "Material-UI Team",
   "description": "React components that implement Google's Material Design.",
@@ -35,8 +35,8 @@
     "extract-error-codes": "cross-env MUI_EXTRACT_ERROR_CODES=true yarn build:esm",
     "prebuild": "rimraf build",
     "release": "yarn build && npm publish build --tag next",
-    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/material-ui/**/*.test.js' --exclude '**/node_modules/**'",
-    "typescript": "tslint -p tsconfig.json \"{src,test}/**/*.{spec,d}.{ts,tsx}\" && tsc -p tsconfig.test.json && tsc -p tsconfig.build.json"
+    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/material-ui/**/*.test.{js,ts,tsx}' --exclude '**/node_modules/**'",
+    "typescript": "tslint -p tsconfig.json \"{src,test}/**/*.{spec,d}.{ts,tsx}\" && tsc -p tsconfig.json && tsc -p tsconfig.build.json"
   },
   "peerDependencies": {
     "@types/react": "^16.8.6",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.4",
-    "@material-ui/styles": "^5.0.0-alpha.6",
+    "@material-ui/styles": "^5.0.0-alpha.7",
     "@material-ui/system": "^5.0.0-alpha.6",
     "@material-ui/types": "^5.1.0",
     "@material-ui/utils": "^5.0.0-alpha.1",

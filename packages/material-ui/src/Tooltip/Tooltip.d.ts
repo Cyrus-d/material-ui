@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { StandardProps } from '..';
+import { InternalStandardProps as StandardProps } from '..';
 import { TransitionProps } from '../transitions/transition';
 import { PopperProps } from '../Popper/Popper';
 
-export interface TooltipProps
-  extends StandardProps<React.HTMLAttributes<HTMLDivElement>, TooltipClassKey, 'title'> {
+export interface TooltipProps extends StandardProps<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /**
    * If `true`, adds an arrow to the tooltip.
    */
@@ -13,6 +12,33 @@ export interface TooltipProps
    * Tooltip reference element.
    */
   children: React.ReactElement<any, any>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: {
+    /** Styles applied to the Popper component. */
+    popper?: string;
+    /** Styles applied to the Popper component if `interactive={true}`. */
+    popperInteractive?: string;
+    /** Styles applied to the Popper component if `arrow={true}`. */
+    popperArrow?: string;
+    /** Styles applied to the tooltip (label wrapper) element. */
+    tooltip?: string;
+    /** Styles applied to the tooltip (label wrapper) element if `arrow={true}`. */
+    tooltipArrow?: string;
+    /** Styles applied to the arrow element. */
+    arrow?: string;
+    /** Styles applied to the tooltip (label wrapper) element if the tooltip is opened by touch. */
+    touch?: string;
+    /** Styles applied to the tooltip (label wrapper) element if `placement` contains "left". */
+    tooltipPlacementLeft?: string;
+    /** Styles applied to the tooltip (label wrapper) element if `placement` contains "right". */
+    tooltipPlacementRight?: string;
+    /** Styles applied to the tooltip (label wrapper) element if `placement` contains "top". */
+    tooltipPlacementTop?: string;
+    /** Styles applied to the tooltip (label wrapper) element if `placement` contains "bottom". */
+    tooltipPlacementBottom?: string;
+  };
   /**
    * Do not respond to focus events.
    */
@@ -62,13 +88,13 @@ export interface TooltipProps
    *
    * @param {object} event The event source of the callback.
    */
-  onClose?: (event: React.ChangeEvent<{}>) => void;
+  onClose?: (event: React.SyntheticEvent | Event) => void;
   /**
    * Callback fired when the component requests to be open.
    *
    * @param {object} event The event source of the callback.
    */
-  onOpen?: (event: React.ChangeEvent<{}>) => void;
+  onOpen?: (event: React.SyntheticEvent) => void;
   /**
    * If `true`, the tooltip is shown.
    */
@@ -115,18 +141,7 @@ export interface TooltipProps
   TransitionProps?: TransitionProps;
 }
 
-export type TooltipClassKey =
-  | 'popper'
-  | 'popperInteractive'
-  | 'popperArrow'
-  | 'tooltip'
-  | 'tooltipArrow'
-  | 'arrow'
-  | 'touch'
-  | 'tooltipPlacementLeft'
-  | 'tooltipPlacementRight'
-  | 'tooltipPlacementTop'
-  | 'tooltipPlacementBottom';
+export type TooltipClassKey = keyof NonNullable<TooltipProps['classes']>;
 
 /**
  *

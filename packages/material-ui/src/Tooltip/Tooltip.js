@@ -7,8 +7,9 @@ import withStyles from '../styles/withStyles';
 import capitalize from '../utils/capitalize';
 import Grow from '../Grow';
 import Popper from '../Popper';
+import useEventCallback from '../utils/useEventCallback';
 import useForkRef from '../utils/useForkRef';
-import useId from '../utils/unstable_useId';
+import useId from '../utils/useId';
 import useIsFocusVisible from '../utils/useIsFocusVisible';
 import useControlled from '../utils/useControlled';
 import useTheme from '../styles/useTheme';
@@ -78,13 +79,12 @@ export const styles = (theme) => ({
   popperArrow: arrowGenerator(),
   /* Styles applied to the tooltip (label wrapper) element. */
   tooltip: {
-    backgroundColor: fade(theme.palette.grey[700], 0.9),
+    backgroundColor: fade(theme.palette.grey[700], 0.92),
     borderRadius: theme.shape.borderRadius,
     color: theme.palette.common.white,
     fontFamily: theme.typography.fontFamily,
     padding: '4px 8px',
-    fontSize: theme.typography.pxToRem(10),
-    lineHeight: `${round(14 / 10)}em`,
+    fontSize: theme.typography.pxToRem(11),
     maxWidth: 300,
     wordWrap: 'break-word',
     fontWeight: theme.typography.fontWeightMedium,
@@ -327,22 +327,27 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
     }
   };
 
-  const handleClose = (event) => {
-    clearTimeout(hystersisTimer);
-    hystersisTimer = setTimeout(() => {
-      hystersisOpen = false;
-    }, 800 + leaveDelay);
-    setOpenState(false);
+  const handleClose = useEventCallback(
+    /**
+     * @param {React.SyntheticEvent | Event} event
+     */
+    (event) => {
+      clearTimeout(hystersisTimer);
+      hystersisTimer = setTimeout(() => {
+        hystersisOpen = false;
+      }, 800 + leaveDelay);
+      setOpenState(false);
 
-    if (onClose) {
-      onClose(event);
-    }
+      if (onClose) {
+        onClose(event);
+      }
 
-    clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => {
-      ignoreNonTouchEvents.current = false;
-    }, theme.transitions.duration.shortest);
-  };
+      clearTimeout(closeTimer.current);
+      closeTimer.current = setTimeout(() => {
+        ignoreNonTouchEvents.current = false;
+      }, theme.transitions.duration.shortest);
+    },
+  );
 
   const handleLeave = (forward = true) => (event) => {
     const childrenProps = children.props;
@@ -402,6 +407,28 @@ const Tooltip = React.forwardRef(function Tooltip(props, ref) {
       handleClose(event);
     }, leaveTouchDelay);
   };
+
+  React.useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
+    /**
+     * @param {KeyboardEvent} nativeEvent
+     */
+    function handleKeyDown(nativeEvent) {
+      // IE 11, Edge (prior to using Bink?) use 'Esc'
+      if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+        handleClose(nativeEvent);
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleClose, open]);
 
   const handleUseRef = useForkRef(setChildNode, ref);
   const handleFocusRef = useForkRef(focusVisibleRef, handleUseRef);
@@ -539,7 +566,6 @@ Tooltip.propTypes = {
   children: elementAcceptingRef.isRequired,
   /**
    * Override or extend the styles applied to the component.
-   * See [CSS API](#css) below for more details.
    */
   classes: PropTypes.object,
   /**
