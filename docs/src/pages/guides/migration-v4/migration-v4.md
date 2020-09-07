@@ -53,6 +53,21 @@ This change affects almost all components where you're using the `component` pro
 
 ### Theme
 
+For a smoother transition, the `adaptV4Theme` helper allows you to iteratively upgrade to the new theme structure.
+
+```diff
+-import { createMuiTheme } from '@material-ui/core/styles';
++import { createMuiTheme, adaptV4Theme } from '@material-ui/core/styles';
+
+-const theme = createMuitheme({
++const theme = createMuitheme(adaptV4Theme({
+  // v4 theme
+-});
++}));
+```
+
+#### Changes
+
 - The "gutters" abstraction hasn't proven to be used frequently enough to be valuable.
 
   ```diff
@@ -107,28 +122,6 @@ const theme = createMuitheme({
 +    },
 +  },
 });
-```
-
-For a smoother transition, the `adaptV4Theme` helper allows you to iteratively upgrade to the new theme structure. Note that it will display a deprecation warning in the console, since it will be removed at the next major release.
-
-```diff
--import { createMuiTheme } from '@material-ui/core/styles';
-+import { createMuiTheme, adaptV4Theme } from '@material-ui/core/styles';
-
--const theme = createMuitheme({
-+const theme = createMuitheme(adaptV4Theme({
-  props: {
-    MuiButton: {
-      disableRipple: true,
-    },
-  },
-  overrides: {
-    MuiButton: {
-      root: { padding: 0 },
-    },
-  },
--});
-+}));
 ```
 
 ### Avatar
@@ -370,6 +363,11 @@ For a smoother transition, the `adaptV4Theme` helper allows you to iteratively u
   >
   ```
 
+### Modal
+
+- Remove `onRendered` prop.
+  Depending on your use case either use a [callback ref](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs) on the child element or an effect hook in the child component.
+
 ### Pagination
 
 - Rename `round` to `circular` for consistency. The possible values should be adjectives, not nouns:
@@ -410,6 +408,11 @@ For a smoother transition, the `adaptV4Theme` helper allows you to iteratively u
   +  }}
   />
   ```
+
+### Portal
+
+- Remove `onRendered` prop.
+  Depending on your use case either use a [callback ref](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs) on the child element or an effect hook in the child component.
 
 ### Rating
 

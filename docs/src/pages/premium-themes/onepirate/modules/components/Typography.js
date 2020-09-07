@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MuiTypography from '@material-ui/core/Typography';
@@ -99,6 +99,7 @@ Typography.propTypes = {
   marked: PropTypes.oneOf(['center', 'left', 'none']),
   /**
    * Applies the theme typography styles.
+   * @default 'body1'
    */
   variant: PropTypes.oneOf([
     'body1',

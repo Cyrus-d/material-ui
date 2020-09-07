@@ -6,6 +6,7 @@ import withStyles from '../styles/withStyles';
 import useTheme from '../styles/useTheme';
 import { fade, lighten, darken } from '../styles/colorManipulator';
 import useIsFocusVisible from '../utils/useIsFocusVisible';
+import useEnhancedEffect from '../utils/useEnhancedEffect';
 import ownerDocument from '../utils/ownerDocument';
 import useEventCallback from '../utils/useEventCallback';
 import useForkRef from '../utils/useForkRef';
@@ -449,6 +450,22 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     setOpen(-1);
   });
 
+  useEnhancedEffect(() => {
+    if (disabled && sliderRef.current.contains(document.activeElement)) {
+      // This is necessary because Firefox and Safari will keep focus
+      // on a disabled element:
+      // https://codesandbox.io/s/mui-pr-22247-forked-h151h?file=/src/App.js
+      document.activeElement.blur();
+    }
+  }, [disabled]);
+
+  if (disabled && active !== -1) {
+    setActive(-1);
+  }
+  if (disabled && focusVisible !== -1) {
+    setFocusVisible(-1);
+  }
+
   const isRtl = theme.direction === 'rtl';
 
   const handleKeyDown = useEventCallback((event) => {
@@ -591,6 +608,13 @@ const Slider = React.forwardRef(function Slider(props, ref) {
       return;
     }
 
+    // Cancel move in case some other element consumed a mouseup event and it was not fired.
+    if (nativeEvent.type === 'mousemove' && nativeEvent.buttons === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handleTouchEnd(nativeEvent);
+      return;
+    }
+
     const { newValue, activeIndex } = getFingerNewValue({
       finger,
       move: true,
@@ -678,6 +702,16 @@ const Slider = React.forwardRef(function Slider(props, ref) {
       doc.removeEventListener('touchend', handleTouchEnd);
     };
   }, [handleTouchEnd, handleTouchMove, handleTouchStart]);
+
+  React.useEffect(() => {
+    if (disabled) {
+      const doc = ownerDocument(sliderRef.current);
+      doc.removeEventListener('mousemove', handleTouchMove);
+      doc.removeEventListener('mouseup', handleTouchEnd);
+      doc.removeEventListener('touchmove', handleTouchMove);
+      doc.removeEventListener('touchend', handleTouchEnd);
+    }
+  }, [disabled, handleTouchEnd, handleTouchMove]);
 
   const handleMouseDown = useEventCallback((event) => {
     if (onMouseDown) {
@@ -873,6 +907,7 @@ Slider.propTypes = {
   className: PropTypes.string,
   /**
    * The color of the component. It supports those theme colors that make sense for this component.
+   * @default 'primary'
    */
   color: PropTypes.oneOf(['primary', 'secondary']),
   /**
@@ -886,6 +921,7 @@ Slider.propTypes = {
   defaultValue: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.number]),
   /**
    * If `true`, the slider will be disabled.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -907,6 +943,7 @@ Slider.propTypes = {
    * Marks indicate predetermined values to which the user can move the slider.
    * If `true` the marks will be spaced according the value of the `step` prop.
    * If an array, it should contain objects with `value` and an optional `label` keys.
+   * @default false
    */
   marks: PropTypes.oneOfType([
     PropTypes.arrayOf(
@@ -920,11 +957,13 @@ Slider.propTypes = {
   /**
    * The maximum allowed value of the slider.
    * Should not be equal to min.
+   * @default 100
    */
   max: PropTypes.number,
   /**
    * The minimum allowed value of the slider.
    * Should not be equal to max.
+   * @default 0
    */
   min: PropTypes.number,
   /**
@@ -951,10 +990,12 @@ Slider.propTypes = {
   onMouseDown: PropTypes.func,
   /**
    * The slider orientation.
+   * @default 'horizontal'
    */
   orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * A transformation function, to change the scale of the slider.
+   * @default (x) => x
    */
   scale: PropTypes.func,
   /**
@@ -963,10 +1004,12 @@ Slider.propTypes = {
    * We recommend (max - min) to be evenly divisible by the step.
    *
    * When step is `null`, the thumb can only be slid onto marks provided with the `marks` prop.
+   * @default 1
    */
   step: PropTypes.number,
   /**
    * The component used to display the value label.
+   * @default 'span'
    */
   ThumbComponent: PropTypes.elementType,
   /**
@@ -975,6 +1018,7 @@ Slider.propTypes = {
    * - `normal` the track will render a bar representing the slider value.
    * - `inverted` the track will render a bar representing the remaining slider value.
    * - `false` the track will render without a bar.
+   * @default 'normal'
    */
   track: PropTypes.oneOf(['inverted', 'normal', false]),
   /**
@@ -984,6 +1028,7 @@ Slider.propTypes = {
   value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.number]),
   /**
    * The value label component.
+   * @default ValueLabel
    */
   ValueLabelComponent: PropTypes.elementType,
   /**
@@ -992,6 +1037,7 @@ Slider.propTypes = {
    * - `auto` the value label will display when the thumb is hovered or focused.
    * - `on` will display persistently.
    * - `off` will never display.
+   * @default 'off'
    */
   valueLabelDisplay: PropTypes.oneOf(['auto', 'off', 'on']),
   /**
@@ -1001,6 +1047,7 @@ Slider.propTypes = {
    *
    * - {number} value The value label's value to format
    * - {number} index The value label's index to format
+   * @default (x) => x
    */
   valueLabelFormat: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
 };
